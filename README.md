@@ -4,7 +4,7 @@ FableWorld
 FableWorld is 3D game, created with DirecX 9.0 and C++.<br />
 The main features of the game are:<br />
   1.Battle system<br />
-  -the player can attack enemies in the game by walking close to the enemy and pressing left mouse button<br />
+  -the player can attack enemies in the game by walking close to the enemy and pressing left mouse button<br /><br />
   2.Dialogue system<br />
   -the player can communicate with entities, which have dialogue attached to them.<br />
   The dialogue consist of multiple choices for the player and each choice can lead to different result.<br />
