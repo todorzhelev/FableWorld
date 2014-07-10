@@ -74,7 +74,7 @@ void TextManager::CreateFontFor3DText()
 							);
 
 
-  
+
 
 	SelectObject(m_hDC, m_pFont3D);
 }
@@ -88,13 +88,13 @@ Purpose:creates 3D text model for model titles
 void TextManager::CreateMeshFor3DText(GameObject* pGameObject)
 {
 	D3DXCreateText(pDxDevice,  
-					m_hDC,          
-					pGameObject->m_strModelName.c_str(),		//Text 
-					0.001f,            
-					0.04f,          
-					&pGameObject->m_pTitleMesh,			//Mesh
-					NULL,       
-					NULL);
+				   m_hDC,          
+				   pGameObject->m_strModelName.c_str(),		//Text 
+				   0.001f,            
+				   0.04f,          
+				   &pGameObject->m_pTitleMesh,			//Mesh
+				   NULL,       
+				   NULL);
 }
 
 
@@ -141,7 +141,7 @@ void TextManager::OnUpdate(float dt)
 
 	fFps += 1.0f;
 	fTimeElapsed += dt;
-	
+
 	if(fTimeElapsed >= 1.0f)
 	{
 		m_fFPS = fFps;
