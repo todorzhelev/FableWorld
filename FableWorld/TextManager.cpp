@@ -19,14 +19,14 @@ TextManager::TextManager():m_fFPS(0.0)
 	D3DXFONT_DESC fontDesc;
 
 	fontDesc.Height				= 18;
-    fontDesc.Width				= 0;
-    fontDesc.Weight				= 0;
-    fontDesc.MipLevels			= 1;
-    fontDesc.Italic				= false;
-    fontDesc.CharSet			= DEFAULT_CHARSET;
-    fontDesc.OutputPrecision	= OUT_DEFAULT_PRECIS;
-    fontDesc.Quality			= DEFAULT_QUALITY;
-    fontDesc.PitchAndFamily		= DEFAULT_PITCH | FF_DONTCARE;
+	fontDesc.Width				= 0;
+	fontDesc.Weight				= 0;
+	fontDesc.MipLevels			= 1;
+	fontDesc.Italic				= false;
+	fontDesc.CharSet			= DEFAULT_CHARSET;
+	fontDesc.OutputPrecision	= OUT_DEFAULT_PRECIS;
+	fontDesc.Quality			= DEFAULT_QUALITY;
+	fontDesc.PitchAndFamily		= DEFAULT_PITCH | FF_DONTCARE;
 	_tcscpy_s(fontDesc.FaceName, _T("Starcraft Normal"));
 
 	if( SUCCEEDED(D3DXCreateFontIndirect(pDxDevice, &fontDesc, &m_pFont2D)) )
