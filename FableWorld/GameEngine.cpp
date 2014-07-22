@@ -217,7 +217,7 @@ void GameEngine::InitDirect3D()
 	}
 
 	fout<<"directx device created\n";
-	//SwitchToFullscreen(true);
+	SwitchToFullscreen(true);
 }
 
 

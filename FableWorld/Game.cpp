@@ -422,12 +422,12 @@ void Game::OnUpdate(float dt)
 		}
 	}
 
-	if( pDinput->IsMouseButtonUp(0) && m_pHealSpell->IsClicked() )
+	/*if( pDinput->IsMouseButtonUp(0) && m_pHealSpell->IsClicked() )
 	{
 		m_rHealthBarRectangle.right += 20;
 	}
 
-	m_pHealSpell->OnUpdate();
+	m_pHealSpell->OnUpdate();*/
 
 	//controls the health bars of the enemy and the mainHero.
 	ManageHealthBars();
@@ -614,7 +614,7 @@ void Game::OnRender()
 
 			m_pInterfaceSprite->End();
 			
-			m_pHealSpell->OnRender();
+			//m_pHealSpell->OnRender();
 
 	pDxDevice->EndScene();
 
