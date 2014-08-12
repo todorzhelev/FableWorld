@@ -11,7 +11,7 @@ Purpose:constructor. load the font for drawing on the screen.
 */
 TextManager::TextManager():m_fFPS(0.0)
 {
-	if( AddFontResource("fonts/starcraft.ttf") == 0 )
+	if( AddFontResource("../../../Resources/fonts/starcraft.ttf") == 0 )
 	{
 		MessageBox(0,"cannot load font",0,0);
 	}

@@ -22,8 +22,8 @@ Menu::Menu()
 	pTextManager = new TextManager;
 
 	D3DXCreateSprite(pDxDevice,&m_pSpriteForLogo);
-	D3DXCreateTextureFromFile(pDxDevice,"textures/logo_FableWorld.jpg",&m_pLogoInWindowTexture);
-	D3DXCreateTextureFromFile(pDxDevice,"textures/logo_FableWorldFullscreen.jpg",&m_pLogoInFullscreenTexture);
+	D3DXCreateTextureFromFile(pDxDevice,"../../../Resources/textures/logo_FableWorld.jpg",&m_pLogoInWindowTexture);
+	D3DXCreateTextureFromFile(pDxDevice,"../../../Resources/textures/logo_FableWorldFullscreen.jpg",&m_pLogoInFullscreenTexture);
 
 	float posx = static_cast<float>(pEngine->GetPresentParameters().BackBufferWidth/2);
 	float posy = static_cast<float>(pEngine->GetPresentParameters().BackBufferHeight/2);

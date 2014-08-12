@@ -10,7 +10,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "building1"
-modelFileName = "models/buildings/building1/building.X"
+modelFileName = "../../../Resources/models/buildings/building1/building.X"
 addStaticModel();
 
 x = -199.646
@@ -25,7 +25,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "building2"
-modelFileName = "models/buildings/building1/building.X"
+modelFileName = "../../../Resources/models/buildings/building1/building.X"
 addStaticModel();
 
 x = -111.063
@@ -40,7 +40,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "building3"
-modelFileName = "models/buildings/building1/building.X"
+modelFileName = "../../../Resources/models/buildings/building1/building.X"
 addStaticModel();
 
 x = 61.5676
@@ -55,7 +55,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "building4"
-modelFileName = "models/buildings/building1/building.X"
+modelFileName = "../../../Resources/models/buildings/building1/building.X"
 addStaticModel();
 
 x = -10.2376
@@ -70,7 +70,7 @@ bindable = 1
 bindToAnModel = "ezreal"
 bindToAnModelBone = "head"
 modelName = "ezr_head"
-modelFileName = "models/head/paladin_head/pal_head.X"
+modelFileName = "../../../Resources/models/head/paladin_head/pal_head.X"
 addStaticModel();
 
 x = 4.79345
@@ -85,7 +85,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "ezreal_house"
-modelFileName = "models/buildings/house1/house1.X"
+modelFileName = "../../../Resources/models/buildings/house1/house1.X"
 addStaticModel();
 
 x = -9.04183
@@ -100,7 +100,7 @@ bindable = 1
 bindToAnModel = "galio"
 bindToAnModelBone = "Bone18"
 modelName = "gal_head"
-modelFileName = "models/head/warrior_brown/warrior_head.X"
+modelFileName = "../../../Resources/models/head/warrior_brown/warrior_head.X"
 addStaticModel();
 
 x = 86.7488
@@ -115,7 +115,7 @@ bindable = 1
 bindToAnModel = "galio"
 bindToAnModelBone = "right_hand"
 modelName = "sword_hyjal"
-modelFileName = "models/weapons/hyjal_sword/sword_hyjal_big.X"
+modelFileName = "../../../Resources/models/weapons/hyjal_sword/sword_hyjal_big.X"
 addStaticModel();
 
 x = 10.5708
@@ -130,7 +130,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree1"
-modelFileName = "models/trees/tree1/tree.X"
+modelFileName = "../../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
 x = -50.8663
@@ -145,7 +145,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree2"
-modelFileName = "models/trees/tree1/tree.X"
+modelFileName = "../../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
 x = 14.952
@@ -160,7 +160,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree3"
-modelFileName = "models/trees/tree1/tree.X"
+modelFileName = "../../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
 x = -51.4922
@@ -175,7 +175,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree4"
-modelFileName = "models/trees/tree1/tree.X"
+modelFileName = "../../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
 x = 54.1656
@@ -190,7 +190,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree5"
-modelFileName = "models/trees/tree3/tree3.X"
+modelFileName = "../../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
 x = -92.798
@@ -205,7 +205,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree6"
-modelFileName = "models/trees/tree3/tree3.X"
+modelFileName = "../../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
 x = -13.4302
@@ -220,7 +220,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree7"
-modelFileName = "models/trees/tree2/tree2.X"
+modelFileName = "../../../Resources/models/trees/tree2/tree2.X"
 addStaticModel();
 
 x = -67.1726
@@ -235,7 +235,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree8"
-modelFileName = "models/trees/tree3/tree3.X"
+modelFileName = "../../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
 x = -111.134
@@ -250,7 +250,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree9"
-modelFileName = "models/trees/tree3/tree3.X"
+modelFileName = "../../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
 x = 46.8694
@@ -265,7 +265,7 @@ bindable = 1
 bindToAnModel = "ezreal"
 bindToAnModelBone = "right_hand"
 modelName = "yellow_axe"
-modelFileName = "models/weapons/black_axe/axe_yellow.X"
+modelFileName = "../../../Resources/models/weapons/black_axe/axe_yellow.X"
 addStaticModel();
 
 x = -20.0
@@ -280,7 +280,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "sun_for_terrain"
-modelFileName = "models/head/paladin_head/pal_head.X"
+modelFileName = "../../../Resources/models/head/paladin_head/pal_head.X"
 addStaticModel();
 
 x = 1.0
@@ -295,6 +295,6 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "sun_for_models"
-modelFileName = "models/head/paladin_head/pal_head.X"
+modelFileName = "../../../Resources/models/head/paladin_head/pal_head.X"
 addStaticModel();
 

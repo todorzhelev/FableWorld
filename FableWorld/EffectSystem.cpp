@@ -10,7 +10,7 @@ EffectSystem::EffectSystem(string sShaderFileName, string sShaderTechName, strin
 	InitShader(sShaderFileName,sShaderTechName);
 
 
-	pDxDevice->CreateVertexBuffer(nMaxAmountOfParticles*sizeof(Particle),
+	pDxDevice->CreateVertexBuffer(nMaxAmountOfParticles*sizeof (Particle),
 								  D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY|D3DUSAGE_POINTS,
 								  0, D3DPOOL_DEFAULT, &m_pEffectVertexBuffer, 0);
 

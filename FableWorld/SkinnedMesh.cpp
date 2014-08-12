@@ -11,7 +11,7 @@ SkinnedMesh::SkinnedMesh()
 ,m_fTransTimeForIdle(0.25f)
 {
 	//default white texture for models which doesnt have any
-	D3DXCreateTextureFromFile(pDxDevice, "textures/whitetex.dds", &m_pWhiteTexture);
+	D3DXCreateTextureFromFile(pDxDevice, "../../../Resources/textures/whitetex.dds", &m_pWhiteTexture);
 
 	//max number of bones that can be supported.Above 60 bones arent rendered correctly
 	m_nMaxBonesSupported = 60;
@@ -45,7 +45,7 @@ SkinnedMesh::SkinnedMesh(string strModelName, string ModelFileName, string strTe
 {
 	//code duplication, move it to another function
 	//default white texture for models which doesnt have any
-	D3DXCreateTextureFromFile(pDxDevice, "textures/whitetex.dds", &m_pWhiteTexture);
+	D3DXCreateTextureFromFile(pDxDevice, "../../../Resources/textures/whitetex.dds", &m_pWhiteTexture);
 
 	//max number of bones that can be supported.Above 60 bones arent rendered correctly
 	m_nMaxBonesSupported = 60;

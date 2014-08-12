@@ -120,16 +120,16 @@ Purpose:initialize the window
 void GameEngine::InitMainWindow()
 {
 	WNDCLASS wc;
-	wc.style			= CS_HREDRAW | CS_VREDRAW;					//indicates that the windows has to be repainted in case the window's size is changed in horizontal or vertical side
-	wc.lpfnWndProc		= MainWndProc;								//pointer to the windows procedure function.This function is responsible for processing events
-	wc.cbClsExtra		= 0;										//if our program needs extra space
-	wc.cbWndExtra		= 0;										//if our program needs extra space
-	wc.hInstance		= m_hAppInstance;							//handle to our application instance
-	wc.hIcon			= LoadIcon(0, IDI_APPLICATION);				//handle to an icon
-	wc.hCursor			= LoadCursorFromFile("cursors/Hand1.cur");	//handle to a cursor, when the mouse is in the client's area of the window
-	wc.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);		//the background of the client's area of the window
-	wc.lpszMenuName		= 0;										//if we have menu
-	wc.lpszClassName	= "D3DWndClassName";						//the name of the class. We use it later to identify the wndclass structure when creating the window
+	wc.style			= CS_HREDRAW | CS_VREDRAW;										//indicates that the windows has to be repainted in case the window's size is changed in horizontal or vertical side
+	wc.lpfnWndProc		= MainWndProc;													//pointer to the windows procedure function.This function is responsible for processing events
+	wc.cbClsExtra		= 0;															//if our program needs extra space
+	wc.cbWndExtra		= 0;															//if our program needs extra space
+	wc.hInstance		= m_hAppInstance;												//handle to our application instance
+	wc.hIcon			= LoadIcon(0, IDI_APPLICATION);									//handle to an icon
+	wc.hCursor			= LoadCursorFromFile("../../../Resources/cursors/Hand1.cur");	//handle to a cursor, when the mouse is in the client's area of the window
+	wc.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);							//the background of the client's area of the window
+	wc.lpszMenuName		= 0;															//if we have menu
+	wc.lpszClassName	= "D3DWndClassName";											//the name of the class. We use it later to identify the wndclass structure when creating the window
 	
 	if( !RegisterClass(&wc) )								//Windows requires the window to be registered
 	{
