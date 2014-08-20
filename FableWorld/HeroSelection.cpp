@@ -1,6 +1,6 @@
 #include "HeroSelection.h"
 #include "Game.h"
-#include "TextManager.h"
+#include "../../../TheCore/TheCore/TheCore/TextManager.h"
 
 /*
 SourceFile:HeroSelection.cpp

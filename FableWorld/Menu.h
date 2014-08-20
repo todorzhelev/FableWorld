@@ -1,9 +1,9 @@
 #pragma once
-#include "IBaseScene.h"
-#include "DirectInput.h"
-#include "Misc.h"
+#include "../../../TheCore/TheCore/TheCore/IBaseScene.h"
+#include "../../../TheCore/TheCore/TheCore/DirectInput.h"
+#include "../../../TheCore/TheCore/TheCore/Misc.h"
 #include "Menu.h"
-#include "Label.h"
+#include "../../../TheCore/TheCore/TheCore/Label.h"
 using namespace std;
 
 //this is the menu scene and contains all the thing needed in the menu

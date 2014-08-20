@@ -1,6 +1,6 @@
 #include "Menu.h"
 #include "Game.h"
-#include "TextManager.h"
+#include "../../../TheCore/TheCore/TheCore/TextManager.h"
 
 /*
 SourceFile:Menu.cpp

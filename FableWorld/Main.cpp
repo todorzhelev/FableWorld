@@ -1,4 +1,4 @@
-#include"GameEngine.h"
+#include"../../../TheCore/TheCore/TheCore/GameEngine.h"
 #include"Game.h"
 #include"Menu.h"
 #include"MenuInGame.h"
@@ -15,7 +15,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 
 	fout.open("logs/log.txt");
 
-	pEngine = new GameEngine(hInstance, "Fable World", D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING);
+	pEngine = new GameEngine(hInstance, "Fable World", D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING,true);
 	
 	//adds 3 scenes in the scenesContainer and set the active scene to be the menu scene.
 	Menu menu;

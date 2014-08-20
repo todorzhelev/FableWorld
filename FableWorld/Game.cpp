@@ -58,7 +58,7 @@ Game::Game()
 	float fWidth  = (float)pEngine->GetPresentParameters().BackBufferWidth;
 	float fHeight = (float)pEngine->GetPresentParameters().BackBufferHeight;
 
-	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 2000.0f);
+	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 2000.0f,false);
 	camera->SetCameraMode(ECameraMode_MoveWithPressedMouse);
 
 	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.
@@ -136,7 +136,7 @@ Purpose:initializes the shader for debug graphics
 
 void Game::InitDebugGraphicsShader()
 {
-	D3DXCreateEffectFromFile(pDxDevice, "shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
+	D3DXCreateEffectFromFile(pDxDevice, "../../../TheCore/TheCore/TheCore/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
 	m_hDebugGraphicsTechnique  = m_pDebugGraphicsEffect->GetTechniqueByName("DebugGraphics3DTech");
 	m_hDebugGraphicsWVPMatrix  = m_pDebugGraphicsEffect->GetParameterByName(0, "WVP");
 }

@@ -87,78 +87,84 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="DirectInput.cpp" />
-    <ClCompile Include="GameEngine.cpp" />
-    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Button.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Camera.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\DialogueManager.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\DirectInput.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameEngine.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameObject.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\IBaseMenuObject.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Label.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\LuaFunctions.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Misc.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\SkinnedMesh.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Sky.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\SoundSyst.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\StaticMesh.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Terrain.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Textbox.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\TextManager.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinystr.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxml.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Tree.cpp" />
     <ClCompile Include="HeroSelection.cpp" />
-    <ClCompile Include="IBaseMenuObject.cpp" />
-    <ClCompile Include="LuaFunctions.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Misc.cpp" />
-    <ClCompile Include="Sky.cpp" />
-    <ClCompile Include="SoundSyst.cpp" />
-    <ClCompile Include="StaticMesh.cpp" />
-    <ClCompile Include="Terrain.cpp" />
-    <ClCompile Include="TextManager.cpp" />
-    <ClCompile Include="Button.cpp" />
-    <ClCompile Include="Label.cpp" />
-    <ClCompile Include="Textbox.cpp" />
-    <ClCompile Include="SkinnedMesh.cpp" />
-    <ClCompile Include="tinystr.cpp" />
-    <ClCompile Include="tinyxml.cpp" />
-    <ClCompile Include="tinyxmlerror.cpp" />
-    <ClCompile Include="tinyxmlparser.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MenuInGame.cpp" />
-    <ClCompile Include="DialogueManager.cpp" />
-    <ClCompile Include="Tree.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="DirectInput.h" />
-    <ClInclude Include="GameEngine.h" />
-    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Button.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Camera.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\DialogueManager.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\DirectInput.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameEngine.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameObject.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\IBaseMenuObject.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\IBaseScene.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Label.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\LuaFunctions.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Misc.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\SkinnedMesh.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Sky.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\SoundSyst.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\StaticMesh.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Terrain.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Textbox.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\TextManager.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\tinystr.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\tinyxml.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Tree.h" />
     <ClInclude Include="HeroSelection.h" />
-    <ClInclude Include="IBaseMenuObject.h" />
-    <ClInclude Include="LuaFunctions.h" />
-    <ClInclude Include="Misc.h" />
     <ClInclude Include="IBaseScene.h" />
-    <ClInclude Include="Sky.h" />
-    <ClInclude Include="SoundSyst.h" />
-    <ClInclude Include="StaticMesh.h" />
-    <ClInclude Include="Terrain.h" />
-    <ClInclude Include="TextManager.h" />
-    <ClInclude Include="Button.h" />
-    <ClInclude Include="Label.h" />
-    <ClInclude Include="Textbox.h" />
-    <ClInclude Include="SkinnedMesh.h" />
-    <ClInclude Include="tinystr.h" />
-    <ClInclude Include="tinyxml.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuInGame.h" />
-    <ClInclude Include="DialogueManager.h" />
-    <ClInclude Include="Tree.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="dialogues\dialogue2.xml" />
     <None Include="fonts\28DaysLater.ttf" />
     <None Include="scripts\animatedModels.lua" />
     <None Include="scripts\init.lua" />
     <None Include="scripts\quests.lua" />
     <None Include="scripts\sounds.lua" />
     <None Include="scripts\staticModels.lua" />
-    <None Include="shaders\SkinnedMeshShader.fx" />
-    <None Include="shaders\SkyShader.fx" />
-    <None Include="shaders\StaticMeshShader.fx" />
-    <None Include="shaders\TerrainShader.fx" />
-    <None Include="shaders\Text3DShader.fx" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\DebugGraphicsShader.fx">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TransformVS</EntryPointName>
+    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\SkinnedMeshShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkinnedMeshVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\SkyShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkyVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\StaticMeshShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StaticMeshVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\TerrainShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TerrainVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\Text3DShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
     </FxCompile>
   </ItemGroup>
