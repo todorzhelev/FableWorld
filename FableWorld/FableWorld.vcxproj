@@ -93,6 +93,7 @@
     <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\DirectInput.cpp" />
     <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameEngine.cpp" />
     <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameObject.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameObjectManager.cpp" />
     <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\IBaseMenuObject.cpp" />
     <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Label.cpp" />
     <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\LuaFunctions.cpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\DirectInput.h" />
     <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameEngine.h" />
     <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameObject.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameObjectManager.h" />
     <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\IBaseMenuObject.h" />
     <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\IBaseScene.h" />
     <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Label.h" />

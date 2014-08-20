@@ -15,6 +15,7 @@
 #include "Menu.h"
 #include "MenuInGame.h"
 #include "../../../TheCore/TheCore/TheCore/LuaFunctions.h"
+#include "../../../TheCore/TheCore/TheCore/GameObjectManager.h"
 
 
 using namespace std;

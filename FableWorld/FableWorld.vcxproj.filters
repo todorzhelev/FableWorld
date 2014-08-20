@@ -135,6 +135,9 @@
     <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxmlerror.cpp">
       <Filter>extern\Source Files\TinyXML</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameObjectManager.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -214,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\tinystr.h">
       <Filter>extern\Header Files\TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameObjectManager.h">
+      <Filter>extern\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

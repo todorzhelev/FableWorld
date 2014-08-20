@@ -87,7 +87,7 @@ Game::Game()
 	pDialogueManager->LoadDialogues("dialogues/dialogue.xml");
 
 	//creates 3d titles for the models and check for dialogues
-	for(map<string,GameObject*>::iterator it=pEngine->m_mapGameObjects.begin();it!=pEngine->m_mapGameObjects.end();it++)
+	for(auto it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
 	{
 		if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
 		{
@@ -95,7 +95,7 @@ Game::Game()
 			pTextManager->CreateMeshFor3DText((*it).second);
 			
 			//check if certain skinned mesh has dialog attached to it
-			for(vector<string>::iterator it1 = pDialogueManager->m_vGameObjectsWithDialogues.begin();it1!=pDialogueManager->m_vGameObjectsWithDialogues.end();it1++)
+			for(auto it1 = pDialogueManager->m_vGameObjectsWithDialogues.begin();it1!=pDialogueManager->m_vGameObjectsWithDialogues.end();it1++)
 			{
 				if( (*it).second->m_strModelName == (*it1) )
 				{
@@ -110,7 +110,7 @@ Game::Game()
 	// hides the enemy health bar before we attack enemy.
 	m_bIsEnemyHealthBarVisible = false;
 
-	pMainHero = static_cast<SkinnedMesh*>(pEngine->m_mapGameObjects.find(mainHero)->second);
+	pMainHero = static_cast<SkinnedMesh*>(m_pGameObjManager->GetGameObjects().find(mainHero)->second);
 	
 	m_pHealSpell = new Button;
 
@@ -170,7 +170,7 @@ void Game::OnLostDevice()
 	pTextManager->OnLostDevice();
 	pTerrain->OnLostDevice();
 
-	for(map<string,GameObject*>::iterator it = pEngine->m_mapGameObjects.begin();it!=pEngine->m_mapGameObjects.end();it++)
+	for(auto it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
 	{
 		(*it).second->OnLostDevice();
 	}
@@ -190,7 +190,7 @@ void Game::OnResetDevice()
 	pTextManager->OnResetDevice();
 	pTerrain->OnResetDevice();
 	
-	for(map<string,GameObject*>::iterator it = pEngine->m_mapGameObjects.begin();it!=pEngine->m_mapGameObjects.end();it++)
+	for(auto it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
 	{
 		(*it).second->OnResetDevice();
 	}
@@ -225,7 +225,7 @@ void Game::OnUpdate(float dt)
 	}
 
 	//update all the game objects
-	for(map<string,GameObject*>::iterator it = pEngine->m_mapGameObjects.begin();it!=pEngine->m_mapGameObjects.end();it++)
+	for(auto it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
 	{
 		(*it).second->OnUpdate(dt);
 	}
@@ -262,8 +262,8 @@ void Game::OnUpdate(float dt)
 		for(map<string,QuestObject>::iterator it=m_mapActiveQuests.begin();it!=m_mapActiveQuests.end();it++)
 		{
 			//if mainHero is close to the required from the quest object and the required object is dead the quest is completed.
-			if(IsObjectNear(pMainHero,pEngine->m_mapGameObjects.find((*it).second.requiredObject)->second) && 
-				pEngine->m_mapGameObjects.find((*it).second.requiredObject)->second->m_bIsDead )
+			if(IsObjectNear(pMainHero,m_pGameObjManager->GetGameObjects().find((*it).second.requiredObject)->second) && 
+				m_pGameObjManager->GetGameObjects().find((*it).second.requiredObject)->second->m_bIsDead )
 			{
 				(*it).second.completed = true;
 			}
@@ -271,18 +271,18 @@ void Game::OnUpdate(float dt)
 	}
 	
 	//revealing dialogue if model is picked
-	for(map<string,DialogueObject>::iterator it=pDialogueManager->m_mapModelDialogue.begin();it!=pDialogueManager->m_mapModelDialogue.end();it++)
+	for(auto it=pDialogueManager->m_mapModelDialogue.begin();it!=pDialogueManager->m_mapModelDialogue.end();it++)
 	{
-		if( pEngine->m_mapGameObjects.find((*it).second.m_strModel)->second->m_bIsPicked && !(*it).second.m_bIsEnded )
+		if( m_pGameObjManager->GetGameObjects().find((*it).second.m_strModel)->second->m_bIsPicked && !(*it).second.m_bIsEnded )
 		{
 			(*it).second.m_pTree->GetRoot()->m_pLabel->SetVisible(true);
-			GameObject* pGameObject = pEngine->m_mapGameObjects.find((*it).second.m_strModel)->second;
+			GameObject* pGameObject = m_pGameObjManager->GetGameObjects().find((*it).second.m_strModel)->second;
 			pGameObject->m_bIsPicked = false;
 		}
 	}
 
 	//updating the models's titles positions
-	for(map<string,GameObject*>::iterator it=pEngine->m_mapGameObjects.begin();it!=pEngine->m_mapGameObjects.end();it++)
+	for(auto it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
 	{
 		if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
 		{
@@ -300,7 +300,7 @@ void Game::OnUpdate(float dt)
 
 	//updating the models's title's quest positions. 
 	//At the moment these titles are ? signs above the head of the model if he got dialogue attached.
-	for(map<string,GameObject*>::iterator it=pEngine->m_mapGameObjects.begin();it!=pEngine->m_mapGameObjects.end();it++)
+	for(map<string,GameObject*>::iterator it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
 	{
 		if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
 		{
@@ -315,13 +315,13 @@ void Game::OnUpdate(float dt)
 		}
 	}
 
-	/*for(map<string,GameObject*>::iterator it=pEngine->m_mapGameObjects.begin();it!=pEngine->m_mapGameObjects.end();it++)
+	/*for(map<string,GameObject*>::iterator it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
 	{
 		DrawLine(pMainHero->m_vPos,(*it).second->m_vPos);
 	}*/
 
 	//if mainHero is attacking
-	for(map<string,GameObject*>::iterator it=pEngine->m_mapGameObjects.begin();it!=pEngine->m_mapGameObjects.end();it++)
+	for(map<string,GameObject*>::iterator it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
 	{
 		if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
 		{
@@ -444,7 +444,7 @@ void Game::MoveObject(string objectTitle, float dt)
 	//this vector holds the new direction to move
 	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
 
-	SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(pEngine->m_mapGameObjects.find(objectTitle)->second);
+	SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(m_pGameObjManager->GetGameObjects().find(objectTitle)->second);
 	
 	if( pDinput->IsKeyDown(DIK_W) )
 	{
@@ -502,7 +502,7 @@ Purpose:rotates to model and the camera if the mouse is moved
 */
 void Game::RotateObject(string objectTitle, float dt)
 {
-	SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(pEngine->m_mapGameObjects.find(objectTitle)->second);
+	SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(m_pGameObjManager->GetGameObjects().find(objectTitle)->second);
 	
 	float yAngle = pDinput->GetMouseDX() / (19000*dt);
 	pSkinnedMesh->m_fRotAngleY +=yAngle;
@@ -535,13 +535,13 @@ void Game::ManageHealthBars()
 		
 		//set the animation of the attacked to idle, because sometimes got bugged and plays run animaiton
 		string strEnemy = pMainHero->m_strAttackerName;
-		SkinnedMesh* pEnemy = static_cast<SkinnedMesh*>(pEngine->m_mapGameObjects.find(strEnemy)->second);
+		SkinnedMesh* pEnemy = static_cast<SkinnedMesh*>(m_pGameObjManager->GetGameObjects().find(strEnemy)->second);
 		pEnemy->PlayAnimation("idle");
 	}
 	if( m_rEnemyHealthBarRectangle.right <= 0.0 )
 	{
 		string strEnemy = pMainHero->m_strAttackerName;
-		SkinnedMesh* pEnemy = static_cast<SkinnedMesh*>(pEngine->m_mapGameObjects.find(strEnemy)->second);
+		SkinnedMesh* pEnemy = static_cast<SkinnedMesh*>(m_pGameObjManager->GetGameObjects().find(strEnemy)->second);
 		pEnemy->PlayAnimationOnceAndStop("dead");
 		pEnemy->m_bIsDead = true;
 	}
@@ -563,7 +563,7 @@ void Game::OnRender()
 			pSky->OnRender();
 			pTerrain->OnRender();
 
-			for(map<string,GameObject*>::iterator it = pEngine->m_mapGameObjects.begin();it!=pEngine->m_mapGameObjects.end();it++)
+			for(map<string,GameObject*>::iterator it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
 			{
 				(*it).second->OnRender();
 			}
