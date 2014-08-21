@@ -36,16 +36,10 @@ HeroSelection::HeroSelection()
 
 	float posx = static_cast<float>(pEngine->GetPresentParameters().BackBufferWidth/2);
 	float posy = static_cast<float>(pEngine->GetPresentParameters().BackBufferHeight/2);
+	int width = GetStringWidth("Enter world");
 
-	m_pLabelEnterWorld = new Label;
-	m_pLabelEnterWorld->SetText("Enter World");
+	m_pLabelEnterWorld = new Label(D3DXVECTOR2(posx-width/2,2*posy - 75),"Enter world");
 	m_pLabelEnterWorld->SetVisible(true);
-	m_pLabelEnterWorld->SetHeight(static_cast<int>(GetStringHeight(m_pLabelEnterWorld->GetText())));
-	m_pLabelEnterWorld->SetWidth(static_cast<int>(GetStringWidth(m_pLabelEnterWorld->GetText())));
-	m_pLabelEnterWorld->SetMouseDown(false);
-	m_pLabelEnterWorld->SetMouseOver(false) ;
-	m_pLabelEnterWorld->SetPosition(D3DXVECTOR2(posx-m_pLabelEnterWorld->GetWidth()/2,2*posy - 75));
-
 }
 
 /////////////////////////////////////////////////////////////////////////

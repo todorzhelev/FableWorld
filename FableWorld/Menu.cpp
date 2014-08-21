@@ -28,24 +28,11 @@ Menu::Menu()
 	float posx = static_cast<float>(pEngine->GetPresentParameters().BackBufferWidth/2);
 	float posy = static_cast<float>(pEngine->GetPresentParameters().BackBufferHeight/2);
 
-	m_pLabelStartGame = new Label;
-	m_pLabelStartGame->SetText("Start game");
+	m_pLabelStartGame = new Label(D3DXVECTOR2(posx-40.0f,posy-20.0f),"Start game");
 	m_pLabelStartGame->SetVisible(true);
-	m_pLabelStartGame->SetHeight(static_cast<int>(GetStringHeight(m_pLabelStartGame->GetText())));
-	m_pLabelStartGame->SetWidth(static_cast<int>(GetStringWidth(m_pLabelStartGame->GetText())));
-	m_pLabelStartGame->SetMouseDown(false);
-	m_pLabelStartGame->SetMouseOver(false) ;
-	m_pLabelStartGame->SetPosition(D3DXVECTOR2(posx-40.0f,posy-20.0f));
 
-
-	m_pLabelQuit = new Label;
-	m_pLabelQuit->SetText("Quit");
+	m_pLabelQuit = new Label(D3DXVECTOR2(posx-40.0f,posy+20.0f),"Quit");
 	m_pLabelQuit->SetVisible(true);
-	m_pLabelQuit->SetHeight(static_cast<int>(GetStringHeight(m_pLabelQuit->GetText())));
-	m_pLabelQuit->SetWidth(static_cast<int>(GetStringWidth(m_pLabelQuit->GetText())));
-	m_pLabelQuit->SetMouseDown(false);
-	m_pLabelQuit->SetMouseOver(false);
-	m_pLabelQuit->SetPosition(D3DXVECTOR2(posx-40.0f,posy+20.0f));
 
 	OnResetDevice();
 }

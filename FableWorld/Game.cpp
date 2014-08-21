@@ -112,16 +112,9 @@ Game::Game()
 
 	pMainHero = static_cast<SkinnedMesh*>(m_pGameObjManager->GetGameObjects().find(mainHero)->second);
 	
-	m_pHealSpell = new Button;
-
 	D3DXVECTOR2 spellPosition(0,600);
-	m_pHealSpell->SetIdleStateTextureFileName("../../../Resources/textures/spells/blueTear.dds");
-	m_pHealSpell->SetMouseOverStateTextureFileName("../../../Resources/textures/spells/blueTear.dds");
-	m_pHealSpell->SetPosition(spellPosition);
-	m_pHealSpell->SetHeight(64);
-	m_pHealSpell->SetWidth(64);
 
-	m_pHealSpell->Init();
+	m_pHealSpell = new Button(spellPosition,64,64,"","blueTear.dds","blueTear.dds");
 
 	InitDebugGraphicsShader();
 
@@ -422,12 +415,12 @@ void Game::OnUpdate(float dt)
 		}
 	}
 
-	/*if( pDinput->IsMouseButtonUp(0) && m_pHealSpell->IsClicked() )
+	if( pDinput->IsMouseButtonUp(0) && m_pHealSpell->IsClicked() )
 	{
 		m_rHealthBarRectangle.right += 20;
 	}
 
-	m_pHealSpell->OnUpdate();*/
+	m_pHealSpell->OnUpdate();
 
 	//controls the health bars of the enemy and the mainHero.
 	ManageHealthBars();
@@ -614,7 +607,7 @@ void Game::OnRender()
 
 			m_pInterfaceSprite->End();
 			
-			//m_pHealSpell->OnRender();
+			m_pHealSpell->OnRender();
 
 	pDxDevice->EndScene();
 
