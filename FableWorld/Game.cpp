@@ -66,7 +66,7 @@ Game::Game()
 
 	pSky = new Sky("../../../Resources/textures/grassenvmap1024.dds", 10000.0f);
 
-	pTerrain = new Terrain("../../../Resources/heightmaps/heightmap_full copy.raw",0.85f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	pTerrain = new Terrain("../../../Resources/heightmaps/heightmap_full copy.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
 	//the direction to the sun
 	D3DXVECTOR3 lightVector(20.0f, 300.0f, 50.0f);
 	D3DXVec3Normalize(&lightVector, &lightVector);
