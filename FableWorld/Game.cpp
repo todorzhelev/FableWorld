@@ -77,11 +77,12 @@ Game::Game()
 	pTextManager->CreateFontFor3DText();
 
 	//loads the models, sounds and quests from the scripts
-	luaL_dofile(L, "scripts/animatedModels.lua");
-	luaL_dofile(L, "scripts/staticModels.lua");
+	//luaL_dofile(L, "scripts/animatedModels.lua");
+	//luaL_dofile(L, "scripts/staticModels.lua");
+	luaL_dofile(L, "scripts/level.lua");
 	luaL_dofile(L, "scripts/sounds.lua");
 	luaL_dofile(L, "scripts/quests.lua");
-	luaL_dofile(L, "scripts/init.lua");
+	//luaL_dofile(L, "scripts/init.lua");
 
 	pDialogueManager = new DialogueManager;
 	pDialogueManager->LoadDialogues("dialogues/dialogue.xml");

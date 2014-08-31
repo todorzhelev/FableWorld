@@ -1,3 +1,48 @@
+x = -19.9559
+y = 0.5
+z = 83.0423
+scale = 0.2
+rotX = 0
+rotY = 0
+rotZ = 0
+titleRotY = 0
+modelName = "cho"
+titleForQuest = "?"
+modelFileName = "../../../Resources/models/cho/cho_5anmx.X"
+textureFileName = "../../../Resources/textures/chogath_abyss_TX_CM.DDS"
+typeInGame = "enemy"
+addAnimatedModel();
+
+x = -33.1832
+y = 0.5
+z = -143.746
+scale = 0.1
+rotX = 0
+rotY = 2.3
+rotZ = 0
+titleRotY = 0
+modelName = "ezreal"
+titleForQuest = "?"
+modelFileName = "../../../Resources/models/ezreal/ezreal_5anm.X"
+textureFileName = "../../../Resources/textures/Ezreal_ProdigalExplorer.dds"
+typeInGame = "neutral"
+addAnimatedModel();
+
+x = -170.167
+y = 0.5
+z = -152.522
+scale = 0.07
+rotX = 0
+rotY = 0
+rotZ = 0
+titleRotY = 0
+modelName = "galio"
+titleForQuest = "?"
+modelFileName = "../../../Resources/models/galio/galio_5anmx.X"
+textureFileName = "../../../Resources/textures/galio_base_TX_CM.dds"
+typeInGame = "mainHero"
+addAnimatedModel();
+
 x = 195.585
 y = 0
 z = 75.4184
@@ -134,7 +179,7 @@ modelFileName = "../../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
 x = -50.8663
-y = 0.233353
+y = 0.3967
 z = -62.3996
 scale = 0.430003
 rotX = 0
@@ -178,123 +223,6 @@ modelName = "tree4"
 modelFileName = "../../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
-x = 54.1656
-y = 0
-z = 60.6748
-scale = 0.590003
-rotX = 0
-rotY = 0
-rotZ = 0
-titleRotY = 0
-bindable = 0
-bindToAnModel = ""
-bindToAnModelBone = ""
-modelName = "tree5"
-modelFileName = "../../../Resources/models/trees/tree3/tree3.X"
-addStaticModel();
-
-x = -92.798
-y = 0
-z = 56.0656
-scale = 0.590003
-rotX = 0
-rotY = 0
-rotZ = 0
-titleRotY = 0
-bindable = 0
-bindToAnModel = ""
-bindToAnModelBone = ""
-modelName = "tree6"
-modelFileName = "../../../Resources/models/trees/tree3/tree3.X"
-addStaticModel();
-
-x = -13.4302
-y = 0
-z = -173.035
-scale = 0.720003
-rotX = 0
-rotY = 0
-rotZ = 0
-titleRotY = 0
-bindable = 0
-bindToAnModel = ""
-bindToAnModelBone = ""
-modelName = "tree7"
-modelFileName = "../../../Resources/models/trees/tree2/tree2.X"
-addStaticModel();
-
-x = -67.1726
-y = 0
-z = -176.188
-scale = 0.470003
-rotX = 0
-rotY = 0
-rotZ = 0
-titleRotY = 0
-bindable = 0
-bindToAnModel = ""
-bindToAnModelBone = ""
-modelName = "tree8"
-modelFileName = "../../../Resources/models/trees/tree3/tree3.X"
-addStaticModel();
-
-x = -111.134
-y = 36.3064
-z = -100.521
-scale = 0.460003
-rotX = 0
-rotY = 2.3
-rotZ = 6.1
-titleRotY = 0
-bindable = 0
-bindToAnModel = ""
-bindToAnModelBone = ""
-modelName = "tree9"
-modelFileName = "../../../Resources/models/trees/tree3/tree3.X"
-addStaticModel();
-
-x = 46.8694
-y = 91.8546
-z = 21.0917
-scale = 3.2
-rotX = -0.2
-rotY = 6.3
-rotZ = 7.89999
-titleRotY = 0
-bindable = 1
-bindToAnModel = "ezreal"
-bindToAnModelBone = "right_hand"
-modelName = "yellow_axe"
-modelFileName = "../../../Resources/models/weapons/black_axe/axe_yellow.X"
-addStaticModel();
-
-x = -20.0
-y = 300.0
-z = 50.0
-scale = 50.0
-rotX = 0.0
-rotY = 0.0
-rotZ = 0.0
-titleRotY = 0
-bindable = 0
-bindToAnModel = ""
-bindToAnModelBone = ""
-modelName = "sun_for_terrain"
-modelFileName = "../../../Resources/models/head/paladin_head/pal_head.X"
-addStaticModel();
-
-x = 1.0
-y = 10.0
-z = 100.0
-scale = 50.0
-rotX = 0.0
-rotY = 0.0
-rotZ = 0.0
-titleRotY = 0
-bindable = 0
-bindToAnModel = ""
-bindToAnModelBone = ""
-modelName = "sun_for_models"
-modelFileName = "../../../Resources/models/head/paladin_head/pal_head.X"
-addStaticModel();
+mainHero = "galio"
+setUpMainHero();
 
