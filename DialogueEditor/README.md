@@ -1,4 +1,4 @@
-TheCore
+DialogueEditor
 ==========
 
-TheCore is engine for creating 3D games<br />
+With the dialogue editor dialogues can be created or edited, which can later be used in the Fable world game<br />
