@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>FableWorld_levelEditor</ProjectName>
+    <ProjectGuid>{1B841516-2E1E-46B8-AF1D-7235D31B7598}</ProjectGuid>
+    <RootNamespace>diplomna</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Projects\lua-5.1.4\lua-5.1.4\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <SourcePath>C:\Projects\lua-5.1.4\lua-5.1.4\src;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Projects\lua-5.1.4\lua-5.1.4\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;$(LibraryPath)</LibraryPath>
+    <SourcePath>C:\Projects\lua-5.1.4\lua-5.1.4\src;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>lua5.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Button.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Camera.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Checkbox.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\DialogueManager.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\DirectInput.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameEngine.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameObject.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameObjectManager.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\IBaseMenuObject.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Label.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\LuaFunctions.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Misc.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\SkinnedMesh.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Sky.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\SoundSyst.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\StaticMesh.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Terrain.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Textbox.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\TextManager.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinystr.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxml.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Tree.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MenuInGame.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Button.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Camera.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Checkbox.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\DialogueManager.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\DirectInput.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameEngine.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameObject.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameObjectManager.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\IBaseMenuObject.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\IBaseScene.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Label.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\LuaFunctions.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Misc.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\SkinnedMesh.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Sky.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\SoundSyst.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\StaticMesh.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Terrain.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Textbox.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\TextManager.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\tinystr.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\tinyxml.h" />
+    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Tree.h" />
+    <ClInclude Include="IBaseScene.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="MenuInGame.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fonts\28DaysLater.ttf" />
+    <None Include="scripts\animatedModels.lua" />
+    <None Include="scripts\init.lua" />
+    <None Include="scripts\quests.lua" />
+    <None Include="scripts\sounds.lua" />
+    <None Include="scripts\staticModels.lua" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\DebugGraphicsShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\SkinnedMeshShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkinnedMeshVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\SkyShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkyVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\StaticMeshShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StaticMeshVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\TerrainShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TerrainVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\Text3DShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
+    </FxCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
