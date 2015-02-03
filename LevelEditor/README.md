@@ -1,4 +1,4 @@
-TheCore
+LevelEditor
 ==========
 
-TheCore is engine for creating 3D games<br />
+LevelEditor is used for creating and editing levels for the Fable world game <br />
