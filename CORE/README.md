@@ -1,4 +1,4 @@
-TheCore
+CORE
 ==========
 
-TheCore is engine for creating 3D games<br />
+CORE is engine for creating 3D games<br />
