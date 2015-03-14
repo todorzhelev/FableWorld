@@ -1,6 +1,6 @@
 #include "HeroSelection.h"
 #include "Game.h"
-#include "../../../TheCore/TheCore/TheCore/TextManager.h"
+#include "../../CORE/CORE/TextManager.h"
 
 /*
 SourceFile:HeroSelection.cpp
@@ -17,9 +17,9 @@ HeroSelection::HeroSelection()
 {
 	camera->GetPosition() = D3DXVECTOR3(-2,31,-160);
 
-	GameObject* pMesh = new SkinnedMesh("pesho","../../../Resources/models/ezreal/ezreal_5anm.x","../../../Resources/textures/Ezreal_ProdigalExplorer.dds",false);
+	GameObject* pMesh = new SkinnedMesh("pesho","../../Resources/models/ezreal/ezreal_5anm.x","../../Resources/textures/Ezreal_ProdigalExplorer.dds",false);
 
-	GameObject* pLand = new StaticMesh("land","../../../Resources/models/land.x","../../../Resources/textures/grass-texture-02.dds");
+	GameObject* pLand = new StaticMesh("land","../../Resources/models/land.x","../../Resources/textures/grass-texture-02.dds");
 
 	pMesh->LoadGameObject();
 	pLand->LoadGameObject();

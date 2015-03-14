@@ -1,4 +1,4 @@
-#include"../../../TheCore/TheCore/TheCore/GameEngine.h"
+#include"../../CORE/CORE/GameEngine.h"
 #include"Game.h"
 #include"Menu.h"
 #include"MenuInGame.h"

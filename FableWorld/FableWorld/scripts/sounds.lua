@@ -4,7 +4,7 @@ add2DSound();
 
 --]]
 
-soundFileName = "../../../Resources/sounds/stern.mp3"
+soundFileName = "../../Resources/sounds/stern.mp3"
 soundVolume = 0.38
 x = -170.167
 y = 0.5

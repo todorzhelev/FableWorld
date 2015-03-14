@@ -69,73 +69,76 @@
     <ClCompile Include="HeroSelection.cpp">
       <Filter>Source Files\scenes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Camera.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\DialogueManager.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\DirectInput.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameEngine.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameObject.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\LuaFunctions.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Misc.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\SkinnedMesh.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Sky.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\SoundSyst.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\StaticMesh.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Terrain.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\TextManager.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Tree.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Button.cpp">
-      <Filter>extern\Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\IBaseMenuObject.cpp">
-      <Filter>extern\Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Label.cpp">
-      <Filter>extern\Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Textbox.cpp">
-      <Filter>extern\Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxmlparser.cpp">
+    <ClCompile Include="..\..\CORE\CORE\tinyxmlparser.cpp">
       <Filter>extern\Source Files\TinyXML</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinystr.cpp">
+    <ClCompile Include="..\..\CORE\CORE\tinystr.cpp">
       <Filter>extern\Source Files\TinyXML</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxml.cpp">
+    <ClCompile Include="..\..\CORE\CORE\tinyxml.cpp">
       <Filter>extern\Source Files\TinyXML</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxmlerror.cpp">
+    <ClCompile Include="..\..\CORE\CORE\tinyxmlerror.cpp">
       <Filter>extern\Source Files\TinyXML</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameObjectManager.cpp">
+    <ClCompile Include="..\..\CORE\CORE\IBaseMenuObject.cpp">
+      <Filter>extern\Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\Label.cpp">
+      <Filter>extern\Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\Textbox.cpp">
+      <Filter>extern\Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\Button.cpp">
+      <Filter>extern\Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\LuaFunctions.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\Misc.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\SkinnedMesh.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\Sky.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\SoundSyst.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\StaticMesh.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\Terrain.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\TextManager.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\Tree.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\Camera.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\DialogueManager.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\DirectInput.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\GameEngine.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\Checkbox.cpp">
+      <Filter>extern\Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\GameObject.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\GameObjectManager.cpp">
       <Filter>extern\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -149,87 +152,84 @@
     <ClInclude Include="MenuInGame.h">
       <Filter>Header Files\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="IBaseScene.h">
-      <Filter>Header Files\scenes</Filter>
-    </ClInclude>
     <ClInclude Include="HeroSelection.h">
       <Filter>Header Files\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Camera.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\DialogueManager.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\DirectInput.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameEngine.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameObject.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\IBaseScene.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\LuaFunctions.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Misc.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\SkinnedMesh.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Sky.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\SoundSyst.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\StaticMesh.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Terrain.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\TextManager.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Tree.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Button.h">
+    <ClInclude Include="..\..\CORE\CORE\Button.h">
       <Filter>extern\Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\IBaseMenuObject.h">
+    <ClInclude Include="..\..\CORE\CORE\IBaseMenuObject.h">
       <Filter>extern\Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Label.h">
+    <ClInclude Include="..\..\CORE\CORE\Label.h">
       <Filter>extern\Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Textbox.h">
+    <ClInclude Include="..\..\CORE\CORE\Textbox.h">
       <Filter>extern\Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\tinyxml.h">
+    <ClInclude Include="..\..\CORE\CORE\Checkbox.h">
+      <Filter>extern\Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\Tree.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\Camera.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\DialogueManager.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\DirectInput.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\GameEngine.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\GameObject.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\GameObjectManager.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\IBaseScene.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\LuaFunctions.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\Misc.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\SkinnedMesh.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\Sky.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\SoundSyst.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\StaticMesh.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\Terrain.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\TextManager.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\tinystr.h">
       <Filter>extern\Header Files\TinyXML</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\tinystr.h">
+    <ClInclude Include="..\..\CORE\CORE\tinyxml.h">
       <Filter>extern\Header Files\TinyXML</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameObjectManager.h">
-      <Filter>extern\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fonts\28DaysLater.ttf">
       <Filter>fonts</Filter>
     </None>
-    <None Include="scripts\animatedModels.lua">
-      <Filter>scripts</Filter>
-    </None>
-    <None Include="scripts\init.lua">
+    <None Include="scripts\level.lua">
       <Filter>scripts</Filter>
     </None>
     <None Include="scripts\quests.lua">
@@ -238,24 +238,24 @@
     <None Include="scripts\sounds.lua">
       <Filter>scripts</Filter>
     </None>
-    <None Include="scripts\staticModels.lua">
-      <Filter>scripts</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\SkinnedMeshShader.fx">
+    <FxCompile Include="..\..\CORE\CORE\shaders\DebugGraphicsShader.fx">
       <Filter>extern\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\SkyShader.fx">
+    <FxCompile Include="..\..\CORE\CORE\shaders\SkinnedMeshShader.fx">
       <Filter>extern\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\StaticMeshShader.fx">
+    <FxCompile Include="..\..\CORE\CORE\shaders\SkyShader.fx">
       <Filter>extern\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\TerrainShader.fx">
+    <FxCompile Include="..\..\CORE\CORE\shaders\StaticMeshShader.fx">
       <Filter>extern\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\Text3DShader.fx">
+    <FxCompile Include="..\..\CORE\CORE\shaders\TerrainShader.fx">
+      <Filter>extern\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\CORE\CORE\shaders\Text3DShader.fx">
       <Filter>extern\shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -25,9 +25,9 @@ Game::Game()
 	//sprite for the interface in the game
 	D3DXCreateSprite(pDxDevice,&m_pInterfaceSprite);
 	//textures for the interface
-	D3DXCreateTextureFromFile(pDxDevice,"../../../Resources/textures/healthbar.dds",&m_pHealthBarTexture);
-	D3DXCreateTextureFromFile(pDxDevice,"../../../Resources/textures/healthbar_filled.dds",&m_pHealthBarFilledTexture);
-	D3DXCreateTextureFromFile(pDxDevice,"../../../Resources/textures/healthbar_filled_enemy.dds",&m_phealthBarFilledEnemyTexture);
+	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/healthbar.dds",&m_pHealthBarTexture);
+	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/healthbar_filled.dds",&m_pHealthBarFilledTexture);
+	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/healthbar_filled_enemy.dds",&m_phealthBarFilledEnemyTexture);
 	m_rHealthBarRectangle.left = 0;  
 	m_rHealthBarRectangle.top = 0;  
 	m_rHealthBarRectangle.right  = 270;  
@@ -64,9 +64,9 @@ Game::Game()
 	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.
 	InitVertexDeclarations();
 
-	pSky = new Sky("../../../Resources/textures/grassenvmap1024.dds", 10000.0f);
+	pSky = new Sky("../../Resources/textures/grassenvmap1024.dds", 10000.0f);
 
-	pTerrain = new Terrain("../../../Resources/heightmaps/heightmap_full copy.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	pTerrain = new Terrain("../../Resources/heightmaps/heightmap_full copy.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
 	//the direction to the sun
 	D3DXVECTOR3 lightVector(20.0f, 300.0f, 50.0f);
 	D3DXVec3Normalize(&lightVector, &lightVector);
@@ -130,7 +130,7 @@ Purpose:initializes the shader for debug graphics
 
 void Game::InitDebugGraphicsShader()
 {
-	D3DXCreateEffectFromFile(pDxDevice, "../../../TheCore/TheCore/TheCore/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
+	D3DXCreateEffectFromFile(pDxDevice, "../../CORE/CORE/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
 	m_hDebugGraphicsTechnique  = m_pDebugGraphicsEffect->GetTechniqueByName("DebugGraphics3DTech");
 	m_hDebugGraphicsWVPMatrix  = m_pDebugGraphicsEffect->GetParameterByName(0, "WVP");
 }

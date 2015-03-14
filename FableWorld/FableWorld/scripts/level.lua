@@ -8,8 +8,8 @@ rotZ = 0
 titleRotY = 0
 modelName = "cho"
 titleForQuest = "?"
-modelFileName = "../../../Resources/models/cho/cho_5anmx.X"
-textureFileName = "../../../Resources/textures/chogath_abyss_TX_CM.DDS"
+modelFileName = "../../Resources/models/cho/cho_5anmx.X"
+textureFileName = "../../Resources/textures/chogath_abyss_TX_CM.DDS"
 typeInGame = "enemy"
 addAnimatedModel();
 
@@ -23,8 +23,8 @@ rotZ = 0
 titleRotY = 0
 modelName = "ezreal"
 titleForQuest = "?"
-modelFileName = "../../../Resources/models/ezreal/ezreal_5anm.X"
-textureFileName = "../../../Resources/textures/Ezreal_ProdigalExplorer.dds"
+modelFileName = "../../Resources/models/ezreal/ezreal_5anm.X"
+textureFileName = "../../Resources/textures/Ezreal_ProdigalExplorer.dds"
 typeInGame = "neutral"
 addAnimatedModel();
 
@@ -38,8 +38,8 @@ rotZ = 0
 titleRotY = 0
 modelName = "galio"
 titleForQuest = "?"
-modelFileName = "../../../Resources/models/galio/galio_5anmx.X"
-textureFileName = "../../../Resources/textures/galio_base_TX_CM.dds"
+modelFileName = "../../Resources/models/galio/galio_5anmx.X"
+textureFileName = "../../Resources/textures/galio_base_TX_CM.dds"
 typeInGame = "mainHero"
 addAnimatedModel();
 
@@ -55,7 +55,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "building1"
-modelFileName = "../../../Resources/models/buildings/building1/building.X"
+modelFileName = "../../Resources/models/buildings/building1/building.X"
 addStaticModel();
 
 x = -199.646
@@ -70,7 +70,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "building2"
-modelFileName = "../../../Resources/models/buildings/building1/building.X"
+modelFileName = "../../Resources/models/buildings/building1/building.X"
 addStaticModel();
 
 x = -111.063
@@ -85,7 +85,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "building3"
-modelFileName = "../../../Resources/models/buildings/building1/building.X"
+modelFileName = "../../Resources/models/buildings/building1/building.X"
 addStaticModel();
 
 x = 61.5676
@@ -100,7 +100,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "building4"
-modelFileName = "../../../Resources/models/buildings/building1/building.X"
+modelFileName = "../../Resources/models/buildings/building1/building.X"
 addStaticModel();
 
 x = -10.2376
@@ -115,7 +115,7 @@ bindable = 1
 bindToAnModel = "ezreal"
 bindToAnModelBone = "head"
 modelName = "ezr_head"
-modelFileName = "../../../Resources/models/head/paladin_head/pal_head.X"
+modelFileName = "../../Resources/models/head/paladin_head/pal_head.X"
 addStaticModel();
 
 x = 4.79345
@@ -130,7 +130,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "ezreal_house"
-modelFileName = "../../../Resources/models/buildings/house1/house1.X"
+modelFileName = "../../Resources/models/buildings/house1/house1.X"
 addStaticModel();
 
 x = -9.04183
@@ -145,7 +145,7 @@ bindable = 1
 bindToAnModel = "galio"
 bindToAnModelBone = "Bone18"
 modelName = "gal_head"
-modelFileName = "../../../Resources/models/head/warrior_brown/warrior_head.X"
+modelFileName = "../../Resources/models/head/warrior_brown/warrior_head.X"
 addStaticModel();
 
 x = 86.7488
@@ -160,7 +160,7 @@ bindable = 1
 bindToAnModel = "galio"
 bindToAnModelBone = "right_hand"
 modelName = "sword_hyjal"
-modelFileName = "../../../Resources/models/weapons/hyjal_sword/sword_hyjal_big.X"
+modelFileName = "../../Resources/models/weapons/hyjal_sword/sword_hyjal_big.X"
 addStaticModel();
 
 x = 10.5708
@@ -175,7 +175,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree1"
-modelFileName = "../../../Resources/models/trees/tree1/tree.X"
+modelFileName = "../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
 x = -50.8663
@@ -190,7 +190,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree2"
-modelFileName = "../../../Resources/models/trees/tree1/tree.X"
+modelFileName = "../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
 x = 14.952
@@ -205,7 +205,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree3"
-modelFileName = "../../../Resources/models/trees/tree1/tree.X"
+modelFileName = "../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
 x = -51.4922
@@ -220,7 +220,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree4"
-modelFileName = "../../../Resources/models/trees/tree1/tree.X"
+modelFileName = "../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
 mainHero = "galio"
