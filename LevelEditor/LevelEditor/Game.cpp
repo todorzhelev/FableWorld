@@ -36,10 +36,10 @@ Game::Game()
 
 
 	//init sky
-	sky = new Sky("../../../Resources/textures/grassenvmap1024.dds", 10000.0f);
+	sky = new Sky("../../Resources/textures/grassenvmap1024.dds", 10000.0f);
 
 	//init terrain
-	pTerrain = new Terrain("../../../Resources/heightmaps/heightmap_full copy.raw",0.85f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));;
+	pTerrain = new Terrain("../../Resources/heightmaps/heightmap_full copy.raw",0.85f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));;
 	D3DXVECTOR3 toSun(-20.0f, 300.0f, 50.0f);
 	D3DXVec3Normalize(&toSun, &toSun);
 	pTerrain->SetLightVector(toSun);
@@ -1023,7 +1023,7 @@ void Game::ImportStaticModel()
 		}
 
 		string strModelName = GetModelNameFromFilePath(relativeModelFile);
-		relativeModelFile  = "../../../Resources/"+relativeModelFile;
+		relativeModelFile  = "../../Resources/"+relativeModelFile;
 
 		GameObject* obj = new StaticMesh(strModelName,relativeModelFile,"");
 
@@ -1093,7 +1093,7 @@ void Game::LoadAnimatedModel()
 		}
 
 		string strModelName = GetModelNameFromFilePath(relativeModelFile);
-		relativeModelFile  = "../../../Resources/"+relativeModelFile;
+		relativeModelFile  = "../../Resources/"+relativeModelFile;
 
 		GameObject* obj = new SkinnedMesh(strModelName,relativeModelFile,"");
 

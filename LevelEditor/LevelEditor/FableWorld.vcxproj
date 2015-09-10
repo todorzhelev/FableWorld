@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -20,12 +20,12 @@
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -49,16 +49,16 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Projects\lua-5.1.4\lua-5.1.4\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Repositories\lua-5.1.4\lua-5.1.4\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <SourcePath>C:\Projects\lua-5.1.4\lua-5.1.4\src;$(SourcePath)</SourcePath>
+    <SourcePath>C:\Repositories\lua-5.1.4\lua-5.1.4\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Projects\lua-5.1.4\lua-5.1.4\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Repositories\lua-5.1.4\lua-5.1.4\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;$(LibraryPath)</LibraryPath>
-    <SourcePath>C:\Projects\lua-5.1.4\lua-5.1.4\src;$(SourcePath)</SourcePath>
+    <SourcePath>C:\Repositories\lua-5.1.4\lua-5.1.4\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -92,59 +92,59 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Button.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Camera.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Checkbox.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\DialogueManager.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\DirectInput.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameEngine.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameObject.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\GameObjectManager.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\IBaseMenuObject.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Label.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\LuaFunctions.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Misc.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\SkinnedMesh.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Sky.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\SoundSyst.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\StaticMesh.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Terrain.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Textbox.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\TextManager.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinystr.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxml.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxmlerror.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\tinyxmlparser.cpp" />
-    <ClCompile Include="..\..\..\TheCore\TheCore\TheCore\Tree.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Button.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Camera.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Checkbox.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\DialogueManager.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\DirectInput.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\GameEngine.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\GameObject.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\GameObjectManager.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\IBaseMenuObject.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Label.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\LuaFunctions.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Misc.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\SkinnedMesh.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Sky.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\SoundSyst.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\StaticMesh.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Terrain.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Textbox.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\TextManager.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\tinystr.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\tinyxml.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Tree.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MenuInGame.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Button.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Camera.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Checkbox.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\DialogueManager.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\DirectInput.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameEngine.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameObject.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\GameObjectManager.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\IBaseMenuObject.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\IBaseScene.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Label.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\LuaFunctions.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Misc.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\SkinnedMesh.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Sky.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\SoundSyst.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\StaticMesh.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Terrain.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Textbox.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\TextManager.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\tinystr.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\tinyxml.h" />
-    <ClInclude Include="..\..\..\TheCore\TheCore\TheCore\Tree.h" />
+    <ClInclude Include="..\..\CORE\CORE\Button.h" />
+    <ClInclude Include="..\..\CORE\CORE\Camera.h" />
+    <ClInclude Include="..\..\CORE\CORE\Checkbox.h" />
+    <ClInclude Include="..\..\CORE\CORE\DialogueManager.h" />
+    <ClInclude Include="..\..\CORE\CORE\DirectInput.h" />
+    <ClInclude Include="..\..\CORE\CORE\GameEngine.h" />
+    <ClInclude Include="..\..\CORE\CORE\GameObject.h" />
+    <ClInclude Include="..\..\CORE\CORE\GameObjectManager.h" />
+    <ClInclude Include="..\..\CORE\CORE\IBaseMenuObject.h" />
+    <ClInclude Include="..\..\CORE\CORE\IBaseScene.h" />
+    <ClInclude Include="..\..\CORE\CORE\Label.h" />
+    <ClInclude Include="..\..\CORE\CORE\LuaFunctions.h" />
+    <ClInclude Include="..\..\CORE\CORE\Misc.h" />
+    <ClInclude Include="..\..\CORE\CORE\SkinnedMesh.h" />
+    <ClInclude Include="..\..\CORE\CORE\Sky.h" />
+    <ClInclude Include="..\..\CORE\CORE\SoundSyst.h" />
+    <ClInclude Include="..\..\CORE\CORE\StaticMesh.h" />
+    <ClInclude Include="..\..\CORE\CORE\Terrain.h" />
+    <ClInclude Include="..\..\CORE\CORE\Textbox.h" />
+    <ClInclude Include="..\..\CORE\CORE\TextManager.h" />
+    <ClInclude Include="..\..\CORE\CORE\tinystr.h" />
+    <ClInclude Include="..\..\CORE\CORE\tinyxml.h" />
+    <ClInclude Include="..\..\CORE\CORE\Tree.h" />
     <ClInclude Include="IBaseScene.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Menu.h" />
@@ -159,23 +159,33 @@
     <None Include="scripts\staticModels.lua" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\DebugGraphicsShader.fx">
+    <FxCompile Include="..\..\CORE\CORE\shaders\DebugGraphicsShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
+      <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </DisableOptimizations>
+      <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EnableDebuggingInformation>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TransformVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\SkinnedMeshShader.fx">
+    <FxCompile Include="..\..\CORE\CORE\shaders\SkinnedMeshShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkinnedMeshVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SkinnedMeshVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\SkyShader.fx">
+    <FxCompile Include="..\..\CORE\CORE\shaders\SkyShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkyVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SkyVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\StaticMeshShader.fx">
+    <FxCompile Include="..\..\CORE\CORE\shaders\StaticMeshShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StaticMeshVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">StaticMeshVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\TerrainShader.fx">
+    <FxCompile Include="..\..\CORE\CORE\shaders\TerrainShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TerrainVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TerrainVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\..\TheCore\TheCore\TheCore\shaders\Text3DShader.fx">
+    <FxCompile Include="..\..\CORE\CORE\shaders\Text3DShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TransformVS</EntryPointName>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

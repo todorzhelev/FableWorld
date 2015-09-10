@@ -2,7 +2,7 @@
 #include"GameEngine.h"
 using namespace std;
 
-#define release(x) { if( x ){ (x)->Release();(x) = NULL; } }
+#define releaseX(x) { if( x ){ (x)->Release();(x) = nullptr; } }
 
 /////////////////////////////////////////////////////////////////
 

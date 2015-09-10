@@ -199,7 +199,7 @@ void Terrain::GenerateTerrainMesh()
 
 	
 
-	release(mesh); 
+	releaseX(mesh);
 }
 
 

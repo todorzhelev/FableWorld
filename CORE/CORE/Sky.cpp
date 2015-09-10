@@ -29,9 +29,9 @@ Purpose:destructor
 */
 Sky::~Sky()
 {
-	release(m_pSkyMesh);
-	release(m_pSkyTexture);
-	release(m_pEffect);
+	releaseX(m_pSkyMesh);
+	releaseX(m_pSkyTexture);
+	releaseX(m_pEffect);
 }
 
 

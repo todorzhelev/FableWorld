@@ -224,6 +224,8 @@ void Game::OnUpdate(float dt)
 		(*it).second->OnUpdate(dt);
 	}
 
+	m_pGameObjManager->OnUpdate();
+
 	soundsyst->OnUpdate();
 	pTextManager->OnUpdate(dt);
 	camera->OnUpdate(dt);

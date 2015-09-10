@@ -60,8 +60,8 @@ Purpose:destructor
 */
 GameEngine::~GameEngine()
 {
-	release(m_pD3DObject);
-	release(pDxDevice);
+	releaseX(m_pD3DObject);
+	releaseX(pDxDevice);
 }
 
 
@@ -146,7 +146,8 @@ void GameEngine::InitMainWindow()
 	int width  = GetSystemMetrics(SM_CXSCREEN);
 	int height = GetSystemMetrics(SM_CYSCREEN);
 
-	RECT R = {0, 0, 1280,768 };
+	//RECT R = {0, 0, 1280,768 };
+	RECT R = { 0, 0, 1440, 900 };
 
 	//WS_OVERLAPPEDWINDOW is a style which gives the window title bar, window menu,sizing border,minimize and maximize buttons. 
 	AdjustWindowRect(&R, WS_OVERLAPPEDWINDOW, false);
@@ -272,8 +273,11 @@ int GameEngine::MainLoop()
 				//convert the counts into seconds
 				float dt = (currTimeStamp - prevTimeStamp)*secsPerCnt;
 
+				if (m_pCurrentScene != nullptr)
+				{
 					m_pCurrentScene->OnUpdate(dt);
 					m_pCurrentScene->OnRender();
+				}
 
 				prevTimeStamp = currTimeStamp;
 			}

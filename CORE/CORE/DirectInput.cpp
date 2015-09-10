@@ -41,11 +41,11 @@ Purpose:destructor
 */
 DirectInput::~DirectInput()
 {
-	release(m_pDirectInput);
+	releaseX(m_pDirectInput);
 	m_pKeyboad->Unacquire();
-	release(m_pKeyboad);
+	releaseX(m_pKeyboad);
 	m_pMouse->Unacquire();
-	release(m_pMouse);
+	releaseX(m_pMouse);
 }
 
 

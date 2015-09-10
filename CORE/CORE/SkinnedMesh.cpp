@@ -911,8 +911,8 @@ HRESULT AllocateHierarchy::DestroyMeshContainer(D3DXMESHCONTAINER* MeshContainer
 
 	delete[] MeshContainer->pMaterials;
 
-	release(MeshContainer->MeshData.pMesh);
-	release(MeshContainer->pSkinInfo);
+	releaseX(MeshContainer->MeshData.pMesh);
+	releaseX(MeshContainer->pSkinInfo);
  
 	delete MeshContainer;
  

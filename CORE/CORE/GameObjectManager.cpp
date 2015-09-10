@@ -48,7 +48,7 @@ void GameObjectManager::OnUpdate()
 	{
 		if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
 		{	
-			//if( pDinput->IsMouseButtonDown(0) )
+			if( pDinput->IsMouseButtonDown(0) )
 			{
 				D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 				D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
@@ -63,6 +63,8 @@ void GameObjectManager::OnUpdate()
 					D3DXFRAME* pFrame = pMesh->FindFrameWithMesh(it->second->m_pRoot);
 
 					float nDistance = 0.0f;
+
+					//m_mapPickedObjects[nDistance] = it->second;
 
 					if( IsPickedSkinnedObject(pFrame,it->second->m_CombinedTransformationMatrix,vOrigin,vDir,nDistance) )
 					{
@@ -133,7 +135,7 @@ bool GameObjectManager::IsPickedStaticObject(GameObject* pObj, float& nDistance)
 		ID3DXBuffer* allhits = 0;
 		DWORD numHits = 0;
 		D3DXIntersect(pObj->m_pMesh, &vOrigin, &vDir, &hit,&faceIndex, &u, &v, &dist, &allhits, &numHits);
-		release(allhits);
+		releaseX(allhits);
 
 		nDistance = dist;
 		return hit;
@@ -169,7 +171,7 @@ bool GameObjectManager::IsPickedSkinnedObject(D3DXFRAME* pFrame,D3DXMATRIX combi
 		DWORD numHits = 0;
 	
 		D3DXIntersect(pMeshContainer->MeshData.pMesh, &vOrigin, &vDir, &hit,&faceIndex, &u, &v, &dist, &allhits, &numHits);
-		release(allhits);
+		releaseX(allhits);
 
 		nDistance = dist;
 
