@@ -54,9 +54,9 @@ void GameObjectManager::OnUpdate()
 				D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
 
 				GetWorldPickingRay(vOrigin, vDir);
-				AABB box;
-				it->second->m_BoundingBox.transformByMatrix(it->second->m_CombinedTransformationMatrix, box);
-				if( D3DXBoxBoundProbe(&box.minPt, &box.maxPt, &vOrigin, &vDir) )
+				
+				AABB box = it->second->m_BoundingBox.TransformByMatrix(it->second->m_CombinedTransformationMatrix);
+				if( D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir) )
 				{
 					SkinnedMesh* pMesh = static_cast<SkinnedMesh*>(it->second);
 
@@ -109,11 +109,10 @@ bool GameObjectManager::IsPickedStaticObject(GameObject* pObj, float& nDistance)
 
 	GetWorldPickingRay(vOrigin, vDir);
 
-	AABB box;
 	bool bIsPicked = false;
 
-	pObj->m_BoundingBox.transformByMatrix(pObj->m_CombinedTransformationMatrix, box);
-	bIsPicked = D3DXBoxBoundProbe(&box.minPt, &box.maxPt, &vOrigin, &vDir);
+	AABB box = pObj->m_BoundingBox.TransformByMatrix(pObj->m_CombinedTransformationMatrix);
+	bIsPicked = D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir);
 
 	if( bIsPicked )
 	{

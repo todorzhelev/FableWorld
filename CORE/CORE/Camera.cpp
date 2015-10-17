@@ -166,7 +166,7 @@ void Camera::OnUpdate(float dt)
 Function:isVisible()
 Purpose:tests if certain bounding box is visible by the camera
 */
-bool Camera::IsBoundingBoxVisible(const AABB& box) const
+bool Camera::IsBoundingBoxVisible(AABB& box) const
 {
 	D3DXVECTOR3 Q;
 	for(int i = 0; i < 6; ++i)
@@ -176,11 +176,11 @@ bool Camera::IsBoundingBoxVisible(const AABB& box) const
 		{
 			if( m_FrustumPlanes[i][j] >= 0.0f )
 			{
-				Q[j] = box.maxPt[j];
+				Q[j] = box.GetMaxPoint()[j];
 			}
 			else 
 			{
-				Q[j] = box.minPt[j];
+				Q[j] = box.GetMinPoint()[j];
 			}
 		}
 		//computes the dot product between the current plane and the point that it is assumed to be in the positive half-space of the plane

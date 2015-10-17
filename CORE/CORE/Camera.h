@@ -2,6 +2,7 @@
 #include "DirectInput.h"
 #include "Terrain.h"
 #include "Misc.h"
+#include "AABB.h"
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +41,7 @@ public:
 
 	void			OnUpdate(float dt);
 
-	bool			IsBoundingBoxVisible(const AABB& box)const;
+	bool			IsBoundingBoxVisible(AABB& box)const;
 
 	void			SetCameraMode(ECameraMode eCameraMode);
 

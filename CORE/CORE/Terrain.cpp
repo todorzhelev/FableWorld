@@ -399,7 +399,7 @@ void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalText
 
 	AABB bndBox;
 	D3DXComputeBoundingBox((D3DXVECTOR3*)pVertexBuffer, pSubMesh->GetNumVertices(), 
-		sizeof(VertexPositionNormalTexture), &bndBox.minPt, &bndBox.maxPt);
+		sizeof(VertexPositionNormalTexture), &bndBox.GetMinPoint(), &bndBox.GetMaxPoint());
 
 	pSubMesh->UnlockVertexBuffer();
 

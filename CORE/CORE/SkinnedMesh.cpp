@@ -472,20 +472,20 @@ void SkinnedMesh::BuildBoundingBox()
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	m_pMesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
 
-	D3DXComputeBoundingBox(&pVertexBuffer[0].m_vPos, m_pMesh->GetNumVertices(), sizeof(VertexPositionNormalTexture), &(m_BoundingBox.minPt), &(m_BoundingBox.maxPt));
+	D3DXComputeBoundingBox(&pVertexBuffer[0].m_vPos, m_pMesh->GetNumVertices(), sizeof(VertexPositionNormalTexture), &(m_BoundingBox.GetMinPoint()), &(m_BoundingBox.GetMaxPoint()));
 	
 	m_pMesh->UnlockVertexBuffer();
 
 	
-    float width  = m_BoundingBox.maxPt.x - m_BoundingBox.minPt.x;
-	float height = m_BoundingBox.maxPt.y - m_BoundingBox.minPt.y;
-	float depth  = m_BoundingBox.maxPt.z - m_BoundingBox.minPt.z;
+    float width  = m_BoundingBox.GetMaxPoint().x - m_BoundingBox.GetMinPoint().x;
+	float height = m_BoundingBox.GetMaxPoint().y - m_BoundingBox.GetMinPoint().y;
+	float depth  = m_BoundingBox.GetMaxPoint().z - m_BoundingBox.GetMinPoint().z;
 	//fout<<"Bounding box\n"<<width<<endl<<height<<endl<<depth<<endl;
 
 	D3DXCreateBox(pDxDevice, width, height, depth, &m_pBoundingBoxMesh, 0);
 
 
-	D3DXVECTOR3 center = m_BoundingBox.center();
+	D3DXVECTOR3 center = m_BoundingBox.GetCenter();
 	D3DXMatrixTranslation(&(m_BoundingBoxOffset), center.x, center.y, center.z);
 
 	m_BoundingBoxMaterial.m_ambient = D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.17f);
@@ -620,11 +620,11 @@ void SkinnedMesh::OnRender()
 		//VertexPositionNormalTexture* pVertexBuffer = 0;
 		//m_pMesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
 
-		//D3DXComputeBoundingBox(&pVertexBuffer[0].m_vPos, m_pMesh->GetNumVertices(), sizeof(VertexPositionNormalTexture), &(m_BoundingBox.minPt), &(m_BoundingBox.maxPt));
+		//D3DXComputeBoundingBox(&pVertexBuffer[0].m_vPos, m_pMesh->GetNumVertices(), sizeof(VertexPositionNormalTexture), &(m_BoundingBox.GetMinPoint()), &(m_BoundingBox.GetMaxPoint()));
 		//
 		//m_pMesh->UnlockVertexBuffer();
 
-		//D3DXVECTOR3 center = m_BoundingBox.center();
+		//D3DXVECTOR3 center = m_BoundingBox.GetCenter();
 		//D3DXMatrixTranslation(&(BoundingBoxOffset), center.x, center.y, center.z);
 		//D3DXVec3TransformCoord(&vLook, &vLook, &BoundingBoxOffset);
 		//D3DXVec3TransformCoord(&vUp, &vUp, &BoundingBoxOffset);
@@ -674,7 +674,7 @@ void SkinnedMesh::OnRender()
 	{
 		m_pEffect->BeginPass(i);
 			m_pMesh->DrawSubset(0);
-			//RenderBoundingBox();
+			RenderBoundingBox();
 		m_pEffect->EndPass();
 	}
 	m_pEffect->End();
@@ -717,10 +717,10 @@ void SkinnedMesh::RenderTitles()
 	D3DXMATRIX CombinedMatrix = m_BoundingBoxOffset * meshCombined; 
 
 	AABB boundingBox;
-	m_BoundingBox.transformByMatrix(CombinedMatrix,boundingBox);
+	boundingBox = m_BoundingBox.TransformByMatrix(CombinedMatrix);
 
 	D3DXMatrixTranslation(&T,m_vPos.x,
-							 (m_vPos.y + (boundingBox.maxPt.y - boundingBox.minPt.y)+5.0f),
+							 (m_vPos.y + (boundingBox.GetMaxPoint().y - boundingBox.GetMinPoint().y)+5.0f),
 							 m_vPos.z);
 
 	D3DXMatrixScaling(&S,m_fScale+3,m_fScale+3,m_fScale+3);
@@ -758,11 +758,10 @@ void SkinnedMesh::RenderTitlesForQuest()
 
 		D3DXMATRIX CombinedMatrix = m_BoundingBoxOffset * meshCombined; 
 
-		AABB boundingBox;
-		m_BoundingBox.transformByMatrix(CombinedMatrix,boundingBox);
+		AABB boundingBox = m_BoundingBox.TransformByMatrix(CombinedMatrix);
 
 		D3DXMatrixTranslation(&T,m_vPos.x,
-							  (m_vPos.y + (boundingBox.maxPt.y - boundingBox.minPt.y)+10.0f),
+							  (m_vPos.y + (boundingBox.GetMaxPoint().y - boundingBox.GetMinPoint().y)+10.0f),
 							  m_vPos.z);
 
 		D3DXMatrixScaling(&S,m_fScale+10,m_fScale+10,m_fScale+10);
@@ -794,12 +793,13 @@ void SkinnedMesh::RenderBoundingBox()
 	pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
-			D3DXMATRIX T,S,R,R1;
+			D3DXMATRIX T,S,R,R1,R2;
 			D3DXMatrixTranslation(&T,m_vPos.x,m_vPos.y,m_vPos.z);
 			D3DXMatrixScaling(&S,m_fScale,m_fScale,m_fScale);
 			D3DXMatrixRotationX(&R,m_fRotAngleX);
 			D3DXMatrixRotationY(&R1,m_fRotAngleY);
-			D3DXMATRIX meshCombined = S*(R*R1)*T;
+			D3DXMatrixRotationZ(&R2, m_fRotAngleZ);
+			D3DXMATRIX meshCombined = S*(R*R1*R2)*T;
 
 	m_pEffect->SetMatrix(m_hWVPMatrix, &(m_BoundingBoxOffset * meshCombined * camera->GetViewProjMatrix()));
 

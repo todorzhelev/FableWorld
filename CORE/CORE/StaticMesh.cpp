@@ -186,19 +186,19 @@ void StaticMesh::BuildBoundingBox()
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	m_pMesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
 
-	D3DXComputeBoundingBox(&pVertexBuffer[0].m_vPos, m_pMesh->GetNumVertices(), sizeof(VertexPositionNormalTexture), &(m_BoundingBox.minPt), &(m_BoundingBox.maxPt));
+	D3DXComputeBoundingBox(&pVertexBuffer[0].m_vPos, m_pMesh->GetNumVertices(), sizeof(VertexPositionNormalTexture), &(m_BoundingBox.GetMinPoint()), &(m_BoundingBox.GetMaxPoint()));
 	
 	m_pMesh->UnlockVertexBuffer();
 	
-    float width  = m_BoundingBox.maxPt.x - m_BoundingBox.minPt.x;
-	float height = m_BoundingBox.maxPt.y - m_BoundingBox.minPt.y;
-	float depth  = m_BoundingBox.maxPt.z - m_BoundingBox.minPt.z;
+    float width  = m_BoundingBox.GetMaxPoint().x - m_BoundingBox.GetMinPoint().x;
+	float height = m_BoundingBox.GetMaxPoint().y - m_BoundingBox.GetMinPoint().y;
+	float depth  = m_BoundingBox.GetMaxPoint().z - m_BoundingBox.GetMinPoint().z;
 
 	fout<<"Bounding box\n"<<width<<endl<<height<<endl<<depth<<endl;
 
 	D3DXCreateBox(pDxDevice, width, height, depth, &m_pBoundingBoxMesh, 0);
 
-	D3DXVECTOR3 center = m_BoundingBox.center();
+	D3DXVECTOR3 center = m_BoundingBox.GetCenter();
 	D3DXMatrixTranslation(&(m_BoundingBoxOffset), center.x, center.y, center.z);
 
 	m_BoundingBoxMaterial.m_ambient  		= D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.17f);
@@ -491,7 +491,7 @@ void StaticMesh::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 			m_pEffect->SetValue(m_hMaterial, &pBindedObject->m_BoundingBoxMaterial, sizeof(Material));
 			m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);
 			m_pEffect->CommitChanges();
-			//pBindedObject.BoundingBoxMesh->DrawSubset(0);
+			//pBindedObject->m_pBoundingBoxMesh->DrawSubset(0);
 			pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 
 		m_pEffect->EndPass();
