@@ -14,7 +14,7 @@ DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags)
 	ZeroMemory(m_keyboardState, sizeof(m_keyboardState));
 	ZeroMemory(&m_mouseState, sizeof(m_mouseState));
 
-	if( FAILED(DirectInput8Create(pEngine->GetAppInstance(), DIRECTINPUT_VERSION,IID_IDirectInput8, (void**)&m_pDirectInput, 0)) )
+	if( FAILED(DirectInput8Create(pApp->GetAppInstance(), DIRECTINPUT_VERSION,IID_IDirectInput8, (void**)&m_pDirectInput, 0)) )
 	{
 		MessageBox(0,"Failed Creating Dinput8",0,0);
 	}
@@ -22,13 +22,13 @@ DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags)
 	//Keyboard
 	m_pDirectInput->CreateDevice(GUID_SysKeyboard, &m_pKeyboad, 0);
 	m_pKeyboad->SetDataFormat(&c_dfDIKeyboard);
-	m_pKeyboad->SetCooperativeLevel(pEngine->GetMainWindow(), keyboardCoopFlags);
+	m_pKeyboad->SetCooperativeLevel(pApp->GetMainWindow(), keyboardCoopFlags);
 	m_pKeyboad->Acquire();
 
 	//Mouse
 	m_pDirectInput->CreateDevice(GUID_SysMouse, &m_pMouse, 0);
 	m_pMouse->SetDataFormat(&c_dfDIMouse2);
-	m_pMouse->SetCooperativeLevel(pEngine->GetMainWindow(), mouseCoopFlags);
+	m_pMouse->SetCooperativeLevel(pApp->GetMainWindow(), mouseCoopFlags);
 	m_pMouse->Acquire();
 
 }

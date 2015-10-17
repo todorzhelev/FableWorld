@@ -1,5 +1,4 @@
 #include"Misc.h"
-#include"GameEngine.h"
 #include"Camera.h"
 #include"TextManager.h"
 #include <string.h>
@@ -17,10 +16,10 @@ void GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection)
 	GetCursorPos(&pCursorPosition);
 
 	//transforms the position of the cursor to be relative to the client's window
-	ScreenToClient(pEngine->GetMainWindow(), &pCursorPosition);
+	ScreenToClient(pApp->GetMainWindow(), &pCursorPosition);
 
-	float w = static_cast<float>(pEngine->GetPresentParameters().BackBufferWidth);
-	float h = static_cast<float>(pEngine->GetPresentParameters().BackBufferHeight);
+	float w = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth);
+	float h = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight);
 
 	D3DXMATRIX ProjMatrix = camera->GetProjMatrix();
 
@@ -117,7 +116,7 @@ bool HasNormals(ID3DXMesh* pMesh)
 /*
 Function:InitVertexDeclarations
 Purpose:initialize vertex declarations. For now only position, normal, texture declaration is used
-		and only it is initalized and saved in the GamepEngine, so we can access it later.
+		and only it is initalized and saved in the GamepApp, so we can access it later.
 */
 void InitVertexDeclarations()
 {
@@ -163,11 +162,11 @@ void InitVertexDeclarations()
 
 	IDirect3DVertexDeclaration9* pDecl = NULL;
 	pDxDevice->CreateVertexDeclaration(vertexPositionNormalTextureElements, &pDecl);
-	pEngine->SetPositionNormalTextureDecl(pDecl);
+	pApp->SetPositionNormalTextureDecl(pDecl);
 
 	pDecl = NULL;
 	pDxDevice->CreateVertexDeclaration(vertexPositionColorElements, &pDecl);
-	pEngine->SetPosColDeclaration(pDecl);
+	pApp->SetPosColDeclaration(pDecl);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

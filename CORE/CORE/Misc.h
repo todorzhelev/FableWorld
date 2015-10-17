@@ -1,5 +1,5 @@
 #pragma once
-#include"GameEngine.h"
+#include"Application.h"
 using namespace std;
 
 #define releaseX(x) { if( x ){ (x)->Release();(x) = nullptr; } }

@@ -107,7 +107,7 @@ void Terrain::GenerateTerrainMesh()
 	UINT numElems = 0;
 
 	//VertexPositionNormalTexture vertexDeclaration;
-	pEngine->GetPositionNormalTextureDecl()->GetDeclaration(elems, &numElems);
+	pApp->GetPositionNormalTextureDecl()->GetDeclaration(elems, &numElems);
 
 	ID3DXMesh* mesh = 0;
 	D3DXCreateMesh(m_nNumTriangles, m_nNumVertices, D3DPOOL_SCRATCH|D3DXMESH_32BIT, elems, pDxDevice, &mesh);
@@ -382,7 +382,7 @@ void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalText
 	D3DVERTEXELEMENT9 elems[MAX_FVF_DECL_SIZE];
 	UINT nNumElements = 0;
 
-	pEngine->GetPositionNormalTextureDecl()->GetDeclaration(elems, &nNumElements);
+	pApp->GetPositionNormalTextureDecl()->GetDeclaration(elems, &nNumElements);
 
 	D3DXCreateMesh(k_nSubGridsTrianglesNumber, k_nSubGridsVertsNumber, D3DXMESH_MANAGED, elems, pDxDevice, &pSubMesh);
 

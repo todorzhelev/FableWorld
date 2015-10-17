@@ -56,7 +56,7 @@ bool Checkbox::IsMouseOver()
 
 	//ScreenToClient makes the mouse coordinates relative to area of the program not to the screen 
 	//i.e. the coordinates will start from top-left position of the window
-	ScreenToClient(pEngine->GetMainWindow(), &s);
+	ScreenToClient(pApp->GetMainWindow(), &s);
 
 	//if the mouse is inside return true
 	if((s.x > m_vPosition.x) && 

@@ -65,7 +65,7 @@ bool Textbox::IsMouseOver()
 	POINT s;
 	GetCursorPos(&s);
 
-	ScreenToClient(pEngine->GetMainWindow(), &s);
+	ScreenToClient(pApp->GetMainWindow(), &s);
 
 	if((s.x > m_vPosition.x) && 
 	   (s.y > m_vPosition.y) &&
@@ -109,16 +109,16 @@ void Textbox::OnClicked()
 
 	if( m_bIsSelected )
 	{
-		if( pEngine->m_strSelectedTextbox.empty() )
+		if( pApp->m_strSelectedTextbox.empty() )
 		{
-			pEngine->m_strSelectedTextbox = m_strId;
+			pApp->m_strSelectedTextbox = m_strId;
 		}
-		else if( m_strId != pEngine->m_strSelectedTextbox )
+		else if( m_strId != pApp->m_strSelectedTextbox )
 		{
-			IBaseMenuObject* pSelectedTextbox = pEngine->FindMenuObject(pEngine->m_strSelectedTextbox);
+			IBaseMenuObject* pSelectedTextbox = pApp->FindMenuObject(pApp->m_strSelectedTextbox);
 
 			pSelectedTextbox->m_bIsSelected = false;
-			pEngine->m_strSelectedTextbox = m_strId;
+			pApp->m_strSelectedTextbox = m_strId;
 		}
 	}
 }

@@ -323,7 +323,7 @@ void SkinnedMesh::BuildSkinnedMesh(ID3DXMesh* pMesh)
 	D3DVERTEXELEMENT9 elements[64];
 	UINT numElements = 0;
 
-	pEngine->GetPositionNormalTextureDecl()->GetDeclaration(elements, &numElements);
+	pApp->GetPositionNormalTextureDecl()->GetDeclaration(elements, &numElements);
 
 	ID3DXMesh* pTempMesh = 0;
 	pMesh->CloneMesh(D3DXMESH_SYSTEMMEM, elements, pDxDevice, &pTempMesh);
@@ -629,9 +629,9 @@ void SkinnedMesh::OnRender()
 		//D3DXVec3TransformCoord(&vRight, &vRight, &BoundingBoxOffset);
 		//D3DXVec3TransformCoord(&vPos, &vPos, &BoundingBoxOffset);
 
-		pEngine->DrawLine(vPos,vLook);
-		pEngine->DrawLine(vPos,vUp);
-		pEngine->DrawLine(vPos,vRight);
+		pApp->DrawLine(vPos,vLook);
+		pApp->DrawLine(vPos,vUp);
+		pApp->DrawLine(vPos,vRight);
 	}
 
 

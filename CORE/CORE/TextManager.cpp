@@ -164,8 +164,8 @@ void TextManager::DrawFPS()
 
 	sprintf_s(buffer,"fps: %.2f \n",m_fFPS);
 
-	int w = pEngine->GetPresentParameters().BackBufferWidth;
-	int h = pEngine->GetPresentParameters().BackBufferHeight;
+	int w = pApp->GetPresentParameters().BackBufferWidth;
+	int h = pApp->GetPresentParameters().BackBufferHeight;
 
 	RECT rec = {w-100,5,0,0};
 	m_pFont2D->DrawTextA(0,buffer,-1,&rec,DT_NOCLIP,D3DCOLOR_XRGB(0,0,0));
