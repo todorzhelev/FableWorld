@@ -93,7 +93,7 @@
     <ClCompile Include="..\..\CORE\CORE\Checkbox.cpp" />
     <ClCompile Include="..\..\CORE\CORE\DialogueManager.cpp" />
     <ClCompile Include="..\..\CORE\CORE\DirectInput.cpp" />
-    <ClCompile Include="..\..\CORE\CORE\GameEngine.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Application.cpp" />
     <ClCompile Include="..\..\CORE\CORE\GameObject.cpp" />
     <ClCompile Include="..\..\CORE\CORE\GameObjectManager.cpp" />
     <ClCompile Include="..\..\CORE\CORE\IBaseMenuObject.cpp" />
@@ -124,7 +124,7 @@
     <ClInclude Include="..\..\CORE\CORE\Checkbox.h" />
     <ClInclude Include="..\..\CORE\CORE\DialogueManager.h" />
     <ClInclude Include="..\..\CORE\CORE\DirectInput.h" />
-    <ClInclude Include="..\..\CORE\CORE\GameEngine.h" />
+    <ClInclude Include="..\..\CORE\CORE\Application.h" />
     <ClInclude Include="..\..\CORE\CORE\GameObject.h" />
     <ClInclude Include="..\..\CORE\CORE\GameObjectManager.h" />
     <ClInclude Include="..\..\CORE\CORE\IBaseMenuObject.h" />

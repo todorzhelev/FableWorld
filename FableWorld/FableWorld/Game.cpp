@@ -16,7 +16,7 @@ Purpose:constructor. It loads all the functionality in the game
 Game::Game()
 {
 	//checks if it is supported pixel and vertex shader 2.0
-	if(!pEngine->IsShaderVersionSupported())
+	if(!pApp->IsShaderVersionSupported())
 	{
 		MessageBox(0, "Shader version is not supported", 0, 0);
 		PostQuitMessage(0); 
@@ -55,8 +55,8 @@ Game::Game()
 	lua_register(L,"addQuest",l_addQuest);
 	lua_register(L,"setUpMainHero",l_setUpMainHero);
 
-	float fWidth  = (float)pEngine->GetPresentParameters().BackBufferWidth;
-	float fHeight = (float)pEngine->GetPresentParameters().BackBufferHeight;
+	float fWidth  = (float)pApp->GetPresentParameters().BackBufferWidth;
+	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
 
 	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 2000.0f,false);
 	camera->SetCameraMode(ECameraMode_MoveWithPressedMouse);
@@ -147,7 +147,7 @@ Game::~Game()
 	delete pTerrain;
 	delete camera;
 	delete pDinput;
-	delete pEngine;
+	delete pApp;
 	delete pDialogueManager;
 	delete soundsyst;
 	delete pSky;
@@ -192,8 +192,8 @@ void Game::OnResetDevice()
 	
 	//after the onResetDevice there might be change in the size of the screen so set
 	//the new dimensions to the camera
-	//float w = (float)pEngine->GetPresentParameters().BackBufferWidth;
-	//float h = (float)pEngine->GetPresentParameters().BackBufferHeight;
+	//float w = (float)pApp->GetPresentParameters().BackBufferWidth;
+	//float h = (float)pApp->GetPresentParameters().BackBufferHeight;
 	//camera->BuildProjectionMatrix(D3DX_PI * 0.25f, w/h, 1.0f, 2000.0f);
 }
 
@@ -209,13 +209,13 @@ void Game::OnUpdate(float dt)
 	pDinput->Poll();
 	if( pDinput->IsKeyDown(DIK_F))
 	{
-		pEngine->SwitchToFullscreen(true);
+		pApp->SwitchToFullscreen(true);
 	}
 	//if escape is pressed in game it switches to another scene
 	if(pDinput->IsKeyDown(DIK_ESCAPE))
 	{
-		IBaseScene* pMenuInGameScene = pEngine->GetScene("menuInGame");
-		pEngine->SetCurrentScene(pMenuInGameScene);
+		IBaseScene* pMenuInGameScene = pApp->GetScene("menuInGame");
+		pApp->SetCurrentScene(pMenuInGameScene);
 	}
 
 	//update all the game objects
@@ -580,17 +580,17 @@ void Game::OnRender()
 			{
 				if((*it).second.completed)
 				{
-					pTextManager->RenderText((*it).second.title.c_str(),pEngine->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
-					pTextManager->RenderText("Completed",pEngine->GetPresentParameters().BackBufferWidth-590,70,0,0,255,255,255,0);
+					pTextManager->RenderText((*it).second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
+					pTextManager->RenderText("Completed",pApp->GetPresentParameters().BackBufferWidth-590,70,0,0,255,255,255,0);
 				}
 				else if( !pMainHero->m_bIsDead )
 				{
-					pTextManager->RenderText((*it).second.title.c_str(),pEngine->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
+					pTextManager->RenderText((*it).second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
 				}
 				else if( !(*it).second.completed && pMainHero->m_bIsDead )
 				{
-					pTextManager->RenderText((*it).second.title.c_str(),pEngine->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
-					pTextManager->RenderText("Epic fail!",pEngine->GetPresentParameters().BackBufferWidth-570,70,0,0,255,255,255,0);
+					pTextManager->RenderText((*it).second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
+					pTextManager->RenderText("Epic fail!",pApp->GetPresentParameters().BackBufferWidth-570,70,0,0,255,255,255,0);
 				}
 			}
 
@@ -650,7 +650,7 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
 
 		pDxDevice->SetStreamSource(0, pVertexBuffer, 0, sizeof(VertexPositionColor));
 
-		pDxDevice->SetVertexDeclaration(pEngine->GetPosColDeclaration());
+		pDxDevice->SetVertexDeclaration(pApp->GetPosColDeclaration());
 
 		pDxDevice->DrawPrimitive(D3DPT_LINELIST,0,1);
 
@@ -701,11 +701,11 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			if( LOWORD(wParam) == WA_INACTIVE )
 			{
-				pEngine->SetPaused(true);
+				pApp->SetPaused(true);
 			}
 			else
 			{
-				pEngine->SetPaused(false);
+				pApp->SetPaused(false);
 			}
 
 			return 0;
@@ -715,7 +715,7 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		//Sent when the user closes the window
 		case WM_CLOSE:
 		{
-			DestroyWindow( pEngine->GetMainWindow() );
+			DestroyWindow( pApp->GetMainWindow() );
 		
 			return 0;
 		}
@@ -749,7 +749,7 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 
   }
-	return DefWindowProc(pEngine->GetMainWindow(), msg, wParam, lParam);
+	return DefWindowProc(pApp->GetMainWindow(), msg, wParam, lParam);
 }
 
 

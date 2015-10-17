@@ -13,8 +13,8 @@ Purpose:constructor. It loads all the functionality in the menu in game
 MenuInGame::MenuInGame()
 {
 
-	float posx = static_cast<float>(pEngine->GetPresentParameters().BackBufferWidth/2);
-	float posy = static_cast<float>(pEngine->GetPresentParameters().BackBufferHeight/2);
+	float posx = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth/2);
+	float posy = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight/2);
 
 	m_pLabelContinueGame = new Label(D3DXVECTOR2(posx-40.0f,posy-20.0f),"Continue game");
 	m_pLabelContinueGame->SetVisible(true);
@@ -57,10 +57,10 @@ void MenuInGame::OnUpdate(float dt)
 	pDinput->Poll();
 	if( pDinput->IsKeyDown(DIK_F))
 	{
-		pEngine->SwitchToFullscreen(true);
+		pApp->SwitchToFullscreen(true);
 	}
-	float w = static_cast<float>(pEngine->GetPresentParameters().BackBufferWidth);
-	float h = static_cast<float>(pEngine->GetPresentParameters().BackBufferHeight);
+	float w = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth);
+	float h = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight);
 
 	m_pLabelContinueGame->SetPosition(D3DXVECTOR2(w/2-40.0f,h/2-20.0f));
 	m_pLabelQuit->SetPosition(D3DXVECTOR2(w/2-40.0f,h/2+20.0f));
@@ -70,8 +70,8 @@ void MenuInGame::OnUpdate(float dt)
 
 	if(m_pLabelContinueGame->IsMouseDown())
 	{
-		IBaseScene* pGameScene = pEngine->GetScene("game");
-		pEngine->SetCurrentScene(pGameScene);
+		IBaseScene* pGameScene = pApp->GetScene("game");
+		pApp->SetCurrentScene(pGameScene);
 	}
 
 	if(m_pLabelQuit->IsMouseDown())
@@ -79,7 +79,7 @@ void MenuInGame::OnUpdate(float dt)
 		PostQuitMessage(0);
 	}
 
-	//pEngine->GetScene("game")->OnUpdate(dt);
+	//pApp->GetScene("game")->OnUpdate(dt);
 }
 
 
@@ -93,7 +93,7 @@ void MenuInGame::OnRender()
 	pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER , 0xff000000, 1.0f, 0);
 	pDxDevice->BeginScene();
 	
-	pEngine->GetScene("game")->OnRender();
+	pApp->GetScene("game")->OnRender();
 
 	if(!m_pLabelContinueGame->IsMouseOver())
 	{
@@ -128,7 +128,7 @@ Purpose:this function detects various messages sent to the window like WM_CLOSE,
 LRESULT MenuInGame::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 
-	return DefWindowProc(pEngine->GetMainWindow(), msg, wParam, lParam);
+	return DefWindowProc(pApp->GetMainWindow(), msg, wParam, lParam);
 }
 
 

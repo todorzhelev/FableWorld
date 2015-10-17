@@ -24,8 +24,8 @@ HeroSelection::HeroSelection()
 	pMesh->LoadGameObject();
 	pLand->LoadGameObject();
 
-	//pEngine->AddGameObject(pMesh);
-	//pEngine->AddGameObject(pLand);
+	//pApp->AddGameObject(pMesh);
+	//pApp->AddGameObject(pLand);
 
 	m_SceneObjects.push_back(pMesh);
 	m_SceneObjects.push_back(pLand);
@@ -34,8 +34,8 @@ HeroSelection::HeroSelection()
 
 	pPesho = pMesh;
 
-	float posx = static_cast<float>(pEngine->GetPresentParameters().BackBufferWidth/2);
-	float posy = static_cast<float>(pEngine->GetPresentParameters().BackBufferHeight/2);
+	float posx = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth/2);
+	float posy = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight/2);
 	int width = GetStringWidth("Enter world");
 
 	m_pLabelEnterWorld = new Label(D3DXVECTOR2(posx-width/2,2*posy - 75),"Enter world");
@@ -85,10 +85,10 @@ void HeroSelection::OnUpdate(float dt)
 
 	if(m_pLabelEnterWorld->IsMouseDown() )
 	{
-		pEngine->GetScene("heroSelect")->OnLostDevice();
+		pApp->GetScene("heroSelect")->OnLostDevice();
 
-		IBaseScene* pGameScene = pEngine->GetScene("game");
-		pEngine->SetCurrentScene(pGameScene);
+		IBaseScene* pGameScene = pApp->GetScene("game");
+		pApp->SetCurrentScene(pGameScene);
 	}
 
 	if(pDinput->IsMouseButtonDown(0) )
@@ -155,7 +155,7 @@ Purpose:this function detects various messages sent to the window like WM_CLOSE,
 LRESULT HeroSelection::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	
-	return DefWindowProc(pEngine->GetMainWindow(), msg, wParam, lParam);
+	return DefWindowProc(pApp->GetMainWindow(), msg, wParam, lParam);
 }
 
 
