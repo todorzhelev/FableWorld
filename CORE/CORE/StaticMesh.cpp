@@ -332,8 +332,6 @@ void StaticMesh::OnRender()
 		m_pEffect->End();
 	}
 	pDxDevice->SetRenderState(D3DRS_ALPHATESTENABLE, false);
-
-	RenderBindedWeapon();
 }
 
 
@@ -342,176 +340,164 @@ void StaticMesh::OnRender()
 Function:renderBindedWeapon
 Purpose:renders binded model
 */
-void StaticMesh::RenderBindedWeapon()
+void StaticMesh::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 {
-	//iterates throught all animated models
-	for(map<string,GameObject*>::iterator it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	//the animated model
+	SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(pSkMesh);
+
+	//the binded weapon
+	GameObject* pBindedObject = this;
+
+	//the bone in the animated model's hierarchy
+	FrameEx* pBone = static_cast<FrameEx*>(D3DXFrameFind(pSkinnedMesh->m_pRoot, bone.c_str()));
+
+	//testing variables
+	/*static float angleX = 33.72;
+	static float angleY = 9.129;
+	static float angleZ = 10.6;
+	static D3DXVECTOR3 pos = D3DXVECTOR3(57.8,38.8,-77.1);*/
+
+	//matrices for the binded weapon
+	D3DXMATRIX SS;
+	D3DXMatrixScaling(&SS,pBindedObject->m_fScale,pBindedObject->m_fScale,pBindedObject->m_fScale);
+
+	D3DXMATRIX R1SX;
+	D3DXMatrixRotationX(&R1SX,pBindedObject->m_fRotAngleX);
+	D3DXMATRIX R1SY;
+	D3DXMatrixRotationY(&R1SY,pBindedObject->m_fRotAngleY);
+	D3DXMATRIX R1SZ;
+	D3DXMatrixRotationZ(&R1SZ,pBindedObject->m_fRotAngleZ);
+
+	D3DXMATRIX TS;
+	D3DXMatrixTranslation(&TS,pBindedObject->m_vPos.x,pBindedObject->m_vPos.y,pBindedObject->m_vPos.z);
+
+	//combined matrix
+	D3DXMATRIX BindedObjectCombinedMatrix = SS*(R1SY*R1SX*R1SZ)*TS;
+
+
+	//this part can be used for manual control over the binded weapon through keyboard.
+	//outputs the results in the log files
+	/*if(Dinput->keyDown(DIK_C))
 	{
-		//if there are any binded models to bone in the animated model they are saved in m_mapBindedObjects map
-		if( !(*it).second->m_mapBindedObjects.empty() && (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
-		{
-			for(map<string,string>::iterator it1 = (*it).second->m_mapBindedObjects.begin();it1!=(*it).second->m_mapBindedObjects.end();it1++)
-			{
-				//the animated model
-				SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>((*it).second);
-				//the binded weapon
-				GameObject* pBindedObject = m_pGameObjManager->GetGameObjects().find((*it1).first.c_str())->second;
-
-				//the bone in the animated model's hierarchy
-				FrameEx* pBone = static_cast<FrameEx*>( D3DXFrameFind(pSkinnedMesh->m_pRoot, (*it1).second.c_str()) );
-
-				//testing variables
-				/*static float angleX = 33.72;
-				static float angleY = 9.129;
-				static float angleZ = 10.6;
-				static D3DXVECTOR3 pos = D3DXVECTOR3(57.8,38.8,-77.1);*/
-
-				//matrices for the binded weapon
-				D3DXMATRIX SS;
-				D3DXMatrixScaling(&SS,pBindedObject->m_fScale,pBindedObject->m_fScale,pBindedObject->m_fScale);
-
-				D3DXMATRIX R1SX;
-				D3DXMatrixRotationX(&R1SX,pBindedObject->m_fRotAngleX);
-				D3DXMATRIX R1SY;
-				D3DXMatrixRotationY(&R1SY,pBindedObject->m_fRotAngleY);
-				D3DXMATRIX R1SZ;
-				D3DXMatrixRotationZ(&R1SZ,pBindedObject->m_fRotAngleZ);
-
-				D3DXMATRIX TS;
-				D3DXMatrixTranslation(&TS,pBindedObject->m_vPos.x,pBindedObject->m_vPos.y,pBindedObject->m_vPos.z);
-
-				//combined matrix
-				D3DXMATRIX BindedObjectCombinedMatrix = SS*(R1SY*R1SX*R1SZ)*TS;
-
-
-				//this part can be used for manual control over the binded weapon through keyboard.
-				//outputs the results in the log files
-				/*if(Dinput->keyDown(DIK_C))
-				{
-					pos.x+=0.1;
-				}
-				if(Dinput->keyDown(DIK_V))
-				{
-					pos.x-=0.1;
-				}
-				if(Dinput->keyDown(DIK_B))
-				{
-					pos.y+=0.1;
-				}
-				if(Dinput->keyDown(DIK_N))
-				{
-					pos.y-=0.1;
-				}
-				if(Dinput->keyDown(DIK_M))
-				{
-					pos.z+=0.1;
-				}
-				if(Dinput->keyDown(DIK_K))
-				{
-					pos.z-=0.1;
-				}
-
-				//static float angleY = -9;
-				//static float angleX = -1.5;
-						
-					
-				if(Dinput->keyDown(DIK_Y))
-				{
-					angleY+=0.01;
-				}
-				if(Dinput->keyDown(DIK_U))
-				{
-					angleY-=0.01;
-				}
-				if(Dinput->keyDown(DIK_O))
-				{
-					angleZ+=0.01;
-				}
-				if(Dinput->keyDown(DIK_P))
-				{
-					angleZ-=0.01;
-				}
-				if(Dinput->keyDown(DIK_R))
-				{
-					angleX+=0.01;
-				}
-				if(Dinput->keyDown(DIK_T))
-				{
-					angleX-=0.01;
-				}
-						
-				fout<<"rot_angleX:"<<angleX<<endl;
-				fout<<"rot_angleY:"<<angleY<<endl;
-				fout<<"rot_angleZ:"<<angleZ<<endl;
-				fout<<"posx:"<<pos.x<<endl;
-				fout<<"posy:"<<pos.y<<endl;
-				fout<<"posz:"<<pos.z<<endl;*/
-						
-
-				//matrices for the animated model
-				D3DXMATRIX TA;
-				D3DXMatrixTranslation(&TA,pSkinnedMesh->m_vPos.x,pSkinnedMesh->m_vPos.y,pSkinnedMesh->m_vPos.z);
-				D3DXMATRIX SA;
-				D3DXMatrixScaling(&SA,pSkinnedMesh->m_fScale,pSkinnedMesh->m_fScale,pSkinnedMesh->m_fScale);
-				D3DXMATRIX R1A;
-				D3DXMatrixRotationY(&R1A,pSkinnedMesh->m_fRotAngleY);
-				D3DXMATRIX AnimatedModelCombinedMatrix = SA*R1A*(TA);
-
-				//combined matrix for the bone
-				D3DXMATRIX BoneCombinedMatrix = pBone->TransformationMatrix*pBone->ToRootMatrix;
-
-				m_pEffect->SetTechnique(m_hEffectTechnique);
-
-				//the full matrix for the binded weapon. 
-				//Its combination from bone matrices, animated model matrices and the binded weapon matrices
-				D3DXMATRIX FullCombinedMatrix = BindedObjectCombinedMatrix * BoneCombinedMatrix * AnimatedModelCombinedMatrix;
-
-				m_pEffect->SetMatrix(m_hWVPMatrix,&(FullCombinedMatrix * (camera->GetViewProjMatrix())));
-						
-				UINT numPasses = 0;
-				m_pEffect->Begin(&numPasses,0);
-				for(UINT i =0;i<numPasses;++i)
-				{
-					m_pEffect->BeginPass(i);
-
-						for(unsigned int j = 0; j < pBindedObject->m_vMaterials.size(); ++j)
-						{
-							m_pEffect->SetValue(m_hMaterial, &(pBindedObject->m_vMaterials[j]), sizeof(Material));
-							if(pBindedObject->m_vTextures[j] != 0)
-							{
-								m_pEffect->SetTexture(m_hTexture, pBindedObject->m_vTextures[j]);
-							}
-							else
-							{
-								m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);
-							}
-													
-							m_pEffect->CommitChanges();
-							pBindedObject->m_pMesh->DrawSubset(j);
-						}
-
-						pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-						pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-						pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
-
-						//bounding box render for binded weapon
-						m_pEffect->SetMatrix(m_hWVPMatrix, &(pBindedObject->m_BoundingBoxOffset*FullCombinedMatrix*camera->GetViewProjMatrix()));
-						m_pEffect->SetValue(m_hMaterial, &pBindedObject->m_BoundingBoxMaterial, sizeof(Material));
-						m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);
-						m_pEffect->CommitChanges();
-						//pBindedObject.BoundingBoxMesh->DrawSubset(0);
-						pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
-
-					m_pEffect->EndPass();
-				}
-				m_pEffect->End();		
-			}
-		}
+		pos.x+=0.1;
+	}
+	if(Dinput->keyDown(DIK_V))
+	{
+		pos.x-=0.1;
+	}
+	if(Dinput->keyDown(DIK_B))
+	{
+		pos.y+=0.1;
+	}
+	if(Dinput->keyDown(DIK_N))
+	{
+		pos.y-=0.1;
+	}
+	if(Dinput->keyDown(DIK_M))
+	{
+		pos.z+=0.1;
+	}
+	if(Dinput->keyDown(DIK_K))
+	{
+		pos.z-=0.1;
 	}
 
-}
+	//static float angleY = -9;
+	//static float angleX = -1.5;
+						
+					
+	if(Dinput->keyDown(DIK_Y))
+	{
+		angleY+=0.01;
+	}
+	if(Dinput->keyDown(DIK_U))
+	{
+		angleY-=0.01;
+	}
+	if(Dinput->keyDown(DIK_O))
+	{
+		angleZ+=0.01;
+	}
+	if(Dinput->keyDown(DIK_P))
+	{
+		angleZ-=0.01;
+	}
+	if(Dinput->keyDown(DIK_R))
+	{
+		angleX+=0.01;
+	}
+	if(Dinput->keyDown(DIK_T))
+	{
+		angleX-=0.01;
+	}
+						
+	fout<<"rot_angleX:"<<angleX<<endl;
+	fout<<"rot_angleY:"<<angleY<<endl;
+	fout<<"rot_angleZ:"<<angleZ<<endl;
+	fout<<"posx:"<<pos.x<<endl;
+	fout<<"posy:"<<pos.y<<endl;
+	fout<<"posz:"<<pos.z<<endl;*/
+						
 
+	//matrices for the animated model
+	D3DXMATRIX TA;
+	D3DXMatrixTranslation(&TA,pSkinnedMesh->m_vPos.x,pSkinnedMesh->m_vPos.y,pSkinnedMesh->m_vPos.z);
+	D3DXMATRIX SA;
+	D3DXMatrixScaling(&SA,pSkinnedMesh->m_fScale,pSkinnedMesh->m_fScale,pSkinnedMesh->m_fScale);
+	D3DXMATRIX R1A;
+	D3DXMatrixRotationY(&R1A,pSkinnedMesh->m_fRotAngleY);
+	D3DXMATRIX AnimatedModelCombinedMatrix = SA*R1A*(TA);
+
+	//combined matrix for the bone
+	D3DXMATRIX BoneCombinedMatrix = pBone->TransformationMatrix*pBone->ToRootMatrix;
+
+	m_pEffect->SetTechnique(m_hEffectTechnique);
+
+	//the full matrix for the binded weapon. 
+	//Its combination from bone matrices, animated model matrices and the binded weapon matrices
+	D3DXMATRIX FullCombinedMatrix = BindedObjectCombinedMatrix * BoneCombinedMatrix * AnimatedModelCombinedMatrix;
+
+	m_pEffect->SetMatrix(m_hWVPMatrix,&(FullCombinedMatrix * (camera->GetViewProjMatrix())));
+						
+	UINT numPasses = 0;
+	m_pEffect->Begin(&numPasses,0);
+	for(UINT i =0;i<numPasses;++i)
+	{
+		m_pEffect->BeginPass(i);
+
+			for(unsigned int j = 0; j < pBindedObject->m_vMaterials.size(); ++j)
+			{
+				m_pEffect->SetValue(m_hMaterial, &(pBindedObject->m_vMaterials[j]), sizeof(Material));
+				if(pBindedObject->m_vTextures[j] != 0)
+				{
+					m_pEffect->SetTexture(m_hTexture, pBindedObject->m_vTextures[j]);
+				}
+				else
+				{
+					m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);
+				}
+													
+				m_pEffect->CommitChanges();
+				pBindedObject->m_pMesh->DrawSubset(j);
+			}
+
+			pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+			pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+			pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+
+			//bounding box render for binded weapon
+			m_pEffect->SetMatrix(m_hWVPMatrix, &(pBindedObject->m_BoundingBoxOffset*FullCombinedMatrix*camera->GetViewProjMatrix()));
+			m_pEffect->SetValue(m_hMaterial, &pBindedObject->m_BoundingBoxMaterial, sizeof(Material));
+			m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);
+			m_pEffect->CommitChanges();
+			//pBindedObject.BoundingBoxMesh->DrawSubset(0);
+			pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+
+		m_pEffect->EndPass();
+	}
+	m_pEffect->End();		
+}
 
 /////////////////////////////////////////////////////////////////////////
 /*

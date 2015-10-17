@@ -26,6 +26,8 @@ public:
 
 	virtual void OnResetDevice() {};
 
+	virtual void RenderBindedWeapon(GameObject* pSkMesh, string bone) {};
+
 
 //make it protected and add getters/setters..
 public:
@@ -63,7 +65,7 @@ public:
 	string m_strBindedToBoneName;
 	
 	//this map holds which weapon to which bone is attached
-	map<string,string> m_mapBindedObjects;
+	unordered_map<GameObject*,string> m_mapBindedObjects;
 
 	bool m_bIsAttacked;
 	bool m_bIsAttacking;

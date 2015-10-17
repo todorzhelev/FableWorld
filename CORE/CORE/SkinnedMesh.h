@@ -51,6 +51,8 @@ public:
 
 	virtual void 	OnLostDevice();
 
+	virtual void	RenderBindedWeapon(GameObject* pSkMesh, string bone);
+
 	void			PlayAnimation(LPCSTR strAnimationName);
 	
 	void 			PlayAnimationOnce(LPCSTR strAnimationName);

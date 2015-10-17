@@ -1,4 +1,5 @@
 #include"SkinnedMesh.h"
+#include"StaticMesh.h"
 
 
 /////////////////////////////////////////////////////////////////////////
@@ -383,7 +384,8 @@ Purpose:binds static object to animated model's bone
 */
 void SkinnedMesh::BindWeaponToModel(string strObjectName,string strBoneToBind)
 {
-	m_mapBindedObjects[strObjectName] = strBoneToBind;
+	GameObject* pGameObject = m_pGameObjManager->GetGameObjects().find(strObjectName.c_str())->second;
+	m_mapBindedObjects[pGameObject] = strBoneToBind;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -683,6 +685,19 @@ void SkinnedMesh::OnRender()
 		RenderTitlesForQuest();
 	}
 	
+	for (auto& it : m_mapBindedObjects)
+	{
+		GameObject* pBindedObject = static_cast<StaticMesh*>(it.first);
+		pBindedObject->RenderBindedWeapon(this, it.second);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void SkinnedMesh::RenderBindedWeapon(GameObject* pSkMesh, string bone)
+{
+
+
 }
 
 /////////////////////////////////////////////////////////////////////////

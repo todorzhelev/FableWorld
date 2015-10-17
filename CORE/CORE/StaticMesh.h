@@ -25,14 +25,14 @@ public:
 
 	virtual void OnLostDevice();
 
+	virtual void RenderBindedWeapon(GameObject* pSkMesh, string bone);
+
 	void		 BuildBoundingBox();
 
 	void		 RenderBoundingBox();
 
 	void		 BuildEffect();
 	
-	void		 RenderBindedWeapon();
-
 private:
 
 	//texture used for models that dont have any

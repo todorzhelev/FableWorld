@@ -59,19 +59,19 @@ int l_addStaticModel(lua_State* L)
 	lua_getglobal(L, "modelFileName");
 	pMesh->m_strModelFileName = lua_tostring(L,lua_gettop(L));
 
-	if( pMesh->m_bIsBindable && !pMesh->m_strBindedToAnimatedModelName.empty() && !pMesh->m_strBindedToBoneName.empty() )
-	{
-		SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(m_pGameObjManager->GetGameObjects().find(pMesh->m_strBindedToAnimatedModelName)->second);
-
-		pSkinnedMesh->BindWeaponToModel(pMesh->m_strModelName,pMesh->m_strBindedToBoneName);
-	}
-
 	pMesh->LoadGameObject();
 
 	pMesh->m_eGameObjectType = EGameObjectType_Static;
 
 	m_pGameObjManager->AddGameObject(pMesh);
 	
+	if (pMesh->m_bIsBindable && !pMesh->m_strBindedToAnimatedModelName.empty() && !pMesh->m_strBindedToBoneName.empty())
+	{
+		SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(m_pGameObjManager->GetGameObjects().find(pMesh->m_strBindedToAnimatedModelName)->second);
+
+		pSkinnedMesh->BindWeaponToModel(pMesh->m_strModelName, pMesh->m_strBindedToBoneName);
+	}
+
 	return 1;
 }
 
