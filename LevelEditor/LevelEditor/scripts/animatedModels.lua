@@ -7,8 +7,8 @@ rotY = 0
 titleRotY = 0
 modelName = "cho"
 titleForQuest = "?"
-modelFileName = "../../../Resources/models/cho/cho_5anmx.X"
-textureFileName = "../../../Resources/textures/chogath_abyss_TX_CM.DDS"
+modelFileName = "../../Resources/models/cho/cho_5anmx.X"
+textureFileName = "../../Resources/textures/chogath_abyss_TX_CM.DDS"
 typeInGame = "enemy"
 addAnimatedModel();
 
@@ -21,8 +21,8 @@ rotY = 2.3
 titleRotY = 0
 modelName = "ezreal"
 titleForQuest = "?"
-modelFileName = "../../../Resources/models/ezreal/ezreal_5anm.X"
-textureFileName = "../../../Resources/textures/Ezreal_ProdigalExplorer.dds"
+modelFileName = "../../Resources/models/ezreal/ezreal_5anm.X"
+textureFileName = "../../Resources/textures/Ezreal_ProdigalExplorer.dds"
 typeInGame = "neutral"
 addAnimatedModel();
 
@@ -35,8 +35,8 @@ rotY = 0
 titleRotY = 0
 modelName = "galio"
 titleForQuest = "?"
-modelFileName = "../../../Resources/models/galio/galio_5anmx.X"
-textureFileName = "../../../Resources/textures/galio_base_TX_CM.dds"
+modelFileName = "../../Resources/models/galio/galio_5anmx.X"
+textureFileName = "../../Resources/textures/galio_base_TX_CM.dds"
 typeInGame = "mainHero"
 addAnimatedModel();
 

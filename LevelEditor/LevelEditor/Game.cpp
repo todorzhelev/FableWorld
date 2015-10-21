@@ -18,8 +18,8 @@ Game::Game()
 		PostQuitMessage(0);
 	}
 
-	float fWidth  = (float)pEngine->GetPresentParameters().BackBufferWidth;
-	float fHeight = (float)pEngine->GetPresentParameters().BackBufferHeight;
+	float fWidth  = (float)pApp->GetPresentParameters().BackBufferWidth;
+	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
 
 	//init and setup camera
 	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 2000.0f,true);
@@ -68,121 +68,121 @@ Game::Game()
 void Game::LoadUIComponents()
 {
 	//TODO: this must be moved to some script
-	float width  = (float)pEngine->GetPresentParameters().BackBufferWidth;
-	float height = (float)pEngine->GetPresentParameters().BackBufferHeight;
+	float width  = (float)pApp->GetPresentParameters().BackBufferWidth;
+	float height = (float)pApp->GetPresentParameters().BackBufferHeight;
 
 	
 	//load static model button
 	button_LoadStaticModel = new Button(D3DXVECTOR2(width - 630, 15.0),128,32,"","Button_LSM_final1.dds","Button_LSM_final2_hover.dds");
-	pEngine->AddUIObject(button_LoadStaticModel);
+	pApp->AddUIObject(button_LoadStaticModel);
 	
 	//load animated model button
 	button_LoadAnimatedModel = new Button(D3DXVECTOR2(width - 490, 15.0),128,32,"","Button_LAM_final1.dds","Button_LAM_final2_hover.dds");
-	pEngine->AddUIObject(button_LoadAnimatedModel);
+	pApp->AddUIObject(button_LoadAnimatedModel);
 
 	//import button
 	button_Import = new Button(D3DXVECTOR2(width - 280, 15.0),128,32,"","Button_Import.dds","Button_Import_hover.dds");
-	pEngine->AddUIObject(button_Import);
+	pApp->AddUIObject(button_Import);
 
 	//export button
 	button_Export = new Button(D3DXVECTOR2(width - 140, 15.0),128,32,"","Button_Export.dds","Button_Export_hover.dds");
-	pEngine->AddUIObject(button_Export);
+	pApp->AddUIObject(button_Export);
 
 	//translation label
 	button_Translation = new Button(D3DXVECTOR2(6.0, 13.0),128,32,"","Button_Translation.dds","Button_Translation.dds");
-	pEngine->AddUIObject(button_Translation);
+	pApp->AddUIObject(button_Translation);
 
 	//translation x checkbox
 	checkbox_TranslationX = new Checkbox(D3DXVECTOR2(20.0, 45.0),32,32,"x","Checkbox_checked.dds","Checkbox_unchecked.dds","checkbox_TranslationX");
-	pEngine->AddUIObject(checkbox_TranslationX);
+	pApp->AddUIObject(checkbox_TranslationX);
 
 	//translation y checkbox
 	checkbox_TranslationY = new Checkbox(D3DXVECTOR2(70.0, 45.0),32,32,"y","Checkbox_checked.dds","Checkbox_unchecked.dds","checkbox_TranslationY");
-	pEngine->AddUIObject(checkbox_TranslationY);
+	pApp->AddUIObject(checkbox_TranslationY);
 
 	//translation z checkbox
 	checkbox_TranslationZ = new Checkbox(D3DXVECTOR2(120.0, 45.0),32,32,"z","Checkbox_checked.dds","Checkbox_unchecked.dds","checkbox_TranslationZ");;
-	pEngine->AddUIObject(checkbox_TranslationZ);
+	pApp->AddUIObject(checkbox_TranslationZ);
 
 	//export button
 	button_Rotation = new Button(D3DXVECTOR2(-10.0, 68.0),128,32,"","Button_Rotation.dds","Button_Rotation.dds");
-	pEngine->AddUIObject(button_Rotation);
+	pApp->AddUIObject(button_Rotation);
 
 	//rotation x checkbox 
 	checkbox_RotationX = new Checkbox(D3DXVECTOR2(20.0, 100.0),32,32,"x","Checkbox_checked.dds","Checkbox_unchecked.dds","checkbox_RotationX");;
-	pEngine->AddUIObject(checkbox_RotationX);
+	pApp->AddUIObject(checkbox_RotationX);
 
 	//rotation y checkbox
 	checkbox_RotationY = new Checkbox(D3DXVECTOR2(70.0, 100.0),32,32,"y","Checkbox_checked.dds","Checkbox_unchecked.dds","checkbox_RotationY");;
-	pEngine->AddUIObject(checkbox_RotationY);
+	pApp->AddUIObject(checkbox_RotationY);
 
 	//rotation z checkbox 
 	checkbox_RotationZ = new Checkbox(D3DXVECTOR2(120.0, 100.0),32,32,"z","Checkbox_checked.dds","Checkbox_unchecked.dds","checkbox_RotationZ");;
-	pEngine->AddUIObject(checkbox_RotationZ);
+	pApp->AddUIObject(checkbox_RotationZ);
 
 	//export button
 	button_Scaling = new Button(D3DXVECTOR2(-13.0, 122.0),128,32,"","Button_Scaling.dds","Button_Scaling.dds");
-	pEngine->AddUIObject(button_Scaling);
+	pApp->AddUIObject(button_Scaling);
 
 	//scaling checkbox
 	checkbox_Scaling = new Checkbox(D3DXVECTOR2(20.0, 155.0),32,32,"scale","Checkbox_checked.dds","Checkbox_unchecked.dds","checkbox_Scaling");;
-	pEngine->AddUIObject(checkbox_Scaling);
+	pApp->AddUIObject(checkbox_Scaling);
 
 	//model name label
 	label_modelName = new Label(D3DXVECTOR2(width-300,150),"model name");
 	label_modelName->SetVisible(false);
-	pEngine->AddUIObject(label_modelName);
+	pApp->AddUIObject(label_modelName);
 
 
 	//model name textbox
 	textbox_modelName = new Textbox(D3DXVECTOR2(width-300, 170.0f),256,32,"","Textbox.dds","Textbox_selected.dds","textbox_modelName");
 	textbox_modelName->SetVisible(false);
 	textbox_modelName->m_bIsSelected = false;
-	pEngine->AddUIObject(textbox_modelName);
+	pApp->AddUIObject(textbox_modelName);
 	
 	//type in game label
 	label_typeInGame = new Label(D3DXVECTOR2(width-300,220),"type in game");
 	label_typeInGame->SetVisible(false);
-	pEngine->AddUIObject(label_typeInGame);
+	pApp->AddUIObject(label_typeInGame);
 
 	//type in game textbox
 	textbox_typeInGame = new Textbox(D3DXVECTOR2(width-300, 240.0f),256,32,"","Textbox.dds","Textbox_selected.dds","textbox_typeInGame");
 	textbox_typeInGame->SetVisible(false);
 	textbox_typeInGame->m_bIsSelected = false;
-	pEngine->AddUIObject(textbox_typeInGame);
+	pApp->AddUIObject(textbox_typeInGame);
 
 	//title for quest label
 	label_titleForQuest = new Label(D3DXVECTOR2(width-300,290),"title for quest");
 	label_titleForQuest->SetVisible(false);
-	pEngine->AddUIObject(label_titleForQuest);
+	pApp->AddUIObject(label_titleForQuest);
 
 	//title for quest textbox
 	textbox_titleForQuest = new Textbox(D3DXVECTOR2(width-300, 310.0f),256,32,"","Textbox.dds","Textbox_selected.dds","textbox_titleForQuest");
 	textbox_titleForQuest->SetVisible(false);
 	textbox_titleForQuest->m_bIsSelected = false;
-	pEngine->AddUIObject(textbox_titleForQuest);
+	pApp->AddUIObject(textbox_titleForQuest);
 
 	//title for quest label
 	label_bindToAnModel = new Label(D3DXVECTOR2(width-300,220),"bind to animated model");
 	label_bindToAnModel->SetVisible(false);
-	pEngine->AddUIObject(label_bindToAnModel);
+	pApp->AddUIObject(label_bindToAnModel);
 
 	//bind to animated model textbox
 	textbox_bindToAnModel = new Textbox(D3DXVECTOR2(width-300, 240),256,32,"","Textbox.dds","Textbox_selected.dds","textbox_bindToAnModel");
 	textbox_bindToAnModel->SetVisible(false);
 	textbox_bindToAnModel->m_bIsSelected = false;
-	pEngine->AddUIObject(textbox_bindToAnModel);
+	pApp->AddUIObject(textbox_bindToAnModel);
 
 	//title for quest label
 	label_bindToAnModelBone = new Label(D3DXVECTOR2(width-300,290),"bind to animated model bone");
 	label_bindToAnModelBone->SetVisible(false);
-	pEngine->AddUIObject(label_bindToAnModelBone);
+	pApp->AddUIObject(label_bindToAnModelBone);
 
 	//bind to animated model's bone textbox
 	textbox_bindToAnModelBone = new Textbox(D3DXVECTOR2(width-300, 310),256,32,"","Textbox.dds","Textbox_selected.dds","textbox_bindToAnModelBone");
 	textbox_bindToAnModelBone->SetVisible(false);
 	textbox_bindToAnModelBone->m_bIsSelected = false;
-	pEngine->AddUIObject(textbox_bindToAnModelBone);
+	pApp->AddUIObject(textbox_bindToAnModelBone);
 }
 
 
@@ -232,7 +232,7 @@ void Game::OnLostDevice()
 	
 	sky->OnLostDevice();
 
-	for(vector<IBaseMenuObject*>::iterator it = pEngine->m_vUIObjects.begin();it!=pEngine->m_vUIObjects.end();it++)
+	for(vector<IBaseMenuObject*>::iterator it = pApp->m_vUIObjects.begin();it!=pApp->m_vUIObjects.end();it++)
 	{
 		(*it)->OnLostDevice();
 	}
@@ -256,7 +256,7 @@ void Game::OnResetDevice()
 {
 	sky->OnResetDevice();
 
-	for(vector<IBaseMenuObject*>::iterator it = pEngine->m_vUIObjects.begin();it!=pEngine->m_vUIObjects.end();it++)
+	for(vector<IBaseMenuObject*>::iterator it = pApp->m_vUIObjects.begin();it!=pApp->m_vUIObjects.end();it++)
 	{
 		(*it)->OnResetDevice();
 	}
@@ -282,8 +282,8 @@ void Game::OnUpdate(float dt)
 		//if escape is pressed in game it switches to another scene
 	if(pDinput->IsKeyDown(DIK_ESCAPE))
 	{
-		IBaseScene* pMenuInGameScene = pEngine->GetScene("menuInGame");
-		pEngine->SetCurrentScene(pMenuInGameScene);
+		IBaseScene* pMenuInGameScene = pApp->GetScene("menuInGame");
+		pApp->SetCurrentScene(pMenuInGameScene);
 	}
 
 	//update all the game objects
@@ -293,7 +293,7 @@ void Game::OnUpdate(float dt)
 	}
 
 	//update all the UI objects
-	for(vector<IBaseMenuObject*>::iterator it = pEngine->m_vUIObjects.begin();it!=pEngine->m_vUIObjects.end();it++)
+	for(vector<IBaseMenuObject*>::iterator it = pApp->m_vUIObjects.begin();it!=pApp->m_vUIObjects.end();it++)
 	{
 		(*it)->OnUpdate();
 	}
@@ -301,7 +301,7 @@ void Game::OnUpdate(float dt)
 	pTextManager->OnUpdate(dt);
 
 	//we store the currently selected textbox in string. If its empty nothing is selected
-	if( pEngine->m_strSelectedTextbox == "" )
+	if( pApp->m_strSelectedTextbox == "" )
 	{
 		typingMode = false;
 	}
@@ -608,8 +608,28 @@ void Game::OnRender()
 			{
 				(*it).second->OnRender();
 			}
-					
-			for(vector<IBaseMenuObject*>::iterator it = pEngine->m_vUIObjects.begin();it!=pEngine->m_vUIObjects.end();it++)
+			
+			if (m_pGameObjManager->GetPickedObject() != nullptr)
+			{
+				auto BB = m_pGameObjManager->GetPickedObject()->m_BoundingBox;
+				BB = BB.TransformByMatrix(BB.m_transformationMatrix);
+				for (auto& object : m_pGameObjManager->GetGameObjects())
+				{
+					auto BB1 = object.second->m_BoundingBox;
+					BB1 = BB1.TransformByMatrix(BB1.m_transformationMatrix);
+
+					if (m_pGameObjManager->GetPickedObject()->m_strModelName.compare(object.second->m_strModelName))
+					{
+						if (BB.Collide(BB1))
+						{
+							cout << "COLLIDING" << object.second->m_strModelName << endl;
+						}
+					}
+				}
+			}
+			
+
+			for(vector<IBaseMenuObject*>::iterator it = pApp->m_vUIObjects.begin();it!=pApp->m_vUIObjects.end();it++)
 			{
 				(*it)->OnRender(255,255,255,255);
 			}
@@ -647,7 +667,7 @@ Purpose:this function detects various messages sent to the window like WM_CLOSE,
 */
 LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	IBaseMenuObject* pSelectedTextbox = pEngine->FindMenuObject(pEngine->m_strSelectedTextbox);
+	IBaseMenuObject* pSelectedTextbox = pApp->FindMenuObject(pApp->m_strSelectedTextbox);
 
 	switch( msg )
 	{
@@ -656,18 +676,18 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		case WM_ACTIVATE:
 			if( LOWORD(wParam) == WA_INACTIVE )
 			{
-				pEngine->SetPaused(true);
+				pApp->SetPaused(true);
 			}
 			else
 			{
-				pEngine->SetPaused(false);
+				pApp->SetPaused(false);
 			}
 			return 0;
 
 
 		//Sent when the user closes the window
 		case WM_CLOSE:
-			DestroyWindow( pEngine->GetMainWindow() );
+			DestroyWindow( pApp->GetMainWindow() );
 			return 0;
 
 		//Sent when the window is destroyed
@@ -689,19 +709,19 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				//pressing enter in textbox finishes the typing and assigns the new values
 				case 0x0D:
 				{
-					//IBaseMenuObject* pSelectedTextbox = pEngine->FindMenuObject(selectedTextbox);
+					//IBaseMenuObject* pSelectedTextbox = pApp->FindMenuObject(selectedTextbox);
 
 
-					if( !pEngine->m_strSelectedTextbox.empty() )
+					if( !pApp->m_strSelectedTextbox.empty() )
 					{
-					    if( pEngine->m_strSelectedTextbox == "textbox_typeInGame" )
+					    if( pApp->m_strSelectedTextbox == "textbox_typeInGame" )
 						{
-							//IBaseMenuObject* pSelectedTextbox = pEngine->FindMenuObject(selectedTextbox);
+							//IBaseMenuObject* pSelectedTextbox = pApp->FindMenuObject(selectedTextbox);
 							m_pGameObjManager->GetPickedObject()->m_strActorType = pSelectedTextbox->GetText();
 							pSelectedTextbox->m_bIsSelected = false;
-							pEngine->m_strSelectedTextbox = "";
+							pApp->m_strSelectedTextbox = "";
 						}
-						else if( pEngine->m_strSelectedTextbox == "textbox_modelName")
+						else if( pApp->m_strSelectedTextbox == "textbox_modelName")
 						{
 							// when we change the model name we must update the map with the new name
 							// therefore we delete the old entry in the map and add new object with the updated name
@@ -718,17 +738,17 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 
 								pSelectedTextbox->m_bIsSelected = false;
 
-								pEngine->m_strSelectedTextbox = "";
+								pApp->m_strSelectedTextbox = "";
 							}
 						}
-						else if( pEngine->m_strSelectedTextbox == "textbox_titleForQuest" && 
+						else if( pApp->m_strSelectedTextbox == "textbox_titleForQuest" && 
 								 m_pGameObjManager->GetPickedObject()->m_eGameObjectType == EGameObjectType_Skinned )
 						{
 							m_pGameObjManager->GetPickedObject()->m_strTitleForQuest= pSelectedTextbox->GetText();
 							pSelectedTextbox->m_bIsSelected = false;
-							pEngine->m_strSelectedTextbox = "";
+							pApp->m_strSelectedTextbox = "";
 						}
-						else if( pEngine->m_strSelectedTextbox == "textbox_bindToAnModel" && 
+						else if( pApp->m_strSelectedTextbox == "textbox_bindToAnModel" && 
 								 m_pGameObjManager->GetPickedObject()->m_eGameObjectType == EGameObjectType_Static )
 						{
 							m_pGameObjManager->GetPickedObject()->m_strBindedToAnimatedModelName = pSelectedTextbox->GetText();
@@ -744,9 +764,9 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 							}
 
 							pSelectedTextbox->m_bIsSelected = false;
-							pEngine->m_strSelectedTextbox = "";
+							pApp->m_strSelectedTextbox = "";
 						}
-						else if( pEngine->m_strSelectedTextbox == "textbox_bindToAnModelBone" && 
+						else if( pApp->m_strSelectedTextbox == "textbox_bindToAnModelBone" && 
 								 m_pGameObjManager->GetPickedObject()->m_eGameObjectType == EGameObjectType_Static  )
 						{
 							m_pGameObjManager->GetPickedObject()->m_strBindedToBoneName = pSelectedTextbox->GetText();
@@ -762,7 +782,7 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 								
 							}
 							pSelectedTextbox->m_bIsSelected = false;
-							pEngine->m_strSelectedTextbox = "";
+							pApp->m_strSelectedTextbox = "";
 						}						
 					}
 				}
@@ -771,15 +791,15 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				//here we detect any key pressed and adds it to the selected textbox
 				default:
 				{
-					if( !pEngine->m_strSelectedTextbox.empty() )
+					if( !pApp->m_strSelectedTextbox.empty() )
 					{
 						
 						//if model name textbox is selected
-						if( pEngine->m_strSelectedTextbox == "textbox_modelName" ||
-							pEngine->m_strSelectedTextbox == "textbox_typeInGame" ||
-							pEngine->m_strSelectedTextbox == "textbox_titleForQuest" ||
-							pEngine->m_strSelectedTextbox == "textbox_bindToAnModel" ||
-							pEngine->m_strSelectedTextbox == "textbox_bindToAnModelBone" )
+						if( pApp->m_strSelectedTextbox == "textbox_modelName" ||
+							pApp->m_strSelectedTextbox == "textbox_typeInGame" ||
+							pApp->m_strSelectedTextbox == "textbox_titleForQuest" ||
+							pApp->m_strSelectedTextbox == "textbox_bindToAnModel" ||
+							pApp->m_strSelectedTextbox == "textbox_bindToAnModelBone" )
 						{
 								//if we press return delete one char
 								if(wParam == VK_BACK && pSelectedTextbox->GetText().size()!= 0)
@@ -805,7 +825,7 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 								}
 
 						}
-						else if( pEngine->m_strSelectedTextbox.empty() )
+						else if( pApp->m_strSelectedTextbox.empty() )
 						{
 
 						}
@@ -946,14 +966,14 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				case MK_LBUTTON:
 				{
 					bool bShouldCheck3D = true;
-					for(int i = 0; i < pEngine->m_vUIObjects.size(); i++)
+					for(int i = 0; i < pApp->m_vUIObjects.size(); i++)
 					{
-						if( pEngine->m_vUIObjects[i]->IsMouseOver() )
+						if( pApp->m_vUIObjects[i]->IsMouseOver() )
 						{
 							bShouldCheck3D = false;
 						}
 
-						pEngine->m_vUIObjects[i]->OnClicked();
+						pApp->m_vUIObjects[i]->OnClicked();
 					}
 
 					if( bShouldCheck3D )
@@ -965,7 +985,7 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			return 0;
 
   }
-  return DefWindowProc(pEngine->GetMainWindow(), msg, wParam, lParam);
+  return DefWindowProc(pApp->GetMainWindow(), msg, wParam, lParam);
 }
 
 
@@ -978,7 +998,7 @@ void Game::ImportStaticModel()
     memset( &ofn, 0, sizeof(ofn) );
 
     ofn.lStructSize       = sizeof(ofn);
-	ofn.hwndOwner         = pEngine->GetMainWindow();
+	ofn.hwndOwner         = pApp->GetMainWindow();
     ofn.hInstance         = 0;
 	ofn.lpstrFilter		  = "X Files (*.x)\0*.x\0All Files (*.*)\0*.*\0\0";
     ofn.lpstrCustomFilter = NULL;
@@ -1047,7 +1067,7 @@ void Game::LoadAnimatedModel()
 	memset( &ofn, 0, sizeof(ofn) );
 
 	ofn.lStructSize       = sizeof(ofn);
-	ofn.hwndOwner         = pEngine->GetMainWindow();
+	ofn.hwndOwner         = pApp->GetMainWindow();
 	ofn.hInstance         = 0;
 	ofn.lpstrFilter		  = "X Files (*.x)\0*.x\0All Files (*.*)\0*.*\0\0";
 	ofn.lpstrCustomFilter = NULL;
@@ -1223,7 +1243,7 @@ void Game::ImportLevel()
     memset( &ofn, 0, sizeof(ofn) );
 
     ofn.lStructSize       = sizeof(ofn);
-	ofn.hwndOwner         = pEngine->GetMainWindow();
+	ofn.hwndOwner         = pApp->GetMainWindow();
     ofn.hInstance         = 0;
 	ofn.lpstrFilter		  = "Lua Files (*.lua)\0*.lua\0All Files (*.*)\0*.*\0\0";
     ofn.lpstrCustomFilter = NULL;

@@ -25,8 +25,8 @@ Menu::Menu()
 	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/logo_FableWorld.jpg",&m_pLogoInWindowTexture);
 	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/logo_FableWorldFullscreen.jpg",&m_pLogoInFullscreenTexture);
 
-	float posx = static_cast<float>(pEngine->GetPresentParameters().BackBufferWidth/2);
-	float posy = static_cast<float>(pEngine->GetPresentParameters().BackBufferHeight/2);
+	float posx = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth/2);
+	float posy = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight/2);
 
 	m_pLabelStartGame = new Label(D3DXVECTOR2(posx-40.0f,posy-20.0f),"Start level editor");
 	m_pLabelStartGame->SetVisible(true);
@@ -59,8 +59,8 @@ void Menu::OnResetDevice()
 {
 	pTextManager->OnResetDevice();
 	m_pSpriteForLogo->OnResetDevice();
-	float w = (float)pEngine->GetPresentParameters().BackBufferWidth;
-	float h = (float)pEngine->GetPresentParameters().BackBufferHeight;
+	float w = (float)pApp->GetPresentParameters().BackBufferWidth;
+	float h = (float)pApp->GetPresentParameters().BackBufferHeight;
 
 	m_pLabelStartGame->SetPosition(D3DXVECTOR2(w/2-40.0f,h/2-20.0f));
 	m_pLabelQuit->SetPosition(D3DXVECTOR2(w/2-40.0f,h/2+20.0f));
@@ -77,7 +77,7 @@ void Menu::OnUpdate(float dt)
 	pDinput->Poll();
 	if( pDinput->IsKeyDown(DIK_F))
 	{
-		pEngine->SwitchToFullscreen(true);
+		pApp->SwitchToFullscreen(true);
 	}
 
 	m_pLabelStartGame->OnUpdate();
@@ -85,10 +85,10 @@ void Menu::OnUpdate(float dt)
 
 	if(m_pLabelStartGame->IsMouseDown())
 	{
-		pEngine->GetScene("menu")->OnLostDevice();
+		pApp->GetScene("menu")->OnLostDevice();
 
-		IBaseScene* pGameScene = pEngine->GetScene("game");
-		pEngine->SetCurrentScene(pGameScene);
+		IBaseScene* pGameScene = pApp->GetScene("game");
+		pApp->SetCurrentScene(pGameScene);
 	}
 
 	if(m_pLabelQuit->IsMouseDown())
@@ -111,7 +111,7 @@ void Menu::OnRender()
 	D3DXVECTOR3 posForLogo(0.0,0.0,0.0);
 	m_pSpriteForLogo->Begin(D3DXSPRITE_ALPHABLEND);
 		
-	if(pEngine->GetPresentParameters().Windowed)
+	if(pApp->GetPresentParameters().Windowed)
 	{
 		m_pSpriteForLogo->Draw(m_pLogoInWindowTexture,NULL,NULL,&posForLogo,D3DXCOLOR(255,255,255,255));
 	}
@@ -154,7 +154,7 @@ Purpose:this function detects various messages sent to the window like WM_CLOSE,
 LRESULT Menu::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	
-	return DefWindowProc(pEngine->GetMainWindow(), msg, wParam, lParam);
+	return DefWindowProc(pApp->GetMainWindow(), msg, wParam, lParam);
 }
 
 
