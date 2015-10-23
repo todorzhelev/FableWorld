@@ -3,7 +3,7 @@
 #include"Menu.h"
 #include"MenuInGame.h"
 #include"HeroSelection.h"
-#include <boost/lexical_cast.hpp>
+//#include <boost/lexical_cast.hpp>
 #include <string>
 
 //////////////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 	
 	m_pGameObjManager = new GameObjectManager(true,false,false,true);
 
-	string str = boost::lexical_cast<string>(1546);
+	//string str = boost::lexical_cast<string>(1546);
 
 	//adds 3 scenes in the scenesContainer and set the active scene to be the menu scene.
 	Menu menu;

@@ -141,6 +141,9 @@
     <ClCompile Include="..\..\CORE\CORE\Application.cpp">
       <Filter>extern\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\AABB.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -194,9 +197,6 @@
     <ClInclude Include="..\..\CORE\CORE\LuaFunctions.h">
       <Filter>extern\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\CORE\CORE\Misc.h">
-      <Filter>extern\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\SkinnedMesh.h">
       <Filter>extern\Header Files</Filter>
     </ClInclude>
@@ -222,6 +222,12 @@
       <Filter>extern\Header Files\TinyXML</Filter>
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\Application.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\Misc.h">
+      <Filter>extern\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\AABB.h">
       <Filter>extern\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

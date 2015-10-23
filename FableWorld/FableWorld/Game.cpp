@@ -564,6 +564,22 @@ void Game::OnRender()
 				(*it).second->OnRender();
 			}
 			
+			auto BB = pMainHero->m_BoundingBox;
+			BB = BB.TransformByMatrix(BB.m_transformationMatrix);
+			for (auto& object:m_pGameObjManager->GetGameObjects())
+			{
+				auto BB1 = object.second->m_BoundingBox;
+				BB1 = BB1.TransformByMatrix(BB1.m_transformationMatrix);
+
+				if (pMainHero->m_strModelName.compare(object.second->m_strModelName))
+				{
+					if (BB.Collide(BB1))
+					{
+						cout << "COLLIDING" << object.second->m_strModelName << endl;
+					}
+				}
+			}
+
 			pTextManager->DrawFPS();
 	
 			//draws dialogues

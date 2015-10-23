@@ -15,6 +15,7 @@
 #include<unordered_map>
 #include<list>
 #include"IBaseScene.h"
+#include<iostream>
 
 using namespace std;
 

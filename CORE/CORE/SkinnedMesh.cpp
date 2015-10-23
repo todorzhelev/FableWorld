@@ -793,15 +793,17 @@ void SkinnedMesh::RenderBoundingBox()
 	pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
-			D3DXMATRIX T,S,R,R1,R2;
-			D3DXMatrixTranslation(&T,m_vPos.x,m_vPos.y,m_vPos.z);
-			D3DXMatrixScaling(&S,m_fScale,m_fScale,m_fScale);
-			D3DXMatrixRotationX(&R,m_fRotAngleX);
-			D3DXMatrixRotationY(&R1,m_fRotAngleY);
-			D3DXMatrixRotationZ(&R2, m_fRotAngleZ);
-			D3DXMATRIX meshCombined = S*(R*R1*R2)*T;
+	D3DXMATRIX T,S,R,R1,R2;
+	D3DXMatrixTranslation(&T,m_vPos.x,m_vPos.y,m_vPos.z);
+	D3DXMatrixScaling(&S,m_fScale,m_fScale,m_fScale);
+	D3DXMatrixRotationX(&R,m_fRotAngleX);
+	D3DXMatrixRotationY(&R1,m_fRotAngleY);
+	D3DXMatrixRotationZ(&R2, m_fRotAngleZ);
+	D3DXMATRIX meshCombined = S*(R*R1*R2)*T;
 
-	m_pEffect->SetMatrix(m_hWVPMatrix, &(m_BoundingBoxOffset * meshCombined * camera->GetViewProjMatrix()));
+	m_BoundingBox.m_transformationMatrix = m_BoundingBoxOffset*meshCombined;
+
+	m_pEffect->SetMatrix(m_hWVPMatrix, &(m_BoundingBoxOffset*meshCombined * camera->GetViewProjMatrix()));
 
 	m_pEffect->SetValue(m_hMaterial, &m_BoundingBoxMaterial, sizeof(Material));
 	m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);

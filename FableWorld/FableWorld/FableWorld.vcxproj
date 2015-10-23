@@ -72,12 +72,15 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
     </ClCompile>
     <Link>
       <AdditionalDependencies>lua5.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -88,6 +91,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\CORE\CORE\AABB.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Button.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Camera.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Checkbox.cpp" />
@@ -119,6 +123,7 @@
     <ClCompile Include="MenuInGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\CORE\CORE\AABB.h" />
     <ClInclude Include="..\..\CORE\CORE\Button.h" />
     <ClInclude Include="..\..\CORE\CORE\Camera.h" />
     <ClInclude Include="..\..\CORE\CORE\Checkbox.h" />

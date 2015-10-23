@@ -204,7 +204,7 @@ void StaticMesh::BuildBoundingBox()
 	m_BoundingBoxMaterial.m_ambient  		= D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.17f);
 	m_BoundingBoxMaterial.m_diffuse   		= D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.17f);
 	m_BoundingBoxMaterial.m_specular     	= D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.17f);
-	m_BoundingBoxMaterial.m_fSpecularPower 	= 8.0f;
+	m_BoundingBoxMaterial.m_fSpecularPower 	= 0.3f;
 }
 
 
@@ -237,7 +237,7 @@ Purpose:updates the position of the mesh
 void StaticMesh::OnUpdate(float fDeltaTime)
 {
 	//binded models got their own height, based on the bone that they are attached to, other models are just put on the terrain
-	if(!m_bIsBindable)
+	if (!m_bIsBindable && m_pGameObjManager->AreObjectsGrounded())
 	{
 		m_vPos.y = pTerrain->GetHeight(m_vPos.x,m_vPos.z);
 	}
@@ -282,12 +282,15 @@ void StaticMesh::OnRender()
 		D3DXMATRIX T,T1;
 		D3DXMATRIX S;
 		D3DXMATRIX R;
-		D3DXMATRIX R1;
+		D3DXMATRIX R1,R2,R3;
 
 		D3DXMatrixTranslation(&T,m_vPos.x,m_vPos.y,m_vPos.z);
 		D3DXMatrixScaling(&S,m_fScale,m_fScale,m_fScale);
-		D3DXMatrixRotationY(&R1,m_fRotAngleY);
-		m_CombinedTransformationMatrix = S*R1*T;
+		D3DXMatrixRotationX(&R1,m_fRotAngleX);
+		D3DXMatrixRotationY(&R2, m_fRotAngleY);
+		D3DXMatrixRotationZ(&R3, m_fRotAngleZ);
+
+		m_CombinedTransformationMatrix = S*R1*R2*R3*T;
 
 		//alpha channel is used in the trees
 		pDxDevice->SetRenderState(D3DRS_ALPHATESTENABLE, true);
@@ -325,7 +328,7 @@ void StaticMesh::OnRender()
 					m_pMesh->DrawSubset(j);					
 				}
 
-				//RenderBoundingBox();
+				RenderBoundingBox();
 
 			m_pEffect->EndPass();
 		}
@@ -510,16 +513,23 @@ void StaticMesh::RenderBoundingBox()
 	pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
-		D3DXMATRIX T,T1;
-		D3DXMATRIX S;
-		D3DXMATRIX R;
-		D3DXMATRIX R1;
+	D3DXMATRIX T,T1;
+	D3DXMATRIX S;
+	D3DXMATRIX R;
+	D3DXMATRIX R1,R2,R3;
 
-		D3DXMatrixTranslation(&T,m_vPos.x,m_vPos.y,m_vPos.z);
-		D3DXMatrixScaling(&S,m_fScale,m_fScale,m_fScale);
-		D3DXMatrixRotationY(&R1,m_fRotAngleY);
+	D3DXMatrixTranslation(&T,m_vPos.x,m_vPos.y,m_vPos.z);
+	D3DXMatrixScaling(&S,m_fScale,m_fScale,m_fScale);
+	D3DXMatrixRotationX(&R1,m_fRotAngleX);
+	D3DXMatrixRotationY(&R2, m_fRotAngleY);
+	D3DXMatrixRotationZ(&R3, m_fRotAngleZ);
 
-	m_pEffect->SetMatrix(m_hWVPMatrix, &(m_BoundingBoxOffset*S*R1*T*camera->GetViewProjMatrix()));
+	D3DXMATRIX meshCombined = m_BoundingBoxOffset*S*R1*R2*R3*T;
+
+	m_BoundingBox.m_transformationMatrix = meshCombined;
+
+	m_pEffect->SetMatrix(m_hWVPMatrix, &(meshCombined*camera->GetViewProjMatrix()));
+
 	m_pEffect->SetValue(m_hMaterial, &m_BoundingBoxMaterial, sizeof(Material));
 	m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);
 	m_pEffect->CommitChanges();
