@@ -6,13 +6,14 @@ GameObjectManager* m_pGameObjManager = nullptr;
 
 /////////////////////////////////////////////////////////////////////////
 
-GameObjectManager::GameObjectManager(bool bShouldRenderTitles, bool bShouldHighlightPickedObjects, bool bShouldRenderAxis, bool bAreObjectsGrounded)
+GameObjectManager::GameObjectManager(bool bShouldRenderTitles, bool bShouldHighlightPickedObjects, bool bShouldRenderAxis, bool bAreObjectsGrounded, bool bShouldRenderBoundingBoxes)
 {
 	m_pPickedObject	= nullptr;
 	m_bShouldHighlightPickedObjects = bShouldHighlightPickedObjects;
 	m_bShouldRenderTitles  = bShouldRenderTitles;
 	m_bShouldRenderAxis    = bShouldRenderAxis;
 	m_bAreObjectsGrounded = bAreObjectsGrounded;
+	m_bShouldRenderBoundingBoxes = bShouldRenderBoundingBoxes;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -252,6 +253,20 @@ void GameObjectManager::SetAreObjectsGrounded(bool bAreObjectsGrounded)
 bool GameObjectManager::AreObjectsGrounded()
 {
 	return m_bAreObjectsGrounded;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void GameObjectManager::SetShouldRenderBoundingBoxes(bool bShouldRenderBoundingBoxes)
+{
+	m_bShouldRenderBoundingBoxes = bShouldRenderBoundingBoxes;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+bool GameObjectManager::ShouldRenderBoundingBoxes()
+{
+	return m_bShouldRenderBoundingBoxes;
 }
 
 /////////////////////////////////////////////////////////////////////////

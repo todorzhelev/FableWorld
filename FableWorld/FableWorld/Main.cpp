@@ -19,7 +19,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 
 	pApp = new Application(hInstance, "Fable World", D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING);
 	
-	m_pGameObjManager = new GameObjectManager(true,false,false,true);
+	m_pGameObjManager = new GameObjectManager(true,false,false,true,false);
 
 	//string str = boost::lexical_cast<string>(1546);
 

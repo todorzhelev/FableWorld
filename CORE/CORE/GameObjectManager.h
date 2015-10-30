@@ -8,7 +8,7 @@ class GameObjectManager
 {
 public:
 
-	GameObjectManager(bool bShouldRenderTitles, bool bShouldHighlightPickedObjects,bool bShouldRenderAxis,bool bAreObjectsGrounded);
+	GameObjectManager(bool bShouldRenderTitles, bool bShouldHighlightPickedObjects, bool bShouldRenderAxis, bool bAreObjectsGrounded, bool bShouldRenderBoundingBoxes);
 
 	void AddGameObject(GameObject* pGameObject);
 
@@ -34,6 +34,10 @@ public:
 
 	bool AreObjectsGrounded();
 
+	void SetShouldRenderBoundingBoxes(bool bShouldRenderAxis);
+
+	bool ShouldRenderBoundingBoxes();
+
 	void OnUpdate();
 
 	bool IsPickedStaticObject(GameObject* pObj, float& nDistance);
@@ -52,6 +56,8 @@ private:
 	bool		m_bShouldRenderAxis;
 
 	bool		m_bAreObjectsGrounded;
+
+	bool		m_bShouldRenderBoundingBoxes;
 
 	GameObject*	m_pPickedObject;
 

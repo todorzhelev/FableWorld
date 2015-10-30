@@ -758,6 +758,14 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 					{
 						camera->SetCameraMode(ECameraMode_MoveWithoutPressedMouse);
 					}
+
+					break;
+				}
+				case 'B':
+				{
+					m_pGameObjManager->SetShouldRenderBoundingBoxes(!m_pGameObjManager->ShouldRenderBoundingBoxes());
+
+					break;
 				}
 			}
 

@@ -106,7 +106,7 @@ float4 SkinnedMeshPS(VS_OUTPUT inp) : COLOR
 		color = (ambient + diffuse*5.0)*texColor;
 	}
 
-  	return float4(color, 1.0);
+  	return float4(color, mtrl.diffuse.a*texColor.a);
     
 }
 

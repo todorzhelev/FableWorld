@@ -81,7 +81,7 @@ float4 StaticMeshPS(VS_OUTPUT inp) : COLOR
 		color = (ambient + diffuse*5.0)*texColor;
 	}
 	
-	return float4(color, texColor.a);
+	return float4(color, mtrl.diffuse.a*texColor.a);
     
 }
 

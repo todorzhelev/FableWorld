@@ -488,9 +488,10 @@ void SkinnedMesh::BuildBoundingBox()
 	D3DXVECTOR3 center = m_BoundingBox.GetCenter();
 	D3DXMatrixTranslation(&(m_BoundingBoxOffset), center.x, center.y, center.z);
 
-	m_BoundingBoxMaterial.m_ambient = D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.17f);
-	m_BoundingBoxMaterial.m_diffuse = D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.17f);
-	m_BoundingBoxMaterial.m_specular = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.17f);
+	m_BoundingBoxMaterial.m_ambient = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
+	//below 0.4 does not work...
+	m_BoundingBoxMaterial.m_diffuse = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.4f);
+	m_BoundingBoxMaterial.m_specular = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
 	m_BoundingBoxMaterial.m_fSpecularPower = 8.0f;
 }
 
@@ -674,7 +675,11 @@ void SkinnedMesh::OnRender()
 	{
 		m_pEffect->BeginPass(i);
 			m_pMesh->DrawSubset(0);
-			RenderBoundingBox();
+
+			if (m_pGameObjManager->ShouldRenderBoundingBoxes())
+			{
+				RenderBoundingBox();
+			}
 		m_pEffect->EndPass();
 	}
 	m_pEffect->End();
@@ -685,6 +690,7 @@ void SkinnedMesh::OnRender()
 		RenderTitlesForQuest();
 	}
 	
+	//render the binded objects associated with this skinned mesh
 	for (auto& it : m_mapBindedObjects)
 	{
 		GameObject* pBindedObject = static_cast<StaticMesh*>(it.first);
