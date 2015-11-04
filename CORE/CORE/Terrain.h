@@ -34,6 +34,8 @@ public:
 
 	float	GetHeight(float fX, float fZ);
 
+	bool	IsValidPosition(float x, float z);
+
 	bool	IsInBounds(int i, int j);
 
 	void	SetLightVector(D3DXVECTOR3 vLightVector);

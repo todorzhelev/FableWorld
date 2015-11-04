@@ -469,26 +469,31 @@ void Game::MoveObject(string objectTitle, float dt)
 	}
 	
 	D3DXVECTOR3 newPos = pSkinnedMesh->m_vPos+ dir*40.0*dt;
-	pSkinnedMesh->m_vPos = newPos;
-	
-	if( camera->GetCameraMode() == ECameraMode_MoveWithoutPressedMouse )
+	if( pTerrain->IsValidPosition(newPos.x,newPos.z))
 	{
-			//if we just move the mouse move the camera
-			RotateObject(objectTitle,dt);
+		
 
-	}
-	else if( camera->GetCameraMode() == ECameraMode_MoveWithPressedMouse )
-	{
-		//if we hold the left mouse button move the camera
-		if(pDinput->IsMouseButtonDown(0))
+		if (camera->GetCameraMode() == ECameraMode_MoveWithoutPressedMouse)
 		{
-			RotateObject(objectTitle,dt);
-		}
-	}
+			//if we just move the mouse move the camera
+			RotateObject(objectTitle, dt);
 
-	//updates the camera position based on the new position of the model.
-	//via cameraOffset we can control how far the camera is from the model and at what position.
-	camera->GetPosition() = pSkinnedMesh->m_vPos + camera->GetOffset();
+		}
+		else if (camera->GetCameraMode() == ECameraMode_MoveWithPressedMouse)
+		{
+			//if we hold the left mouse button move the camera
+			if (pDinput->IsMouseButtonDown(0))
+			{
+				RotateObject(objectTitle, dt);
+			}
+		}
+
+		pSkinnedMesh->m_vPos = newPos;
+
+		//updates the camera position based on the new position of the model.
+		//via cameraOffset we can control how far the camera is from the model and at what position.
+		camera->GetPosition() = pSkinnedMesh->m_vPos + camera->GetOffset();
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////

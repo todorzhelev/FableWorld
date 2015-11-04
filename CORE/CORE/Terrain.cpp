@@ -493,6 +493,28 @@ float Terrain::GetHeight(float x, float z)
 	}
 }
 
+/////////////////////////////////////////////////////////////////////////
+
+bool Terrain::IsValidPosition(float x, float z)
+{
+	float fPossibleColumn = (x + 0.5f*m_nWidth) / m_fDX;
+	float fPossibleRow = (z - 0.5f*m_nDepth) / -m_fDZ;
+
+	//floorf returns the largest integer less than or equal to the passed parameter
+	int nRow = static_cast<int>(floorf(fPossibleRow));
+	int nCol = static_cast<int>(floorf(fPossibleColumn));
+
+	auto size = m_vHeightmap.size();
+	if( nRow*m_nCols + nCol < size &&
+	    nRow*m_nCols + (nCol + 1) < size &&
+		(nRow + 1)*m_nCols + nCol  < size &&
+		(nRow + 1)*m_nCols + (nCol + 1) < size)
+	{
+		return true;
+	}
+
+	return false;
+}
 
 /////////////////////////////////////////////////////////////////////////
 //used in shader
