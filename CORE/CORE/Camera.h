@@ -6,7 +6,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
-enum ECameraMode
+enum class ECameraMode
 {
 	ECameraMode_MoveWithoutPressedMouse,
 	ECameraMode_MoveWithPressedMouse
@@ -54,8 +54,6 @@ private:
 	void			BuildFrustumPlanes();
 
 	void			BuildViewMatrix();
-
-private:
 
 	bool		m_bIsCameraFree;
 	float		m_fFovAngle;

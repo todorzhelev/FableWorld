@@ -59,7 +59,7 @@ Game::Game()
 	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
 
 	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 2000.0f,false);
-	camera->SetCameraMode(ECameraMode_MoveWithPressedMouse);
+	camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithPressedMouse);
 
 	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.
 	InitVertexDeclarations();
@@ -468,32 +468,30 @@ void Game::MoveObject(string objectTitle, float dt)
 		pSkinnedMesh->PlayAnimation("idle");
 	}
 	
+	if (camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithoutPressedMouse)
+	{
+		//if we just move the mouse move the camera
+		RotateObject(objectTitle, dt);
+
+	}
+	else if (camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithPressedMouse)
+	{
+		//if we hold the left mouse button move the camera
+		if (pDinput->IsMouseButtonDown(0))
+		{
+			RotateObject(objectTitle, dt);
+		}
+	}
+
 	D3DXVECTOR3 newPos = pSkinnedMesh->m_vPos+ dir*40.0*dt;
 	if( pTerrain->IsValidPosition(newPos.x,newPos.z))
 	{
-		
-
-		if (camera->GetCameraMode() == ECameraMode_MoveWithoutPressedMouse)
-		{
-			//if we just move the mouse move the camera
-			RotateObject(objectTitle, dt);
-
-		}
-		else if (camera->GetCameraMode() == ECameraMode_MoveWithPressedMouse)
-		{
-			//if we hold the left mouse button move the camera
-			if (pDinput->IsMouseButtonDown(0))
-			{
-				RotateObject(objectTitle, dt);
-			}
-		}
-
 		pSkinnedMesh->m_vPos = newPos;
-
-		//updates the camera position based on the new position of the model.
-		//via cameraOffset we can control how far the camera is from the model and at what position.
-		camera->GetPosition() = pSkinnedMesh->m_vPos + camera->GetOffset();
 	}
+
+	//updates the camera position based on the new position of the model.
+	//via cameraOffset we can control how far the camera is from the model and at what position.
+	camera->SetPosition(pSkinnedMesh->m_vPos + camera->GetOffset());
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -755,13 +753,13 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				case 'L':
 				{
-					if( camera->GetCameraMode() == ECameraMode_MoveWithoutPressedMouse )
+					if( camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithoutPressedMouse )
 					{
-						camera->SetCameraMode(ECameraMode_MoveWithPressedMouse);
+						camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithPressedMouse);
 					}
-					else if( camera->GetCameraMode() == ECameraMode_MoveWithPressedMouse )
+					else if( camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithPressedMouse )
 					{
-						camera->SetCameraMode(ECameraMode_MoveWithoutPressedMouse);
+						camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithoutPressedMouse);
 					}
 
 					break;
