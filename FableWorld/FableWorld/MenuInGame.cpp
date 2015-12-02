@@ -54,11 +54,6 @@ Purpose:updates the labels in the menu in game
 */
 void MenuInGame::OnUpdate(float dt)
 {
-	pDinput->Poll();
-	if( pDinput->IsKeyDown(DIK_F))
-	{
-		pApp->SwitchToFullscreen(true);
-	}
 	float w = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth);
 	float h = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight);
 
@@ -127,6 +122,20 @@ Purpose:this function detects various messages sent to the window like WM_CLOSE,
 */
 LRESULT MenuInGame::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	switch (msg)
+	{
+		case WM_KEYDOWN:
+		{
+			switch (wParam)
+			{
+				case 'F':
+				{
+					pApp->SwitchToFullscreen(true);
+				}
+				break;
+			}
+		}
+	}
 
 	return DefWindowProc(pApp->GetMainWindow(), msg, wParam, lParam);
 }

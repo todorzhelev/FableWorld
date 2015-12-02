@@ -88,20 +88,21 @@ Game::Game()
 	pDialogueManager->LoadDialogues("dialogues/dialogue.xml");
 
 	//creates 3d titles for the models and check for dialogues
-	for(auto it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	auto& gameObjects = m_pGameObjManager->GetGameObjects();
+	for(auto& gameObject : gameObjects)
 	{
-		if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
+		if( gameObject.second->m_eGameObjectType == EGameObjectType_Skinned )
 		{
 			//create mesh for 3d text above the models
-			pTextManager->CreateMeshFor3DText((*it).second);
+			pTextManager->CreateMeshFor3DText(gameObject.second);
 			
 			//check if certain skinned mesh has dialog attached to it
 			for(auto it1 = pDialogueManager->m_vGameObjectsWithDialogues.begin();it1!=pDialogueManager->m_vGameObjectsWithDialogues.end();it1++)
 			{
-				if( (*it).second->m_strModelName == (*it1) )
+				if(gameObject.second->m_strModelName == (*it1) )
 				{
-					(*it).second->m_bHasDialogue = true;
-					pTextManager->CreateMeshFor3DTextQuest((*it).second);
+					gameObject.second->m_bHasDialogue = true;
+					pTextManager->CreateMeshFor3DTextQuest(gameObject.second);
 				}
 			}
 			
@@ -118,8 +119,6 @@ Game::Game()
 	m_pHealSpell = new Button(spellPosition,64,64,"","blueTear.dds","blueTear.dds");
 
 	InitDebugGraphicsShader();
-
-	OnResetDevice();
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -164,12 +163,13 @@ void Game::OnLostDevice()
 	pTextManager->OnLostDevice();
 	pTerrain->OnLostDevice();
 
-	for(auto it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	for(auto& gameObject : m_pGameObjManager->GetGameObjects())
 	{
-		(*it).second->OnLostDevice();
+		gameObject.second->OnLostDevice();
 	}
 
 	m_pInterfaceSprite->OnLostDevice();
+	m_pHealSpell->OnLostDevice();
 }
 
 
@@ -184,11 +184,13 @@ void Game::OnResetDevice()
 	pTextManager->OnResetDevice();
 	pTerrain->OnResetDevice();
 	
-	for(auto it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	for (auto& gameObject : m_pGameObjManager->GetGameObjects())
 	{
-		(*it).second->OnResetDevice();
+		gameObject.second->OnResetDevice();
 	}
 	m_pInterfaceSprite->OnResetDevice();
+
+	m_pHealSpell->OnResetDevice();
 	
 	//after the onResetDevice there might be change in the size of the screen so set
 	//the new dimensions to the camera
@@ -219,9 +221,9 @@ void Game::OnUpdate(float dt)
 	}
 
 	//update all the game objects
-	for(auto it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	for (auto& gameObject : m_pGameObjManager->GetGameObjects())
 	{
-		(*it).second->OnUpdate(dt);
+		gameObject.second->OnUpdate(dt);
 	}
 
 	m_pGameObjManager->OnUpdate();
@@ -233,15 +235,15 @@ void Game::OnUpdate(float dt)
 	soundsyst->PlayAllSounds();
 
 	//updates for the dialogues
-	for(map<string,DialogueObject>::iterator it=pDialogueManager->m_mapModelDialogue.begin();it!=pDialogueManager->m_mapModelDialogue.end();it++)
+	for(auto& dialogue: pDialogueManager->m_mapModelDialogue)
 	{
-		if( !(*it).second.m_bIsEnded )
+		if( !dialogue.second.m_bIsEnded )
 		{
-			pDialogueManager->UpdateLabelTree((*it).second.m_pTree->GetRoot());
-			pDialogueManager->UpdateLabelTreeRoot((*it).second.m_pTree->GetRoot());
-			pDialogueManager->StartDialogue((*it).second.m_pTree->GetRoot(),(*it).second);
-			pDialogueManager->ChangeDialogue((*it).second.m_pCurrentDialogueNode,(*it).second);
-			pDialogueManager->LabelClicked((*it).second,m_mapActiveQuests,availableQuests);
+			pDialogueManager->UpdateLabelTree(dialogue.second.m_pTree->GetRoot());
+			pDialogueManager->UpdateLabelTreeRoot(dialogue.second.m_pTree->GetRoot());
+			pDialogueManager->StartDialogue(dialogue.second.m_pTree->GetRoot(), dialogue.second);
+			pDialogueManager->ChangeDialogue(dialogue.second.m_pCurrentDialogueNode, dialogue.second);
+			pDialogueManager->LabelClicked(dialogue.second,m_mapActiveQuests,availableQuests);
 		}
 	}
 	
@@ -255,81 +257,81 @@ void Game::OnUpdate(float dt)
 	//checking if there is active quest
 	if(!m_mapActiveQuests.empty())
 	{
-		for(map<string,QuestObject>::iterator it=m_mapActiveQuests.begin();it!=m_mapActiveQuests.end();it++)
+		for(auto& quest : m_mapActiveQuests)
 		{
 			//if mainHero is close to the required from the quest object and the required object is dead the quest is completed.
-			if(IsObjectNear(pMainHero,m_pGameObjManager->GetGameObjects().find((*it).second.requiredObject)->second) && 
-				m_pGameObjManager->GetGameObjects().find((*it).second.requiredObject)->second->m_bIsDead )
+			if(IsObjectNear(pMainHero,m_pGameObjManager->GetGameObjects().find(quest.second.requiredObject)->second) &&
+				m_pGameObjManager->GetGameObjects().find(quest.second.requiredObject)->second->m_bIsDead )
 			{
-				(*it).second.completed = true;
+				quest.second.completed = true;
 			}
 		}
 	}
 	
 	//revealing dialogue if model is picked
-	for(auto it=pDialogueManager->m_mapModelDialogue.begin();it!=pDialogueManager->m_mapModelDialogue.end();it++)
+	for (auto& dialogue : pDialogueManager->m_mapModelDialogue)
 	{
-		if( m_pGameObjManager->GetGameObjects().find((*it).second.m_strModel)->second->m_bIsPicked && !(*it).second.m_bIsEnded )
+		if( m_pGameObjManager->GetGameObjects().find(dialogue.second.m_strModel)->second->m_bIsPicked && !dialogue.second.m_bIsEnded )
 		{
-			(*it).second.m_pTree->GetRoot()->m_pLabel->SetVisible(true);
-			GameObject* pGameObject = m_pGameObjManager->GetGameObjects().find((*it).second.m_strModel)->second;
+			dialogue.second.m_pTree->GetRoot()->m_pLabel->SetVisible(true);
+			GameObject* pGameObject = m_pGameObjManager->GetGameObjects().find(dialogue.second.m_strModel)->second;
 			pGameObject->m_bIsPicked = false;
 		}
 	}
 
 	//updating the models's titles positions
-	for(auto it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	for(auto& gameObject : m_pGameObjManager->GetGameObjects())
 	{
-		if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
+		if(gameObject.second->m_eGameObjectType == EGameObjectType_Skinned )
 		{
-			float angle = D3DXVec3Dot(&(*it).second->m_vTitleRight,&camera->GetLookVector());
-			(*it).second->m_fTitleRotationAngleByY += angle;
+			float angle = D3DXVec3Dot(&gameObject.second->m_vTitleRight,&camera->GetLookVector());
+			gameObject.second->m_fTitleRotationAngleByY += angle;
 
 			D3DXMATRIX R;
 			D3DXMatrixRotationY(&R, angle);
-			D3DXVec3TransformCoord(&(*it).second->m_vTitleLook, &(*it).second->m_vTitleLook, &R);
-			D3DXVec3TransformCoord(&(*it).second->m_vTitleRight, &(*it).second->m_vTitleRight, &R);
-			D3DXVec3TransformCoord(&(*it).second->m_vTitleUp, &(*it).second->m_vTitleUp, &R);
+			D3DXVec3TransformCoord(&gameObject.second->m_vTitleLook, &gameObject.second->m_vTitleLook, &R);
+			D3DXVec3TransformCoord(&gameObject.second->m_vTitleRight, &gameObject.second->m_vTitleRight, &R);
+			D3DXVec3TransformCoord(&gameObject.second->m_vTitleUp, &gameObject.second->m_vTitleUp, &R);
 		}
 	
 	}
 
 	//updating the models's title's quest positions. 
 	//At the moment these titles are ? signs above the head of the model if he got dialogue attached.
-	for(map<string,GameObject*>::iterator it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	for (auto& gameObject : m_pGameObjManager->GetGameObjects())
 	{
-		if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
+		if( gameObject.second->m_eGameObjectType == EGameObjectType_Skinned )
 		{
-			float angle = D3DXVec3Dot(&(*it).second->m_vTitleForQuestRight,&camera->GetLookVector());
-			(*it).second->m_fTitleForQuestRotationAngleByY += angle;
+			float angle = D3DXVec3Dot(&gameObject.second->m_vTitleForQuestRight,&camera->GetLookVector());
+			gameObject.second->m_fTitleForQuestRotationAngleByY += angle;
 
 			D3DXMATRIX R;
 			D3DXMatrixRotationY(&R, angle);
-			D3DXVec3TransformCoord(&(*it).second->m_vTitleForQuestLook, &(*it).second->m_vTitleForQuestLook, &R);
-			D3DXVec3TransformCoord(&(*it).second->m_vTitleForQuestRight, &(*it).second->m_vTitleForQuestRight, &R);
-			D3DXVec3TransformCoord(&(*it).second->m_vTitleForQuestUp, &(*it).second->m_vTitleForQuestUp, &R);
+			D3DXVec3TransformCoord(&gameObject.second->m_vTitleForQuestLook, &gameObject.second->m_vTitleForQuestLook, &R);
+			D3DXVec3TransformCoord(&gameObject.second->m_vTitleForQuestRight, &gameObject.second->m_vTitleForQuestRight, &R);
+			D3DXVec3TransformCoord(&gameObject.second->m_vTitleForQuestUp, &gameObject.second->m_vTitleForQuestUp, &R);
 		}
 	}
 
-	/*for(map<string,GameObject*>::iterator it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
-	{
-		DrawLine(pMainHero->m_vPos,(*it).second->m_vPos);
-	}*/
+	//for(map<string,GameObject*>::iterator it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	//{
+	//	DrawLine(pMainHero->m_vPos,gameObject.second->m_vPos);
+	//}
 
 	//if mainHero is attacking
-	for(map<string,GameObject*>::iterator it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	for (auto& gameObject : m_pGameObjManager->GetGameObjects())
 	{
-		if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
+		if( gameObject.second->m_eGameObjectType == EGameObjectType_Skinned )
 		{
 			if( pDinput->IsMouseButtonDown(0) && 
-			   IsObjectNear(pMainHero,(*it).second) && 
-			   pMainHero->m_strModelName != (*it).second->m_strModelName &&
-			   (*it).second->m_strActorType == "enemy"
+			   IsObjectNear(pMainHero,gameObject.second) && 
+			   pMainHero->m_strModelName != gameObject.second->m_strModelName &&
+			   gameObject.second->m_strActorType == "enemy"
 			   )
 			{           
 				m_bIsEnemyHealthBarVisible = true;
-				(*it).second->m_bIsAttacked = true;
-				(*it).second->m_strAttackerName = mainHero;
+				gameObject.second->m_bIsAttacked = true;
+				gameObject.second->m_strAttackerName = mainHero;
 				pMainHero->PlayAnimationOnce("attack_1");
 				if( (pMainHero->m_bIsAttacking) )
 				{
@@ -338,82 +340,82 @@ void Game::OnUpdate(float dt)
 			}
 		
 			// enemy AI
-			if( (*it).second->m_bIsAttacked && IsObjectNear(pMainHero,(*it).second))
+			if( gameObject.second->m_bIsAttacked && IsObjectNear(pMainHero,gameObject.second))
 			{
 				if( m_rHealthBarRectangle.right > 0.0 )
 				{
-					pMainHero->m_strAttackerName = (*it).second->m_strModelName;
-					SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>((*it).second);
+					pMainHero->m_strAttackerName = gameObject.second->m_strModelName;
+					SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(gameObject.second);
 
 					pSkinnedMesh->PlayAnimationOnce("attack_1");
 				
-					if( ((*it).second->m_bIsAttacking) )
+					if( (gameObject.second->m_bIsAttacking) )
 					{
 						m_rHealthBarRectangle.right-=70;
 					}
 				}
 				else
 				{
-					(*it).second->m_bIsAttacked = false;
+					gameObject.second->m_bIsAttacked = false;
 				}
 			}
 
 			//when the enemy is attacked it updates his rotation so it can face the mainHero
-			if( (*it).second->m_bIsAttacked && 
-				!(*it).second->m_bIsDead &&
-			   IsObjectNear(pMainHero,(*it).second)
+			if( gameObject.second->m_bIsAttacked && 
+				!gameObject.second->m_bIsDead &&
+			   IsObjectNear(pMainHero,gameObject.second)
 			  )
 			{
-				D3DXVECTOR3 vActorPosition = (*it).second->m_vPos;
+				D3DXVECTOR3 vActorPosition = gameObject.second->m_vPos;
 				D3DXVECTOR3 vMainHeroPosition = pMainHero->m_vPos;
 
 				D3DXVECTOR3 vDistanceVector = vActorPosition - vMainHeroPosition;
 				D3DXVec3Normalize(&vDistanceVector,&vDistanceVector);
 
 				//for some reason the look vector is the right vector must be fixed
-				float angle = D3DXVec3Dot(&(*it).second->m_vRight,&vDistanceVector);
-				(*it).second->m_fRotAngleY += angle;
+				float angle = D3DXVec3Dot(&gameObject.second->m_vRight,&vDistanceVector);
+				gameObject.second->m_fRotAngleY += angle;
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationY(&R, angle);
-				D3DXVec3TransformCoord(&(*it).second->m_vLook, &(*it).second->m_vLook, &R);
-				D3DXVec3TransformCoord(&(*it).second->m_vRight, &(*it).second->m_vRight, &R);
-				D3DXVec3TransformCoord(&(*it).second->m_vUp, &(*it).second->m_vUp, &R);
+				D3DXVec3TransformCoord(&gameObject.second->m_vLook, &gameObject.second->m_vLook, &R);
+				D3DXVec3TransformCoord(&gameObject.second->m_vRight, &gameObject.second->m_vRight, &R);
+				D3DXVec3TransformCoord(&gameObject.second->m_vUp, &gameObject.second->m_vUp, &R);
 			}
 
 			//if mainHero is fighting with enemy, but started to run and is no longer close to the enemy, 
 			//the enemy updates his vectors so he can face the mainHero and run in his direction.
 			//When he is close enough he start to attack again.
-			if( (*it).second->m_bIsAttacked && 
-				!(*it).second->m_bIsDead &&
-			   !IsObjectNear(pMainHero,(*it).second)
+			if( gameObject.second->m_bIsAttacked && 
+				!gameObject.second->m_bIsDead &&
+			   !IsObjectNear(pMainHero,gameObject.second)
 			  )
 			{
-				SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>((*it).second);
+				SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(gameObject.second);
 				pSkinnedMesh->PlayAnimation("run");
 			
 				D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
 
-				dir -= (*it).second->m_vLook;
+				dir -= gameObject.second->m_vLook;
 
-				D3DXVECTOR3 newPos = (*it).second->m_vPos+ dir*40.0*dt;
-				(*it).second->m_vPos = newPos;
+				D3DXVECTOR3 newPos = gameObject.second->m_vPos+ dir*40.0*dt;
+				gameObject.second->m_vPos = newPos;
 
 				//put it in a function. the code is duplicated.
-				D3DXVECTOR3 vActorPosition = (*it).second->m_vPos;
+				D3DXVECTOR3 vActorPosition = gameObject.second->m_vPos;
 				D3DXVECTOR3 vMainHeroPosition = pMainHero->m_vPos;
 
 				D3DXVECTOR3 vDistanceVector = vActorPosition - vMainHeroPosition;
 				D3DXVec3Normalize(&vDistanceVector,&vDistanceVector);
 
-				float angle = D3DXVec3Dot(&(*it).second->m_vRight,&vDistanceVector);
-				(*it).second->m_fRotAngleY += angle;
+				float angle = D3DXVec3Dot(&gameObject.second->m_vRight,&vDistanceVector);
+				gameObject.second->m_fRotAngleY += angle;
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationY(&R, angle);
-				D3DXVec3TransformCoord(&(*it).second->m_vLook, &(*it).second->m_vLook, &R);
-				D3DXVec3TransformCoord(&(*it).second->m_vRight, &(*it).second->m_vRight, &R);
-				D3DXVec3TransformCoord(&(*it).second->m_vUp, &(*it).second->m_vUp, &R);
+				D3DXVec3TransformCoord(&gameObject.second->m_vLook, &gameObject.second->m_vLook, &R);
+				D3DXVec3TransformCoord(&gameObject.second->m_vRight, &gameObject.second->m_vRight, &R);
+				D3DXVec3TransformCoord(&gameObject.second->m_vUp, &gameObject.second->m_vUp, &R);
 			}
 		}
 	}
@@ -562,9 +564,9 @@ void Game::OnRender()
 			pSky->OnRender();
 			pTerrain->OnRender();
 
-			for(map<string,GameObject*>::iterator it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+			for (auto& gameObject : m_pGameObjManager->GetGameObjects())
 			{
-				(*it).second->OnRender();
+				gameObject.second->OnRender();
 			}
 			
 			auto BB = pMainHero->m_BoundingBox;
@@ -586,29 +588,29 @@ void Game::OnRender()
 			pTextManager->DrawFPS();
 	
 			//draws dialogues
-			for(map<string,DialogueObject>::iterator it=pDialogueManager->m_mapModelDialogue.begin();it!=pDialogueManager->m_mapModelDialogue.end();it++)
+			for (auto& dialogue : pDialogueManager->m_mapModelDialogue)
 			{
-				pDialogueManager->RenderLabelTreeRoot((*it).second.m_pTree->GetRoot());
-				pDialogueManager->RenderLabelTree((*it).second.m_pTree->GetRoot());
+				pDialogueManager->RenderLabelTreeRoot(dialogue.second.m_pTree->GetRoot());
+				pDialogueManager->RenderLabelTree(dialogue.second.m_pTree->GetRoot());
 			}
 
 			//text->drawText("Press L to switch between the two camera modes",400,40,0,0,255,0,0,0);
 
 			//draws quest stuff
-			for(map<string,QuestObject>::iterator it=m_mapActiveQuests.begin();it!=m_mapActiveQuests.end();it++)
+			for(auto& quest: m_mapActiveQuests)
 			{
-				if((*it).second.completed)
+				if(quest.second.completed)
 				{
-					pTextManager->RenderText((*it).second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
+					pTextManager->RenderText(quest.second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
 					pTextManager->RenderText("Completed",pApp->GetPresentParameters().BackBufferWidth-590,70,0,0,255,255,255,0);
 				}
 				else if( !pMainHero->m_bIsDead )
 				{
-					pTextManager->RenderText((*it).second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
+					pTextManager->RenderText(quest.second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
 				}
-				else if( !(*it).second.completed && pMainHero->m_bIsDead )
+				else if( !quest.second.completed && pMainHero->m_bIsDead )
 				{
-					pTextManager->RenderText((*it).second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
+					pTextManager->RenderText(quest.second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
 					pTextManager->RenderText("Epic fail!",pApp->GetPresentParameters().BackBufferWidth-570,70,0,0,255,255,255,0);
 				}
 			}

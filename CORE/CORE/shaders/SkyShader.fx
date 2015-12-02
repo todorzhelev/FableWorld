@@ -53,8 +53,8 @@ technique SkyTech
         vertexShader = compile vs_2_0 SkyVS();
         pixelShader  = compile ps_2_0 SkyPS();
 
+		//the skybox will be outside of the frustum so dont cull it
 		CullMode = None;
-		ZFunc = Always; 
     }
 }
 

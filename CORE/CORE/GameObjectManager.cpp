@@ -45,9 +45,9 @@ void GameObjectManager::SetPickedObject(GameObject* pPickedObject)
 
 void GameObjectManager::OnUpdate()
 {
-	for(auto it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	for(auto& gameObject : m_mapGameObjects)
 	{
-		if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
+		if(gameObject.second->m_eGameObjectType == EGameObjectType_Skinned )
 		{	
 			if( pDinput->IsMouseButtonDown(0) )
 			{
@@ -56,32 +56,32 @@ void GameObjectManager::OnUpdate()
 
 				GetWorldPickingRay(vOrigin, vDir);
 				
-				AABB box = it->second->m_BoundingBox.TransformByMatrix(it->second->m_CombinedTransformationMatrix);
+				AABB box = gameObject.second->m_BoundingBox.TransformByMatrix(gameObject.second->m_CombinedTransformationMatrix);
 				if( D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir) )
 				{
-					SkinnedMesh* pMesh = static_cast<SkinnedMesh*>(it->second);
+					SkinnedMesh* pMesh = static_cast<SkinnedMesh*>(gameObject.second);
 
-					D3DXFRAME* pFrame = pMesh->FindFrameWithMesh(it->second->m_pRoot);
+					D3DXFRAME* pFrame = pMesh->FindFrameWithMesh(gameObject.second->m_pRoot);
 
 					float nDistance = 0.0f;
 
 					//m_mapPickedObjects[nDistance] = it->second;
 
-					if( IsPickedSkinnedObject(pFrame,it->second->m_CombinedTransformationMatrix,vOrigin,vDir,nDistance) )
+					if( IsPickedSkinnedObject(pFrame, gameObject.second->m_CombinedTransformationMatrix,vOrigin,vDir,nDistance) )
 					{
-						m_mapPickedObjects[nDistance] = it->second;
+						m_mapPickedObjects[nDistance] = gameObject.second;
 					}
 				}
 			}
 		}
-		else if( (*it).second->m_eGameObjectType == EGameObjectType_Static )
+		else if(gameObject.second->m_eGameObjectType == EGameObjectType_Static )
 		{
 			//if( pDinput->IsMouseButtonDown(0) )
 			{
 				float nDistance = 0.0f;
-				if( IsPickedStaticObject(it->second,nDistance) )
+				if( IsPickedStaticObject(gameObject.second,nDistance) )
 				{
-					m_mapPickedObjects[nDistance] = it->second;
+					m_mapPickedObjects[nDistance] = gameObject.second;
 				}
 			}
 		}
