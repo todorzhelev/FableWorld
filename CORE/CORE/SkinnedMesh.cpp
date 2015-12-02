@@ -384,7 +384,8 @@ Purpose:binds static object to animated model's bone
 */
 void SkinnedMesh::BindWeaponToModel(string strObjectName,string strBoneToBind)
 {
-	GameObject* pGameObject = m_pGameObjManager->GetGameObjects().find(strObjectName.c_str())->second;
+	GameObject* pGameObject = m_pGameObjManager->GetObjectByName(strObjectName.c_str());
+
 	m_mapBindedObjects[pGameObject] = strBoneToBind;
 }
 

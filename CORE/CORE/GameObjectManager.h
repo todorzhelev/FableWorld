@@ -16,7 +16,9 @@ public:
 
 	void SetPickedObject(GameObject* pPickedObject);
 
-	map<string,GameObject*>& GetGameObjects();
+	std::vector<GameObject*>&  GetGameObjects();
+
+	GameObject* GetObjectByName(std::string name);
 
 	void SetShouldRenderTitles(bool bShouldRenderTitles);
 
@@ -61,7 +63,8 @@ private:
 
 	GameObject*	m_pPickedObject;
 
-	map<string,GameObject*> m_mapGameObjects;
+	std::vector<GameObject*> m_gameObjects;
+	//map<string,GameObject*> m_mapGameObjects;
 
 	//stores all the hit objects by the mouse from single click
 	map<int,GameObject*> m_mapPickedObjects;

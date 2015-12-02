@@ -67,7 +67,12 @@ int l_addStaticModel(lua_State* L)
 	
 	if (pMesh->m_bIsBindable && !pMesh->m_strBindedToAnimatedModelName.empty() && !pMesh->m_strBindedToBoneName.empty())
 	{
-		SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(m_pGameObjManager->GetGameObjects().find(pMesh->m_strBindedToAnimatedModelName)->second);
+		GameObject* obj = m_pGameObjManager->GetObjectByName(pMesh->m_strBindedToAnimatedModelName);
+		SkinnedMesh* pSkinnedMesh = nullptr;
+		if (obj != nullptr)
+		{
+			pSkinnedMesh = static_cast<SkinnedMesh*>(obj);
+		}
 
 		pSkinnedMesh->BindWeaponToModel(pMesh->m_strModelName, pMesh->m_strBindedToBoneName);
 	}

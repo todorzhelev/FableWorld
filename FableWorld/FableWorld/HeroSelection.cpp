@@ -7,6 +7,7 @@ SourceFile:HeroSelection.cpp
 Purpose:loads the logo and labels for the menu and renders them
 */
 
+constexpr int rotationSlowFactor = 200000;
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -95,7 +96,7 @@ void HeroSelection::OnUpdate(float dt)
 	{
 		SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(pPesho);
 	
-		float yAngle = pDinput->GetMouseDX() / (30000*dt);
+		float yAngle = pDinput->GetMouseDX() / (rotationSlowFactor*dt);
 		pSkinnedMesh->m_fRotAngleY -=yAngle;
 	
 		D3DXMATRIX R;
@@ -107,7 +108,7 @@ void HeroSelection::OnUpdate(float dt)
 
 	camera->OnUpdate(dt);
 	//camera->MoveCamera(dt);
-	for( GameObject* pObject : m_SceneObjects )
+	for( auto& pObject : m_SceneObjects )
 	{
 		pObject->OnUpdate(dt);
 	}

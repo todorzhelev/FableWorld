@@ -252,8 +252,9 @@ void DialogueManager::LabelClicked(DialogueObject& dialogueObject,map<string,Que
 				mapActiveQuests[dialogueObject.m_pClickedDialogueNode->m_strQuest] = mapAvailableQuests.find(dialogueObject.m_pClickedDialogueNode->m_strQuest)->second;
 				mapAvailableQuests.erase(dialogueObject.m_pClickedDialogueNode->m_strQuest);
 			}
-				
-			GameObject* pGameObject = m_pGameObjManager->GetGameObjects().find(dialogueObject.m_strModel)->second;
+
+			GameObject* pGameObject = m_pGameObjManager->GetObjectByName(dialogueObject.m_strModel);
+
 			pGameObject->m_bHasDialogue = false;
 
 			dialogueObject.m_bIsClickedDialogueNode  = false;

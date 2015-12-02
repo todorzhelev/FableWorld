@@ -24,7 +24,7 @@ Purpose:puts new GameObject in the map
 */
 void GameObjectManager::AddGameObject(GameObject* pGameObject)
 {
-	m_mapGameObjects[pGameObject->m_strModelName] = pGameObject;
+	m_gameObjects.push_back(pGameObject);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -45,9 +45,9 @@ void GameObjectManager::SetPickedObject(GameObject* pPickedObject)
 
 void GameObjectManager::OnUpdate()
 {
-	for(auto& gameObject : m_mapGameObjects)
+	for(auto& gameObject : m_gameObjects)
 	{
-		if(gameObject.second->m_eGameObjectType == EGameObjectType_Skinned )
+		if(gameObject->m_eGameObjectType == EGameObjectType_Skinned )
 		{	
 			if( pDinput->IsMouseButtonDown(0) )
 			{
@@ -56,32 +56,32 @@ void GameObjectManager::OnUpdate()
 
 				GetWorldPickingRay(vOrigin, vDir);
 				
-				AABB box = gameObject.second->m_BoundingBox.TransformByMatrix(gameObject.second->m_CombinedTransformationMatrix);
+				AABB box = gameObject->m_BoundingBox.TransformByMatrix(gameObject->m_CombinedTransformationMatrix);
 				if( D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir) )
 				{
-					SkinnedMesh* pMesh = static_cast<SkinnedMesh*>(gameObject.second);
+					SkinnedMesh* pMesh = static_cast<SkinnedMesh*>(gameObject);
 
-					D3DXFRAME* pFrame = pMesh->FindFrameWithMesh(gameObject.second->m_pRoot);
+					D3DXFRAME* pFrame = pMesh->FindFrameWithMesh(gameObject->m_pRoot);
 
 					float nDistance = 0.0f;
 
 					//m_mapPickedObjects[nDistance] = it->second;
 
-					if( IsPickedSkinnedObject(pFrame, gameObject.second->m_CombinedTransformationMatrix,vOrigin,vDir,nDistance) )
+					if( IsPickedSkinnedObject(pFrame, gameObject->m_CombinedTransformationMatrix,vOrigin,vDir,nDistance) )
 					{
-						m_mapPickedObjects[nDistance] = gameObject.second;
+						m_mapPickedObjects[nDistance] = gameObject;
 					}
 				}
 			}
 		}
-		else if(gameObject.second->m_eGameObjectType == EGameObjectType_Static )
+		else if(gameObject->m_eGameObjectType == EGameObjectType_Static )
 		{
 			//if( pDinput->IsMouseButtonDown(0) )
 			{
 				float nDistance = 0.0f;
-				if( IsPickedStaticObject(gameObject.second,nDistance) )
+				if( IsPickedStaticObject(gameObject,nDistance) )
 				{
-					m_mapPickedObjects[nDistance] = gameObject.second;
+					m_mapPickedObjects[nDistance] = gameObject;
 				}
 			}
 		}
@@ -194,9 +194,24 @@ bool GameObjectManager::IsPickedSkinnedObject(D3DXFRAME* pFrame,D3DXMATRIX combi
 
 /////////////////////////////////////////////////////////////////////////
 
-map<string,GameObject*>& GameObjectManager::GetGameObjects()
+std::vector<GameObject*>& GameObjectManager::GetGameObjects()
 {
-	return m_mapGameObjects;
+	return m_gameObjects;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+GameObject* GameObjectManager::GetObjectByName(std::string name)
+{
+	for(auto& object : m_gameObjects )
+	{
+		if( !object->m_strModelName.compare(name) )
+		{
+			return object;
+		}
+	}
+
+	return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////
