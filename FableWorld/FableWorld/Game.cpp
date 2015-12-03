@@ -701,7 +701,6 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
 	m_pDebugGraphicsEffect->EndPass();
 	m_pDebugGraphicsEffect->End();
 
-
 	pDxDevice->EndScene();
 
 	pDxDevice->Present(0, 0, 0, 0);
