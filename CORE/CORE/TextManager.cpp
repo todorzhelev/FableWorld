@@ -91,10 +91,10 @@ void TextManager::CreateMeshFor3DText(GameObject* pGameObject)
 {
 	D3DXCreateText(pDxDevice,  
 				   m_hDC,          
-				   pGameObject->m_strModelName.c_str(),		//Text 
+				   pGameObject->GetName().c_str(),		//Text 
 				   0.001f,            
 				   0.04f,          
-				   &pGameObject->m_pTitleMesh,			//Mesh
+				   pGameObject->GetTitleMesh(),			//Mesh
 				   NULL,       
 				   NULL);
 }
@@ -109,10 +109,10 @@ void TextManager::CreateMeshFor3DTextQuest(GameObject* pGameObject)
 {
 	D3DXCreateText( pDxDevice,  
 					m_hDC,          
-					pGameObject->m_strTitleForQuest.c_str(),	  //Text 
+					pGameObject->GetTitleForQuest().c_str(),	  //Text 
 					0.001f,            
 					0.04f,          
-					&pGameObject->m_pTitleForQuestMesh,       //Mesh
+					pGameObject->GetTitleForQuestMesh(),       //Mesh
 					NULL,       
 					NULL);
 }

@@ -356,7 +356,7 @@ void StaticMesh::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 	GameObject* pBindedObject = this;
 
 	//the bone in the animated model's hierarchy
-	FrameEx* pBone = static_cast<FrameEx*>(D3DXFrameFind(pSkinnedMesh->m_pRoot, bone.c_str()));
+	FrameEx* pBone = static_cast<FrameEx*>(D3DXFrameFind(pSkinnedMesh->GetRootFrame(), bone.c_str()));
 
 	//testing variables
 	/*static float angleX = 33.72;
@@ -366,17 +366,17 @@ void StaticMesh::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 
 	//matrices for the binded weapon
 	D3DXMATRIX SS;
-	D3DXMatrixScaling(&SS,pBindedObject->m_fScale,pBindedObject->m_fScale,pBindedObject->m_fScale);
+	D3DXMatrixScaling(&SS,pBindedObject->GetScale(),pBindedObject->GetScale(),pBindedObject->GetScale());
 
 	D3DXMATRIX R1SX;
-	D3DXMatrixRotationX(&R1SX,pBindedObject->m_fRotAngleX);
+	D3DXMatrixRotationX(&R1SX,pBindedObject->GetRotationAngleByX());
 	D3DXMATRIX R1SY;
-	D3DXMatrixRotationY(&R1SY,pBindedObject->m_fRotAngleY);
+	D3DXMatrixRotationY(&R1SY,pBindedObject->GetRotationAngleByY());
 	D3DXMATRIX R1SZ;
-	D3DXMatrixRotationZ(&R1SZ,pBindedObject->m_fRotAngleZ);
+	D3DXMatrixRotationZ(&R1SZ,pBindedObject->GetRotationAngleByZ());
 
 	D3DXMATRIX TS;
-	D3DXMatrixTranslation(&TS,pBindedObject->m_vPos.x,pBindedObject->m_vPos.y,pBindedObject->m_vPos.z);
+	D3DXMatrixTranslation(&TS,pBindedObject->GetPosition().x,pBindedObject->GetPosition().y,pBindedObject->GetPosition().z);
 
 	//combined matrix
 	D3DXMATRIX BindedObjectCombinedMatrix = SS*(R1SY*R1SX*R1SZ)*TS;
@@ -448,11 +448,11 @@ void StaticMesh::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 
 	//matrices for the animated model
 	D3DXMATRIX TA;
-	D3DXMatrixTranslation(&TA,pSkinnedMesh->m_vPos.x,pSkinnedMesh->m_vPos.y,pSkinnedMesh->m_vPos.z);
+	D3DXMatrixTranslation(&TA,pSkinnedMesh->GetPosition().x,pSkinnedMesh->GetPosition().y,pSkinnedMesh->GetPosition().z);
 	D3DXMATRIX SA;
-	D3DXMatrixScaling(&SA,pSkinnedMesh->m_fScale,pSkinnedMesh->m_fScale,pSkinnedMesh->m_fScale);
+	D3DXMatrixScaling(&SA,pSkinnedMesh->GetScale(),pSkinnedMesh->GetScale(),pSkinnedMesh->GetScale());
 	D3DXMATRIX R1A;
-	D3DXMatrixRotationY(&R1A,pSkinnedMesh->m_fRotAngleY);
+	D3DXMatrixRotationY(&R1A,pSkinnedMesh->GetRotationAngleByY());
 	D3DXMATRIX AnimatedModelCombinedMatrix = SA*R1A*(TA);
 
 	//combined matrix for the bone
@@ -472,12 +472,12 @@ void StaticMesh::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 	{
 		m_pEffect->BeginPass(i);
 
-			for(unsigned int j = 0; j < pBindedObject->m_vMaterials.size(); ++j)
+			for(unsigned int j = 0; j < pBindedObject->GetMaterials().size(); ++j)
 			{
-				m_pEffect->SetValue(m_hMaterial, &(pBindedObject->m_vMaterials[j]), sizeof(Material));
-				if(pBindedObject->m_vTextures[j] != 0)
+				m_pEffect->SetValue(m_hMaterial, &(pBindedObject->GetMaterials()[j]), sizeof(Material));
+				if(pBindedObject->GetTextures()[j] != 0)
 				{
-					m_pEffect->SetTexture(m_hTexture, pBindedObject->m_vTextures[j]);
+					m_pEffect->SetTexture(m_hTexture, pBindedObject->GetTextures()[j]);
 				}
 				else
 				{
@@ -485,7 +485,7 @@ void StaticMesh::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 				}
 													
 				m_pEffect->CommitChanges();
-				pBindedObject->m_pMesh->DrawSubset(j);
+				pBindedObject->GetMesh()->DrawSubset(j);
 			}
 
 			pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
@@ -494,8 +494,8 @@ void StaticMesh::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 
 
 			//bounding box render for binded weapon
-			m_pEffect->SetMatrix(m_hWVPMatrix, &(pBindedObject->m_BoundingBoxOffset*FullCombinedMatrix*camera->GetViewProjMatrix()));
-			m_pEffect->SetValue(m_hMaterial, &pBindedObject->m_BoundingBoxMaterial, sizeof(Material));
+			m_pEffect->SetMatrix(m_hWVPMatrix, &(pBindedObject->GetBBOffsetMatrix()*FullCombinedMatrix*camera->GetViewProjMatrix()));
+			m_pEffect->SetValue(m_hMaterial, &pBindedObject->GetBBMaterial(), sizeof(Material));
 			m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);
 			m_pEffect->CommitChanges();
 			//pBindedObject->m_pBoundingBoxMesh->DrawSubset(0);

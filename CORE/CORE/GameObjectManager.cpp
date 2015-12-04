@@ -47,7 +47,7 @@ void GameObjectManager::OnUpdate()
 {
 	for(auto& gameObject : m_gameObjects)
 	{
-		if(gameObject->m_eGameObjectType == EGameObjectType_Skinned )
+		if(gameObject->GetObjectType() == EGameObjectType_Skinned )
 		{	
 			if( pDinput->IsMouseButtonDown(0) )
 			{
@@ -56,25 +56,25 @@ void GameObjectManager::OnUpdate()
 
 				GetWorldPickingRay(vOrigin, vDir);
 				
-				AABB box = gameObject->m_BoundingBox.TransformByMatrix(gameObject->m_CombinedTransformationMatrix);
+				AABB box = gameObject->GetBB().TransformByMatrix(gameObject->GetCombinedTransfMatrix());
 				if( D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir) )
 				{
 					SkinnedMesh* pMesh = static_cast<SkinnedMesh*>(gameObject);
 
-					D3DXFRAME* pFrame = pMesh->FindFrameWithMesh(gameObject->m_pRoot);
+					D3DXFRAME* pFrame = pMesh->FindFrameWithMesh(gameObject->GetRootFrame());
 
 					float nDistance = 0.0f;
 
 					//m_mapPickedObjects[nDistance] = it->second;
 
-					if( IsPickedSkinnedObject(pFrame, gameObject->m_CombinedTransformationMatrix,vOrigin,vDir,nDistance) )
+					if( IsPickedSkinnedObject(pFrame, gameObject->GetCombinedTransfMatrix(),vOrigin,vDir,nDistance) )
 					{
 						m_mapPickedObjects[nDistance] = gameObject;
 					}
 				}
 			}
 		}
-		else if(gameObject->m_eGameObjectType == EGameObjectType_Static )
+		else if(gameObject->GetObjectType() == EGameObjectType_Static )
 		{
 			//if( pDinput->IsMouseButtonDown(0) )
 			{
@@ -94,7 +94,7 @@ void GameObjectManager::OnUpdate()
 		auto pClosestPickedObject = (m_mapPickedObjects.begin()->second);
 		if( pClosestPickedObject )
 		{
-			pClosestPickedObject->m_bIsPicked = true;
+			pClosestPickedObject->SetPicked(true);
 		}
 
 		m_mapPickedObjects.clear();
@@ -112,7 +112,7 @@ bool GameObjectManager::IsPickedStaticObject(GameObject* pObj, float& nDistance)
 
 	bool bIsPicked = false;
 
-	AABB box = pObj->m_BoundingBox.TransformByMatrix(pObj->m_CombinedTransformationMatrix);
+	AABB box = pObj->GetBB().TransformByMatrix(pObj->GetCombinedTransfMatrix());
 	bIsPicked = D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir);
 
 	if( bIsPicked )
@@ -121,7 +121,7 @@ bool GameObjectManager::IsPickedStaticObject(GameObject* pObj, float& nDistance)
 		//this is needed, because we have to transform the picking vectors to the mesh local space
 		//which is required by the D3DXIntersect function
 		D3DXMATRIX InverseWorldMatrix;
-		D3DXMatrixInverse(&InverseWorldMatrix, 0, &pObj->m_CombinedTransformationMatrix);
+		D3DXMatrixInverse(&InverseWorldMatrix, 0, &pObj->GetCombinedTransfMatrix());
 
 		//transform the Ray using the inverse matrix
 		D3DXVec3TransformCoord(&vOrigin, &vOrigin, &InverseWorldMatrix);
@@ -134,7 +134,7 @@ bool GameObjectManager::IsPickedStaticObject(GameObject* pObj, float& nDistance)
 		float dist = 0.0f;
 		ID3DXBuffer* allhits = 0;
 		DWORD numHits = 0;
-		D3DXIntersect(pObj->m_pMesh, &vOrigin, &vDir, &hit,&faceIndex, &u, &v, &dist, &allhits, &numHits);
+		D3DXIntersect(pObj->GetMesh(), &vOrigin, &vDir, &hit,&faceIndex, &u, &v, &dist, &allhits, &numHits);
 		releaseX(allhits);
 
 		nDistance = dist;
@@ -205,7 +205,7 @@ GameObject* GameObjectManager::GetObjectByName(std::string name)
 {
 	for(auto& object : m_gameObjects )
 	{
-		if( !object->m_strModelName.compare(name) )
+		if( !object->GetName().compare(name) )
 		{
 			return object;
 		}

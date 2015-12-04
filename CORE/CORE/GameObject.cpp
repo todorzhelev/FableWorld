@@ -60,34 +60,19 @@ void GameObject::SetPosition(const D3DXVECTOR3& pos)
 	m_vPos = pos;
 }
 
-D3DXVECTOR3 GameObject::GetLookVector() const
+D3DXVECTOR3& GameObject::GetLookVector()
 {
 	return m_vLook;
 }
 
-void GameObject::SetLookVector(const D3DXVECTOR3& look)
-{
-	m_vLook = look;
-}
-
-D3DXVECTOR3 GameObject::GetRightVector() const
+D3DXVECTOR3& GameObject::GetRightVector()
 {
 	return m_vRight;
 }
 
-void GameObject::SetRightVector(const D3DXVECTOR3& right)
-{
-	m_vRight = right;
-}
-
-D3DXVECTOR3 GameObject::GetUpVector() const
+D3DXVECTOR3& GameObject::GetUpVector()
 {
 	return m_vUp;
-}
-
-void GameObject::SetUpVector(const D3DXVECTOR3& up)
-{
-	m_vUp = up;
 }
 
 float GameObject::GetScale() const
@@ -250,9 +235,9 @@ void GameObject::SetActorType(const string& actorType)
 	m_strActorType = actorType;
 }
 
-ID3DXMesh* GameObject::GetTitleMesh() const
+ID3DXMesh** GameObject::GetTitleMesh()
 {
-	return m_pTitleMesh;
+	return& m_pTitleMesh;
 }
 
 void GameObject::SetTitleMesh(ID3DXMesh* titleMesh)
@@ -260,34 +245,19 @@ void GameObject::SetTitleMesh(ID3DXMesh* titleMesh)
 	m_pTitleMesh = titleMesh;
 }
 
-D3DXVECTOR3 GameObject::GetTitleLookVector() const
+D3DXVECTOR3& GameObject::GetTitleLookVector()
 {
 	return m_vTitleLook;
 }
 
-void GameObject::SetTitleLookVector(const D3DXVECTOR3& look)
-{
-	m_vTitleLook = look;
-}
-
-D3DXVECTOR3 GameObject::GetTitleRightVector() const
+D3DXVECTOR3& GameObject::GetTitleRightVector()
 {
 	return m_vTitleRight;
 }
 
-void GameObject::SetTitleRightVector(const D3DXVECTOR3& right)
-{
-	m_vTitleRight = right;
-}
-
-D3DXVECTOR3 GameObject::GetTitleUpVector() const
+D3DXVECTOR3& GameObject::GetTitleUpVector()
 {
 	return m_vTitleUp;
-}
-
-void GameObject::SetTitleUpVector(const D3DXVECTOR3& up)
-{
-	m_vTitleUp = up;
 }
 
 D3DXMATRIX GameObject::GetTitleRotationMatrix() const
@@ -305,9 +275,14 @@ float GameObject::GetTitleRotationAnglyByY() const
 	return m_fTitleRotationAngleByY;
 }
 
-void GameObject::SetTitleRotationAnglyByY(float titleRotationAnglyByY)
+void GameObject::SetTitleRotationAnglyByY(float angle)
 {
-	m_fTitleRotationAngleByY = titleRotationAnglyByY;
+	m_fTitleRotationAngleByY = angle;
+}
+
+void GameObject::ModifyTitleRotationAnglyByY(float delta)
+{
+	m_fTitleRotationAngleByY += delta;
 }
 
 string GameObject::GetTitleForQuest() const
@@ -315,15 +290,14 @@ string GameObject::GetTitleForQuest() const
 	return m_strTitleForQuest;
 }
 
-//terrible code duplication.....
 void GameObject::SetTitleForQuest(const string& titleForQuest)
 {
 	m_strTitleForQuest = titleForQuest;
 }
 
-ID3DXMesh* GameObject::GetTitleForQuestMesh() const
+ID3DXMesh** GameObject::GetTitleForQuestMesh()
 {
-	return m_pTitleForQuestMesh;
+	return &m_pTitleForQuestMesh;
 }
 
 void GameObject::SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh)
@@ -331,34 +305,19 @@ void GameObject::SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh)
 	m_pTitleForQuestMesh = titleForQuestMesh;
 }
 
-D3DXVECTOR3 GameObject::GetTitleForQuestLookVector() const
+D3DXVECTOR3& GameObject::GetTitleForQuestLookVector()
 {
 	return m_vTitleForQuestLook;
 }
 
-void GameObject::SetTitleForQuestLookVector(const D3DXVECTOR3& look)
-{
-	m_vTitleForQuestLook = look;
-}
-
-D3DXVECTOR3 GameObject::GetTitleForQuestRightVector() const
+D3DXVECTOR3& GameObject::GetTitleForQuestRightVector()
 {
 	return m_vTitleForQuestRight;
 }
 
-void GameObject::SetTitleForQuestRightVector(const D3DXVECTOR3& right)
-{
-	m_vTitleForQuestRight = right;
-}
-
-D3DXVECTOR3 GameObject::GetTitleForQuestUpVector() const
+D3DXVECTOR3& GameObject::GetTitleForQuestUpVector()
 {
 	return m_vTitleForQuestUp;
-}
-
-void GameObject::SetTitleForQuestUpVector(const D3DXVECTOR3& up)
-{
-	m_vTitleForQuestUp = up;
 }
 
 D3DXMATRIX GameObject::GetTitleForQuestRotationMatrix() const
@@ -376,9 +335,14 @@ float GameObject::GetTitleForQuestRotationAnglyByY() const
 	return m_fTitleForQuestRotationAngleByY;
 }
 
-void GameObject::SetTitleForQuestRotationAnglyByY(float titleForQuestRotationAnglyByY)
+void GameObject::SetTitleForQuestRotationAnglyByY(float angle)
 {
-	m_fTitleForQuestRotationAngleByY = titleForQuestRotationAnglyByY;
+	m_fTitleForQuestRotationAngleByY = angle;
+}
+
+void GameObject::ModifyTitleForQuestRotationAnglyByY(float delta)
+{
+	m_fTitleForQuestRotationAngleByY += delta;
 }
 
 vector<D3DXMATRIX>& GameObject::GetFinalBonesMatrices()
@@ -511,6 +475,11 @@ void GameObject::SetRotationAngleByX(float rotationAngleByX)
 	m_fRotAngleX = rotationAngleByX;
 }
 
+void GameObject::ModifyRotationAngleByX(float delta)
+{
+	m_fRotAngleX += delta;
+}
+
 float GameObject::GetRotationAngleByY() const
 {
 	return m_fRotAngleY;
@@ -521,6 +490,12 @@ void GameObject::SetRotationAngleByY(float rotationAngleByY)
 	m_fRotAngleY = rotationAngleByY;
 }
 
+
+void GameObject::ModifyRotationAngleByY(float delta)
+{
+	m_fRotAngleY += delta;
+}
+
 float GameObject::GetRotationAngleByZ() const
 {
 	return m_fRotAngleZ;
@@ -529,6 +504,11 @@ float GameObject::GetRotationAngleByZ() const
 void GameObject::SetRotationAngleByZ(float rotationAngleByZ)
 {
 	m_fRotAngleZ = rotationAngleByZ;
+}
+
+void GameObject::ModifyRotationAngleByZ(float delta)
+{
+	m_fRotAngleZ += delta;
 }
 
 bool GameObject::IsPicked() const

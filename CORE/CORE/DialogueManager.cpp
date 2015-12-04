@@ -255,7 +255,7 @@ void DialogueManager::LabelClicked(DialogueObject& dialogueObject,map<string,Que
 
 			GameObject* pGameObject = m_pGameObjManager->GetObjectByName(dialogueObject.m_strModel);
 
-			pGameObject->m_bHasDialogue = false;
+			pGameObject->SetHasDialogue(false);
 
 			dialogueObject.m_bIsClickedDialogueNode  = false;
 			dialogueObject.m_pCurrentDialogueNode	 = dialogueObject.m_pTree->GetRoot();

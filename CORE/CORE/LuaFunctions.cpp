@@ -16,65 +16,68 @@ int l_addStaticModel(lua_State* L)
 	GameObject* pMesh = new StaticMesh;
 
 	//GameObject obj;
-	pMesh->m_vLook	 = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	pMesh->m_vRight  = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pMesh->m_vUp	 = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	pMesh->GetLookVector()	 = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	pMesh->GetRightVector()  = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	pMesh->GetUpVector()	 = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
+	D3DXVECTOR3 pos;
 	lua_getglobal(L, "x");
-	pMesh->m_vPos.x = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pos.x = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
 
 	lua_getglobal(L, "y");
-	pMesh->m_vPos.y = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pos.y = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
 
 	lua_getglobal(L, "z");
-	pMesh->m_vPos.z = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pos.z = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+
+	pMesh->SetPosition(pos);
 
 	lua_getglobal(L, "scale");
-	pMesh->m_fScale = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pMesh->SetScale(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
 
 	lua_getglobal(L, "rotX");
-	pMesh->m_fRotAngleX = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pMesh->SetRotationAngleByX(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
 
 	lua_getglobal(L, "rotY");
-	pMesh->m_fRotAngleY = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pMesh->SetRotationAngleByY(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
 
 	lua_getglobal(L, "rotZ");
-	pMesh->m_fRotAngleZ = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pMesh->SetRotationAngleByZ(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
 	
 	lua_getglobal(L, "titleRotY");
-	pMesh->m_fTitleRotationAngleByY = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pMesh->SetTitleRotationAnglyByY(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
 
 	lua_getglobal(L, "bindable");
-	pMesh->m_bIsBindable = static_cast<int>(lua_tonumber(L,lua_gettop(L)));
+	pMesh->SetIsBindable(static_cast<int>(lua_tonumber(L,lua_gettop(L))));
 
 	lua_getglobal(L,"bindToAnModel");
-	pMesh->m_strBindedToAnimatedModelName = lua_tostring(L,lua_gettop(L));
+	pMesh->SetBindedToAnimatedModelName(lua_tostring(L,lua_gettop(L)));
 
 	lua_getglobal(L,"bindToAnModelBone");
-	pMesh->m_strBindedToBoneName = lua_tostring(L,lua_gettop(L));
+	pMesh->SetBindedToBoneName(lua_tostring(L,lua_gettop(L)));
 
 	lua_getglobal(L,"modelName");
-	pMesh->m_strModelName = lua_tostring(L,lua_gettop(L));
+	pMesh->SetName(lua_tostring(L,lua_gettop(L)));
 
 	lua_getglobal(L, "modelFileName");
-	pMesh->m_strModelFileName = lua_tostring(L,lua_gettop(L));
+	pMesh->SetModelFilename(lua_tostring(L,lua_gettop(L)));
 
 	pMesh->LoadGameObject();
 
-	pMesh->m_eGameObjectType = EGameObjectType_Static;
+	pMesh->SetObjectType(EGameObjectType_Static);
 
 	m_pGameObjManager->AddGameObject(pMesh);
 	
-	if (pMesh->m_bIsBindable && !pMesh->m_strBindedToAnimatedModelName.empty() && !pMesh->m_strBindedToBoneName.empty())
+	if (pMesh->IsBindable() && !pMesh->GetBindedToAnimatedModelName().empty() && !pMesh->GetBindedToBoneName().empty())
 	{
-		GameObject* obj = m_pGameObjManager->GetObjectByName(pMesh->m_strBindedToAnimatedModelName);
+		GameObject* obj = m_pGameObjManager->GetObjectByName(pMesh->GetBindedToAnimatedModelName());
 		SkinnedMesh* pSkinnedMesh = nullptr;
 		if (obj != nullptr)
 		{
 			pSkinnedMesh = static_cast<SkinnedMesh*>(obj);
 		}
 
-		pSkinnedMesh->BindWeaponToModel(pMesh->m_strModelName, pMesh->m_strBindedToBoneName);
+		pSkinnedMesh->BindWeaponToModel(pMesh->GetName(), pMesh->GetBindedToBoneName());
 	}
 
 	return 1;
@@ -90,70 +93,74 @@ int l_addAnimatedModel(lua_State* L)
 {
 	GameObject* pMesh = new SkinnedMesh;
 
-	pMesh->m_vLook		= D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	pMesh->m_vRight		= D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pMesh->m_vUp		= D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	pMesh->GetLookVector()  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	pMesh->GetRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	pMesh->GetUpVector()    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
-	pMesh->m_vTitleLook		= D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	pMesh->m_vTitleRight	= D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pMesh->m_vTitleUp	 	= D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	pMesh->GetTitleLookVector()  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	pMesh->GetTitleRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	pMesh->GetTitleUpVector()    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
-	pMesh->m_vTitleForQuestLook		= D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	pMesh->m_vTitleForQuestRight	= D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pMesh->m_vTitleForQuestUp		= D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	pMesh->m_fTitleForQuestRotationAngleByY	= 0.0;
+	pMesh->GetTitleForQuestLookVector()  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	pMesh->GetTitleForQuestRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	pMesh->GetTitleForQuestUpVector()    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	pMesh->SetTitleForQuestRotationAnglyByY(0.0);
+
+	D3DXVECTOR3 pos;
 
 	lua_getglobal(L, "x");
-	pMesh->m_vPos.x = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pos.x = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
 
 	lua_getglobal(L, "y");
-	pMesh->m_vPos.y = static_cast<float>(lua_tonumber(L,lua_gettop(L))); 
+	pos.y = static_cast<float>(lua_tonumber(L,lua_gettop(L))); 
 
 	lua_getglobal(L, "z");
-	pMesh->m_vPos.z = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pos.z = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+
+	pMesh->SetPosition(pos);
 
 	lua_getglobal(L, "scale");
-	pMesh->m_fScale = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pMesh->SetScale(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
 
 	lua_getglobal(L, "rotX");
-	pMesh->m_fRotAngleX = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pMesh->SetRotationAngleByX(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
 
 	lua_getglobal(L, "rotY");
-	pMesh->m_fRotAngleY = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pMesh->SetRotationAngleByY(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
 
-	pMesh->m_fRotAngleZ = 0;
+	pMesh->SetRotationAngleByZ(0);
 
 	lua_getglobal(L, "titleRotY");
-	pMesh->m_fTitleRotationAngleByY = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
+	pMesh->SetTitleRotationAnglyByY(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
 
 	lua_getglobal(L,"modelName");
-	pMesh->m_strModelName = lua_tostring(L,lua_gettop(L));
+	pMesh->SetName(lua_tostring(L,lua_gettop(L)));
 
 	lua_getglobal(L,"titleForQuest");
-	pMesh->m_strTitleForQuest = lua_tostring(L,lua_gettop(L));
+	pMesh->SetTitleForQuest(lua_tostring(L,lua_gettop(L)));
 
 	lua_getglobal(L, "modelFileName");
-	pMesh->m_strModelFileName = lua_tostring(L,lua_gettop(L));
+	pMesh->SetModelFilename(lua_tostring(L,lua_gettop(L)));
 
 	lua_getglobal(L, "textureFileName");
-	pMesh->m_strTextureFileName = lua_tostring(L,lua_gettop(L));
+	pMesh->SetTextureFilename(lua_tostring(L,lua_gettop(L)));
 
 	lua_getglobal(L, "typeInGame");
-	pMesh->m_strActorType = lua_tostring(L,lua_gettop(L));
+	pMesh->SetActorType(lua_tostring(L,lua_gettop(L)));
 
-	pMesh->m_bIsAttacked = false;
-	pMesh->m_bIsAttacking = false;
-	pMesh->m_nCurrentAnimTrack = 0;
-	pMesh->m_nNewAnimTrack = 1;
-	pMesh->m_bIsSwitched = false;
-	pMesh->m_bIsDead = false;
-	pMesh->m_bIsPicked = false;
-	pMesh->m_bHasDialogue = false;
-	pMesh->m_strAttackerName = "";
+	pMesh->SetAttacked(false);
+	pMesh->SetAttacking(false);
+	pMesh->SetCurrentAnimationTrack(0);
+	pMesh->SetNewAnimationTrack(1);
+	pMesh->SetIsSwitched(false);
+	pMesh->SetDead(false);
+	pMesh->SetPicked(false);
+	pMesh->SetHasDialogue(false);
+	pMesh->SetAttackerName("");
 
 	pMesh->LoadGameObject();
 
-	pMesh->m_eGameObjectType = EGameObjectType_Skinned;
+	pMesh->SetObjectType(EGameObjectType_Skinned);
 
 	m_pGameObjManager->AddGameObject(pMesh);
 	

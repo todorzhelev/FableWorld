@@ -35,17 +35,9 @@ public:
 
 	void SetPosition(const D3DXVECTOR3& pos);
 
-	D3DXVECTOR3 GetLookVector() const;
-
-	void SetLookVector(const D3DXVECTOR3& look);
-
-	D3DXVECTOR3 GetRightVector() const;
-
-	void SetRightVector(const D3DXVECTOR3& right);
-
-	D3DXVECTOR3 GetUpVector() const;
-
-	void SetUpVector(const D3DXVECTOR3& up);
+	D3DXVECTOR3& GetLookVector();
+	D3DXVECTOR3& GetRightVector();
+	D3DXVECTOR3& GetUpVector();
 
 	float GetScale() const;
 
@@ -111,58 +103,32 @@ public:
 
 	void SetActorType(const string& actorType);
 
-	ID3DXMesh* GetTitleMesh() const;
+	//name above the object in the game
+	ID3DXMesh**		GetTitleMesh();
+	void			SetTitleMesh(ID3DXMesh* titleMesh);
+	D3DXVECTOR3&	GetTitleLookVector();
+	D3DXVECTOR3&	GetTitleRightVector();
+	D3DXVECTOR3&	GetTitleUpVector();
+	D3DXMATRIX		GetTitleRotationMatrix() const;
+	void			SetTitleRotationMatrix(D3DXMATRIX titleRotationMatrix);
+	float			GetTitleRotationAnglyByY() const;
+	void			SetTitleRotationAnglyByY(float angle);
+	void			ModifyTitleRotationAnglyByY(float delta);
 
-	void SetTitleMesh(ID3DXMesh* titleMesh);
-
-	D3DXVECTOR3 GetTitleLookVector() const;
-
-	void SetTitleLookVector(const D3DXVECTOR3& look);
-
-	D3DXVECTOR3 GetTitleRightVector() const;
-
-	void SetTitleRightVector(const D3DXVECTOR3& right);
-
-	D3DXVECTOR3 GetTitleUpVector() const;
-
-	void SetTitleUpVector(const D3DXVECTOR3& up);
-
-	D3DXMATRIX GetTitleRotationMatrix() const;
-
-	void SetTitleRotationMatrix(D3DXMATRIX titleRotationMatrix);
-
-	float GetTitleRotationAnglyByY() const;
-
-	void SetTitleRotationAnglyByY(float titleRotationAnglyByY);
-
-	string GetTitleForQuest() const;
-
-	//terrible code duplication.....
-	void SetTitleForQuest(const string& titleForQuest);
-
-	ID3DXMesh* GetTitleForQuestMesh() const;
-
-	void SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh);
-
-	D3DXVECTOR3 GetTitleForQuestLookVector() const;
-
-	void SetTitleForQuestLookVector(const D3DXVECTOR3& look);
-
-	D3DXVECTOR3 GetTitleForQuestRightVector() const;
-
-	void SetTitleForQuestRightVector(const D3DXVECTOR3& right);
-
-	D3DXVECTOR3 GetTitleForQuestUpVector() const;
-
-	void SetTitleForQuestUpVector(const D3DXVECTOR3& up);
-
-	D3DXMATRIX GetTitleForQuestRotationMatrix() const;
-
-	void SetTitleForQuestRotationMatrix(D3DXMATRIX titleForQuestRotationMatrix);
-
-	float GetTitleForQuestRotationAnglyByY() const;
-		
-	void SetTitleForQuestRotationAnglyByY(float titleForQuestRotationAnglyByY);
+	//terrible code duplication fix this .....
+	//text for quest above the object
+	string			GetTitleForQuest() const;
+	void			SetTitleForQuest(const string& titleForQuest);
+	ID3DXMesh**		GetTitleForQuestMesh();
+	void			SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh);
+	D3DXVECTOR3&	GetTitleForQuestLookVector();
+	D3DXVECTOR3&	GetTitleForQuestRightVector();
+	D3DXVECTOR3&	GetTitleForQuestUpVector();
+	D3DXMATRIX		GetTitleForQuestRotationMatrix() const;
+	void			SetTitleForQuestRotationMatrix(D3DXMATRIX titleForQuestRotationMatrix);
+	float			GetTitleForQuestRotationAnglyByY() const;
+	void			SetTitleForQuestRotationAnglyByY(float angle);
+	void			ModifyTitleForQuestRotationAnglyByY(float delta);
 
 	vector<D3DXMATRIX>& GetFinalBonesMatrices();
 
@@ -213,16 +179,16 @@ public:
 	void SetIsSwitched(bool isSwitched);
 
 	float GetRotationAngleByX() const;
-
 	void SetRotationAngleByX(float rotationAngleByX);
+	void ModifyRotationAngleByX(float delta);
 
 	float GetRotationAngleByY() const;
-
 	void SetRotationAngleByY(float rotationAngleByY);
+	void ModifyRotationAngleByY(float delta);
 
 	float GetRotationAngleByZ() const;
-
 	void SetRotationAngleByZ(float rotationAngleByZ);
+	void ModifyRotationAngleByZ(float delta);
 
 	bool IsPicked() const;
 
@@ -252,7 +218,7 @@ public:
 
 	void SetCombinedTransfMatrix(D3DXMATRIX mat);
 
-//private:
+protected:
 
 	//the name of the .x file
 	string m_strModelFileName;

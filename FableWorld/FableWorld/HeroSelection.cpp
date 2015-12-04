@@ -97,13 +97,13 @@ void HeroSelection::OnUpdate(float dt)
 		SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(pPesho);
 	
 		float yAngle = pDinput->GetMouseDX() / (rotationSlowFactor*dt);
-		pSkinnedMesh->m_fRotAngleY -=yAngle;
+		pSkinnedMesh->ModifyRotationAngleByY(-yAngle);
 	
 		D3DXMATRIX R;
 		D3DXMatrixRotationY(&R, yAngle);
-		D3DXVec3TransformCoord(&pSkinnedMesh->m_vRight, &pSkinnedMesh->m_vRight, &R);
-		D3DXVec3TransformCoord(&pSkinnedMesh->m_vUp , &pSkinnedMesh->m_vUp , &R);
-		D3DXVec3TransformCoord(&pSkinnedMesh->m_vLook, &pSkinnedMesh->m_vLook, &R);
+		D3DXVec3TransformCoord(&pSkinnedMesh->GetRightVector(), &pSkinnedMesh->GetRightVector(), &R);
+		D3DXVec3TransformCoord(&pSkinnedMesh->GetUpVector() , &pSkinnedMesh->GetUpVector() , &R);
+		D3DXVec3TransformCoord(&pSkinnedMesh->GetLookVector(), &pSkinnedMesh->GetLookVector(), &R);
 	}
 
 	camera->OnUpdate(dt);

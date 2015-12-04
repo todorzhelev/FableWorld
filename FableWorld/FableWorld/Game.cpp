@@ -91,7 +91,7 @@ Game::Game()
 	auto& gameObjects = m_pGameObjManager->GetGameObjects();
 	for(auto& gameObject : gameObjects)
 	{
-		if( gameObject->m_eGameObjectType == EGameObjectType_Skinned )
+		if( gameObject->GetObjectType() == EGameObjectType_Skinned )
 		{
 			//create mesh for 3d text above the models
 			pTextManager->CreateMeshFor3DText(gameObject);
@@ -99,9 +99,9 @@ Game::Game()
 			//check if certain skinned mesh has dialog attached to it
 			for(auto it1 = pDialogueManager->m_vGameObjectsWithDialogues.begin();it1!=pDialogueManager->m_vGameObjectsWithDialogues.end();it1++)
 			{
-				if(gameObject->m_strModelName == (*it1) )
+				if(gameObject->GetName() == (*it1) )
 				{
-					gameObject->m_bHasDialogue = true;
+					gameObject->SetHasDialogue(true);
 					pTextManager->CreateMeshFor3DTextQuest(gameObject);
 				}
 			}
@@ -254,7 +254,7 @@ void Game::OnUpdate(float dt)
 	
 
 	//binding the camera to mainHero in the game and moving it. mainHero is set in the scripts in init.lua
-	if( !pMainHero->m_bIsDead )
+	if( !pMainHero->IsDead() )
 	{
 		MoveObject(mainHero,dt);
 	}
@@ -267,7 +267,7 @@ void Game::OnUpdate(float dt)
 			GameObject* reqObject = m_pGameObjManager->GetObjectByName(quest.second.requiredObject);
 
 			//if mainHero is close to the required from the quest object and the required object is dead the quest is completed.
-			if(IsObjectNear(pMainHero, reqObject) && reqObject->m_bIsDead )
+			if(IsObjectNear(pMainHero, reqObject) && reqObject->IsDead())
 			{
 				quest.second.completed = true;
 			}
@@ -279,26 +279,26 @@ void Game::OnUpdate(float dt)
 	{
 		GameObject* obj = m_pGameObjManager->GetObjectByName(dialogue.second.m_strModel);
 
-		if(obj->m_bIsPicked && !dialogue.second.m_bIsEnded )
+		if(obj->IsPicked() && !dialogue.second.m_bIsEnded )
 		{
 			dialogue.second.m_pTree->GetRoot()->m_pLabel->SetVisible(true);
-			obj->m_bIsPicked = false;
+			obj->SetPicked(false);
 		}
 	}
 
 	//updating the models's titles positions
 	for(auto& gameObject : m_pGameObjManager->GetGameObjects())
 	{
-		if(gameObject->m_eGameObjectType == EGameObjectType_Skinned )
+		if(gameObject->GetObjectType() == EGameObjectType_Skinned )
 		{
-			float angle = D3DXVec3Dot(&gameObject->m_vTitleRight,&camera->GetLookVector());
-			gameObject->m_fTitleRotationAngleByY += angle;
+			float angle = D3DXVec3Dot(&gameObject->GetTitleRightVector(),&camera->GetLookVector());
+			gameObject->ModifyTitleRotationAnglyByY(angle);
 
 			D3DXMATRIX R;
 			D3DXMatrixRotationY(&R, angle);
-			D3DXVec3TransformCoord(&gameObject->m_vTitleLook, &gameObject->m_vTitleLook, &R);
-			D3DXVec3TransformCoord(&gameObject->m_vTitleRight, &gameObject->m_vTitleRight, &R);
-			D3DXVec3TransformCoord(&gameObject->m_vTitleUp, &gameObject->m_vTitleUp, &R);
+			D3DXVec3TransformCoord(&gameObject->GetTitleLookVector(), &gameObject->GetTitleLookVector(), &R);
+			D3DXVec3TransformCoord(&gameObject->GetTitleRightVector(), &gameObject->GetTitleRightVector(), &R);
+			D3DXVec3TransformCoord(&gameObject->GetTitleUpVector(), &gameObject->GetTitleUpVector(), &R);
 		}
 	
 	}
@@ -307,16 +307,16 @@ void Game::OnUpdate(float dt)
 	//At the moment these titles are ? signs above the head of the model if he got dialogue attached.
 	for (auto& gameObject : m_pGameObjManager->GetGameObjects())
 	{
-		if( gameObject->m_eGameObjectType == EGameObjectType_Skinned )
+		if( gameObject->GetObjectType() == EGameObjectType_Skinned )
 		{
-			float angle = D3DXVec3Dot(&gameObject->m_vTitleForQuestRight,&camera->GetLookVector());
-			gameObject->m_fTitleForQuestRotationAngleByY += angle;
+			float angle = D3DXVec3Dot(&gameObject->GetTitleForQuestRightVector(),&camera->GetLookVector());
+			gameObject->ModifyTitleForQuestRotationAnglyByY(angle);
 
 			D3DXMATRIX R;
 			D3DXMatrixRotationY(&R, angle);
-			D3DXVec3TransformCoord(&gameObject->m_vTitleForQuestLook, &gameObject->m_vTitleForQuestLook, &R);
-			D3DXVec3TransformCoord(&gameObject->m_vTitleForQuestRight, &gameObject->m_vTitleForQuestRight, &R);
-			D3DXVec3TransformCoord(&gameObject->m_vTitleForQuestUp, &gameObject->m_vTitleForQuestUp, &R);
+			D3DXVec3TransformCoord(&gameObject->GetTitleForQuestLookVector(), &gameObject->GetTitleForQuestLookVector(), &R);
+			D3DXVec3TransformCoord(&gameObject->GetTitleForQuestRightVector(), &gameObject->GetTitleForQuestRightVector(), &R);
+			D3DXVec3TransformCoord(&gameObject->GetTitleForQuestUpVector(), &gameObject->GetTitleForQuestUpVector(), &R);
 		}
 	}
 
@@ -328,74 +328,69 @@ void Game::OnUpdate(float dt)
 	//if mainHero is attacking
 	for (auto& gameObject : m_pGameObjManager->GetGameObjects())
 	{
-		if( gameObject->m_eGameObjectType == EGameObjectType_Skinned )
+		if( gameObject->GetObjectType() == EGameObjectType_Skinned )
 		{
 			if( pDinput->IsMouseButtonDown(0) && 
 			   IsObjectNear(pMainHero,gameObject) && 
-			   pMainHero->m_strModelName != gameObject->m_strModelName &&
-			   gameObject->m_strActorType == "enemy"
+			   pMainHero->GetName() != gameObject->GetName() &&
+			   gameObject->GetActorType() == "enemy"
 			   )
 			{           
 				m_bIsEnemyHealthBarVisible = true;
-				gameObject->m_bIsAttacked = true;
-				gameObject->m_strAttackerName = mainHero;
+				gameObject->SetAttacked(true);
+				gameObject->SetAttackerName(mainHero);
 				pMainHero->PlayAnimationOnce("attack_1");
-				if( (pMainHero->m_bIsAttacking) )
+				if( (pMainHero->IsAttacking()) )
 				{
 					m_rEnemyHealthBarRectangle.right-=70;
 				}
 			}
 		
 			// enemy AI
-			if( gameObject->m_bIsAttacked && IsObjectNear(pMainHero,gameObject))
+			if( gameObject->IsAttacked() && IsObjectNear(pMainHero,gameObject))
 			{
 				if( m_rHealthBarRectangle.right > 0.0 )
 				{
-					pMainHero->m_strAttackerName = gameObject->m_strModelName;
+					pMainHero->SetAttackerName(gameObject->GetName());
 					SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(gameObject);
 
 					pSkinnedMesh->PlayAnimationOnce("attack_1");
 				
-					if( (gameObject->m_bIsAttacking) )
+					if( (gameObject->IsAttacking()) )
 					{
 						m_rHealthBarRectangle.right-=70;
 					}
 				}
 				else
 				{
-					gameObject->m_bIsAttacked = false;
+					gameObject->SetAttacked(false);
 				}
 			}
 
 			//when the enemy is attacked it updates his rotation so it can face the mainHero
-			if( gameObject->m_bIsAttacked && 
-				!gameObject->m_bIsDead &&
-			   IsObjectNear(pMainHero,gameObject)
-			  )
+			if( gameObject->IsAttacked() && !gameObject->IsDead() && IsObjectNear(pMainHero,gameObject) )
 			{
-				D3DXVECTOR3 vActorPosition = gameObject->m_vPos;
-				D3DXVECTOR3 vMainHeroPosition = pMainHero->m_vPos;
+				D3DXVECTOR3 vActorPosition = gameObject->GetPosition();
+				D3DXVECTOR3 vMainHeroPosition = pMainHero->GetPosition();
 
 				D3DXVECTOR3 vDistanceVector = vActorPosition - vMainHeroPosition;
 				D3DXVec3Normalize(&vDistanceVector,&vDistanceVector);
 
 				//for some reason the look vector is the right vector must be fixed
-				float angle = D3DXVec3Dot(&gameObject->m_vRight,&vDistanceVector);
-				gameObject->m_fRotAngleY += angle;
+				float angle = D3DXVec3Dot(&gameObject->GetRightVector(),&vDistanceVector);
+				gameObject->ModifyRotationAngleByY(angle);
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationY(&R, angle);
-				D3DXVec3TransformCoord(&gameObject->m_vLook, &gameObject->m_vLook, &R);
-				D3DXVec3TransformCoord(&gameObject->m_vRight, &gameObject->m_vRight, &R);
-				D3DXVec3TransformCoord(&gameObject->m_vUp, &gameObject->m_vUp, &R);
+				D3DXVec3TransformCoord(&gameObject->GetLookVector(), &gameObject->GetLookVector(), &R);
+				D3DXVec3TransformCoord(&gameObject->GetRightVector(), &gameObject->GetRightVector(), &R);
+				D3DXVec3TransformCoord(&gameObject->GetUpVector(), &gameObject->GetUpVector(), &R);
 			}
 
 			//if mainHero is fighting with enemy, but started to run and is no longer close to the enemy, 
 			//the enemy updates his vectors so he can face the mainHero and run in his direction.
 			//When he is close enough he start to attack again.
-			if( gameObject->m_bIsAttacked && 
-				!gameObject->m_bIsDead &&
-			   !IsObjectNear(pMainHero,gameObject)
+			if( gameObject->IsAttacked() && !gameObject->IsDead() && !IsObjectNear(pMainHero,gameObject)
 			  )
 			{
 				SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(gameObject);
@@ -403,26 +398,26 @@ void Game::OnUpdate(float dt)
 			
 				D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
 
-				dir -= gameObject->m_vLook;
+				dir -= gameObject->GetLookVector();
 
-				D3DXVECTOR3 newPos = gameObject->m_vPos+ dir*40.0*dt;
-				gameObject->m_vPos = newPos;
+				D3DXVECTOR3 newPos = gameObject->GetPosition()+ dir*40.0*dt;
+				gameObject->SetPosition(newPos);
 
 				//put it in a function. the code is duplicated.
-				D3DXVECTOR3 vActorPosition = gameObject->m_vPos;
-				D3DXVECTOR3 vMainHeroPosition = pMainHero->m_vPos;
+				D3DXVECTOR3 vActorPosition = gameObject->GetPosition();
+				D3DXVECTOR3 vMainHeroPosition = pMainHero->GetPosition();
 
 				D3DXVECTOR3 vDistanceVector = vActorPosition - vMainHeroPosition;
 				D3DXVec3Normalize(&vDistanceVector,&vDistanceVector);
 
-				float angle = D3DXVec3Dot(&gameObject->m_vRight,&vDistanceVector);
-				gameObject->m_fRotAngleY += angle;
+				float angle = D3DXVec3Dot(&gameObject->GetRightVector(),&vDistanceVector);
+				gameObject->ModifyRotationAngleByY(angle);
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationY(&R, angle);
-				D3DXVec3TransformCoord(&gameObject->m_vLook, &gameObject->m_vLook, &R);
-				D3DXVec3TransformCoord(&gameObject->m_vRight, &gameObject->m_vRight, &R);
-				D3DXVec3TransformCoord(&gameObject->m_vUp, &gameObject->m_vUp, &R);
+				D3DXVec3TransformCoord(&gameObject->GetLookVector(), &gameObject->GetLookVector(), &R);
+				D3DXVec3TransformCoord(&gameObject->GetRightVector(), &gameObject->GetRightVector(), &R);
+				D3DXVec3TransformCoord(&gameObject->GetUpVector(), &gameObject->GetUpVector(), &R);
 			}
 		}
 	}
@@ -460,22 +455,22 @@ void Game::MoveObject(string objectTitle, float dt)
 	if( pDinput->IsKeyDown(DIK_W) )
 	{
 		pSkinnedMesh->PlayAnimation("run");
-		dir += pSkinnedMesh->m_vLook;
+		dir += pSkinnedMesh->GetLookVector();
 	}
 	if( pDinput->IsKeyDown(DIK_S) )
 	{
 		pSkinnedMesh->PlayAnimation("run");
-		dir -= pSkinnedMesh->m_vLook;
+		dir -= pSkinnedMesh->GetLookVector();
 	}
 	if( pDinput->IsKeyDown(DIK_A) )
 	{
 		pSkinnedMesh->PlayAnimation("run");
-		dir -= pSkinnedMesh->m_vRight;
+		dir -= pSkinnedMesh->GetRightVector();
 	}
 	if( pDinput->IsKeyDown(DIK_D) )
 	{
 		pSkinnedMesh->PlayAnimation("run");
-		dir += pSkinnedMesh->m_vRight;
+		dir += pSkinnedMesh->GetRightVector();
 	}
 
 	if( !pDinput->IsKeyDown(DIK_W) && !pDinput->IsKeyDown(DIK_S) && !pDinput->IsKeyDown(DIK_A) && !pDinput->IsKeyDown(DIK_D) )
@@ -498,15 +493,15 @@ void Game::MoveObject(string objectTitle, float dt)
 		}
 	}
 
-	D3DXVECTOR3 newPos = pSkinnedMesh->m_vPos+ dir*40.0*dt;
+	D3DXVECTOR3 newPos = pSkinnedMesh->GetPosition() + dir*40.0*dt;
 	if( pTerrain->IsValidPosition(newPos.x,newPos.z))
 	{
-		pSkinnedMesh->m_vPos = newPos;
+		pSkinnedMesh->SetPosition(newPos);
 	}
 
 	//updates the camera position based on the new position of the model.
 	//via cameraOffset we can control how far the camera is from the model and at what position.
-	camera->SetPosition(pSkinnedMesh->m_vPos + camera->GetOffset());
+	camera->SetPosition(pSkinnedMesh->GetPosition() + camera->GetOffset());
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -525,7 +520,7 @@ void Game::RotateObject(string objectTitle, float dt)
 	}
 	
 	float yAngle = pDinput->GetMouseDX() / (19000*dt);
-	pSkinnedMesh->m_fRotAngleY +=yAngle;
+	pSkinnedMesh->ModifyRotationAngleByY(yAngle);
 	
 	D3DXMATRIX R;
 	D3DXMatrixRotationY(&R, yAngle);
@@ -535,9 +530,9 @@ void Game::RotateObject(string objectTitle, float dt)
 
 	D3DXVec3TransformCoord(&camera->GetOffset(), &camera->GetOffset(), &R);
 
-	pSkinnedMesh->m_vLook  = camera->GetLookVector();
-	pSkinnedMesh->m_vRight = camera->GetRightVector();
-	pSkinnedMesh->m_vUp    = camera->GetUpVector();
+	pSkinnedMesh->GetLookVector()  = camera->GetLookVector();
+	pSkinnedMesh->GetRightVector() = camera->GetRightVector();
+	pSkinnedMesh->GetUpVector()    = camera->GetUpVector();
 }
 
 
@@ -548,7 +543,7 @@ Purpose:controls the health of the hero and enemy and make them play dead animat
 */
 void Game::ManageHealthBars()
 {
-	string strEnemy = pMainHero->m_strAttackerName;
+	string strEnemy = pMainHero->GetAttackerName();
 	GameObject* obj = m_pGameObjManager->GetObjectByName(strEnemy);
 	SkinnedMesh* pEnemy = nullptr;
 	if (obj != nullptr)
@@ -559,7 +554,7 @@ void Game::ManageHealthBars()
 	if( m_rHealthBarRectangle.right <= 0.0 )
 	{
 		pMainHero->PlayAnimationOnceAndStop("dead");
-		pMainHero->m_bIsDead = true;
+		pMainHero->SetDead(true);
 		
 		//set the animation of the attacked to idle, because sometimes got bugged and plays run animaiton
 		pEnemy->PlayAnimation("idle");
@@ -567,7 +562,7 @@ void Game::ManageHealthBars()
 	if( m_rEnemyHealthBarRectangle.right <= 0.0 )
 	{
 		pEnemy->PlayAnimationOnceAndStop("dead");
-		pEnemy->m_bIsDead = true;
+		pEnemy->SetDead(true);
 	}
 }
 
@@ -592,18 +587,18 @@ void Game::OnRender()
 				gameObject->OnRender();
 			}
 			
-			auto BB = pMainHero->m_BoundingBox;
+			auto BB = pMainHero->GetBB();
 			BB = BB.TransformByMatrix(BB.m_transformationMatrix);
 			for (auto& object:m_pGameObjManager->GetGameObjects())
 			{
-				auto BB1 = object->m_BoundingBox;
+				auto BB1 = object->GetBB();
 				BB1 = BB1.TransformByMatrix(BB1.m_transformationMatrix);
 
-				if (pMainHero->m_strModelName.compare(object->m_strModelName))
+				if (pMainHero->GetName().compare(object->GetName()))
 				{
 					if (BB.Collide(BB1))
 					{
-						cout << "COLLIDING" << object->m_strModelName << endl;
+						cout << "COLLIDING" << object->GetName() << endl;
 					}
 				}
 			}
@@ -627,11 +622,11 @@ void Game::OnRender()
 					pTextManager->RenderText(quest.second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
 					pTextManager->RenderText("Completed",pApp->GetPresentParameters().BackBufferWidth-590,70,0,0,255,255,255,0);
 				}
-				else if( !pMainHero->m_bIsDead )
+				else if( !pMainHero->IsDead() )
 				{
 					pTextManager->RenderText(quest.second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
 				}
-				else if( !quest.second.completed && pMainHero->m_bIsDead )
+				else if( !quest.second.completed && pMainHero->IsDead() )
 				{
 					pTextManager->RenderText(quest.second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
 					pTextManager->RenderText("Epic fail!",pApp->GetPresentParameters().BackBufferWidth-570,70,0,0,255,255,255,0);
@@ -714,17 +709,13 @@ Purpose:checks if two models are close
 */
 bool Game::IsObjectNear(GameObject* obj1,GameObject* obj2)
 {
-	if((obj1->m_vPos.x > obj2->m_vPos.x-30) && (obj1->m_vPos.x < obj2->m_vPos.x+30) &&
-	   (obj1->m_vPos.z > obj2->m_vPos.z-30) && (obj1->m_vPos.z < obj2->m_vPos.z+30))
+	if((obj1->GetPosition().x > obj2->GetPosition().x-30) && (obj1->GetPosition().x < obj2->GetPosition().x+30) &&
+	   (obj1->GetPosition().z > obj2->GetPosition().z-30) && (obj1->GetPosition().z < obj2->GetPosition().z+30))
 	{
 	   return true;
 	}
-	else 
-	{
-		return false;
-	}
 
-	return true;
+	return false;
 }
 
 
