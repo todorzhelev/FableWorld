@@ -5,7 +5,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
-class SkinnedMesh;
+class SkinnedModel;
 
 class TextManager
 {
@@ -17,9 +17,9 @@ public:
 
 	void		CreateFontFor3DText();
 
-	void		CreateMeshFor3DText(SkinnedMesh* pGameObject);
+	void		CreateMeshFor3DText(SkinnedModel* pGameObject);
 
-	void		CreateMeshFor3DTextQuest(SkinnedMesh* pGameObject);
+	void		CreateMeshFor3DTextQuest(SkinnedModel* pGameObject);
 
 	void		RenderText(LPCSTR dtext,int x1,int y1,int x2,int y2,int alpha,int color1,int color2,int color3);
 

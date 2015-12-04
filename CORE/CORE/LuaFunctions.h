@@ -1,6 +1,6 @@
 #include "Misc.h"
-#include "StaticMesh.h"
-#include "SkinnedMesh.h"
+#include "StaticModel.h"
+#include "SkinnedModel.h"
 #include "SoundSyst.h"
 #include "DialogueManager.h"
 #include "IBaseScene.h"

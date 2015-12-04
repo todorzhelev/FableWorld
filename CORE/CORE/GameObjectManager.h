@@ -3,9 +3,9 @@
 #include<map>
 #include<string>
 #include"GameObject.h"
-#include"SkinnedMesh.h"
+#include"SkinnedModel.h"
 
-class SkinnedMesh;
+class SkinnedModel;
 
 class GameObjectManager
 {
@@ -21,11 +21,11 @@ public:
 
 	std::vector<GameObject*>&  GetGameObjects();
 
-	std::vector<SkinnedMesh*>& GetSkinnedModels();
+	std::vector<SkinnedModel*>& GetSkinnedModels();
 
 	GameObject* GetObjectByName(std::string name);
 
-	SkinnedMesh* GetSkinnedModelByName(std::string name);
+	SkinnedModel* GetSkinnedModelByName(std::string name);
 
 	void SetShouldRenderTitles(bool bShouldRenderTitles);
 
@@ -71,7 +71,7 @@ private:
 	GameObject*	m_pPickedObject;
 
 	std::vector<GameObject*> m_gameObjects;
-	std::vector<SkinnedMesh*> m_skinnedModels;
+	std::vector<SkinnedModel*> m_skinnedModels;
 
 	//map<string,GameObject*> m_mapGameObjects;
 

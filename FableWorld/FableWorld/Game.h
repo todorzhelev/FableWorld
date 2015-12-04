@@ -3,8 +3,8 @@
 #include "../../CORE/CORE/DirectInput.h"
 #include "../../CORE/CORE/Terrain.h"
 #include "../../CORE/CORE/Camera.h"
-#include "../../CORE/CORE/StaticMesh.h"
-#include "../../CORE/CORE/SkinnedMesh.h"
+#include "../../CORE/CORE/StaticModel.h"
+#include "../../CORE/CORE/SkinnedModel.h"
 #include "../../CORE/CORE/Button.h"
 #include "../../CORE/CORE/Textbox.h"
 #include "../../CORE/CORE/Label.h"
@@ -78,7 +78,7 @@ private:
 
 	Button*					m_pHealSpell;
 
-	SkinnedMesh* 	pMainHero;
+	SkinnedModel* 	pMainHero;
 
 	ID3DXEffect* m_pDebugGraphicsEffect;
 	D3DXHANDLE 	 m_hDebugGraphicsTechnique;

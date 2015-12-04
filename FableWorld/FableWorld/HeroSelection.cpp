@@ -18,9 +18,9 @@ HeroSelection::HeroSelection()
 {
 	camera->GetPosition() = D3DXVECTOR3(-2,31,-160);
 
-	SkinnedMesh* pMesh = new SkinnedMesh("pesho","../../Resources/models/ezreal/ezreal_5anm.x","../../Resources/textures/Ezreal_ProdigalExplorer.dds",false);
+	SkinnedModel* pMesh = new SkinnedModel("pesho","../../Resources/models/ezreal/ezreal_5anm.x","../../Resources/textures/Ezreal_ProdigalExplorer.dds",false);
 
-	GameObject* pLand = new StaticMesh("land","../../Resources/models/land.x","../../Resources/textures/grass-texture-02.dds");
+	GameObject* pLand = new StaticModel("land","../../Resources/models/land.x","../../Resources/textures/grass-texture-02.dds");
 
 	pMesh->LoadGameObject();
 	pLand->LoadGameObject();
@@ -94,16 +94,16 @@ void HeroSelection::OnUpdate(float dt)
 
 	if(pDinput->IsMouseButtonDown(0) )
 	{
-		SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(pPesho);
+		SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pPesho);
 	
 		float yAngle = pDinput->GetMouseDX() / (rotationSlowFactor*dt);
-		pSkinnedMesh->ModifyRotationAngleByY(-yAngle);
+		pSkinnedModel->ModifyRotationAngleByY(-yAngle);
 	
 		D3DXMATRIX R;
 		D3DXMatrixRotationY(&R, yAngle);
-		D3DXVec3TransformCoord(&pSkinnedMesh->GetRightVector(), &pSkinnedMesh->GetRightVector(), &R);
-		D3DXVec3TransformCoord(&pSkinnedMesh->GetUpVector() , &pSkinnedMesh->GetUpVector() , &R);
-		D3DXVec3TransformCoord(&pSkinnedMesh->GetLookVector(), &pSkinnedMesh->GetLookVector(), &R);
+		D3DXVec3TransformCoord(&pSkinnedModel->GetRightVector(), &pSkinnedModel->GetRightVector(), &R);
+		D3DXVec3TransformCoord(&pSkinnedModel->GetUpVector() , &pSkinnedModel->GetUpVector() , &R);
+		D3DXVec3TransformCoord(&pSkinnedModel->GetLookVector(), &pSkinnedModel->GetLookVector(), &R);
 	}
 
 	camera->OnUpdate(dt);

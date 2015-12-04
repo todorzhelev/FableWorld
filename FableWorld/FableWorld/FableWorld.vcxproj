@@ -104,10 +104,10 @@
     <ClCompile Include="..\..\CORE\CORE\Label.cpp" />
     <ClCompile Include="..\..\CORE\CORE\LuaFunctions.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Misc.cpp" />
-    <ClCompile Include="..\..\CORE\CORE\SkinnedMesh.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\SkinnedModel.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Sky.cpp" />
     <ClCompile Include="..\..\CORE\CORE\SoundSyst.cpp" />
-    <ClCompile Include="..\..\CORE\CORE\StaticMesh.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\StaticModel.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Terrain.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Textbox.cpp" />
     <ClCompile Include="..\..\CORE\CORE\TextManager.cpp" />
@@ -137,10 +137,10 @@
     <ClInclude Include="..\..\CORE\CORE\Label.h" />
     <ClInclude Include="..\..\CORE\CORE\LuaFunctions.h" />
     <ClInclude Include="..\..\CORE\CORE\Misc.h" />
-    <ClInclude Include="..\..\CORE\CORE\SkinnedMesh.h" />
+    <ClInclude Include="..\..\CORE\CORE\SkinnedModel.h" />
     <ClInclude Include="..\..\CORE\CORE\Sky.h" />
     <ClInclude Include="..\..\CORE\CORE\SoundSyst.h" />
-    <ClInclude Include="..\..\CORE\CORE\StaticMesh.h" />
+    <ClInclude Include="..\..\CORE\CORE\StaticModel.h" />
     <ClInclude Include="..\..\CORE\CORE\Terrain.h" />
     <ClInclude Include="..\..\CORE\CORE\Textbox.h" />
     <ClInclude Include="..\..\CORE\CORE\TextManager.h" />
@@ -153,6 +153,7 @@
     <ClInclude Include="MenuInGame.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="fonts\28DaysLater.ttf" />
     <None Include="scripts\level.lua" />
     <None Include="scripts\quests.lua" />
@@ -163,16 +164,16 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TransformVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\SkinnedMeshShader.fx">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkinnedMeshVS</EntryPointName>
+    <FxCompile Include="..\..\CORE\CORE\shaders\SkinnedModelShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkinnedModelVS</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SkinnedMeshVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\CORE\CORE\shaders\SkyShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkyVS</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SkyVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\StaticMeshShader.fx">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StaticMeshVS</EntryPointName>
+    <FxCompile Include="..\..\CORE\CORE\shaders\StaticModelShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StaticModelVS</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">StaticMeshVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\CORE\CORE\shaders\TerrainShader.fx">

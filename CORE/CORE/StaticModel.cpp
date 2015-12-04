@@ -1,14 +1,14 @@
-#include"StaticMesh.h"
+#include"StaticModel.h"
 #include<vector>
 //clean renderbindedweapon and render
 
 
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:StaticMesh
+Function:StaticModel
 Purpose:constructor
 */
-StaticMesh::StaticMesh()
+StaticModel::StaticModel()
 {
 	//default texture for models that dont have any
 	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/whitetex.dds", &m_pWhiteTexture);	
@@ -28,10 +28,10 @@ StaticMesh::StaticMesh()
 
 ////////////////////////////////////////////////////////////////////////
 /*
-Function:SkinnedMesh
+Function:SkinnedModel
 Purpose:this constructor loads default values for the skinned mesh
 */
-StaticMesh::StaticMesh(string strModelName, string ModelFileName, string strTextureFileName)
+StaticModel::StaticModel(string strModelName, string ModelFileName, string strTextureFileName)
 {
 		//default texture for models that dont have any
 	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/whitetex.dds", &m_pWhiteTexture);	
@@ -72,9 +72,9 @@ StaticMesh::StaticMesh(string strModelName, string ModelFileName, string strText
 
 	/*if( pMesh->m_bIsBindable && !pMesh->m_strBindedToAnimatedModelName.empty() && !pMesh->m_strBindedToBoneName.empty() )
 	{
-		SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(m_pGameObjManager->GetGameObjects().find(pMesh->m_strBindedToAnimatedModelName)->second);
+		SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(m_pGameObjManager->GetGameObjects().find(pMesh->m_strBindedToAnimatedModelName)->second);
 
-		pSkinnedMesh->BindWeaponToModel(pMesh->m_strModelName,pMesh->m_strBindedToBoneName);
+		pSkinnedModel->BindWeaponToModel(pMesh->m_strModelName,pMesh->m_strBindedToBoneName);
 	}*/
 
 	m_eGameObjectType = EGameObjectType_Static;
@@ -87,7 +87,7 @@ StaticMesh::StaticMesh(string strModelName, string ModelFileName, string strText
 Function:LoadXFile
 Purpose:load model from .x file
 */
-void StaticMesh::LoadGameObject()
+void StaticModel::LoadGameObject()
 {
 	ID3DXMesh* pMesh			 = NULL;
 	ID3DXBuffer* pMaterialBuffer = NULL;
@@ -166,7 +166,7 @@ void StaticMesh::LoadGameObject()
 Function:BuildBoundingBox
 Purpose:generates bounding box for a model
 */
-void StaticMesh::BuildBoundingBox()
+void StaticModel::BuildBoundingBox()
 {
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	m_pMesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
@@ -199,7 +199,7 @@ void StaticMesh::BuildBoundingBox()
 Function:onResetDevice
 Purpose:invoked when the device is reset
 */
-void StaticMesh::OnResetDevice()
+void StaticModel::OnResetDevice()
 {
 	m_pEffect->OnResetDevice();
 }
@@ -209,7 +209,7 @@ void StaticMesh::OnResetDevice()
 Function:onLostDevice
 Purpose:invoked when the device is lost
 */
-void StaticMesh::OnLostDevice()
+void StaticModel::OnLostDevice()
 {
 	//add check if it already went through here
 	m_pEffect->OnLostDevice();
@@ -220,7 +220,7 @@ void StaticMesh::OnLostDevice()
 Function:update
 Purpose:updates the position of the mesh
 */
-void StaticMesh::OnUpdate(float fDeltaTime)
+void StaticModel::OnUpdate(float fDeltaTime)
 {
 	//binded models got their own height, based on the bone that they are attached to, other models are just put on the terrain
 	if (!m_bIsBindable && m_pGameObjManager->AreObjectsGrounded())
@@ -234,15 +234,15 @@ void StaticMesh::OnUpdate(float fDeltaTime)
 Function:buildEffect
 Purpose:set shader parameters
 */
-void StaticMesh::BuildEffect()
+void StaticModel::BuildEffect()
 {
-	if( FAILED(D3DXCreateEffectFromFile(pDxDevice,"../../CORE/CORE/shaders/StaticMeshShader.fx",0,0,D3DXSHADER_DEBUG,0,&m_pEffect,0)) )
+	if( FAILED(D3DXCreateEffectFromFile(pDxDevice,"../../CORE/CORE/shaders/StaticModelShader.fx",0,0,D3DXSHADER_DEBUG,0,&m_pEffect,0)) )
 	{
 		MessageBox(0,"Failed loading effect file in static mesh",0,0);
 		PostQuitMessage(0);
 	}
 
-	m_hEffectTechnique	= m_pEffect->GetTechniqueByName("StaticMeshTech");
+	m_hEffectTechnique	= m_pEffect->GetTechniqueByName("StaticModelTech");
 	m_hWVPMatrix		= m_pEffect->GetParameterByName(0, "WVP");
 	m_hMaterial			= m_pEffect->GetParameterByName(0, "mtrl");
 	m_hLight			= m_pEffect->GetParameterByName(0, "light");
@@ -258,7 +258,7 @@ void StaticMesh::BuildEffect()
 Function:render
 Purpose:renders not-binded model
 */
-void StaticMesh::OnRender()
+void StaticModel::OnRender()
 {
 	//if the model is not binded to skinned mesh's bone render it
 	if(!m_bIsBindable)
@@ -332,16 +332,16 @@ void StaticMesh::OnRender()
 Function:renderBindedWeapon
 Purpose:renders binded model
 */
-void StaticMesh::RenderBindedWeapon(GameObject* pSkMesh,string bone)
+void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 {
 	//the animated model
-	SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(pSkMesh);
+	SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pSkMesh);
 
 	//the binded weapon
 	GameObject* pBindedObject = this;
 
 	//the bone in the animated model's hierarchy
-	FrameEx* pBone = static_cast<FrameEx*>(D3DXFrameFind(pSkinnedMesh->GetRootFrame(), bone.c_str()));
+	FrameEx* pBone = static_cast<FrameEx*>(D3DXFrameFind(pSkinnedModel->GetRootFrame(), bone.c_str()));
 
 	//testing variables
 	/*static float angleX = 33.72;
@@ -433,11 +433,11 @@ void StaticMesh::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 
 	//matrices for the animated model
 	D3DXMATRIX TA;
-	D3DXMatrixTranslation(&TA,pSkinnedMesh->GetPosition().x,pSkinnedMesh->GetPosition().y,pSkinnedMesh->GetPosition().z);
+	D3DXMatrixTranslation(&TA,pSkinnedModel->GetPosition().x,pSkinnedModel->GetPosition().y,pSkinnedModel->GetPosition().z);
 	D3DXMATRIX SA;
-	D3DXMatrixScaling(&SA,pSkinnedMesh->GetScale(),pSkinnedMesh->GetScale(),pSkinnedMesh->GetScale());
+	D3DXMatrixScaling(&SA,pSkinnedModel->GetScale(),pSkinnedModel->GetScale(),pSkinnedModel->GetScale());
 	D3DXMATRIX R1A;
-	D3DXMatrixRotationY(&R1A,pSkinnedMesh->GetRotationAngleByY());
+	D3DXMatrixRotationY(&R1A,pSkinnedModel->GetRotationAngleByY());
 	D3DXMATRIX AnimatedModelCombinedMatrix = SA*R1A*(TA);
 
 	//combined matrix for the bone
@@ -496,7 +496,7 @@ void StaticMesh::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 Function:RenderBoundingBox
 Purpose:renders the bounding box
 */
-void StaticMesh::RenderBoundingBox()
+void StaticModel::RenderBoundingBox()
 {
 	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 	pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -528,7 +528,7 @@ void StaticMesh::RenderBoundingBox()
 	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 }
 
-float StaticMesh::GetDistanceToPickedObject()
+float StaticModel::GetDistanceToPickedObject()
 {
 	D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);

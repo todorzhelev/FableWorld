@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SkinnedMesh.h"
+#include "SkinnedModel.h"
 #include "TextManager.h"
 #include "Misc.h"
 #include "Terrain.h"
@@ -9,11 +9,11 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
-class StaticMesh : public GameObject
+class StaticModel : public GameObject
 {
 public:
-	StaticMesh();
-	StaticMesh(string strModelName, string ModelFileName, string strTextureFileName);
+	StaticModel();
+	StaticModel(string strModelName, string ModelFileName, string strTextureFileName);
 	
 	virtual void LoadGameObject() override;
 

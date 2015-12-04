@@ -112,7 +112,7 @@ Game::Game()
 
 	if(obj != nullptr )
 	{
-		pMainHero = static_cast<SkinnedMesh*>(obj);
+		pMainHero = static_cast<SkinnedModel*>(obj);
 	}
 	
 	D3DXVECTOR2 spellPosition(0,600);
@@ -260,7 +260,7 @@ void Game::OnUpdate(float dt)
 	{
 		for(auto& quest : m_mapActiveQuests)
 		{
-			SkinnedMesh* reqObject = m_pGameObjManager->GetSkinnedModelByName(quest.second.requiredObject);
+			SkinnedModel* reqObject = m_pGameObjManager->GetSkinnedModelByName(quest.second.requiredObject);
 
 			//if mainHero is close to the required from the quest object and the required object is dead the quest is completed.
 			if(IsObjectNear(pMainHero, reqObject) && reqObject->IsDead())
@@ -339,9 +339,9 @@ void Game::OnUpdate(float dt)
 			if( m_rHealthBarRectangle.right > 0.0 )
 			{
 				pMainHero->SetAttackerName(gameObject->GetName());
-				SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(gameObject);
+				SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(gameObject);
 
-				pSkinnedMesh->PlayAnimationOnce("attack_1");
+				pSkinnedModel->PlayAnimationOnce("attack_1");
 				
 				if( (gameObject->IsAttacking()) )
 				{
@@ -380,8 +380,8 @@ void Game::OnUpdate(float dt)
 		if( gameObject->IsAttacked() && !gameObject->IsDead() && !IsObjectNear(pMainHero,gameObject)
 			)
 		{
-			SkinnedMesh* pSkinnedMesh = static_cast<SkinnedMesh*>(gameObject);
-			pSkinnedMesh->PlayAnimation("run");
+			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(gameObject);
+			pSkinnedModel->PlayAnimation("run");
 			
 			D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
 
@@ -431,37 +431,37 @@ void Game::MoveObject(string objectTitle, float dt)
 	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
 
 	GameObject* obj = m_pGameObjManager->GetObjectByName(objectTitle);
-	SkinnedMesh* pSkinnedMesh = nullptr;
+	SkinnedModel* pSkinnedModel = nullptr;
 
 	if (obj != nullptr)
 	{
-		pSkinnedMesh = static_cast<SkinnedMesh*>(obj);
+		pSkinnedModel = static_cast<SkinnedModel*>(obj);
 	}
 	
 	if( pDinput->IsKeyDown(DIK_W) )
 	{
-		pSkinnedMesh->PlayAnimation("run");
-		dir += pSkinnedMesh->GetLookVector();
+		pSkinnedModel->PlayAnimation("run");
+		dir += pSkinnedModel->GetLookVector();
 	}
 	if( pDinput->IsKeyDown(DIK_S) )
 	{
-		pSkinnedMesh->PlayAnimation("run");
-		dir -= pSkinnedMesh->GetLookVector();
+		pSkinnedModel->PlayAnimation("run");
+		dir -= pSkinnedModel->GetLookVector();
 	}
 	if( pDinput->IsKeyDown(DIK_A) )
 	{
-		pSkinnedMesh->PlayAnimation("run");
-		dir -= pSkinnedMesh->GetRightVector();
+		pSkinnedModel->PlayAnimation("run");
+		dir -= pSkinnedModel->GetRightVector();
 	}
 	if( pDinput->IsKeyDown(DIK_D) )
 	{
-		pSkinnedMesh->PlayAnimation("run");
-		dir += pSkinnedMesh->GetRightVector();
+		pSkinnedModel->PlayAnimation("run");
+		dir += pSkinnedModel->GetRightVector();
 	}
 
 	if( !pDinput->IsKeyDown(DIK_W) && !pDinput->IsKeyDown(DIK_S) && !pDinput->IsKeyDown(DIK_A) && !pDinput->IsKeyDown(DIK_D) )
 	{
-		pSkinnedMesh->PlayAnimation("idle");
+		pSkinnedModel->PlayAnimation("idle");
 	}
 	
 	if (camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithoutPressedMouse)
@@ -479,15 +479,15 @@ void Game::MoveObject(string objectTitle, float dt)
 		}
 	}
 
-	D3DXVECTOR3 newPos = pSkinnedMesh->GetPosition() + dir*40.0*dt;
+	D3DXVECTOR3 newPos = pSkinnedModel->GetPosition() + dir*40.0*dt;
 	if( pTerrain->IsValidPosition(newPos.x,newPos.z))
 	{
-		pSkinnedMesh->SetPosition(newPos);
+		pSkinnedModel->SetPosition(newPos);
 	}
 
 	//updates the camera position based on the new position of the model.
 	//via cameraOffset we can control how far the camera is from the model and at what position.
-	camera->SetPosition(pSkinnedMesh->GetPosition() + camera->GetOffset());
+	camera->SetPosition(pSkinnedModel->GetPosition() + camera->GetOffset());
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -498,15 +498,15 @@ Purpose:rotates to model and the camera if the mouse is moved
 void Game::RotateObject(string objectTitle, float dt)
 {
 	GameObject* obj = m_pGameObjManager->GetObjectByName(objectTitle);
-	SkinnedMesh* pSkinnedMesh = nullptr;
+	SkinnedModel* pSkinnedModel = nullptr;
 
 	if (obj != nullptr)
 	{
-		pSkinnedMesh = static_cast<SkinnedMesh*>(obj);
+		pSkinnedModel = static_cast<SkinnedModel*>(obj);
 	}
 	
 	float yAngle = pDinput->GetMouseDX() / (19000*dt);
-	pSkinnedMesh->ModifyRotationAngleByY(yAngle);
+	pSkinnedModel->ModifyRotationAngleByY(yAngle);
 	
 	D3DXMATRIX R;
 	D3DXMatrixRotationY(&R, yAngle);
@@ -516,9 +516,9 @@ void Game::RotateObject(string objectTitle, float dt)
 
 	D3DXVec3TransformCoord(&camera->GetOffset(), &camera->GetOffset(), &R);
 
-	pSkinnedMesh->GetLookVector()  = camera->GetLookVector();
-	pSkinnedMesh->GetRightVector() = camera->GetRightVector();
-	pSkinnedMesh->GetUpVector()    = camera->GetUpVector();
+	pSkinnedModel->GetLookVector()  = camera->GetLookVector();
+	pSkinnedModel->GetRightVector() = camera->GetRightVector();
+	pSkinnedModel->GetUpVector()    = camera->GetUpVector();
 }
 
 
@@ -531,10 +531,10 @@ void Game::ManageHealthBars()
 {
 	string strEnemy = pMainHero->GetAttackerName();
 	GameObject* obj = m_pGameObjManager->GetObjectByName(strEnemy);
-	SkinnedMesh* pEnemy = nullptr;
+	SkinnedModel* pEnemy = nullptr;
 	if (obj != nullptr)
 	{
-		pEnemy = static_cast<SkinnedMesh*>(obj);
+		pEnemy = static_cast<SkinnedModel*>(obj);
 	}
 
 	if( m_rHealthBarRectangle.right <= 0.0 )

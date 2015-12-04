@@ -1,5 +1,5 @@
 #include "DialogueManager.h"
-#include "SkinnedMesh.h"
+#include "SkinnedModel.h"
 
 DialogueManager* pDialogueManager = NULL;
 
@@ -253,7 +253,7 @@ void DialogueManager::LabelClicked(DialogueObject& dialogueObject,map<string,Que
 				mapAvailableQuests.erase(dialogueObject.m_pClickedDialogueNode->m_strQuest);
 			}
 
-			SkinnedMesh* pGameObject = m_pGameObjManager->GetSkinnedModelByName(dialogueObject.m_strModel);
+			SkinnedModel* pGameObject = m_pGameObjManager->GetSkinnedModelByName(dialogueObject.m_strModel);
 
 			pGameObject->SetHasDialogue(false);
 

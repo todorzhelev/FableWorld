@@ -1,5 +1,5 @@
 #include "TextManager.h"
-#include "SkinnedMesh.h"
+#include "SkinnedModel.h"
 /////////////////////////////////////////////////////////////////////////
 
 TextManager* pTextManager = NULL;
@@ -87,7 +87,7 @@ void TextManager::CreateFontFor3DText()
 Function:CreateMeshFor3DText
 Purpose:creates 3D text model for model titles
 */
-void TextManager::CreateMeshFor3DText(SkinnedMesh* pGameObject)
+void TextManager::CreateMeshFor3DText(SkinnedModel* pGameObject)
 {
 	D3DXCreateText(pDxDevice,  
 				   m_hDC,          
@@ -105,7 +105,7 @@ void TextManager::CreateMeshFor3DText(SkinnedMesh* pGameObject)
 Function:CreateMeshFor3DTextQuest
 Purpose:creates 3D text model for quest titles
 */
-void TextManager::CreateMeshFor3DTextQuest(SkinnedMesh* pGameObject)
+void TextManager::CreateMeshFor3DTextQuest(SkinnedModel* pGameObject)
 {
 	D3DXCreateText( pDxDevice,  
 					m_hDC,          

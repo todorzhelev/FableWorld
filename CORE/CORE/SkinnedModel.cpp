@@ -1,13 +1,13 @@
-#include"SkinnedMesh.h"
-#include"StaticMesh.h"
+#include"SkinnedModel.h"
+#include"StaticModel.h"
 
 
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:SkinnedMesh
+Function:SkinnedModel
 Purpose:constructor
 */
-SkinnedMesh::SkinnedMesh()
+SkinnedModel::SkinnedModel()
 :m_fTransTimeForAttack(0.125f)
 ,m_fTransTimeForIdle(0.25f)
 {
@@ -37,10 +37,10 @@ SkinnedMesh::SkinnedMesh()
 
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:SkinnedMesh
+Function:SkinnedModel
 Purpose:this constructor loads default values for the skinned mesh
 */
-SkinnedMesh::SkinnedMesh(string strModelName, string ModelFileName, string strTextureFileName,bool bShouldRenderTitles)
+SkinnedModel::SkinnedModel(string strModelName, string ModelFileName, string strTextureFileName,bool bShouldRenderTitles)
 :m_fTransTimeForAttack(0.125f)
 ,m_fTransTimeForIdle(0.25f)
 {
@@ -116,7 +116,7 @@ SkinnedMesh::SkinnedMesh(string strModelName, string ModelFileName, string strTe
 Function:LoadGameObject
 Purpose:loads the animated model
 */
-void SkinnedMesh::LoadGameObject()
+void SkinnedModel::LoadGameObject()
 {
 	//creates the texture for the model
 	D3DXCreateTextureFromFile(pDxDevice, m_strTextureFileName.c_str(), &m_pTexture);
@@ -167,17 +167,17 @@ void SkinnedMesh::LoadGameObject()
 	m_pAnimController->KeyTrackWeight( m_nNewAnimTrack, 0.0f, 0.0f, m_fTransTimeForAttack, D3DXTRANSITION_LINEAR );
 	
 	//after the mesh is found it is then changed in order to become skinned mesh
-	BuildSkinnedMesh(pMeshContainer->MeshData.pMesh);
+	BuildSkinnedModel(pMeshContainer->MeshData.pMesh);
 
 	BuildToRootMatricesPtrArray();
 }
 
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:~SkinnedMesh
+Function:~SkinnedModel
 Purpose:destructor
 */
-SkinnedMesh::~SkinnedMesh()
+SkinnedModel::~SkinnedModel()
 {
 }
 
@@ -187,7 +187,7 @@ Function:GetFinalBonesMatricesArray
 Purpose:returns the final matrices for each bone which are passed to the shader for rendering.
 		We are returning the adress of the first element of the array, because in the shader we need the beginning of the array and the size of it
 */
-D3DXMATRIX* SkinnedMesh::GetFinalBonesMatricesArray()
+D3DXMATRIX* SkinnedModel::GetFinalBonesMatricesArray()
 {
 	return &m_vFinalBonesMatrices[0];
 }
@@ -198,7 +198,7 @@ Function:PlayAnimation()
 Purpose:sets the animation index on the mesh at the current track. 
 This function repeats the animation, i.e. after the animation set ended it starts from the beginning and so on.
 */
-void SkinnedMesh::PlayAnimation(LPCSTR strAnimationName)
+void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
 {
 	m_pAnimController->GetAnimationSetByName(strAnimationName,&m_pCurrentAnimSet);
 	m_pAnimController->SetTrackAnimationSet(m_nCurrentAnimTrack,m_pCurrentAnimSet);
@@ -212,7 +212,7 @@ The idea is to slightly move from the current track to the new one, holding the 
 After the new animation is played to the end, we stop it. 
 This way the two animation tracks are with 0.0 weight and thus no animation is played.
 */
-void SkinnedMesh::PlayAnimationOnceAndStop(LPCSTR strAnimationName)
+void SkinnedModel::PlayAnimationOnceAndStop(LPCSTR strAnimationName)
 {
 	m_pAnimController->GetAnimationSetByName(strAnimationName,&m_pSecondAnimSet);
 	m_pAnimController->SetTrackAnimationSet(m_nNewAnimTrack,m_pSecondAnimSet);
@@ -239,7 +239,7 @@ Function:playAnimationOnce()
 Purpose:plays animation only once.switches to idle animation( used for transition between idle and attack )
 rand is used so it can be randomly determined which one from the 2 attack animations to be played.
 */
-void SkinnedMesh::PlayAnimationOnce(LPCSTR strAnimationName)
+void SkinnedModel::PlayAnimationOnce(LPCSTR strAnimationName)
 {
 		srand(static_cast<unsigned int>(time(NULL)));
 
@@ -284,7 +284,7 @@ void SkinnedMesh::PlayAnimationOnce(LPCSTR strAnimationName)
 Function:FindFrameWithMesh
 Purpose:finds the frame that contains mesh
 */
-D3DXFRAME* SkinnedMesh::FindFrameWithMesh(D3DXFRAME* frame)
+D3DXFRAME* SkinnedModel::FindFrameWithMesh(D3DXFRAME* frame)
 {
 	if( frame->pMeshContainer )
 	{
@@ -316,10 +316,10 @@ D3DXFRAME* SkinnedMesh::FindFrameWithMesh(D3DXFRAME* frame)
 
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:buildSkinnedMesh()
+Function:buildSkinnedModel()
 Purpose:creates the mesh and converts it to skinned mesh and also computes normals for the mesh if needed
 */
-void SkinnedMesh::BuildSkinnedMesh(ID3DXMesh* pMesh)
+void SkinnedModel::BuildSkinnedModel(ID3DXMesh* pMesh)
 {
 	D3DVERTEXELEMENT9 elements[64];
 	UINT numElements = 0;
@@ -362,7 +362,7 @@ Purpose:Stores pointers to the to root matrices of all the bones in the skinned 
 		quick access to these matrices just by index, instead of using D3DXFrameFind every time in OnUpdate
 		These matrices are needed to calculate the final matrix transformation for the vertices
 */
-void SkinnedMesh::BuildToRootMatricesPtrArray()
+void SkinnedModel::BuildToRootMatricesPtrArray()
 {
 	for(UINT i = 0; i < m_nNumBones; ++i)
 	{
@@ -382,7 +382,7 @@ void SkinnedMesh::BuildToRootMatricesPtrArray()
 Function:bindWeaponToModel()
 Purpose:binds static object to animated model's bone
 */
-void SkinnedMesh::BindWeaponToModel(string strObjectName,string strBoneToBind)
+void SkinnedModel::BindWeaponToModel(string strObjectName,string strBoneToBind)
 {
 	GameObject* pGameObject = m_pGameObjManager->GetObjectByName(strObjectName.c_str());
 
@@ -415,7 +415,7 @@ We do this, because we want when the root is moved all bones in the hierarchy to
 bone5 doesnt have children or siblings, so we continue on bone1 with the same algorithm.
 
 */
-void SkinnedMesh::BuildToRootMatrices(FrameEx* pBone, D3DXMATRIX& ParentBoneToRootMatrix) 
+void SkinnedModel::BuildToRootMatrices(FrameEx* pBone, D3DXMATRIX& ParentBoneToRootMatrix) 
 {
 	//gets the local transformation matrix of the current bone
     D3DXMATRIX BoneLocalMatrix = pBone->TransformationMatrix;
@@ -445,7 +445,7 @@ void SkinnedMesh::BuildToRootMatrices(FrameEx* pBone, D3DXMATRIX& ParentBoneToRo
 Function:OnResetDevice
 Purpose:restores the effect file from onLostDevice status
 */
-void SkinnedMesh::OnResetDevice()
+void SkinnedModel::OnResetDevice()
 {
 	m_pEffect->OnResetDevice();
 	m_pTitlesEffect->OnResetDevice();
@@ -456,7 +456,7 @@ void SkinnedMesh::OnResetDevice()
 Function:OnLostDevice
 Purpose:this can occur if alt+tab is pressed
 */
-void SkinnedMesh::OnLostDevice()
+void SkinnedModel::OnLostDevice()
 {
 	m_pEffect->OnLostDevice();
 	m_pTitlesEffect->OnLostDevice();
@@ -468,7 +468,7 @@ void SkinnedMesh::OnLostDevice()
 Function:BuildBoundingBox
 Purpose:builds the bounding box around the model. Used for collision detection tests and visible tests
 */
-void SkinnedMesh::BuildBoundingBox()
+void SkinnedModel::BuildBoundingBox()
 {
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	m_pMesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
@@ -501,15 +501,15 @@ void SkinnedMesh::BuildBoundingBox()
 Function:BuildEffect
 Purpose:sets paramateres needed in the effect file
 */
-void SkinnedMesh::BuildEffect()
+void SkinnedModel::BuildEffect()
 {
-	if(FAILED(D3DXCreateEffectFromFile(pDxDevice,"../../CORE/CORE/shaders/SkinnedMeshShader.fx",0,0,D3DXSHADER_DEBUG,0,&m_pEffect,0)))
+	if(FAILED(D3DXCreateEffectFromFile(pDxDevice,"../../CORE/CORE/shaders/SkinnedModelShader.fx",0,0,D3DXSHADER_DEBUG,0,&m_pEffect,0)))
 	{
-		MessageBox(0,"Failed loading effect file in skinnedMesh",0,0);
+		MessageBox(0,"Failed loading effect file in SkinnedModel",0,0);
 		PostQuitMessage(0);
 	}
 
-	m_hEffectTechnique	  = m_pEffect->GetTechniqueByName("SkinnedMeshTech");
+	m_hEffectTechnique	  = m_pEffect->GetTechniqueByName("SkinnedModelTech");
 	m_hWVPMatrix		  = m_pEffect->GetParameterByName(0, "WVP");
 	m_hMaterial  		  = m_pEffect->GetParameterByName(0, "mtrl");
 	m_hLight	 		  = m_pEffect->GetParameterByName(0, "light");
@@ -526,7 +526,7 @@ void SkinnedMesh::BuildEffect()
 Function:BuildEffectForTitles
 Purpose:sets paramateres needed in the effect file for the titles
 */
-void SkinnedMesh::BuildEffectForTitles()
+void SkinnedModel::BuildEffectForTitles()
 {
 	D3DXCreateEffectFromFile(pDxDevice, "../../CORE/CORE/shaders/Text3DShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pTitlesEffect, 0);
 	m_hTitlesEffectTechnique = m_pTitlesEffect->GetTechniqueByName("text3DTech");
@@ -538,7 +538,7 @@ void SkinnedMesh::BuildEffectForTitles()
 Function:onUpdate()
 Purpose:updates the mesh bones and current position
 */
-void SkinnedMesh::OnUpdate(float fDeltaTime)
+void SkinnedModel::OnUpdate(float fDeltaTime)
 {
 	//this if is the second part of the algorithm for playing animation just once.
 	//after the function for playing animation once starts playing the next animation(for instance we play attack animation)
@@ -597,7 +597,7 @@ void SkinnedMesh::OnUpdate(float fDeltaTime)
 Function:OnRender
 Purpose:renders the skinned mesh on the screen
 */
-void SkinnedMesh::OnRender()
+void SkinnedModel::OnRender()
 {
 	if( m_pGameObjManager->ShouldRenderAxis() )
 	{
@@ -694,14 +694,14 @@ void SkinnedMesh::OnRender()
 	//render the binded objects associated with this skinned mesh
 	for (auto& it : m_mapBindedObjects)
 	{
-		GameObject* pBindedObject = static_cast<StaticMesh*>(it.first);
+		GameObject* pBindedObject = static_cast<StaticModel*>(it.first);
 		pBindedObject->RenderBindedWeapon(this, it.second);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedMesh::RenderBindedWeapon(GameObject* pSkMesh, string bone)
+void SkinnedModel::RenderBindedWeapon(GameObject* pSkMesh, string bone)
 {
 
 
@@ -712,7 +712,7 @@ void SkinnedMesh::RenderBindedWeapon(GameObject* pSkMesh, string bone)
 Function:RenderTitles
 Purpose:renders the titles above the skinned meshes
 */
-void SkinnedMesh::RenderTitles()
+void SkinnedModel::RenderTitles()
 {
 	D3DXMATRIX T,S,R,R1;
 	D3DXMatrixTranslation(&T,m_vPos.x,m_vPos.y,m_vPos.z);
@@ -752,7 +752,7 @@ void SkinnedMesh::RenderTitles()
 Function:renderTitlesForQuest
 Purpose:renders the titles for quests above the skinned meshes
 */
-void SkinnedMesh::RenderTitlesForQuest()
+void SkinnedModel::RenderTitlesForQuest()
 {
 	if( m_bHasDialogue )
 	{
@@ -794,7 +794,7 @@ void SkinnedMesh::RenderTitlesForQuest()
 Function:RenderBoundingBox
 Purpose:renders the bounding box
 */
-void SkinnedMesh::RenderBoundingBox()
+void SkinnedModel::RenderBoundingBox()
 {
 	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 	pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -945,7 +945,7 @@ HRESULT AllocateHierarchy::DestroyMeshContainer(D3DXMESHCONTAINER* MeshContainer
 
 /////////////////////////////////////////////////////////////////////////
 
-float SkinnedMesh::GetDistanceToPickedObject()
+float SkinnedModel::GetDistanceToPickedObject()
 {
 	D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
@@ -967,7 +967,7 @@ float SkinnedMesh::GetDistanceToPickedObject()
 	return -1;
 }
 
-bool SkinnedMesh::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX combinedMatrix, D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir, float& nDistance)
+bool SkinnedModel::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX combinedMatrix, D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir, float& nDistance)
 {
 	D3DXMESHCONTAINER* pMeshContainer = pFrame->pMeshContainer;
 
@@ -1015,292 +1015,292 @@ bool SkinnedMesh::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX 
 }
 
 
-bool SkinnedMesh::IsAttacked() const
+bool SkinnedModel::IsAttacked() const
 {
 	return m_bIsAttacked;
 }
 
-void SkinnedMesh::SetAttacked(bool attacked)
+void SkinnedModel::SetAttacked(bool attacked)
 {
 	m_bIsAttacked = attacked;
 }
 
-bool SkinnedMesh::IsAttacking() const
+bool SkinnedModel::IsAttacking() const
 {
 	return m_bIsAttacking;
 }
 
-void SkinnedMesh::SetAttacking(bool attacking)
+void SkinnedModel::SetAttacking(bool attacking)
 {
 	m_bIsAttacking = attacking;
 }
 
-bool SkinnedMesh::IsDead() const
+bool SkinnedModel::IsDead() const
 {
 	return m_bIsDead;
 }
 
-void SkinnedMesh::SetDead(bool dead)
+void SkinnedModel::SetDead(bool dead)
 {
 	m_bIsDead = dead;
 }
 
-bool SkinnedMesh::HasDialogue() const
+bool SkinnedModel::HasDialogue() const
 {
 	return m_bHasDialogue;
 }
 
-void SkinnedMesh::SetHasDialogue(bool hasDialogue)
+void SkinnedModel::SetHasDialogue(bool hasDialogue)
 {
 	m_bHasDialogue = hasDialogue;
 }
 
-string SkinnedMesh::GetAttackerName() const
+string SkinnedModel::GetAttackerName() const
 {
 	return m_strAttackerName;
 }
 
-void SkinnedMesh::SetAttackerName(const string& attackerName)
+void SkinnedModel::SetAttackerName(const string& attackerName)
 {
 	m_strAttackerName = attackerName;
 }
 
-string SkinnedMesh::GetActorType() const
+string SkinnedModel::GetActorType() const
 {
 	return m_strActorType;
 }
 
-void SkinnedMesh::SetActorType(const string& actorType)
+void SkinnedModel::SetActorType(const string& actorType)
 {
 	m_strActorType = actorType;
 }
 
-ID3DXMesh** SkinnedMesh::GetTitleMesh()
+ID3DXMesh** SkinnedModel::GetTitleMesh()
 {
 	return&m_pTitleMesh;
 }
 
-void SkinnedMesh::SetTitleMesh(ID3DXMesh* titleMesh)
+void SkinnedModel::SetTitleMesh(ID3DXMesh* titleMesh)
 {
 	m_pTitleMesh = titleMesh;
 }
 
-D3DXVECTOR3& SkinnedMesh::GetTitleLookVector()
+D3DXVECTOR3& SkinnedModel::GetTitleLookVector()
 {
 	return m_vTitleLook;
 }
 
-D3DXVECTOR3& SkinnedMesh::GetTitleRightVector()
+D3DXVECTOR3& SkinnedModel::GetTitleRightVector()
 {
 	return m_vTitleRight;
 }
 
-D3DXVECTOR3& SkinnedMesh::GetTitleUpVector()
+D3DXVECTOR3& SkinnedModel::GetTitleUpVector()
 {
 	return m_vTitleUp;
 }
 
-D3DXMATRIX SkinnedMesh::GetTitleRotationMatrix() const
+D3DXMATRIX SkinnedModel::GetTitleRotationMatrix() const
 {
 	return m_TitleRotationMatrix;
 }
 
-void SkinnedMesh::SetTitleRotationMatrix(D3DXMATRIX titleRotationMatrix)
+void SkinnedModel::SetTitleRotationMatrix(D3DXMATRIX titleRotationMatrix)
 {
 	m_TitleRotationMatrix = titleRotationMatrix;
 }
 
-float SkinnedMesh::GetTitleRotationAnglyByY() const
+float SkinnedModel::GetTitleRotationAnglyByY() const
 {
 	return m_fTitleRotationAngleByY;
 }
 
-void SkinnedMesh::SetTitleRotationAnglyByY(float angle)
+void SkinnedModel::SetTitleRotationAnglyByY(float angle)
 {
 	m_fTitleRotationAngleByY = angle;
 }
 
-void SkinnedMesh::ModifyTitleRotationAnglyByY(float delta)
+void SkinnedModel::ModifyTitleRotationAnglyByY(float delta)
 {
 	m_fTitleRotationAngleByY += delta;
 }
 
-string SkinnedMesh::GetTitleForQuest() const
+string SkinnedModel::GetTitleForQuest() const
 {
 	return m_strTitleForQuest;
 }
 
-void SkinnedMesh::SetTitleForQuest(const string& titleForQuest)
+void SkinnedModel::SetTitleForQuest(const string& titleForQuest)
 {
 	m_strTitleForQuest = titleForQuest;
 }
 
-ID3DXMesh** SkinnedMesh::GetTitleForQuestMesh()
+ID3DXMesh** SkinnedModel::GetTitleForQuestMesh()
 {
 	return &m_pTitleForQuestMesh;
 }
 
-void SkinnedMesh::SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh)
+void SkinnedModel::SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh)
 {
 	m_pTitleForQuestMesh = titleForQuestMesh;
 }
 
-D3DXVECTOR3& SkinnedMesh::GetTitleForQuestLookVector()
+D3DXVECTOR3& SkinnedModel::GetTitleForQuestLookVector()
 {
 	return m_vTitleForQuestLook;
 }
 
-D3DXVECTOR3& SkinnedMesh::GetTitleForQuestRightVector()
+D3DXVECTOR3& SkinnedModel::GetTitleForQuestRightVector()
 {
 	return m_vTitleForQuestRight;
 }
 
-D3DXVECTOR3& SkinnedMesh::GetTitleForQuestUpVector()
+D3DXVECTOR3& SkinnedModel::GetTitleForQuestUpVector()
 {
 	return m_vTitleForQuestUp;
 }
 
-D3DXMATRIX SkinnedMesh::GetTitleForQuestRotationMatrix() const
+D3DXMATRIX SkinnedModel::GetTitleForQuestRotationMatrix() const
 {
 	return m_TitleForQuestRotationMatrix;
 }
 
-void SkinnedMesh::SetTitleForQuestRotationMatrix(D3DXMATRIX titleForQuestRotationMatrix)
+void SkinnedModel::SetTitleForQuestRotationMatrix(D3DXMATRIX titleForQuestRotationMatrix)
 {
 	m_TitleForQuestRotationMatrix = titleForQuestRotationMatrix;
 }
 
-float SkinnedMesh::GetTitleForQuestRotationAnglyByY() const
+float SkinnedModel::GetTitleForQuestRotationAnglyByY() const
 {
 	return m_fTitleForQuestRotationAngleByY;
 }
 
-void SkinnedMesh::SetTitleForQuestRotationAnglyByY(float angle)
+void SkinnedModel::SetTitleForQuestRotationAnglyByY(float angle)
 {
 	m_fTitleForQuestRotationAngleByY = angle;
 }
 
-void SkinnedMesh::ModifyTitleForQuestRotationAnglyByY(float delta)
+void SkinnedModel::ModifyTitleForQuestRotationAnglyByY(float delta)
 {
 	m_fTitleForQuestRotationAngleByY += delta;
 }
 
-vector<D3DXMATRIX>& SkinnedMesh::GetFinalBonesMatrices()
+vector<D3DXMATRIX>& SkinnedModel::GetFinalBonesMatrices()
 {
 	return m_vFinalBonesMatrices;
 }
 
-void SkinnedMesh::SetFinalBonesMatrices(vector<D3DXMATRIX> bonesMatrices)
+void SkinnedModel::SetFinalBonesMatrices(vector<D3DXMATRIX> bonesMatrices)
 {
 	m_vFinalBonesMatrices = bonesMatrices;
 }
 
-vector<D3DXMATRIX*>& SkinnedMesh::GetToRootMatrices()
+vector<D3DXMATRIX*>& SkinnedModel::GetToRootMatrices()
 {
 	return m_vToRootMatrices;
 }
 
-void SkinnedMesh::SetToRootMatrices(vector<D3DXMATRIX*> toRootMatrices)
+void SkinnedModel::SetToRootMatrices(vector<D3DXMATRIX*> toRootMatrices)
 {
 	m_vToRootMatrices = toRootMatrices;
 }
 
-D3DXFRAME* SkinnedMesh::GetRootFrame() const
+D3DXFRAME* SkinnedModel::GetRootFrame() const
 {
 	return m_pRoot;
 }
 
-void SkinnedMesh::SetRootFrame(D3DXFRAME* rootFrame)
+void SkinnedModel::SetRootFrame(D3DXFRAME* rootFrame)
 {
 	m_pRoot = rootFrame;
 }
 
-DWORD SkinnedMesh::GetMaxVertexInfluences() const
+DWORD SkinnedModel::GetMaxVertexInfluences() const
 {
 	return m_nMaxVertInfluences;
 }
 
-void SkinnedMesh::SetMaxVertexInfluences(DWORD maxVertexInfluences)
+void SkinnedModel::SetMaxVertexInfluences(DWORD maxVertexInfluences)
 {
 	m_nMaxVertInfluences = maxVertexInfluences;
 }
 
-DWORD SkinnedMesh::GetAmountOfBones() const
+DWORD SkinnedModel::GetAmountOfBones() const
 {
 	return m_nNumBones;
 }
 
-void SkinnedMesh::SetAmountOfBones(DWORD amountOfBones)
+void SkinnedModel::SetAmountOfBones(DWORD amountOfBones)
 {
 	m_nNumBones = amountOfBones;
 }
 
-ID3DXSkinInfo* SkinnedMesh::GetSKinInfo() const
+ID3DXSkinInfo* SkinnedModel::GetSKinInfo() const
 {
 	return m_pSkinInfo;
 }
 
-void SkinnedMesh::SetSkinInfo(ID3DXSkinInfo* skinInfo)
+void SkinnedModel::SetSkinInfo(ID3DXSkinInfo* skinInfo)
 {
 	m_pSkinInfo = skinInfo;
 }
 
-ID3DXAnimationController* SkinnedMesh::GetAnimationController() const
+ID3DXAnimationController* SkinnedModel::GetAnimationController() const
 {
 	return m_pAnimController;
 }
 
-void SkinnedMesh::SetAnimationController(ID3DXAnimationController* animController)
+void SkinnedModel::SetAnimationController(ID3DXAnimationController* animController)
 {
 	m_pAnimController = animController;
 }
 
-LPD3DXANIMATIONSET SkinnedMesh::GetCurrentAnimationSet() const
+LPD3DXANIMATIONSET SkinnedModel::GetCurrentAnimationSet() const
 {
 	return m_pCurrentAnimSet;
 }
 
-void SkinnedMesh::SetCurrentAnimationSet(LPD3DXANIMATIONSET currentAnimationSet)
+void SkinnedModel::SetCurrentAnimationSet(LPD3DXANIMATIONSET currentAnimationSet)
 {
 	m_pCurrentAnimSet = currentAnimationSet;
 }
 
-LPD3DXANIMATIONSET SkinnedMesh::GetSecondAnimationSet() const
+LPD3DXANIMATIONSET SkinnedModel::GetSecondAnimationSet() const
 {
 	return m_pSecondAnimSet;
 }
 
-void SkinnedMesh::SetSecondAnimationSet(LPD3DXANIMATIONSET secondAnimationSet)
+void SkinnedModel::SetSecondAnimationSet(LPD3DXANIMATIONSET secondAnimationSet)
 {
 	m_pSecondAnimSet = secondAnimationSet;
 }
 
-DWORD SkinnedMesh::GetCurrentAnimationTrack() const
+DWORD SkinnedModel::GetCurrentAnimationTrack() const
 {
 	return m_nCurrentAnimTrack;
 }
 
-void SkinnedMesh::SetCurrentAnimationTrack(DWORD currentAnimationTrack)
+void SkinnedModel::SetCurrentAnimationTrack(DWORD currentAnimationTrack)
 {
 	m_nCurrentAnimTrack = currentAnimationTrack;
 }
 
-DWORD SkinnedMesh::GetNewAnimationTrack() const
+DWORD SkinnedModel::GetNewAnimationTrack() const
 {
 	return m_nNewAnimTrack;
 }
 
-void SkinnedMesh::SetNewAnimationTrack(DWORD newAnimationTrack)
+void SkinnedModel::SetNewAnimationTrack(DWORD newAnimationTrack)
 {
 	m_nNewAnimTrack = newAnimationTrack;
 }
 
-bool SkinnedMesh::IsSwitched() const
+bool SkinnedModel::IsSwitched() const
 {
 	return m_bIsSwitched;
 }
 
-void SkinnedMesh::SetIsSwitched(bool isSwitched)
+void SkinnedModel::SetIsSwitched(bool isSwitched)
 {
 	m_bIsSwitched = isSwitched;
 }

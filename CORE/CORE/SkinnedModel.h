@@ -5,7 +5,7 @@
 #include "DialogueManager.h"
 #include <stdlib.h>
 #include <time.h>
-#include "StaticMesh.h"
+#include "StaticModel.h"
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -34,12 +34,12 @@ public:
 //////////////////////////////////////////////////////////////////////////////
 
 //this class contains all the functions for loading animated model, updating his bones, and rendering the model
-class SkinnedMesh : public GameObject
+class SkinnedModel : public GameObject
 {
 public:
-	SkinnedMesh();
-	SkinnedMesh(string strModelName, string ModelFileName, string strTextureFileName, bool bShouldRenderTitles = true);
-	~SkinnedMesh();
+	SkinnedModel();
+	SkinnedModel(string strModelName, string ModelFileName, string strTextureFileName, bool bShouldRenderTitles = true);
+	~SkinnedModel();
 
 	virtual void 	LoadGameObject() override;
 
@@ -176,7 +176,7 @@ private:
 		
 	void 			BuildBoundingBox();
 	
-	void 			BuildSkinnedMesh(ID3DXMesh* pMesh);
+	void 			BuildSkinnedModel(ID3DXMesh* pMesh);
 	
 	void 			BuildToRootMatricesPtrArray();
 	

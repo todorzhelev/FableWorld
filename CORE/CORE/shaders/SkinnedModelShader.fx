@@ -47,7 +47,7 @@ struct VS_INPUT
     int4 boneIndex 	: BLENDINDICES0;
 };
 
-VS_OUTPUT SkinnedMeshVS(VS_INPUT inp)
+VS_OUTPUT SkinnedModelVS(VS_INPUT inp)
 {
 	VS_OUTPUT o;
 
@@ -85,7 +85,7 @@ VS_OUTPUT SkinnedMeshVS(VS_INPUT inp)
     return o;
 }
 
-float4 SkinnedMeshPS(VS_OUTPUT inp) : COLOR
+float4 SkinnedModelPS(VS_OUTPUT inp) : COLOR
 {
 	inp.norm = normalize(inp.norm);
 	
@@ -111,12 +111,12 @@ float4 SkinnedMeshPS(VS_OUTPUT inp) : COLOR
 }
 
 
-technique SkinnedMeshTech
+technique SkinnedModelTech
 {
 	pass P0
 	{
-		vertexShader = compile vs_2_0 SkinnedMeshVS();
-        pixelShader  = compile ps_2_0 SkinnedMeshPS();
+		vertexShader = compile vs_2_0 SkinnedModelVS();
+        pixelShader  = compile ps_2_0 SkinnedModelPS();
 
 		//FillMode          = WireFrame;
 	}

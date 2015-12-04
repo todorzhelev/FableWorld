@@ -1,6 +1,6 @@
 #include "GameObjectManager.h"
 #include "DirectInput.h"
-#include "SkinnedMesh.h"
+#include "SkinnedModel.h"
 
 GameObjectManager* m_pGameObjManager = nullptr;
 
@@ -28,7 +28,7 @@ void GameObjectManager::AddGameObject(GameObject* pGameObject)
 
 	if( pGameObject->GetObjectType() == EGameObjectType_Skinned )
 	{
-		m_skinnedModels.push_back(static_cast<SkinnedMesh*>(pGameObject));
+		m_skinnedModels.push_back(static_cast<SkinnedModel*>(pGameObject));
 	}
 }
 
@@ -85,7 +85,7 @@ std::vector<GameObject*>& GameObjectManager::GetGameObjects()
 
 /////////////////////////////////////////////////////////////////////////
 
-std::vector<SkinnedMesh*>& GameObjectManager::GetSkinnedModels()
+std::vector<SkinnedModel*>& GameObjectManager::GetSkinnedModels()
 {
 	return m_skinnedModels;
 }
@@ -107,13 +107,13 @@ GameObject* GameObjectManager::GetObjectByName(std::string name)
 
 /////////////////////////////////////////////////////////////////////////
 
-SkinnedMesh* GameObjectManager::GetSkinnedModelByName(std::string name)
+SkinnedModel* GameObjectManager::GetSkinnedModelByName(std::string name)
 {
 	for (auto& object : m_skinnedModels)
 	{
 		if ( !object->GetName().compare(name) )
 		{
-			return static_cast<SkinnedMesh*>(object);
+			return static_cast<SkinnedModel*>(object);
 		}
 	}
 

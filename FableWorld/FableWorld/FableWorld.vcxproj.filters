@@ -83,16 +83,10 @@
     <ClCompile Include="..\..\CORE\CORE\Misc.cpp">
       <Filter>CORE\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\SkinnedMesh.cpp">
-      <Filter>CORE\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\CORE\CORE\Sky.cpp">
       <Filter>CORE\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\CORE\CORE\SoundSyst.cpp">
-      <Filter>CORE\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\StaticMesh.cpp">
       <Filter>CORE\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\CORE\CORE\Terrain.cpp">
@@ -128,6 +122,12 @@
     <ClCompile Include="..\..\CORE\CORE\AABB.cpp">
       <Filter>CORE\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\SkinnedModel.cpp">
+      <Filter>CORE\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\StaticModel.cpp">
+      <Filter>CORE\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\CORE\CORE\AABB.h">
@@ -160,16 +160,10 @@
     <ClInclude Include="..\..\CORE\CORE\Misc.h">
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\CORE\CORE\SkinnedMesh.h">
-      <Filter>CORE\Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\Sky.h">
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\SoundSyst.h">
-      <Filter>CORE\Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\CORE\CORE\StaticMesh.h">
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\Terrain.h">
@@ -214,6 +208,12 @@
     <ClInclude Include="MenuInGame.h">
       <Filter>Source Files\scenes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\SkinnedModel.h">
+      <Filter>CORE\Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\StaticModel.h">
+      <Filter>CORE\Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fonts\28DaysLater.ttf">
@@ -228,24 +228,25 @@
     <None Include="scripts\sounds.lua">
       <Filter>scripts</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\CORE\CORE\shaders\DebugGraphicsShader.fx">
       <Filter>CORE\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\SkinnedMeshShader.fx">
-      <Filter>CORE\shaders</Filter>
-    </FxCompile>
     <FxCompile Include="..\..\CORE\CORE\shaders\SkyShader.fx">
-      <Filter>CORE\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\StaticMeshShader.fx">
       <Filter>CORE\shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\..\CORE\CORE\shaders\TerrainShader.fx">
       <Filter>CORE\shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\..\CORE\CORE\shaders\Text3DShader.fx">
+      <Filter>CORE\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\CORE\CORE\shaders\SkinnedModelShader.fx">
+      <Filter>CORE\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\CORE\CORE\shaders\StaticModelShader.fx">
       <Filter>CORE\shaders</Filter>
     </FxCompile>
   </ItemGroup>

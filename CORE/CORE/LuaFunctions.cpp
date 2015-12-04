@@ -13,7 +13,7 @@ Purpose:load static models, i.e. models whithout animations
 */
 int l_addStaticModel(lua_State* L)
 {
-	GameObject* pMesh = new StaticMesh;
+	GameObject* pMesh = new StaticModel;
 
 	//GameObject obj;
 	pMesh->GetLookVector()	 = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
@@ -71,13 +71,13 @@ int l_addStaticModel(lua_State* L)
 	if (pMesh->IsBindable() && !pMesh->GetBindedToAnimatedModelName().empty() && !pMesh->GetBindedToBoneName().empty())
 	{
 		GameObject* obj = m_pGameObjManager->GetObjectByName(pMesh->GetBindedToAnimatedModelName());
-		SkinnedMesh* pSkinnedMesh = nullptr;
+		SkinnedModel* pSkinnedModel = nullptr;
 		if (obj != nullptr)
 		{
-			pSkinnedMesh = static_cast<SkinnedMesh*>(obj);
+			pSkinnedModel = static_cast<SkinnedModel*>(obj);
 		}
 
-		pSkinnedMesh->BindWeaponToModel(pMesh->GetName(), pMesh->GetBindedToBoneName());
+		pSkinnedModel->BindWeaponToModel(pMesh->GetName(), pMesh->GetBindedToBoneName());
 	}
 
 	return 1;
@@ -91,7 +91,7 @@ Purpose:load animated model
 */
 int l_addAnimatedModel(lua_State* L)
 {
-	SkinnedMesh* pMesh = new SkinnedMesh;
+	SkinnedModel* pMesh = new SkinnedModel;
 
 	pMesh->GetLookVector()  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 	pMesh->GetRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);

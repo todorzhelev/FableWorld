@@ -44,7 +44,7 @@ struct VS_INPUT
 	float2 tex : TEXCOORD0;
 };
 
-VS_OUTPUT StaticMeshVS(VS_INPUT inp)
+VS_OUTPUT StaticModelVS(VS_INPUT inp)
 {
 	VS_OUTPUT o;
 	
@@ -58,7 +58,7 @@ VS_OUTPUT StaticMeshVS(VS_INPUT inp)
     return o;
 }
 
-float4 StaticMeshPS(VS_OUTPUT inp) : COLOR
+float4 StaticModelPS(VS_OUTPUT inp) : COLOR
 {
 	inp.norm = normalize(inp.norm);
 	
@@ -85,11 +85,11 @@ float4 StaticMeshPS(VS_OUTPUT inp) : COLOR
     
 }
 
-technique StaticMeshTech
+technique StaticModelTech
 {
     pass P0
     {
-        vertexShader = compile vs_2_0 StaticMeshVS();
-        pixelShader  = compile ps_2_0 StaticMeshPS();
+        vertexShader = compile vs_2_0 StaticModelVS();
+        pixelShader  = compile ps_2_0 StaticModelPS();
     }
 }
