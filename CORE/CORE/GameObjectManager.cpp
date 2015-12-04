@@ -25,6 +25,11 @@ Purpose:puts new GameObject in the map
 void GameObjectManager::AddGameObject(GameObject* pGameObject)
 {
 	m_gameObjects.push_back(pGameObject);
+
+	if( pGameObject->GetObjectType() == EGameObjectType_Skinned )
+	{
+		m_skinnedModels.push_back(static_cast<SkinnedMesh*>(pGameObject));
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -61,7 +66,7 @@ void GameObjectManager::OnUpdate()
 				{
 					SkinnedMesh* pMesh = static_cast<SkinnedMesh*>(gameObject);
 
-					D3DXFRAME* pFrame = pMesh->FindFrameWithMesh(gameObject->GetRootFrame());
+					D3DXFRAME* pFrame = pMesh->FindFrameWithMesh(pMesh->GetRootFrame());
 
 					float nDistance = 0.0f;
 
@@ -201,6 +206,13 @@ std::vector<GameObject*>& GameObjectManager::GetGameObjects()
 
 /////////////////////////////////////////////////////////////////////////
 
+std::vector<SkinnedMesh*>& GameObjectManager::GetSkinnedModels()
+{
+	return m_skinnedModels;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
 GameObject* GameObjectManager::GetObjectByName(std::string name)
 {
 	for(auto& object : m_gameObjects )
@@ -208,6 +220,22 @@ GameObject* GameObjectManager::GetObjectByName(std::string name)
 		if( !object->GetName().compare(name) )
 		{
 			return object;
+		}
+	}
+
+	return nullptr;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+SkinnedMesh* GameObjectManager::GetSkinnedModelByName(std::string name)
+{
+	for (auto& object : m_gameObjects)
+	{
+		if ( object->GetObjectType() == EGameObjectType_Skinned &&
+			 !object->GetName().compare(name))
+		{
+			return static_cast<SkinnedMesh*>(object);
 		}
 	}
 

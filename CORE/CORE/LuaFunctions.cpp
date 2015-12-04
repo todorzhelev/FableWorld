@@ -45,7 +45,7 @@ int l_addStaticModel(lua_State* L)
 	pMesh->SetRotationAngleByZ(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
 	
 	lua_getglobal(L, "titleRotY");
-	pMesh->SetTitleRotationAnglyByY(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
+	//pMesh->SetTitleRotationAnglyByY(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
 
 	lua_getglobal(L, "bindable");
 	pMesh->SetIsBindable(static_cast<int>(lua_tonumber(L,lua_gettop(L))));
@@ -91,7 +91,7 @@ Purpose:load animated model
 */
 int l_addAnimatedModel(lua_State* L)
 {
-	GameObject* pMesh = new SkinnedMesh;
+	SkinnedMesh* pMesh = new SkinnedMesh;
 
 	pMesh->GetLookVector()  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 	pMesh->GetRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);

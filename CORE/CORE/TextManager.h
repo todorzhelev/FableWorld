@@ -2,9 +2,10 @@
 
 #include "Camera.h"
 #include "Misc.h"
-#include "GameObject.h"
 
 //////////////////////////////////////////////////////////////////////////////
+
+class SkinnedMesh;
 
 class TextManager
 {
@@ -16,9 +17,9 @@ public:
 
 	void		CreateFontFor3DText();
 
-	void		CreateMeshFor3DText(GameObject* pGameObject);
+	void		CreateMeshFor3DText(SkinnedMesh* pGameObject);
 
-	void		CreateMeshFor3DTextQuest(GameObject* pGameObject);
+	void		CreateMeshFor3DTextQuest(SkinnedMesh* pGameObject);
 
 	void		RenderText(LPCSTR dtext,int x1,int y1,int x2,int y2,int alpha,int color1,int color2,int color3);
 

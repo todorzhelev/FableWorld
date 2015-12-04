@@ -944,3 +944,293 @@ HRESULT AllocateHierarchy::DestroyMeshContainer(D3DXMESHCONTAINER* MeshContainer
 }
 
 /////////////////////////////////////////////////////////////////////////
+
+bool SkinnedMesh::IsAttacked() const
+{
+	return m_bIsAttacked;
+}
+
+void SkinnedMesh::SetAttacked(bool attacked)
+{
+	m_bIsAttacked = attacked;
+}
+
+bool SkinnedMesh::IsAttacking() const
+{
+	return m_bIsAttacking;
+}
+
+void SkinnedMesh::SetAttacking(bool attacking)
+{
+	m_bIsAttacking = attacking;
+}
+
+bool SkinnedMesh::IsDead() const
+{
+	return m_bIsDead;
+}
+
+void SkinnedMesh::SetDead(bool dead)
+{
+	m_bIsDead = dead;
+}
+
+bool SkinnedMesh::HasDialogue() const
+{
+	return m_bHasDialogue;
+}
+
+void SkinnedMesh::SetHasDialogue(bool hasDialogue)
+{
+	m_bHasDialogue = hasDialogue;
+}
+
+string SkinnedMesh::GetAttackerName() const
+{
+	return m_strAttackerName;
+}
+
+void SkinnedMesh::SetAttackerName(const string& attackerName)
+{
+	m_strAttackerName = attackerName;
+}
+
+string SkinnedMesh::GetActorType() const
+{
+	return m_strActorType;
+}
+
+void SkinnedMesh::SetActorType(const string& actorType)
+{
+	m_strActorType = actorType;
+}
+
+ID3DXMesh** SkinnedMesh::GetTitleMesh()
+{
+	return&m_pTitleMesh;
+}
+
+void SkinnedMesh::SetTitleMesh(ID3DXMesh* titleMesh)
+{
+	m_pTitleMesh = titleMesh;
+}
+
+D3DXVECTOR3& SkinnedMesh::GetTitleLookVector()
+{
+	return m_vTitleLook;
+}
+
+D3DXVECTOR3& SkinnedMesh::GetTitleRightVector()
+{
+	return m_vTitleRight;
+}
+
+D3DXVECTOR3& SkinnedMesh::GetTitleUpVector()
+{
+	return m_vTitleUp;
+}
+
+D3DXMATRIX SkinnedMesh::GetTitleRotationMatrix() const
+{
+	return m_TitleRotationMatrix;
+}
+
+void SkinnedMesh::SetTitleRotationMatrix(D3DXMATRIX titleRotationMatrix)
+{
+	m_TitleRotationMatrix = titleRotationMatrix;
+}
+
+float SkinnedMesh::GetTitleRotationAnglyByY() const
+{
+	return m_fTitleRotationAngleByY;
+}
+
+void SkinnedMesh::SetTitleRotationAnglyByY(float angle)
+{
+	m_fTitleRotationAngleByY = angle;
+}
+
+void SkinnedMesh::ModifyTitleRotationAnglyByY(float delta)
+{
+	m_fTitleRotationAngleByY += delta;
+}
+
+string SkinnedMesh::GetTitleForQuest() const
+{
+	return m_strTitleForQuest;
+}
+
+void SkinnedMesh::SetTitleForQuest(const string& titleForQuest)
+{
+	m_strTitleForQuest = titleForQuest;
+}
+
+ID3DXMesh** SkinnedMesh::GetTitleForQuestMesh()
+{
+	return &m_pTitleForQuestMesh;
+}
+
+void SkinnedMesh::SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh)
+{
+	m_pTitleForQuestMesh = titleForQuestMesh;
+}
+
+D3DXVECTOR3& SkinnedMesh::GetTitleForQuestLookVector()
+{
+	return m_vTitleForQuestLook;
+}
+
+D3DXVECTOR3& SkinnedMesh::GetTitleForQuestRightVector()
+{
+	return m_vTitleForQuestRight;
+}
+
+D3DXVECTOR3& SkinnedMesh::GetTitleForQuestUpVector()
+{
+	return m_vTitleForQuestUp;
+}
+
+D3DXMATRIX SkinnedMesh::GetTitleForQuestRotationMatrix() const
+{
+	return m_TitleForQuestRotationMatrix;
+}
+
+void SkinnedMesh::SetTitleForQuestRotationMatrix(D3DXMATRIX titleForQuestRotationMatrix)
+{
+	m_TitleForQuestRotationMatrix = titleForQuestRotationMatrix;
+}
+
+float SkinnedMesh::GetTitleForQuestRotationAnglyByY() const
+{
+	return m_fTitleForQuestRotationAngleByY;
+}
+
+void SkinnedMesh::SetTitleForQuestRotationAnglyByY(float angle)
+{
+	m_fTitleForQuestRotationAngleByY = angle;
+}
+
+void SkinnedMesh::ModifyTitleForQuestRotationAnglyByY(float delta)
+{
+	m_fTitleForQuestRotationAngleByY += delta;
+}
+
+vector<D3DXMATRIX>& SkinnedMesh::GetFinalBonesMatrices()
+{
+	return m_vFinalBonesMatrices;
+}
+
+void SkinnedMesh::SetFinalBonesMatrices(vector<D3DXMATRIX> bonesMatrices)
+{
+	m_vFinalBonesMatrices = bonesMatrices;
+}
+
+vector<D3DXMATRIX*>& SkinnedMesh::GetToRootMatrices()
+{
+	return m_vToRootMatrices;
+}
+
+void SkinnedMesh::SetToRootMatrices(vector<D3DXMATRIX*> toRootMatrices)
+{
+	m_vToRootMatrices = toRootMatrices;
+}
+
+D3DXFRAME* SkinnedMesh::GetRootFrame() const
+{
+	return m_pRoot;
+}
+
+void SkinnedMesh::SetRootFrame(D3DXFRAME* rootFrame)
+{
+	m_pRoot = rootFrame;
+}
+
+DWORD SkinnedMesh::GetMaxVertexInfluences() const
+{
+	return m_nMaxVertInfluences;
+}
+
+void SkinnedMesh::SetMaxVertexInfluences(DWORD maxVertexInfluences)
+{
+	m_nMaxVertInfluences = maxVertexInfluences;
+}
+
+DWORD SkinnedMesh::GetAmountOfBones() const
+{
+	return m_nNumBones;
+}
+
+void SkinnedMesh::SetAmountOfBones(DWORD amountOfBones)
+{
+	m_nNumBones = amountOfBones;
+}
+
+ID3DXSkinInfo* SkinnedMesh::GetSKinInfo() const
+{
+	return m_pSkinInfo;
+}
+
+void SkinnedMesh::SetSkinInfo(ID3DXSkinInfo* skinInfo)
+{
+	m_pSkinInfo = skinInfo;
+}
+
+ID3DXAnimationController* SkinnedMesh::GetAnimationController() const
+{
+	return m_pAnimController;
+}
+
+void SkinnedMesh::SetAnimationController(ID3DXAnimationController* animController)
+{
+	m_pAnimController = animController;
+}
+
+LPD3DXANIMATIONSET SkinnedMesh::GetCurrentAnimationSet() const
+{
+	return m_pCurrentAnimSet;
+}
+
+void SkinnedMesh::SetCurrentAnimationSet(LPD3DXANIMATIONSET currentAnimationSet)
+{
+	m_pCurrentAnimSet = currentAnimationSet;
+}
+
+LPD3DXANIMATIONSET SkinnedMesh::GetSecondAnimationSet() const
+{
+	return m_pSecondAnimSet;
+}
+
+void SkinnedMesh::SetSecondAnimationSet(LPD3DXANIMATIONSET secondAnimationSet)
+{
+	m_pSecondAnimSet = secondAnimationSet;
+}
+
+DWORD SkinnedMesh::GetCurrentAnimationTrack() const
+{
+	return m_nCurrentAnimTrack;
+}
+
+void SkinnedMesh::SetCurrentAnimationTrack(DWORD currentAnimationTrack)
+{
+	m_nCurrentAnimTrack = currentAnimationTrack;
+}
+
+DWORD SkinnedMesh::GetNewAnimationTrack() const
+{
+	return m_nNewAnimTrack;
+}
+
+void SkinnedMesh::SetNewAnimationTrack(DWORD newAnimationTrack)
+{
+	m_nNewAnimTrack = newAnimationTrack;
+}
+
+bool SkinnedMesh::IsSwitched() const
+{
+	return m_bIsSwitched;
+}
+
+void SkinnedMesh::SetIsSwitched(bool isSwitched)
+{
+	m_bIsSwitched = isSwitched;
+}

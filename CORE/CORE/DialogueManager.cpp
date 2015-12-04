@@ -253,7 +253,7 @@ void DialogueManager::LabelClicked(DialogueObject& dialogueObject,map<string,Que
 				mapAvailableQuests.erase(dialogueObject.m_pClickedDialogueNode->m_strQuest);
 			}
 
-			GameObject* pGameObject = m_pGameObjManager->GetObjectByName(dialogueObject.m_strModel);
+			SkinnedMesh* pGameObject = m_pGameObjManager->GetSkinnedModelByName(dialogueObject.m_strModel);
 
 			pGameObject->SetHasDialogue(false);
 

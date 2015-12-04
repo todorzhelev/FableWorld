@@ -1,8 +1,11 @@
+#pragma once
+
 #include<map>
 #include<string>
 #include"GameObject.h"
+#include"SkinnedMesh.h"
 
-#pragma once
+class SkinnedMesh;
 
 class GameObjectManager
 {
@@ -18,7 +21,11 @@ public:
 
 	std::vector<GameObject*>&  GetGameObjects();
 
+	std::vector<SkinnedMesh*>& GetSkinnedModels();
+
 	GameObject* GetObjectByName(std::string name);
+
+	SkinnedMesh* GetSkinnedModelByName(std::string name);
 
 	void SetShouldRenderTitles(bool bShouldRenderTitles);
 
@@ -64,6 +71,8 @@ private:
 	GameObject*	m_pPickedObject;
 
 	std::vector<GameObject*> m_gameObjects;
+	std::vector<SkinnedMesh*> m_skinnedModels;
+
 	//map<string,GameObject*> m_mapGameObjects;
 
 	//stores all the hit objects by the mouse from single click
