@@ -24,6 +24,8 @@ public:
 	virtual void OnResetDevice();
 	virtual void RenderBindedWeapon(GameObject* pSkMesh, string bone);
 
+	virtual float GetDistanceToPickedObject();
+
 	string GetModelFileName() const;
 	void SetModelFilename(const string& strModelFileName);
 
@@ -154,11 +156,6 @@ protected:
 
 	string m_strBindedToAnimatedModelName;
 	string m_strBindedToBoneName;
-	
-	//this map holds which weapon to which bone is attached
-	unordered_map<GameObject*,string> m_mapBindedObjects;
-
-	
 	
 	float m_fRotAngleX;
 	float m_fRotAngleY;

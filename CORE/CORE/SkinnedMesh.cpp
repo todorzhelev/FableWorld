@@ -945,6 +945,76 @@ HRESULT AllocateHierarchy::DestroyMeshContainer(D3DXMESHCONTAINER* MeshContainer
 
 /////////////////////////////////////////////////////////////////////////
 
+float SkinnedMesh::GetDistanceToPickedObject()
+{
+	D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
+
+	GetWorldPickingRay(vOrigin, vDir);
+
+	AABB box = m_BoundingBox.TransformByMatrix(m_CombinedTransformationMatrix);
+	if (D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir))
+	{
+		float nDistance = 0.0f;
+		D3DXFRAME* pFrame = FindFrameWithMesh(m_pRoot);
+
+		if (CalculateDistanceToPickedObject(pFrame, m_CombinedTransformationMatrix, vOrigin, vDir, nDistance))
+		{
+			return nDistance;
+		}
+	}
+
+	return -1;
+}
+
+bool SkinnedMesh::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX combinedMatrix, D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir, float& nDistance)
+{
+	D3DXMESHCONTAINER* pMeshContainer = pFrame->pMeshContainer;
+
+	D3DXFRAME* pSibling = pFrame->pFrameSibling;
+	D3DXFRAME* pFirstChild = pFrame->pFrameFirstChild;
+
+	if (pMeshContainer != NULL)
+	{
+		//fout<<pFrame->Name << endl;
+
+		D3DXMATRIX InverseWorldMatrix;
+		D3DXMatrixInverse(&InverseWorldMatrix, 0, &combinedMatrix);
+
+		//transform the Ray using the inverse matrix
+		D3DXVec3TransformCoord(&vOrigin, &vOrigin, &InverseWorldMatrix);
+		D3DXVec3TransformNormal(&vDir, &vDir, &InverseWorldMatrix);
+
+		BOOL hit = false;
+		DWORD faceIndex = -1;
+		float u = 0.0f;
+		float v = 0.0f;
+		float dist = 0.0f;
+		ID3DXBuffer* allhits = 0;
+		DWORD numHits = 0;
+
+		D3DXIntersect(pMeshContainer->MeshData.pMesh, &vOrigin, &vDir, &hit, &faceIndex, &u, &v, &dist, &allhits, &numHits);
+		releaseX(allhits);
+
+		nDistance = dist;
+
+		return hit;
+	}
+
+	if (pSibling)
+	{
+		CalculateDistanceToPickedObject(pSibling, combinedMatrix, vOrigin, vDir, nDistance);
+	}
+
+	if (pFirstChild)
+	{
+		CalculateDistanceToPickedObject(pFirstChild, combinedMatrix, vOrigin, vDir, nDistance);
+	}
+
+	return false;
+}
+
+
 bool SkinnedMesh::IsAttacked() const
 {
 	return m_bIsAttacked;

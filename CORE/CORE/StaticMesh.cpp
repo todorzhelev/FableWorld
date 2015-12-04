@@ -528,5 +528,44 @@ void StaticMesh::RenderBoundingBox()
 	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 }
 
+float StaticMesh::GetDistanceToPickedObject()
+{
+	D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
+
+	GetWorldPickingRay(vOrigin, vDir);
+
+	bool bIsPicked = false;
+
+	AABB box = m_BoundingBox.TransformByMatrix(m_CombinedTransformationMatrix);
+	bIsPicked = D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir);
+
+	if (bIsPicked)
+	{
+		//by finding the inverse of mesh CombinedMatrix we transform from World space to the mesh local space
+		//this is needed, because we have to transform the picking vectors to the mesh local space
+		//which is required by the D3DXIntersect function
+		D3DXMATRIX InverseWorldMatrix;
+		D3DXMatrixInverse(&InverseWorldMatrix, 0, &m_CombinedTransformationMatrix);
+
+		//transform the Ray using the inverse matrix
+		D3DXVec3TransformCoord(&vOrigin, &vOrigin, &InverseWorldMatrix);
+		D3DXVec3TransformNormal(&vDir, &vDir, &InverseWorldMatrix);
+
+		BOOL hit = false;
+		DWORD faceIndex = -1;
+		float u = 0.0f;
+		float v = 0.0f;
+		float dist = 0.0f;
+		ID3DXBuffer* allhits = 0;
+		DWORD numHits = 0;
+		D3DXIntersect(m_pMesh, &vOrigin, &vDir, &hit, &faceIndex, &u, &v, &dist, &allhits, &numHits);
+		releaseX(allhits);
+
+		return dist;
+	}
+
+	return -1;
+}
 
 /////////////////////////////////////////////////////////////////////////

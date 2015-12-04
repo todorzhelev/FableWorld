@@ -30,6 +30,12 @@ void GameObject::RenderBindedWeapon(GameObject* pSkMesh, string bone)
 	
 }
 
+//checks if object is picked
+float GameObject::GetDistanceToPickedObject()
+{
+	return -1;
+}
+
 string GameObject::GetModelFileName() const
 {
 	return m_strModelFileName;
@@ -163,16 +169,6 @@ string GameObject::GetBindedToBoneName() const
 void GameObject::SetBindedToBoneName(const string& bindedToBoneName)
 {
 	m_strBindedToBoneName = bindedToBoneName;
-}
-
-unordered_map<GameObject*, string>& GameObject::GetBindedObjects()
-{
-	return m_mapBindedObjects;
-}
-
-void GameObject::SetBindedObjects(unordered_map<GameObject*, string> bindedObjects)
-{
-	m_mapBindedObjects = bindedObjects;
 }
 
 float GameObject::GetRotationAngleByX() const

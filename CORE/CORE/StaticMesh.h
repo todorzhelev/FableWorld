@@ -15,17 +15,19 @@ public:
 	StaticMesh();
 	StaticMesh(string strModelName, string ModelFileName, string strTextureFileName);
 	
-	virtual void LoadGameObject();
+	virtual void LoadGameObject() override;
 
-	virtual void OnUpdate(float fDeltaTime);
+	virtual void OnUpdate(float fDeltaTime) override;
 
-	virtual void OnRender();
+	virtual void OnRender() override;
 
-	virtual void OnResetDevice();
+	virtual void OnResetDevice() override;
 
-	virtual void OnLostDevice();
+	virtual void OnLostDevice() override;
 
-	virtual void RenderBindedWeapon(GameObject* pSkMesh, string bone);
+	virtual void RenderBindedWeapon(GameObject* pSkMesh, string bone) override;
+
+	virtual float GetDistanceToPickedObject() override;
 
 	void		 BuildBoundingBox();
 
