@@ -166,7 +166,7 @@
     </FxCompile>
     <FxCompile Include="..\..\CORE\CORE\shaders\SkinnedModelShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkinnedModelVS</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SkinnedMeshVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SkinnedModelVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\CORE\CORE\shaders\SkyShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkyVS</EntryPointName>
@@ -174,7 +174,7 @@
     </FxCompile>
     <FxCompile Include="..\..\CORE\CORE\shaders\StaticModelShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StaticModelVS</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">StaticMeshVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">StaticModelVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\CORE\CORE\shaders\TerrainShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TerrainVS</EntryPointName>

@@ -64,6 +64,7 @@ void GameObjectManager::OnUpdate()
 	}
 
 	//the closest object is picked
+	//in the game skinned models only should be picked. fix this
 	if( !m_mapPickedObjects.empty() )
 	{
 		auto pClosestPickedObject = (m_mapPickedObjects.begin()->second);

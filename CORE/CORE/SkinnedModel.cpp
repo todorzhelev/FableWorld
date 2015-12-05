@@ -12,7 +12,7 @@ SkinnedModel::SkinnedModel()
 ,m_fTransTimeForIdle(0.25f)
 {
 	//default white texture for models which doesnt have any
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/whitetex.dds", &m_pWhiteTexture);
+	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture);
 
 	//max number of bones that can be supported.Above 60 bones arent rendered correctly
 	m_nMaxBonesSupported = 60;
@@ -46,7 +46,7 @@ SkinnedModel::SkinnedModel(string strModelName, string ModelFileName, string str
 {
 	//code duplication, move it to another function
 	//default white texture for models which doesnt have any
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/whitetex.dds", &m_pWhiteTexture);
+	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture);
 
 	//max number of bones that can be supported.Above 60 bones arent rendered correctly
 	m_nMaxBonesSupported = 60;
@@ -585,7 +585,8 @@ void SkinnedModel::OnUpdate(float fDeltaTime)
 		m_vFinalBonesMatrices[i] = BoneOffsetMatrix * ToRootMatrix;
 	}
 	
-	if( m_pGameObjManager->AreObjectsGrounded() )
+	if( m_pGameObjManager->AreObjectsGrounded() &&
+		pTerrain->IsValidPosition(m_vPos.x, m_vPos.z) )
 	{
 		//updates the height of the model, so it can sit above the ground
 		m_vPos.y = pTerrain->GetHeight(m_vPos.x,m_vPos.z) + 0.5f;

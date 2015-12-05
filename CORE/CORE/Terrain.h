@@ -5,8 +5,8 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
-const int k_nSubGridsRowsNumber = 33;
-const int k_nSubGridsColsNumber = 33;
+const int k_nSubGridsRowsNumber = 65;
+const int k_nSubGridsColsNumber = 65;
 const int k_nSubGridsTrianglesNumber  = (k_nSubGridsRowsNumber-1) * (k_nSubGridsColsNumber-1) * 2;
 const int k_nSubGridsVertsNumber	  = k_nSubGridsRowsNumber * k_nSubGridsColsNumber;
 
@@ -14,6 +14,12 @@ const int k_nSubGridsVertsNumber	  = k_nSubGridsRowsNumber * k_nSubGridsColsNumb
 
 struct TerrainSubGrid
 {
+	TerrainSubGrid(ID3DXMesh* mesh, AABB bb)
+	{
+		m_pSubGridMesh = mesh;
+		m_subGridBoungingBox = bb;
+	}
+
 	ID3DXMesh*	m_pSubGridMesh;
 	AABB		m_subGridBoungingBox;
 };
@@ -75,7 +81,7 @@ private:
 	vector<float> m_vHeightmap;
 
 	//vector with subgrids of the terrain
-	vector<TerrainSubGrid> m_vSubGrids;
+	vector<TerrainSubGrid*> m_vSubGrids;
 
 	IDirect3DTexture9* m_pBlendMapTexture;
 	IDirect3DTexture9* m_pStoneTexture;

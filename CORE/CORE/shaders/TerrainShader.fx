@@ -74,7 +74,7 @@ VS_OUTPUT TerrainVS(VS_INPUT inp)
 	//saturate makes the result between [0,1]. Outside this interval the light is strange.
     outVS.light = saturate(dot(inp.norm, lightVector) + 0.3);
     
-	outVS.pos = mul(float4(inp.pos, 1.0f), WVP);
+	outVS.pos = mul(float4(inp.pos, 1.0f), WVP);//on huge steep terrains this instruction takes most of the time
 	outVS.tiledTex = inp.tex * texScale; 
 	outVS.blendMapText = inp.tex;
 	

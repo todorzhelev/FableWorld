@@ -110,7 +110,10 @@ void Terrain::GenerateTerrainMesh()
 	pApp->GetPositionNormalTextureDecl()->GetDeclaration(elems, &numElems);
 
 	ID3DXMesh* mesh = 0;
-	D3DXCreateMesh(m_nNumTriangles, m_nNumVertices, D3DPOOL_SCRATCH|D3DXMESH_32BIT, elems, pDxDevice, &mesh);
+	if( FAILED(D3DXCreateMesh(m_nNumTriangles, m_nNumVertices, D3DPOOL_SCRATCH|D3DXMESH_32BIT, elems, pDxDevice, &mesh)) )
+	{
+		MessageBox(0, "Could not create terrain mesh", 0, 0);
+	}
 
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	//LockVertexBuffer() gives us access to the internal mesh data and by v we can write information to the mesh
@@ -420,10 +423,7 @@ void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalText
 	pSubMesh->UnlockIndexBuffer();
 	pSubMesh->UnlockAttributeBuffer();
 
-	TerrainSubGrid subGrid;
-
-	subGrid.m_pSubGridMesh		 = pSubMesh;
-	subGrid.m_subGridBoungingBox = bndBox;
+	TerrainSubGrid* subGrid = new TerrainSubGrid(pSubMesh,bndBox);
 
 	m_vSubGrids.push_back(subGrid);
 }
@@ -504,6 +504,11 @@ bool Terrain::IsValidPosition(float x, float z)
 	int nRow = static_cast<int>(floorf(fPossibleRow));
 	int nCol = static_cast<int>(floorf(fPossibleColumn));
 
+	if( nRow > m_nRows || nCol > m_nCols || nRow < 0 || nCol < 0 )
+	{
+		return false;
+	}
+
 	auto size = m_vHeightmap.size();
 	if( nRow*m_nCols + nCol < size &&
 	    nRow*m_nCols + (nCol + 1) < size &&
@@ -560,14 +565,16 @@ Purpose: draws the terrain(his submeshes)
 */
 void Terrain::OnRender()
 { 
-	vector<TerrainSubGrid> visibleSubGrids;
-	for(UINT i = 0; i < m_vSubGrids.size(); ++i)
+	vector<TerrainSubGrid*> visibleSubGrids;
+	for(auto& subGrid : m_vSubGrids)
 	{
-		if( camera->IsBoundingBoxVisible(m_vSubGrids[i].m_subGridBoungingBox) )
+		if (camera->IsBoundingBoxVisible(subGrid->m_subGridBoungingBox))
 		{
-			visibleSubGrids.push_back(m_vSubGrids[i]);
+			visibleSubGrids.push_back(subGrid);
 		}
 	}
+
+	//dont compute anything for subgrids that are not visible
 
 	m_pEffect->SetMatrix(m_hWVPMatrix, &camera->GetViewProjMatrix());
 	m_pEffect->SetTechnique(m_hEffectTechnique);
@@ -575,9 +582,9 @@ void Terrain::OnRender()
 	m_pEffect->Begin(&numPasses, 0);
 	m_pEffect->BeginPass(0);
 
-		for(vector<TerrainSubGrid>::iterator iter = visibleSubGrids.begin(); iter != visibleSubGrids.end(); ++iter)
+		for(auto& visibleSubGrid : visibleSubGrids)
 		{
-			iter->m_pSubGridMesh->DrawSubset(0);
+			visibleSubGrid->m_pSubGridMesh->DrawSubset(0);
 		}
 	
 	m_pEffect->EndPass();
