@@ -26,10 +26,10 @@ Terrain::Terrain(string strHeightmapFileName,float fHeightsScale, int nRows,int 
 
 	LoadHeightmap();
 
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/blend_map.dds", &m_pBlendMapTexture);
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/ground0.dds", &m_pDirtTexture);
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/grass-texture-02.dds", &m_pGrassTexture);
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/rocks.dds", &m_pStoneTexture);
+	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/blend_map.dds", &m_pBlendMapTexture);
+	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/ground0.dds", &m_pDirtTexture);
+	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/grass-texture-02.dds", &m_pGrassTexture);
+	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/rocks.dds", &m_pStoneTexture);
 
 	GenerateTerrainMesh();
 	BuildEffect();	

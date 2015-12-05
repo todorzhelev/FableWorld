@@ -9,7 +9,7 @@ titleRotY = 0
 modelName = "cho"
 titleForQuest = "?"
 modelFileName = "../../Resources/models/cho/cho_5anmx.X"
-textureFileName = "../../Resources/textures/chogath_abyss_TX_CM.DDS"
+textureFileName = "../../Resources/textures/SkinnedModels/chogath_abyss_TX_CM.DDS"
 typeInGame = "enemy"
 addAnimatedModel();
 
@@ -24,7 +24,7 @@ titleRotY = 0
 modelName = "ezreal"
 titleForQuest = "?"
 modelFileName = "../../Resources/models/ezreal/ezreal_5anm.X"
-textureFileName = "../../Resources/textures/Ezreal_ProdigalExplorer.dds"
+textureFileName = "../../Resources/textures/SkinnedModels/Ezreal_ProdigalExplorer.dds"
 typeInGame = "neutral"
 addAnimatedModel();
 
@@ -39,7 +39,7 @@ titleRotY = 0
 modelName = "galio"
 titleForQuest = "?"
 modelFileName = "../../Resources/models/galio/galio_5anmx.X"
-textureFileName = "../../Resources/textures/galio_base_TX_CM.dds"
+textureFileName = "../../Resources/textures/SkinnedModels/galio_base_TX_CM.dds"
 typeInGame = "mainHero"
 addAnimatedModel();
 

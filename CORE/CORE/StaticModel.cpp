@@ -11,7 +11,7 @@ Purpose:constructor
 StaticModel::StaticModel()
 {
 	//default texture for models that dont have any
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/whitetex.dds", &m_pWhiteTexture);	
+	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture);	
 
 	m_light.m_vLight   = D3DXVECTOR3(20.0f, 300.0f, 50.0f);
 	m_light.m_ambient  = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
@@ -34,7 +34,7 @@ Purpose:this constructor loads default values for the skinned mesh
 StaticModel::StaticModel(string strModelName, string ModelFileName, string strTextureFileName)
 {
 		//default texture for models that dont have any
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/whitetex.dds", &m_pWhiteTexture);	
+	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture);	
 
 	m_light.m_vLight   = D3DXVECTOR3(20.0f, 300.0f, 50.0f);
 	m_light.m_ambient  = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
@@ -142,7 +142,7 @@ void StaticModel::LoadGameObject()
 			{
 				IDirect3DTexture9* pTexture = 0;
 				char strTexturePath[80];
-				strcpy_s(strTexturePath,"../../Resources/textures/");
+				strcpy_s(strTexturePath,"../../Resources/textures/StaticModels/");
 				strcat_s(strTexturePath,d3dxmtrls[i].pTextureFilename);
 				D3DXCreateTextureFromFile(pDxDevice, strTexturePath, &pTexture);
 

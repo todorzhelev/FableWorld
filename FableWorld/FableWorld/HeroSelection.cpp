@@ -18,15 +18,12 @@ HeroSelection::HeroSelection()
 {
 	camera->GetPosition() = D3DXVECTOR3(-2,31,-160);
 
-	SkinnedModel* pMesh = new SkinnedModel("pesho","../../Resources/models/ezreal/ezreal_5anm.x","../../Resources/textures/Ezreal_ProdigalExplorer.dds",false);
+	SkinnedModel* pMesh = new SkinnedModel("Ezrael","../../Resources/models/ezreal/ezreal_5anm.x","../../Resources/textures/SkinnedModels/Ezreal_ProdigalExplorer.dds",false);
 
-	GameObject* pLand = new StaticModel("land","../../Resources/models/land.x","../../Resources/textures/grass-texture-02.dds");
+	GameObject* pLand = new StaticModel("land","../../Resources/models/land.x","../../Resources/textures/Terrain/grass-texture-02.dds");
 
 	pMesh->LoadGameObject();
 	pLand->LoadGameObject();
-
-	//pApp->AddGameObject(pMesh);
-	//pApp->AddGameObject(pLand);
 
 	m_SceneObjects.push_back(pMesh);
 	m_SceneObjects.push_back(pLand);

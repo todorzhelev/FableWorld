@@ -25,9 +25,9 @@ Game::Game()
 	//sprite for the interface in the game
 	D3DXCreateSprite(pDxDevice,&m_pInterfaceSprite);
 	//textures for the interface
-	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/healthbar.dds",&m_pHealthBarTexture);
-	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/healthbar_filled.dds",&m_pHealthBarFilledTexture);
-	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/healthbar_filled_enemy.dds",&m_phealthBarFilledEnemyTexture);
+	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/GUI/healthbar.dds",&m_pHealthBarTexture);
+	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/GUI/healthbar_filled.dds",&m_pHealthBarFilledTexture);
+	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/GUI/healthbar_filled_enemy.dds",&m_phealthBarFilledEnemyTexture);
 	m_rHealthBarRectangle.left = 0;  
 	m_rHealthBarRectangle.top = 0;  
 	m_rHealthBarRectangle.right  = 270;  
@@ -64,9 +64,10 @@ Game::Game()
 	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.
 	InitVertexDeclarations();
 
-	pSky = new Sky("../../Resources/textures/grassenvmap1024.dds", 10000.0f);
+	pSky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
-	pTerrain = new Terrain("../../Resources/heightmaps/heightmap_full copy.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
+
 	//the direction to the sun
 	D3DXVECTOR3 lightVector(20.0f, 300.0f, 50.0f);
 	D3DXVec3Normalize(&lightVector, &lightVector);
