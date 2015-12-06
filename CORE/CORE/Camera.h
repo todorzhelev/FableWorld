@@ -35,8 +35,6 @@ public:
 
 	void			SetPosition(D3DXVECTOR3 vNewPos);
 
-	D3DXVECTOR3&	GetOffset();
-
 	void			BuildProjectionMatrix(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, float fFrustumFarPlaneZ);
 
 	void			OnUpdate(float dt);
@@ -49,6 +47,16 @@ public:
 
 	void			MoveCamera(float dt);
 
+	bool			IsCameraFree() const;
+
+	void			SetCameraFree(bool free);
+
+	void			SetZoom(int zoom);
+
+	void			ModifyZoom(int delta);
+
+	int				GetZoom();
+
 private:
 
 	void			BuildFrustumPlanes();
@@ -56,6 +64,7 @@ private:
 	void			BuildViewMatrix();
 
 	bool		m_bIsCameraFree;
+
 	float		m_fFovAngle;
 	float		m_fAspectRatio;
 	float		m_fFrustumNearPlaneZ;
@@ -72,10 +81,9 @@ private:
 	D3DXVECTOR3 m_vUpVector;
 	D3DXVECTOR3 m_vLookVector;
 
-	//the offset from a certain object to the camera
-	D3DXVECTOR3 m_vOffset;
-
 	ECameraMode m_eCameraMode;
+
+	int m_zoom;
 };
 
 //////////////////////////////////////////////////////////////////////////////

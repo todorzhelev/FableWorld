@@ -15,12 +15,12 @@ Camera::Camera(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, fl
 	, m_fFrustumNearPlaneZ(fFrustumNearPlaneZ)
 	, m_fFrustumFarPlaneZ(fFrustumFarPlaneZ)
 	, m_bIsCameraFree(bIsCameraFree)
+	, m_zoom(0)
 {
 	D3DXMatrixIdentity(&m_ViewMatrix);
 	D3DXMatrixIdentity(&m_ProjectionMatrix);
 	D3DXMatrixIdentity(&m_ViewProjectionMatrix);
 
-	m_vOffset      = D3DXVECTOR3(0.0f, 25.0, -70.0);
 	m_vPosition	   = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_vRightVector = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 	m_vUpVector	   = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -92,18 +92,6 @@ D3DXVECTOR3& Camera::GetLookVector()
 {
 	return m_vLookVector;
 }
-
-
-/////////////////////////////////////////////////////////////////////////
-/*
-Function:getCamOffset()
-Purpose:returns the offset from the attached model to the camera if we attached the camera to model
-*/
-D3DXVECTOR3& Camera::GetOffset() 
-{
-	return m_vOffset;
-}
-
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -336,3 +324,28 @@ void Camera::MoveCamera(float dt)
 }
 
 /////////////////////////////////////////////////////////////////////////
+
+bool Camera::IsCameraFree() const
+{
+	return m_bIsCameraFree;
+}
+
+void Camera::SetCameraFree(bool free)
+{
+	m_bIsCameraFree = free;
+}
+
+void Camera::SetZoom(int zoom)
+{
+	m_zoom = zoom;
+}
+
+void Camera::ModifyZoom(int delta)
+{
+	m_zoom += delta;
+}
+
+int Camera::GetZoom()
+{
+	return m_zoom;
+}

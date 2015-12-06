@@ -252,7 +252,7 @@ void Game::OnUpdate(float dt)
 	
 
 	//binding the camera to mainHero in the game and moving it. mainHero is set in the scripts in init.lua
-	if( !pMainHero->IsDead() )
+	if( !pMainHero->IsDead() && !camera->IsCameraFree() )
 	{
 		MoveObject(mainHero,dt);
 	}
@@ -481,15 +481,18 @@ void Game::MoveObject(string objectTitle, float dt)
 		}
 	}
 
-	D3DXVECTOR3 newPos = pSkinnedModel->GetPosition() + dir*200.0*dt;
+	D3DXVECTOR3 newPos = pSkinnedModel->GetPosition() + dir*150.0*dt;
 	if( pTerrain->IsValidPosition(newPos.x,newPos.z))
 	{
 		pSkinnedModel->SetPosition(newPos);
 	}
 
-	//updates the camera position based on the new position of the model.
-	//via cameraOffset we can control how far the camera is from the model and at what position.
-	camera->SetPosition(pSkinnedModel->GetPosition() + camera->GetOffset());
+	//updates the camera position based on the new position of the model and the zoom
+	//we zoom in the direction of the look vector. If the zoom is negative it will go in the opposite direction
+	D3DXVECTOR3 upOffset = D3DXVECTOR3(0, 25, 0);
+	D3DXVECTOR3 cameraPos = pMainHero->GetPosition() + camera->GetLookVector()*camera->GetZoom() + upOffset;
+
+	camera->SetPosition(cameraPos);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -515,8 +518,6 @@ void Game::RotateObject(string objectTitle, float dt)
 	D3DXVec3TransformCoord(&camera->GetRightVector(), &camera->GetRightVector(), &R);
 	D3DXVec3TransformCoord(&camera->GetUpVector(), &camera->GetUpVector(), &R);
 	D3DXVec3TransformCoord(&camera->GetLookVector(), &camera->GetLookVector(), &R);
-
-	D3DXVec3TransformCoord(&camera->GetOffset(), &camera->GetOffset(), &R);
 
 	pSkinnedModel->GetLookVector()  = camera->GetLookVector();
 	pSkinnedModel->GetRightVector() = camera->GetRightVector();
@@ -773,9 +774,23 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 
 					break;
 				}
+				case 'C':
+				{
+					//TODO: if the camera becomes attached again align it with the object
+					camera->SetCameraFree(!camera->IsCameraFree());
+
+					break;
+				}
 			}
 
 			return 0;
+		}
+
+		case WM_MOUSEWHEEL:
+		{
+			auto delta = GET_WHEEL_DELTA_WPARAM(wParam);
+
+			camera->ModifyZoom(delta / 10);
 		}
 
   }

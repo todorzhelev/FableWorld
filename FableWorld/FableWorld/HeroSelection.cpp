@@ -132,7 +132,7 @@ void HeroSelection::OnRender()
 		
 	if(!m_pLabelEnterWorld->IsMouseOver())
 	{
-		m_pLabelEnterWorld->OnRender(255,255,255,255);
+		m_pLabelEnterWorld->OnRender(255,0,0,0);
 	}
 	else
 	{
