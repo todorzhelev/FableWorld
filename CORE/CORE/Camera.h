@@ -83,6 +83,9 @@ private:
 
 	ECameraMode m_eCameraMode;
 
+	int m_maxZoom;
+	int m_minZoom;
+
 	int m_zoom;
 };
 

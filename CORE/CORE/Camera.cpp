@@ -15,7 +15,9 @@ Camera::Camera(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, fl
 	, m_fFrustumNearPlaneZ(fFrustumNearPlaneZ)
 	, m_fFrustumFarPlaneZ(fFrustumFarPlaneZ)
 	, m_bIsCameraFree(bIsCameraFree)
-	, m_zoom(0)
+	, m_zoom(-35)
+	, m_maxZoom(-80)
+	, m_minZoom(-24)
 {
 	D3DXMatrixIdentity(&m_ViewMatrix);
 	D3DXMatrixIdentity(&m_ProjectionMatrix);
@@ -342,6 +344,18 @@ void Camera::SetZoom(int zoom)
 
 void Camera::ModifyZoom(int delta)
 {
+	if( m_zoom + delta > m_minZoom)
+	{
+		m_zoom = m_minZoom;
+		return;
+	}
+
+	if( m_zoom + delta < m_maxZoom )
+	{
+		m_zoom = m_maxZoom;
+		return;
+	}
+
 	m_zoom += delta;
 }
 
