@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef _DEBUG
+	#ifndef D3D_DEBUG_INFO
+	#define D3D_DEBUG_INFO
+	#endif
+#endif
+
 #include<windows.h>
 #include<d3d9.h>
 #include<d3dx9.h>

@@ -193,6 +193,7 @@ Purpose:builds the view matrix. View matrix represents the inverse matrix of the
 		Initally all the models in the game are transformed according to the world matrix, so they can be in same space.
 		After that we transform all the models according to view matrix, so they can be in view space.
 		Later we are transforming them according to a projection matrix, so they can be rendered in the screen.
+		Note that the camera is like a regular object in the world, we are just viewing the world from its point of view
 */
 void Camera::BuildViewMatrix()
 {
@@ -332,15 +333,21 @@ bool Camera::IsCameraFree() const
 	return m_bIsCameraFree;
 }
 
+/////////////////////////////////////////////////////////////////////////
+
 void Camera::SetCameraFree(bool free)
 {
 	m_bIsCameraFree = free;
 }
 
+/////////////////////////////////////////////////////////////////////////
+
 void Camera::SetZoom(int zoom)
 {
 	m_zoom = zoom;
 }
+
+/////////////////////////////////////////////////////////////////////////
 
 void Camera::ModifyZoom(int delta)
 {
@@ -359,7 +366,11 @@ void Camera::ModifyZoom(int delta)
 	m_zoom += delta;
 }
 
+/////////////////////////////////////////////////////////////////////////
+
 int Camera::GetZoom()
 {
 	return m_zoom;
 }
+
+/////////////////////////////////////////////////////////////////////////
