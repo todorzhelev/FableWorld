@@ -97,8 +97,8 @@ void StaticModel::LoadGameObject()
 	HRESULT hr = D3DXLoadMeshFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pDxDevice, 0, &pMaterialBuffer, 0, &nMaterialsAmount, &pMesh);
 	if( FAILED(hr))
 	{
-		std::string message = "Could not load static model " + m_strModelFileName;
-		MessageBox(0, message.c_str(), 0, 0);
+		std::string message = "Could not load static model " + m_strModelFileName + "\nError string:" + DXGetErrorString(hr) + "\nError description:" + DXGetErrorDescription(hr);
+		MessageBox(0, message.c_str(), "Error", MB_CANCELTRYCONTINUE | MB_ICONEXCLAMATION);
 	}
 
 	bool bHasNormals = HasNormals(pMesh);

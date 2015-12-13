@@ -9,6 +9,7 @@
 #include<windows.h>
 #include<d3d9.h>
 #include<d3dx9.h>
+#include<DxErr9.h>
 #include<tchar.h>
 #include<sstream>
 #include<vector>
@@ -34,6 +35,7 @@ class IBaseMenuObject;
 
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"d3dx9.lib")
+#pragma comment(lib, "dxerr9.lib")
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"fmodex_vc.lib")

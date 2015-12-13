@@ -175,7 +175,7 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree1"
-modelFileName = "../../Resources/models/deathclaw/deathclaw.X"
+modelFileName = "../../Resources/models/deathclaw/deathclaw1.X"
 addStaticModel();
 
 x = -50.8663
