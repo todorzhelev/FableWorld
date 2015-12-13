@@ -1,0 +1,21 @@
+How to setup the project:
+1. Download and install Visual studio 2015 Community Edition or Enterprise
+2. Download and install Microsoft DirectX SDK (June 2010) https://www.microsoft.com/en-us/download/details.aspx?id=6812
+3. Download and install fmod (for the music in the game) http://www.fmod.org/download/ FMOD Studio Programmer’s API and Low Level Programmer API
+4. Download boost 1.59.0 http://www.boost.org/users/download/
+5. Download lua 5.1.4 http://www.lua.org/ftp/
+6. Open FableWorld.sln
+7. In the project properties in VC++ Directories:
+	- in Include Directories add the path to include directories for fmod, directx and to the src folder of lua
+		C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include
+		F:\Repositories\lua-5.1.4\lua-5.1.4\src
+		C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc
+	- in Library Directories add the path to library directories for fmod and directx
+		C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86
+		C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\lib
+	- in Source Directories add the path to the source foulder of lua
+		F:\Repositories\lua-5.1.4\lua-5.1.4\src
+8. In the project properties in C/C++ in Additional Include Directories add the path to boost:
+	C:\Repositories\FableWorld\FableWorld\boost_1_59_0\boost_1_59_0
+9. Press Apply and OK
+10. Set the configuration to Debug and start the project
