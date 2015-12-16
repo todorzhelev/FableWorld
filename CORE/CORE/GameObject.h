@@ -29,7 +29,7 @@ public:
 	string GetModelFileName() const;
 	void SetModelFilename(const string& strModelFileName);
 
-	string GetName() const;
+	string& GetName();
 
 	void SetName(const string& strName);
 
@@ -44,6 +44,8 @@ public:
 	float GetScale() const;
 
 	void SetScale(float scale);
+
+	void ModifyScale(float delta);
 
 	ID3DXMesh* GetMesh() const;
 

@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>FableWorld_levelEditor</ProjectName>
+    <ProjectName>LevelEditor</ProjectName>
     <ProjectGuid>{1B841516-2E1E-46B8-AF1D-7235D31B7598}</ProjectGuid>
     <RootNamespace>diplomna</RootNamespace>
   </PropertyGroup>
@@ -56,9 +56,9 @@
     <SourcePath>C:\Repositories\lua-5.1.4\lua-5.1.4\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Repositories\lua-5.1.4\lua-5.1.4\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\boost_1.59.0;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;$(LibraryPath)</LibraryPath>
-    <SourcePath>C:\Repositories\lua-5.1.4\lua-5.1.4\src;$(SourcePath)</SourcePath>
+    <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -72,6 +72,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -105,10 +106,10 @@
     <ClCompile Include="..\..\CORE\CORE\Label.cpp" />
     <ClCompile Include="..\..\CORE\CORE\LuaFunctions.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Misc.cpp" />
-    <ClCompile Include="..\..\CORE\CORE\SkinnedMesh.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\SkinnedModel.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Sky.cpp" />
     <ClCompile Include="..\..\CORE\CORE\SoundSyst.cpp" />
-    <ClCompile Include="..\..\CORE\CORE\StaticMesh.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\StaticModel.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Terrain.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Textbox.cpp" />
     <ClCompile Include="..\..\CORE\CORE\TextManager.cpp" />
@@ -137,10 +138,10 @@
     <ClInclude Include="..\..\CORE\CORE\Label.h" />
     <ClInclude Include="..\..\CORE\CORE\LuaFunctions.h" />
     <ClInclude Include="..\..\CORE\CORE\Misc.h" />
-    <ClInclude Include="..\..\CORE\CORE\SkinnedMesh.h" />
+    <ClInclude Include="..\..\CORE\CORE\SkinnedModel.h" />
     <ClInclude Include="..\..\CORE\CORE\Sky.h" />
     <ClInclude Include="..\..\CORE\CORE\SoundSyst.h" />
-    <ClInclude Include="..\..\CORE\CORE\StaticMesh.h" />
+    <ClInclude Include="..\..\CORE\CORE\StaticModel.h" />
     <ClInclude Include="..\..\CORE\CORE\Terrain.h" />
     <ClInclude Include="..\..\CORE\CORE\Textbox.h" />
     <ClInclude Include="..\..\CORE\CORE\TextManager.h" />
@@ -156,6 +157,7 @@
     <None Include="fonts\28DaysLater.ttf" />
     <None Include="scripts\animatedModels.lua" />
     <None Include="scripts\init.lua" />
+    <None Include="scripts\level.lua" />
     <None Include="scripts\quests.lua" />
     <None Include="scripts\sounds.lua" />
     <None Include="scripts\staticModels.lua" />
@@ -163,31 +165,21 @@
   <ItemGroup>
     <FxCompile Include="..\..\CORE\CORE\shaders\DebugGraphicsShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
-      <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </DisableOptimizations>
-      <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </EnableDebuggingInformation>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TransformVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\SkinnedMeshShader.fx">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkinnedMeshVS</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SkinnedMeshVS</EntryPointName>
+    <FxCompile Include="..\..\CORE\CORE\shaders\SkinnedModelShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkinnedModelVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\CORE\CORE\shaders\SkyShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkyVS</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SkyVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\StaticMeshShader.fx">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StaticMeshVS</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">StaticMeshVS</EntryPointName>
+    <FxCompile Include="..\..\CORE\CORE\shaders\StaticModelShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StaticModelVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\CORE\CORE\shaders\TerrainShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TerrainVS</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TerrainVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\CORE\CORE\shaders\Text3DShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TransformVS</EntryPointName>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

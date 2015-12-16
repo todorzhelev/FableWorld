@@ -48,7 +48,7 @@ void GameObject::SetModelFilename(const string& strModelFileName)
 	m_strModelFileName = strModelFileName;
 }
 
-string GameObject::GetName() const
+string& GameObject::GetName()
 {
 	return m_strModelName;
 }
@@ -91,6 +91,11 @@ float GameObject::GetScale() const
 void GameObject::SetScale(float scale)
 {
 	m_fScale = scale;
+}
+
+void GameObject::ModifyScale(float delta)
+{
+	m_fScale += delta;
 }
 
 ID3DXMesh* GameObject::GetMesh() const

@@ -4,11 +4,10 @@
 ofstream fout; //for logs.
 lua_State* L;
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*
-Function:Game
-Purpose:constructor. It loads all the functionality in the game
-*/
+//TODO: refactor the whole code 
+
 Game::Game()
 {
 	//checks if pixel and vertex shader 2.0 is supported
@@ -23,7 +22,7 @@ Game::Game()
 
 	//init and setup camera
 	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 2000.0f,true);
-	camera->SetCameraMode(ECameraMode_MoveWithPressedMouse);
+	camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithPressedMouse);
 
 	D3DXVECTOR3 vCameraPosition = D3DXVECTOR3(0,100,0);
 	camera->SetPosition(vCameraPosition);
@@ -36,10 +35,10 @@ Game::Game()
 
 
 	//init sky
-	sky = new Sky("../../Resources/textures/grassenvmap1024.dds", 10000.0f);
+	sky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
 	//init terrain
-	pTerrain = new Terrain("../../Resources/heightmaps/heightmap_full copy.raw",0.85f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));;
+	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",0.85f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));;
 	D3DXVECTOR3 toSun(-20.0f, 300.0f, 50.0f);
 	D3DXVec3Normalize(&toSun, &toSun);
 	pTerrain->SetLightVector(toSun);
@@ -64,6 +63,7 @@ Game::Game()
 	OnResetDevice();
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::LoadUIComponents()
 {
@@ -185,11 +185,8 @@ void Game::LoadUIComponents()
 	pApp->AddUIObject(textbox_bindToAnModelBone);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*
-Function:~Game
-Purpose:destructor
-*/
 Game::~Game()
 {
 	/*delete text;
@@ -207,10 +204,8 @@ Game::~Game()
 	delete engine;*/
 }
 
-/*
-Function:checkDeviceCaps
-Purpose:checks for shader support
-*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool Game::checkDeviceCaps()
 {
 	D3DCAPS9 caps;
@@ -223,57 +218,49 @@ bool Game::checkDeviceCaps()
 	return true;
 }
 
-/*
-Function:onLostDevice
-Purpose:invokes the corresponding OnLostDevice functions
-*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::OnLostDevice()
 {
 	
 	sky->OnLostDevice();
 
-	for(vector<IBaseMenuObject*>::iterator it = pApp->m_vUIObjects.begin();it!=pApp->m_vUIObjects.end();it++)
+	for (auto& obj : pApp->m_vUIObjects)
 	{
-		(*it)->OnLostDevice();
+		obj->OnLostDevice();
 	}
 
 	pTextManager->OnLostDevice();
 	pTerrain->OnLostDevice();
 
-	for(map<string,GameObject*>::iterator it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	for(auto& obj : m_pGameObjManager->GetGameObjects() )
 	{
-		(*it).second->OnLostDevice();
+		obj->OnLostDevice();
 	}
-
-	//spriteForInterface->OnLostDevice();
 }
 
-/*
-Function:onResetDevice
-Purpose:invokes the corresponding onResetDevice functions
-*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::OnResetDevice()
 {
 	sky->OnResetDevice();
 
-	for(vector<IBaseMenuObject*>::iterator it = pApp->m_vUIObjects.begin();it!=pApp->m_vUIObjects.end();it++)
+	for (auto& obj : pApp->m_vUIObjects)
 	{
-		(*it)->OnResetDevice();
+		obj->OnResetDevice();
 	}
 
 	pTextManager->OnResetDevice();
 	pTerrain->OnResetDevice();
 
-	for(map<string,GameObject*>::iterator it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	for (auto& obj : m_pGameObjManager->GetGameObjects())
 	{
-		(*it).second->OnResetDevice();
+		obj->OnResetDevice();
 	}
 }
 
-/*
-Function ate
-Purpose:updates all the functionallity in game
-*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::OnUpdate(float dt)
 {
 	//poll starts to listen if any key on the keyboard is pressed
@@ -287,15 +274,15 @@ void Game::OnUpdate(float dt)
 	}
 
 	//update all the game objects
-	for(map<string,GameObject*>::iterator it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	for (auto& obj : m_pGameObjManager->GetGameObjects())
 	{
-		(*it).second->OnUpdate(dt);
+		obj->OnUpdate(dt);
 	}
 
 	//update all the UI objects
-	for(vector<IBaseMenuObject*>::iterator it = pApp->m_vUIObjects.begin();it!=pApp->m_vUIObjects.end();it++)
+	for (auto& obj : pApp->m_vUIObjects)
 	{
-		(*it)->OnUpdate();
+		obj->OnUpdate();
 	}
 
 	pTextManager->OnUpdate(dt);
@@ -342,12 +329,14 @@ void Game::OnUpdate(float dt)
 	//TODO this must not be made like this. When something is picked it should do the job automatically, 
 	//even if a callback is needed.
 	//iterates through all animated models and checks if any of them is picked
-	for(auto it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	for (auto& obj : m_pGameObjManager->GetGameObjects())
 	{
-		if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
+		if( obj->GetObjectType() == EGameObjectType_Skinned )
 		{		
+			SkinnedModel* skinnedModel = static_cast<SkinnedModel*>(obj);
+
 			//it it is picked reveals animated model's related textboxes and labels
-			if( (*it).second->m_bIsPicked && !label_typeInGame->IsVisible())
+			if(obj->IsPicked() && !label_typeInGame->IsVisible())
 			{
 				label_modelName->SetVisible(true);
 				textbox_modelName->SetVisible(true);
@@ -368,29 +357,29 @@ void Game::OnUpdate(float dt)
 			}
 
 			//with switchedPicked we control if we picked new model and unpicked old one
-			if( m_pGameObjManager->GetPickedObject() == NULL && (*it).second->m_bIsPicked || 
+			if( m_pGameObjManager->GetPickedObject() == NULL && obj->IsPicked() ||
 				m_pGameObjManager->GetPickedObject() != NULL && 
-				(*it).second->m_bIsPicked && 
-				m_pGameObjManager->GetPickedObject()->m_strModelName.compare((*it).second->m_strModelName) )
+				obj->IsPicked() &&
+				m_pGameObjManager->GetPickedObject()->GetName().compare(obj->GetName()) )
 			{
-				textbox_typeInGame->SetText((*it).second->m_strActorType);
-				textbox_modelName->SetText((*it).second->m_strModelName);
-				textbox_titleForQuest->SetText((*it).second->m_strTitleForQuest);
+				textbox_typeInGame->SetText(skinnedModel->GetActorType()); //TODO: fix this
+				textbox_modelName->SetText(obj->GetName());
+				textbox_titleForQuest->SetText(skinnedModel->GetTitleForQuest());
 				
 				if( m_pGameObjManager->GetPickedObject() != NULL &&  
-					m_pGameObjManager->GetPickedObject()->m_strModelName.compare((*it).second->m_strModelName) )
+					m_pGameObjManager->GetPickedObject()->GetName().compare(obj->GetName()) )
 				{
-					m_pGameObjManager->GetPickedObject()->m_bIsPicked = false;
+					m_pGameObjManager->GetPickedObject()->SetPicked(false);
 				}
 
-				m_pGameObjManager->SetPickedObject((*it).second);
+				m_pGameObjManager->SetPickedObject(obj);
 			}
 
-			pickedModelControl(*(*it).second, dt);
+			pickedModelControl(*obj, dt);
 		}
-		else if( (*it).second->m_eGameObjectType == EGameObjectType_Static )
+		else if( obj->GetObjectType() == EGameObjectType_Static )
 		{
-			if( (*it).second->m_bIsPicked && !label_bindToAnModel->IsVisible() )
+			if( obj->IsPicked() && !label_bindToAnModel->IsVisible() )
 			{
 				label_modelName->SetVisible(true);
 				textbox_modelName->SetVisible(true);
@@ -410,25 +399,25 @@ void Game::OnUpdate(float dt)
 			}
 
 			//with switchedPicked we control if we picked new model and unpicked old one
-			if( m_pGameObjManager->GetPickedObject() == NULL && (*it).second->m_bIsPicked || 
+			if( m_pGameObjManager->GetPickedObject() == NULL && obj->IsPicked() || 
 				m_pGameObjManager->GetPickedObject() != NULL && 
-				(*it).second->m_bIsPicked && 
-				m_pGameObjManager->GetPickedObject()->m_strModelName.compare((*it).second->m_strModelName) )
+				obj->IsPicked() && 
+				m_pGameObjManager->GetPickedObject()->GetName().compare(obj->GetName()) )
 			{
-				textbox_typeInGame->SetText((*it).second->m_strActorType);
-				textbox_modelName->SetText((*it).second->m_strModelName);
-				textbox_titleForQuest->SetText((*it).second->m_strTitleForQuest);
+				//textbox_typeInGame->SetText((*it).second->m_strActorType);
+				textbox_modelName->SetText(obj->GetName());
+				//textbox_titleForQuest->SetText((*it).second->m_strTitleForQuest);
 				
 				if( m_pGameObjManager->GetPickedObject() != NULL &&  
-					m_pGameObjManager->GetPickedObject()->m_strModelName.compare((*it).second->m_strModelName) )
+					m_pGameObjManager->GetPickedObject()->GetName().compare(obj->GetName()) )
 				{
-					m_pGameObjManager->GetPickedObject()->m_bIsPicked = false;
+					m_pGameObjManager->GetPickedObject()->SetPicked(false);
 				}
 
-				m_pGameObjManager->SetPickedObject((*it).second);
+				m_pGameObjManager->SetPickedObject(obj);
 			}
 
-			pickedModelControl(*(*it).second, dt);
+			pickedModelControl(*obj, dt);
 		}
 	}
 
@@ -438,7 +427,8 @@ void Game::OnUpdate(float dt)
 	{
 		if( m_pGameObjManager->GetPickedObject() != nullptr )
 		{	
-			m_pGameObjManager->GetGameObjects().erase(m_pGameObjManager->GetPickedObject()->m_strModelName);
+			//TODO : fix this
+			//m_pGameObjManager->GetGameObjects().erase(m_pGameObjManager->GetPickedObject()->GetName());
 
 			m_pGameObjManager->SetPickedObject(nullptr);
 
@@ -454,217 +444,216 @@ void Game::OnUpdate(float dt)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::pickedModelControl(GameObject& obj, float dt)
 {
-	if( obj.m_bIsPicked && static_cast<Checkbox*>(checkbox_TranslationX)->m_bIsChecked )
+	if( obj.IsPicked() )
+	{
+		if (static_cast<Checkbox*>(checkbox_TranslationX)->m_bIsChecked)
 		{
-			if( pDinput->IsMouseButtonDown(0) )
+			if (pDinput->IsMouseButtonDown(0))
 			{
-				obj.m_vPos += ( obj.m_vLook *40.0*dt);
+				auto vec = obj.GetLookVector() *40.0*dt;
+				auto pos = obj.GetPosition();
+				obj.SetPosition(pos + vec);
 			}
-			else if( pDinput->IsMouseButtonDown(1) )
+			else if (pDinput->IsMouseButtonDown(1))
 			{
-				obj.m_vPos -= ( obj.m_vLook *40.0*dt);
+				auto vec = obj.GetLookVector() *40.0*dt;
+				auto pos = obj.GetPosition();
+				obj.SetPosition(pos - vec);
 			}
 		}
 
-		if( obj.m_bIsPicked && static_cast<Checkbox*>(checkbox_TranslationY)->m_bIsChecked )
+		if (static_cast<Checkbox*>(checkbox_TranslationY)->m_bIsChecked)
 		{
-			if( pDinput->IsMouseButtonDown(0) )
+			if (pDinput->IsMouseButtonDown(0))
 			{
-				obj.m_vPos += ( obj.m_vUp*40.0*dt);
+				auto vec = obj.GetUpVector() *40.0*dt;
+				auto pos = obj.GetPosition();
+				obj.SetPosition(pos + vec);
 			}
-			else if( pDinput->IsMouseButtonDown(1) )
+			else if (pDinput->IsMouseButtonDown(1))
 			{
-				obj.m_vPos -= ( obj.m_vUp*40.0*dt);
+				auto vec = obj.GetUpVector() *40.0*dt;
+				auto pos = obj.GetPosition();
+				obj.SetPosition(pos - vec);
 			}
 		}
 
-		
-
-		if( obj.m_bIsPicked && static_cast<Checkbox*>(checkbox_TranslationZ)->m_bIsChecked  )
+		if (static_cast<Checkbox*>(checkbox_TranslationZ)->m_bIsChecked)
 		{
-			if( pDinput->IsMouseButtonDown(0) )
+			if (pDinput->IsMouseButtonDown(0))
 			{
-				obj.m_vPos += ( obj.m_vRight *40.0*dt);
+				auto vec = obj.GetRightVector() *40.0*dt;
+				auto pos = obj.GetPosition();
+				obj.SetPosition(pos + vec);
 			}
-			else if( pDinput->IsMouseButtonDown(1) )
+			else if (pDinput->IsMouseButtonDown(1))
 			{
-				obj.m_vPos -= ( obj.m_vRight *40.0*dt);
+				auto vec = obj.GetRightVector() *40.0*dt;
+				auto pos = obj.GetPosition();
+				obj.SetPosition(pos - vec);
 			}
 		}
 
-		if( obj.m_bIsPicked && static_cast<Checkbox*>(checkbox_RotationY)->m_bIsChecked )
+		if (static_cast<Checkbox*>(checkbox_RotationY)->m_bIsChecked)
 		{
-			if( pDinput->IsMouseButtonDown(0) )
+			if (pDinput->IsMouseButtonDown(0))
 			{
 				float yAngle = 0.1;
-				obj.m_fRotAngleY +=yAngle;
+				obj.ModifyRotationAngleByY(yAngle);
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationY(&R, yAngle);
-				D3DXVec3TransformCoord(&obj.m_vRight, &obj.m_vRight, &R);
-				D3DXVec3TransformCoord(&obj.m_vUp, &obj.m_vUp, &R);
-				D3DXVec3TransformCoord(&obj.m_vLook, &obj.m_vLook, &R);
+				D3DXVec3TransformCoord(&obj.GetRightVector(), &obj.GetRightVector(), &R);
+				D3DXVec3TransformCoord(&obj.GetUpVector(), &obj.GetUpVector(), &R);
+				D3DXVec3TransformCoord(&obj.GetLookVector(), &obj.GetLookVector(), &R);
 			}
-			else if( pDinput->IsMouseButtonDown(1) )
+			else if (pDinput->IsMouseButtonDown(1))
 			{
 				float yAngle = 0.1;
-				obj.m_fRotAngleY -=yAngle;
+				obj.ModifyRotationAngleByY(-yAngle);
 
 				D3DXMATRIX R;
 				//it is -yAngle, because we rotate on the other side
 				D3DXMatrixRotationY(&R, -yAngle);
-				D3DXVec3TransformCoord(&obj.m_vRight, &obj.m_vRight, &R);
-				D3DXVec3TransformCoord(&obj.m_vUp, &obj.m_vUp, &R);
-				D3DXVec3TransformCoord(&obj.m_vLook, &obj.m_vLook, &R);
+				D3DXVec3TransformCoord(&obj.GetRightVector(), &obj.GetRightVector(), &R);
+				D3DXVec3TransformCoord(&obj.GetUpVector(), &obj.GetUpVector(), &R);
+				D3DXVec3TransformCoord(&obj.GetLookVector(), &obj.GetLookVector(), &R);
 			}
 		}
 
-		if( obj.m_bIsPicked && static_cast<Checkbox*>(checkbox_RotationX)->m_bIsChecked )
+		if (static_cast<Checkbox*>(checkbox_RotationX)->m_bIsChecked)
 		{
-			if( pDinput->IsMouseButtonDown(0) )
+			if (pDinput->IsMouseButtonDown(0))
 			{
 				float yAngle = 0.1;
-				obj.m_fRotAngleX +=yAngle;
+				obj.ModifyRotationAngleByX(yAngle);
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationX(&R, yAngle);
-				D3DXVec3TransformCoord(&obj.m_vRight, &obj.m_vRight, &R);
-				D3DXVec3TransformCoord(&obj.m_vUp, &obj.m_vUp, &R);
-				D3DXVec3TransformCoord(&obj.m_vLook, &obj.m_vLook, &R);
+				D3DXVec3TransformCoord(&obj.GetRightVector(), &obj.GetRightVector(), &R);
+				D3DXVec3TransformCoord(&obj.GetUpVector(), &obj.GetUpVector(), &R);
+				D3DXVec3TransformCoord(&obj.GetLookVector(), &obj.GetLookVector(), &R);
 			}
-			else if( pDinput->IsMouseButtonDown(1) )
+			else if (pDinput->IsMouseButtonDown(1))
 			{
 				float yAngle = 0.1;
-				obj.m_fRotAngleX -=yAngle;
+				obj.ModifyRotationAngleByX(-yAngle);
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationX(&R, -yAngle);
-				D3DXVec3TransformCoord(&obj.m_vRight, &obj.m_vRight, &R);
-				D3DXVec3TransformCoord(&obj.m_vUp, &obj.m_vUp, &R);
-				D3DXVec3TransformCoord(&obj.m_vLook, &obj.m_vLook, &R);
+				D3DXVec3TransformCoord(&obj.GetRightVector(), &obj.GetRightVector(), &R);
+				D3DXVec3TransformCoord(&obj.GetUpVector(), &obj.GetUpVector(), &R);
+				D3DXVec3TransformCoord(&obj.GetLookVector(), &obj.GetLookVector(), &R);
 			}
 		}
 
-		if( obj.m_bIsPicked && static_cast<Checkbox*>(checkbox_RotationZ)->m_bIsChecked )
+		if (static_cast<Checkbox*>(checkbox_RotationZ)->m_bIsChecked)
 		{
-			if( pDinput->IsMouseButtonDown(0) )
+			if (pDinput->IsMouseButtonDown(0))
 			{
 				float yAngle = 0.1;
-				obj.m_fRotAngleZ +=yAngle;
+				obj.ModifyRotationAngleByZ(yAngle);
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationZ(&R, yAngle);
-				D3DXVec3TransformCoord(&obj.m_vRight, &obj.m_vRight, &R);
-				D3DXVec3TransformCoord(&obj.m_vUp, &obj.m_vUp, &R);
-				D3DXVec3TransformCoord(&obj.m_vLook, &obj.m_vLook, &R);
+				D3DXVec3TransformCoord(&obj.GetRightVector(), &obj.GetRightVector(), &R);
+				D3DXVec3TransformCoord(&obj.GetUpVector(), &obj.GetUpVector(), &R);
+				D3DXVec3TransformCoord(&obj.GetLookVector(), &obj.GetLookVector(), &R);
 			}
-			else if( pDinput->IsMouseButtonDown(1) )
+			else if (pDinput->IsMouseButtonDown(1))
 			{
 				float yAngle = 0.1;
-				obj.m_fRotAngleZ -=yAngle;
+				obj.ModifyRotationAngleByZ(-yAngle);
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationZ(&R, -yAngle);
-				D3DXVec3TransformCoord(&obj.m_vRight, &obj.m_vRight, &R);
-				D3DXVec3TransformCoord(&obj.m_vUp, &obj.m_vUp, &R);
-				D3DXVec3TransformCoord(&obj.m_vLook, &obj.m_vLook, &R);
+				D3DXVec3TransformCoord(&obj.GetRightVector(), &obj.GetRightVector(), &R);
+				D3DXVec3TransformCoord(&obj.GetUpVector(), &obj.GetUpVector(), &R);
+				D3DXVec3TransformCoord(&obj.GetLookVector(), &obj.GetLookVector(), &R);
 			}
 		}
 
-		
-
-		if( obj.m_bIsPicked && static_cast<Checkbox*>(checkbox_Scaling)->m_bIsChecked )
+		if (static_cast<Checkbox*>(checkbox_Scaling)->m_bIsChecked)
 		{
-			if( pDinput->IsMouseButtonDown(0) )
+			if (pDinput->IsMouseButtonDown(0))
 			{
-				obj.m_fScale +=0.01;
+				obj.ModifyScale(0.01);
 			}
-			else if( pDinput->IsMouseButtonDown(1) )
+			else if (pDinput->IsMouseButtonDown(1))
 			{
-				obj.m_fScale -= 0.01;
+				obj.ModifyScale(-0.01);
 			}
 		}
+	}
+	
 }
-/*
-Function:onRender
-Purpose:render all
-*/
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::OnRender()
 {
-
     pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
 
     pDxDevice->BeginScene();
 	
-			sky->OnRender();
+	sky->OnRender();
 
-			pTerrain->OnRender();
+	pTerrain->OnRender();
 
-	
-			//render all the game objects
-			for(map<string,GameObject*>::iterator it = m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
-			{
-				(*it).second->OnRender();
-			}
+	//render all the game objects
+	for(auto& obj : m_pGameObjManager->GetGameObjects() )
+	{
+		obj->OnRender();
+	}
 			
-			if (m_pGameObjManager->GetPickedObject() != nullptr)
-			{
-				auto BB = m_pGameObjManager->GetPickedObject()->m_BoundingBox;
-				BB = BB.TransformByMatrix(BB.m_transformationMatrix);
-				for (auto& object : m_pGameObjManager->GetGameObjects())
-				{
-					auto BB1 = object.second->m_BoundingBox;
-					BB1 = BB1.TransformByMatrix(BB1.m_transformationMatrix);
+	if (m_pGameObjManager->GetPickedObject() != nullptr)
+	{
+		auto BB = m_pGameObjManager->GetPickedObject()->GetBB();
+		BB = BB.TransformByMatrix(BB.m_transformationMatrix);
+		for (auto& obj : m_pGameObjManager->GetGameObjects())
+		{
+			auto BB1 = obj->GetBB();
+			BB1 = BB1.TransformByMatrix(BB1.m_transformationMatrix);
 
-					if (m_pGameObjManager->GetPickedObject()->m_strModelName.compare(object.second->m_strModelName))
-					{
-						if (BB.Collide(BB1))
-						{
-							cout << "COLLIDING" << object.second->m_strModelName << endl;
-						}
-					}
+			if (m_pGameObjManager->GetPickedObject()->GetName().compare(obj->GetName()))
+			{
+				if (BB.Collide(BB1))
+				{
+					cout << "COLLIDING" << obj->GetName() << endl;
 				}
 			}
+		}
+	}
 			
+	for(auto& obj: pApp->m_vUIObjects)
+	{
+		obj->OnRender(255, 255, 255, 255);
+	}
 
-			for(vector<IBaseMenuObject*>::iterator it = pApp->m_vUIObjects.begin();it!=pApp->m_vUIObjects.end();it++)
-			{
-				(*it)->OnRender(255,255,255,255);
-			}
-			
-
- 
 	pDxDevice->EndScene();
 
 	pDxDevice->Present(0, 0, 0, 0);
 }
 	
-/*
-Function:isNear
-Purpose:checks if two models are close
-*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool Game::isNear(GameObject& obj1,GameObject& obj2)
 {
-	if((obj1.m_vPos.x > obj2.m_vPos.x-30) && (obj1.m_vPos.x < obj2.m_vPos.x+30) &&
-	   (obj1.m_vPos.z > obj2.m_vPos.z-30) && (obj1.m_vPos.z < obj2.m_vPos.z+30))
+	if((obj1.GetPosition().x > obj2.GetPosition().x-30) && (obj1.GetPosition().x < obj2.GetPosition().x+30) &&
+	   (obj1.GetPosition().z > obj2.GetPosition().z-30) && (obj1.GetPosition().z < obj2.GetPosition().z+30))
 	{
 	   return true;
 	}
-	else 
-	{
-		return false;
-	}
 
-	return true;
+	return false;
 }
 
-/*
-Function:msgProc
-Purpose:this function detects various messages sent to the window like WM_CLOSE, WM_ACTIVATE and etc.
-		Used mainly for the textbox and camera mode switching
-*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	IBaseMenuObject* pSelectedTextbox = pApp->FindMenuObject(pApp->m_strSelectedTextbox);
@@ -703,10 +692,9 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 
 			switch(wParam)
 			{
-							
-
 				//this is the code for enter
 				//pressing enter in textbox finishes the typing and assigns the new values
+				//TODO: create map code, name to be more clear...
 				case 0x0D:
 				{
 					//IBaseMenuObject* pSelectedTextbox = pApp->FindMenuObject(selectedTextbox);
@@ -716,69 +704,69 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 					{
 					    if( pApp->m_strSelectedTextbox == "textbox_typeInGame" )
 						{
-							//IBaseMenuObject* pSelectedTextbox = pApp->FindMenuObject(selectedTextbox);
-							m_pGameObjManager->GetPickedObject()->m_strActorType = pSelectedTextbox->GetText();
-							pSelectedTextbox->m_bIsSelected = false;
-							pApp->m_strSelectedTextbox = "";
+							if(m_pGameObjManager->GetPickedObject()->GetObjectType() == EGameObjectType_Skinned)
+							{
+								SkinnedModel* pickedObject = static_cast<SkinnedModel*>(m_pGameObjManager->GetPickedObject());
+
+								pickedObject->SetActorType(pSelectedTextbox->GetText());
+								pSelectedTextbox->m_bIsSelected = false;
+								pApp->m_strSelectedTextbox = "";
+							}
 						}
 						else if( pApp->m_strSelectedTextbox == "textbox_modelName")
 						{
-							// when we change the model name we must update the map with the new name
-							// therefore we delete the old entry in the map and add new object with the updated name
-							if( m_pGameObjManager->GetPickedObject()->m_eGameObjectType == EGameObjectType_Skinned )
+							if( m_pGameObjManager->GetPickedObject()->GetObjectType() == EGameObjectType_Skinned )
 							{
-								GameObject *obj;
-								obj = m_pGameObjManager->GetGameObjects().find(m_pGameObjManager->GetPickedObject()->m_strModelName)->second;
-								obj = static_cast<SkinnedMesh*>(obj);
+								std::string name =  m_pGameObjManager->GetPickedObject()->GetName();
+								SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
 
-								m_pGameObjManager->GetGameObjects().erase(m_pGameObjManager->GetPickedObject()->m_strModelName);
-
-								m_pGameObjManager->GetGameObjects()[pSelectedTextbox->GetText()] = obj;
-								m_pGameObjManager->GetPickedObject()->m_strModelName = pSelectedTextbox->GetText();
-
+								obj->SetName(pSelectedTextbox->GetText());
 								pSelectedTextbox->m_bIsSelected = false;
 
 								pApp->m_strSelectedTextbox = "";
 							}
 						}
 						else if( pApp->m_strSelectedTextbox == "textbox_titleForQuest" && 
-								 m_pGameObjManager->GetPickedObject()->m_eGameObjectType == EGameObjectType_Skinned )
+								 m_pGameObjManager->GetPickedObject()->GetObjectType() == EGameObjectType_Skinned )
 						{
-							m_pGameObjManager->GetPickedObject()->m_strTitleForQuest= pSelectedTextbox->GetText();
+							std::string name = m_pGameObjManager->GetPickedObject()->GetName();
+							SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
+							obj->SetTitleForQuest(pSelectedTextbox->GetText());
 							pSelectedTextbox->m_bIsSelected = false;
+
 							pApp->m_strSelectedTextbox = "";
 						}
 						else if( pApp->m_strSelectedTextbox == "textbox_bindToAnModel" && 
-								 m_pGameObjManager->GetPickedObject()->m_eGameObjectType == EGameObjectType_Static )
+								 m_pGameObjManager->GetPickedObject()->GetObjectType() == EGameObjectType_Static )
 						{
-							m_pGameObjManager->GetPickedObject()->m_strBindedToAnimatedModelName = pSelectedTextbox->GetText();
+							m_pGameObjManager->GetPickedObject()->SetBindedToAnimatedModelName(pSelectedTextbox->GetText());
 
-							if( !m_pGameObjManager->GetPickedObject()->m_strBindedToBoneName.empty() )
+							if( !m_pGameObjManager->GetPickedObject()->GetBindedToBoneName().empty() )
 							{
-								SkinnedMesh* obj;
-								obj = static_cast<SkinnedMesh*>(m_pGameObjManager->GetGameObjects().find(m_pGameObjManager->GetPickedObject()->m_strBindedToAnimatedModelName)->second);
+								std::string name = m_pGameObjManager->GetPickedObject()->GetBindedToAnimatedModelName();
+								SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
 
-								obj->BindWeaponToModel(m_pGameObjManager->GetPickedObject()->m_strModelName,m_pGameObjManager->GetPickedObject()->m_strBindedToBoneName);
+								obj->BindWeaponToModel(m_pGameObjManager->GetPickedObject()->GetName(),m_pGameObjManager->GetPickedObject()->GetBindedToBoneName());
 
-								m_pGameObjManager->GetPickedObject()->m_bIsBindable = true;
+								m_pGameObjManager->GetPickedObject()->SetIsBindable(true);
 							}
 
 							pSelectedTextbox->m_bIsSelected = false;
 							pApp->m_strSelectedTextbox = "";
 						}
 						else if( pApp->m_strSelectedTextbox == "textbox_bindToAnModelBone" && 
-								 m_pGameObjManager->GetPickedObject()->m_eGameObjectType == EGameObjectType_Static  )
+								 m_pGameObjManager->GetPickedObject()->GetObjectType() == EGameObjectType_Static  )
 						{
-							m_pGameObjManager->GetPickedObject()->m_strBindedToBoneName = pSelectedTextbox->GetText();
+							m_pGameObjManager->GetPickedObject()->SetBindedToBoneName(pSelectedTextbox->GetText());
 
-							if( !m_pGameObjManager->GetPickedObject()->m_strBindedToAnimatedModelName.empty() )
+							if( !m_pGameObjManager->GetPickedObject()->GetBindedToAnimatedModelName().empty() )
 							{
-								SkinnedMesh* obj;
-								obj = static_cast<SkinnedMesh*>(m_pGameObjManager->GetGameObjects().find(m_pGameObjManager->GetPickedObject()->m_strBindedToAnimatedModelName)->second);
+								std::string name = m_pGameObjManager->GetPickedObject()->GetBindedToAnimatedModelName();
+								SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
 
-								obj->BindWeaponToModel(m_pGameObjManager->GetPickedObject()->m_strModelName,m_pGameObjManager->GetPickedObject()->m_strBindedToBoneName);
+								obj->BindWeaponToModel(m_pGameObjManager->GetPickedObject()->GetName(),m_pGameObjManager->GetPickedObject()->GetBindedToBoneName());
 
-								m_pGameObjManager->GetPickedObject()->m_bIsBindable = true;
+								m_pGameObjManager->GetPickedObject()->SetIsBindable(true);
 								
 							}
 							pSelectedTextbox->m_bIsSelected = false;
@@ -814,9 +802,9 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 									//initially we assign name to the model based on the models filename. Then in the level editor we can change it, 
 									//but here limit the size so it doesnt exceed the textbox's dimensions
 
-									if( m_pGameObjManager->GetPickedObject()->m_strModelName.size() > 15 )
+									if( m_pGameObjManager->GetPickedObject()->GetName().size() > 15 )
 									{
-										m_pGameObjManager->GetPickedObject()->m_strModelName.erase();
+										m_pGameObjManager->GetPickedObject()->GetName().erase();
 									}
 
 									string strNewText = pSelectedTextbox->GetText() + (TCHAR) wParam;
@@ -841,13 +829,13 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				case 'L':
 				{
-					if( camera->GetCameraMode() == ECameraMode_MoveWithoutPressedMouse )
+					if( camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithoutPressedMouse )
 					{
-						camera->SetCameraMode(ECameraMode_MoveWithPressedMouse);
+						camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithPressedMouse);
 					}
-					else if( camera->GetCameraMode() == ECameraMode_MoveWithPressedMouse )
+					else if( camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithPressedMouse )
 					{
-						camera->SetCameraMode(ECameraMode_MoveWithoutPressedMouse);
+						camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithoutPressedMouse);
 					}
 				}
 				break;
@@ -988,7 +976,7 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
   return DefWindowProc(pApp->GetMainWindow(), msg, wParam, lParam);
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::ImportStaticModel()
 {
@@ -1045,9 +1033,9 @@ void Game::ImportStaticModel()
 		string strModelName = GetModelNameFromFilePath(relativeModelFile);
 		relativeModelFile  = "../../Resources/"+relativeModelFile;
 
-		GameObject* obj = new StaticMesh(strModelName,relativeModelFile,"");
+		GameObject* obj = new StaticModel(strModelName,relativeModelFile,"");
 
-		obj->m_strModelName = strModelName;
+		obj->SetName(strModelName);
 		textbox_modelName->SetText(strModelName);
 
 		obj->LoadGameObject();
@@ -1058,6 +1046,8 @@ void Game::ImportStaticModel()
 	}
 
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::LoadAnimatedModel()
 {
@@ -1115,7 +1105,7 @@ void Game::LoadAnimatedModel()
 		string strModelName = GetModelNameFromFilePath(relativeModelFile);
 		relativeModelFile  = "../../Resources/"+relativeModelFile;
 
-		GameObject* obj = new SkinnedMesh(strModelName,relativeModelFile,"");
+		GameObject* obj = new SkinnedModel(strModelName,relativeModelFile,"");
 
 		textbox_modelName->SetText(strModelName);
 
@@ -1125,13 +1115,15 @@ void Game::LoadAnimatedModel()
 
 		if( m_pGameObjManager->GetPickedObject() != NULL )
 		{
-			m_pGameObjManager->GetPickedObject()->m_bIsPicked = false;	
+			m_pGameObjManager->GetPickedObject()->SetPicked(false);	
 		}
 
 		m_pGameObjManager->SetPickedObject(obj);
 	}
 
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //this functions returns default model name, based on the name of the file
 //for instance if the file path to the model is models/cho/cho.x, the model name will be cho
@@ -1164,76 +1156,74 @@ string Game::GetModelNameFromFilePath(string strFilePath)
 	return strModelName;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::ExportLevel()
 {
-	  ofstream staticModelsFile("export/staticModels.lua");
-	  ofstream animatedModelsFile("export/animatedModels.lua");
-	  ofstream mainHeroFile("export/init.lua");
-	  ofstream level("export/level.lua");
+	ofstream staticModelsFile("export/staticModels.lua");
+	ofstream animatedModelsFile("export/animatedModels.lua");
+	ofstream mainHeroFile("export/init.lua");
+	ofstream level("export/level.lua");
 
-	  //exports static models
-	  if( level.is_open() )
-	  {
-		  //export skinned models first, because of the binded objects
-		  for(auto it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
-		  {
-			  if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
-			  {	
-				  level<<"x = "<< (*it).second->m_vPos.x<<"\n";
-				  level<<"y = "<<(*it).second->m_vPos.y<<"\n";
-				  level<<"z = "<<(*it).second->m_vPos.z<<"\n";
-				  level<<"scale = "<<(*it).second->m_fScale<<"\n";
-				  level<<"rotX = "<<(*it).second->m_fRotAngleX<<"\n";
-				  level<<"rotY = "<<(*it).second->m_fRotAngleY<<"\n";
-				  level<<"rotZ = "<<(*it).second->m_fRotAngleZ<<"\n";
-				  level<<"titleRotY = "<<(*it).second->m_fTitleRotationAngleByY<<"\n";
-				  level<<"modelName = "<<"\""<<(*it).second->m_strModelName<<"\""<<"\n";
-				  level<<"titleForQuest = "<<"\""<<(*it).second->m_strTitleForQuest<<"\""<<"\n";
-				  level<<"modelFileName = "<<"\""<<(*it).second->m_strModelFileName<<"\""<<"\n";
-				  level<<"textureFileName = "<<"\""<<(*it).second->m_strTextureFileName<<"\""<<"\n";
-				  level<<"typeInGame = "<<"\""<<(*it).second->m_strActorType<<"\""<<"\n";
+	//exports static models
+	if( level.is_open() )
+	{
+		//export skinned models first, because of the binded objects
+		for(auto& obj : m_pGameObjManager->GetSkinnedModels())
+		{
+			level << "x = " << obj->GetPosition().x << "\n";
+			level << "y = " << obj->GetPosition().y << "\n";
+			level << "z = " << obj->GetPosition().z << "\n";
+			level << "scale = " << obj->GetScale() << "\n";
+			level << "rotX = " << obj->GetRotationAngleByX() << "\n";
+			level << "rotY = " << obj->GetRotationAngleByY() << "\n";
+			level << "rotZ = " << obj->GetRotationAngleByZ() << "\n";
+			level << "titleRotY = " << obj->GetTitleRotationAnglyByY() << "\n";
+			level << "modelName = " << "\"" << obj->GetName() << "\"" << "\n";
+			level << "titleForQuest = " << "\"" << obj->GetTitleForQuest() << "\"" << "\n";
+			level << "modelFileName = " << "\"" << obj->GetModelFileName() << "\"" << "\n";
+			level << "textureFileName = " << "\"" << obj->GetTextureFilename() << "\"" << "\n";
+			level << "typeInGame = " << "\"" << obj->GetActorType() << "\"" << "\n";
 
-				  level<<"addAnimatedModel();"<<"\n"<<"\n";
-			  }
-		  }
+			level << "addAnimatedModel();" << "\n" << "\n";
+		}
 
-		  for(auto it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
-		  {
-			  if( (*it).second->m_eGameObjectType == EGameObjectType_Static )
-			  {
-				  level<<"x = "<<(*it).second->m_vPos.x<<"\n";
-				  level<<"y = "<<(*it).second->m_vPos.y<<"\n";
-				  level<<"z = "<<(*it).second->m_vPos.z<<"\n";
-				  level<<"scale = "<<(*it).second->m_fScale<<"\n";
-				  level<<"rotX = "<<(*it).second->m_fRotAngleX<<"\n";
-				  level<<"rotY = "<<(*it).second->m_fRotAngleY<<"\n";
-				  level<<"rotZ = "<<(*it).second->m_fRotAngleZ<<"\n";
-				  level<<"titleRotY = "<<(*it).second->m_fTitleRotationAngleByY<<"\n";
-				  level<<"bindable = "<<(*it).second->m_bIsBindable<<"\n";
-				  level<<"bindToAnModel = "<<"\""<<(*it).second->m_strBindedToAnimatedModelName<<"\""<<"\n";
-				  level<<"bindToAnModelBone = "<<"\""<<(*it).second->m_strBindedToBoneName<<"\""<<"\n";
-				  level<<"modelName = "<<"\""<<(*it).second->m_strModelName<<"\""<<"\n";
-				  level<<"modelFileName = "<<"\""<<(*it).second->m_strModelFileName<<"\""<<"\n";
-				  level<<"addStaticModel();"<<"\n"<<"\n";
-			  }
-		  }
+		for (auto& obj : m_pGameObjManager->GetGameObjects())
+		{
+			if( obj->GetObjectType() == EGameObjectType_Static )
+			{
+				level << "x = " << obj->GetPosition().x << "\n";
+				level << "y = " << obj->GetPosition().y << "\n";
+				level << "z = " << obj->GetPosition().z << "\n";
+				level << "scale = " << obj->GetScale() << "\n";
+				level << "rotX = " << obj->GetRotationAngleByX() << "\n";
+				level << "rotY = " << obj->GetRotationAngleByY() << "\n";
+				level << "rotZ = " << obj->GetRotationAngleByZ() << "\n";
+				level<<"bindable = "<<obj->IsBindable()<<"\n";
+				level<<"bindToAnModel = "<<"\""<<obj->GetBindedToAnimatedModelName()<<"\""<<"\n";
+				level<<"bindToAnModelBone = "<<"\""<<obj->GetBindedToBoneName()<<"\""<<"\n";
+				level << "modelName = " << "\"" << obj->GetName() << "\"" << "\n";
+				level << "modelFileName = " << "\"" << obj->GetModelFileName() << "\"" << "\n";
+				level<<"addStaticModel();"<<"\n"<<"\n";
+			}
+		}
 
-		  for(auto it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
-		  {
-			  if( (*it).second->m_eGameObjectType == EGameObjectType_Skinned )
-			  {	
-				  if( (*it).second->m_strActorType == "mainHero" )
-				  {
-					  level<<"mainHero = "<<"\""<<(*it).second->m_strModelName<<"\""<<"\n";
-					  level<<"setUpMainHero();"<<"\n"<<"\n";
-				  }
-			  }
-		  }
+		//TODO : why are we iterating the skinned models again for the main hero??
+		for (auto& obj : m_pGameObjManager->GetSkinnedModels())
+		{
+			if(	obj->GetActorType() == "mainHero" )
+			{
+				level<<"mainHero = "<<"\""<<obj->GetName() <<"\""<<"\n";
+				level<<"setUpMainHero();"<<"\n"<<"\n";
+			}
+		}
 
-		  level.close();
-	  }
-	  else cout << "Unable to open file";
+		level.close();
+	}
+	else cout << "Unable to open file";
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::ImportLevel()
 {
@@ -1266,3 +1256,5 @@ void Game::ImportLevel()
 		luaL_dofile(L, filename);
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -137,7 +137,7 @@ void SkinnedModel::LoadGameObject()
 	m_vToRootMatrices.resize(m_nNumBones, 0);
 
 	char str[80];
-	strcpy_s(str,"../../Resources/textures/");
+	strcpy_s(str,"../../Resources/textures/SkinnedModels/");
 	strcat_s(str,pMeshContainer->pMaterials->pTextureFilename);
 
 	m_strTextureFileName = str;

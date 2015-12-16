@@ -43,9 +43,6 @@ int l_addStaticModel(lua_State* L)
 
 	lua_getglobal(L, "rotZ");
 	pMesh->SetRotationAngleByZ(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
-	
-	lua_getglobal(L, "titleRotY");
-	//pMesh->SetTitleRotationAnglyByY(static_cast<float>(lua_tonumber(L,lua_gettop(L))));
 
 	lua_getglobal(L, "bindable");
 	pMesh->SetIsBindable(static_cast<int>(lua_tonumber(L,lua_gettop(L))));
