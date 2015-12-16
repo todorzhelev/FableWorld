@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 //we extend the D3DXFRAME structure so we can have matrix which will store
-//all the the transformations that bone's parent has 
+//all the the transformations from the parent of the bone to the root
 struct FrameEx : public D3DXFRAME
 {
 	D3DXMATRIX ToRootMatrix;
@@ -189,8 +189,6 @@ private:
 	void 			BuildEffectForTitles();	
 
 	bool			IsPicked(D3DXFRAME* pFrame,D3DXMATRIX combinedMatrix,D3DXVECTOR3 vOrigin,D3DXVECTOR3 vDir);
-
-private:
 
 	IDirect3DTexture9* m_pWhiteTexture;
 

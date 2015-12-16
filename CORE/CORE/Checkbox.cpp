@@ -1,11 +1,7 @@
 #include"Checkbox.h"
 #include"TextManager.h"
 
-/*
-SourceFile: GuiCheckbox.cpp
-Purpose: Contains functions for loading and rendering checkboxes
-todo: recomment
-*/
+/////////////////////////////////////////////////////////////////////////
 
 Checkbox::Checkbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, string strText, string strIdleStateTexFileName, string strMouseOverStateTexFileName, string strId)
 :IBaseMenuObject(vPosition,nWidth,nHeight,strText,strIdleStateTexFileName,strMouseOverStateTexFileName,strId)
@@ -18,37 +14,28 @@ Checkbox::Checkbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, string strTex
 	m_bIsChecked   = false;
 }
 
-/*
-Function:createGuiCheckbox
-Purpose:creates to sprite for rendering the button and loads the textures of the button:
-		the mouseover texture and normal texture
-*/
+/////////////////////////////////////////////////////////////////////////
+
 void Checkbox::Init()
 {
 }
 
-/*
-Function:onLostDevice
-Purpose:invokes the OnLostDevice function of the sprite 
-*/
+/////////////////////////////////////////////////////////////////////////
+
 void Checkbox::OnLostDevice()
 {
 	m_pSprite->OnLostDevice();
 }
 
-/*
-Function:onResetDevice
-Purpose:invokes the OnResetDevice function of the sprite 
-*/
+/////////////////////////////////////////////////////////////////////////
+
 void Checkbox::OnResetDevice()
 {
 	m_pSprite->OnResetDevice();
 }
 
-/*
-Function:isMouseOver
-Purpose:checks if the mouse is over the texture
-*/
+/////////////////////////////////////////////////////////////////////////
+
 bool Checkbox::IsMouseOver()
 {
 	POINT s;
@@ -73,6 +60,8 @@ bool Checkbox::IsMouseOver()
 		
 }
 
+/////////////////////////////////////////////////////////////////////////
+
 void Checkbox::OnClicked()
 {
 	if( IsMouseOver() )
@@ -89,11 +78,8 @@ void Checkbox::OnClicked()
 
 }
 
+/////////////////////////////////////////////////////////////////////////
 
-/*
-Function:isMouseDown
-Purpose:if the mouse is over the image and the mouse button is clicked we got mouse down event
-*/
 bool Checkbox::IsMouseDown()
 {
 	//if the mouse is over the area and the left button is pressed then return true
@@ -107,11 +93,8 @@ bool Checkbox::IsMouseDown()
 	}
 }
 
+/////////////////////////////////////////////////////////////////////////
 
-/*
-Function:onUpdate
-Purpose:updates the variables of the guiobject
-*/
 void Checkbox::OnUpdate()
 {
 	if( IsMouseOver())
@@ -133,10 +116,8 @@ void Checkbox::OnUpdate()
 	}
 }
 
-/*
-Function:onRender
-Purpose:render the button
-*/
+/////////////////////////////////////////////////////////////////////////
+
 void Checkbox::OnRender(int a,int r,int g,int b)
 {
 	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
@@ -162,5 +143,6 @@ void Checkbox::OnRender(int a,int r,int g,int b)
 					m_vPosition.y,
 					m_vPosition.x+20,
 					m_vPosition.y+32,255,255,255,255);
-
 }
+
+/////////////////////////////////////////////////////////////////////////

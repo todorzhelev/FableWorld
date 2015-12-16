@@ -14,6 +14,7 @@ public:
 
 	virtual void OnRender() {}
 
+	//this function detects various messages sent to the window like WM_CLOSE, WM_ACTIVATE key pressed and etc.
 	virtual LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) { return 1;}
 };
 

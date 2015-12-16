@@ -5,10 +5,7 @@
 Camera* camera = NULL;
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Camera()
-Purpose:constructor.The inititial values for the camera's vectors , the speed of the camera and the cammera offset are set
-*/
+
 Camera::Camera(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, float fFrustumFarPlaneZ, bool bIsCameraFree) 
 	: m_fFovAngle(fFovAngle)
 	, m_fAspectRatio(fAspectRatio)
@@ -32,95 +29,63 @@ Camera::Camera(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, fl
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:getViewMatrix()
-Purpose:returns the view matrix for the camera
-*/
+
 D3DXMATRIX Camera::GetViewMatrix() const
 {
 	return m_ViewMatrix;
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:getProjMatrix
-Purpose:returns the projection matrix for the camera
-*/
+
 D3DXMATRIX Camera::GetProjMatrix() const
 {
 	return m_ProjectionMatrix;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:getViewProjMatrix()
-Purpose:returns the combined matrix from proj and view matrices
-*/
+
 D3DXMATRIX Camera::GetViewProjMatrix() const
 {
 	return m_ViewProjectionMatrix;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:getRightVector()
-Purpose:returns the right vector of the camera
-*/
+
 D3DXVECTOR3& Camera::GetRightVector()
 {
 	return m_vRightVector;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:getUpVector()
-Purpose:returns the up vector of the camera
-*/
+
 D3DXVECTOR3& Camera::GetUpVector() 
 {
 	return m_vUpVector;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:getLookVector()
-Purpose:return the look vector of the camera
-*/
+
 D3DXVECTOR3& Camera::GetLookVector() 
 {
 	return m_vLookVector;
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:pos()
-Purpose:returns the current position of the camera
-*/
+
 D3DXVECTOR3& Camera::GetPosition()
 {
 	return m_vPosition;
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:pos()
-Purpose:returns the current position of the camera
-*/
+
 void Camera::SetPosition(D3DXVECTOR3 vNewPos)
 {
 	m_vPosition = vNewPos;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:setLens()
-Purpose:builds the projection matrix
-*/
+
 void Camera::BuildProjectionMatrix(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, float fFrustumFarPlaneZ)
 {
 	//build projection matrix, based on the field of view angle. 
@@ -133,10 +98,7 @@ void Camera::BuildProjectionMatrix(float fFovAngle, float fAspectRatio, float fF
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:update()
-Purpose:updates the camera position
-*/
+
 void Camera::OnUpdate(float dt)
 {
 	if( m_bIsCameraFree )
@@ -152,10 +114,8 @@ void Camera::OnUpdate(float dt)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:isVisible()
-Purpose:tests if certain bounding box is visible by the camera
-*/
+
+//tests if certain bounding box is visible by the camera
 bool Camera::IsBoundingBoxVisible(AABB& box) const
 {
 	D3DXVECTOR3 Q;
@@ -185,15 +145,13 @@ bool Camera::IsBoundingBoxVisible(AABB& box) const
 	return true;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:buildView()
-Purpose:builds the view matrix. View matrix represents the inverse matrix of the world matrix.
-		Initally all the models in the game are transformed according to the world matrix, so they can be in same space.
-		After that we transform all the models according to view matrix, so they can be in view space.
-		Later we are transforming them according to a projection matrix, so they can be rendered in the screen.
-		Note that the camera is like a regular object in the world, we are just viewing the world from its point of view
+builds the view matrix. View matrix represents the inverse matrix of the world matrix.
+Initally all the models in the game are transformed according to the world matrix, so they can be in same space.
+After that we transform all the models according to view matrix, so they can be in view space.
+Later we are transforming them according to a projection matrix, so they can be rendered in the screen.
+Note that the camera is like a regular object in the world, we are just viewing the world from its point of view
 */
 void Camera::BuildViewMatrix()
 {
@@ -232,12 +190,10 @@ void Camera::BuildViewMatrix()
 	m_ViewMatrix(3,3) = 1.0f;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:buildFrustumPlanes
-Purpose:the camera in the game is represented by a frustum - clipped pyramid. The pyramid is built by 6 planes
-	    which can be extracted directly from the combined view and proj matrix.
+the camera in the game is represented by a frustum - clipped pyramid. The pyramid is built by 6 planes
+which can be extracted directly from the combined view and proj matrix.
 */
 void Camera::BuildFrustumPlanes()
 {

@@ -4,11 +4,12 @@
 
 Terrain* pTerrain = NULL;
 
+//TODO: do we need to translate the terrain to the center of the coordinate system
+// and after that return it back to fourth quadrant?
+
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Terrain()
-Purpose:constructor.First the heightmap is loaded,then based on loaded values from heightmap and rows,cols,dx,dz large terrain mesh is generated.
-*/
+
+//First the heightmap is loaded,then based on loaded values from heightmap and rows,cols,dx,dz large terrain mesh is generated.
 Terrain::Terrain(string strHeightmapFileName,float fHeightsScale, int nRows,int nCols,float fDX,float fDZ ,const D3DXVECTOR3& vCenterPoint)
 :m_strHeightmapFileName(strHeightmapFileName)
 ,m_fHeightsScale(fHeightsScale)
@@ -38,8 +39,7 @@ Terrain::Terrain(string strHeightmapFileName,float fHeightsScale, int nRows,int 
 
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:LoadHeightmap()
-Purpose:LoadHeightmap() opens the passed file for heightmap and read its values in binary mode.
+LoadHeightmap() opens the passed file for heightmap and read its values in binary mode.
 	  This values are used as heights for the terrain.For heightmap can be used normal picture .jpg .bmp .raw.
 	  in the file values are not stored as 64x64 matrix(for instance) which we need to simulate 64x64 terrain,but like this
 	  ¨§££ù†§©Øµª≈ø∂≤≥∑ª∏∑π∂≤≤≤≥≥≥∏æπ∑∫º∑ØπÕ◊‹ÊÏÓıË›À∆«À »ªµ∂∫∏≤≠®®°õõû££••¢ù°¶ß®¶£•ß™¥∏∑µ¥∞≥πøÃ–”‹ﬁ›’À¡π∑∏ª¿øºª≥∏≈œ’’Ÿ’
@@ -89,8 +89,7 @@ void Terrain::LoadHeightmap()
 
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:GenerateTerrainMesh()
-Purpose:Builds the mesh which represents our terrain.
+Builds the mesh which represents our terrain.
 	  Mesh is consisted of vertex and index buffer so we manualy write the information to our own vertex and index buffers
 	  when invoking GenerateIndexBuffer() and GenerateVertexBuffer().After the mesh is created it is splited by 33x33 submeshes so large 
 	  terrains can be loaded(512x512 for instance).The idea is that bounding boxes are generated for the submeshes and then it can be tested 
@@ -208,8 +207,7 @@ void Terrain::GenerateTerrainMesh()
 
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:GenerateVertexBuffer()
-Purpose:generates the vertex buffer so the vertices are propelrly positioned and there is distance between the vertices - the m_fDX and m_fDZ
+generates the vertex buffer so the vertices are properly positioned and there is distance between the vertices - the m_fDX and m_fDZ
 ._._._. - one vertex
 |     | - this is m_fDX
 .     .
@@ -278,10 +276,8 @@ void Terrain::GenerateVertexBuffer(vector<D3DXVECTOR3>& vVertices, int nNumRows,
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:GenerateIndexBuffer()
-Purpose:generates the indexBuffer for the mesh.
-*/
+
+//generates the indexBuffer for the mesh.
 void Terrain::GenerateIndexBuffer(vector<DWORD>& vIndices,int nNumRows,int nNumCols)
 {
 	vIndices.resize((nNumRows-1)*(nNumCols-1)*6);
@@ -336,10 +332,8 @@ void Terrain::GenerateIndexBuffer(vector<DWORD>& vIndices,int nNumRows,int nNumC
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:IsInBounds()
-Purpose: checks if certain point is at the terrain
-*/
+
+//checks if certain point is at the terrain
 bool Terrain::IsInBounds(int i, int j)
 {
 	return i >= 0 && i < m_nRows && j >= 0 && j < m_nCols;
@@ -347,32 +341,22 @@ bool Terrain::IsInBounds(int i, int j)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnLostDevice()
-Purpose:this can occur if alt+tab is pressed
-*/
+
 void Terrain::OnLostDevice()
 {
 	m_pEffect->OnLostDevice();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnResetDevice()
-Purpose: restores the effect file from onLostDevice status
-*/
+
 void Terrain::OnResetDevice()
 {
 	m_pEffect->OnResetDevice();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:BuildSubGridMesh()
-Purpose: Generates the mesh for the subgrid of the terrain
-*/
+
+//Generates the mesh for the subgrid of the terrain
 void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalTexture* pVertices)
 {
 	vector<D3DXVECTOR3> vTempVerts;
@@ -430,11 +414,9 @@ void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalText
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:GetHeight()
-Purpose:here float x and float z are world coordinates, not elements in terrain mesh.You can place model at x = 15.0 and z = 20.0
-      and then GetHeight will give you the height at this position
-*/
+
+//here float x and float z are world coordinates, not elements in terrain mesh.You can place model at x = 15.0 and z = 20.0
+//and then GetHeight will give you the height at this position
 float Terrain::GetHeight(float x, float z)
 {
 	//converts to fourth quadrant(with +0.5*width and -0.5*height), this is done
@@ -528,12 +510,9 @@ void Terrain::SetLightVector(D3DXVECTOR3 vLightVector)
 	m_pEffect->SetValue(m_hLightVector, &vLightVector, sizeof(D3DXVECTOR3));
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:BuildEffect()
-Purpose:loads the effect parameters and the textures used by the terrain into the shader
-*/
+
+//loads the effect parameters and the textures used by the terrain into the shader
 void Terrain::BuildEffect()
 {
 	if( FAILED(D3DXCreateEffectFromFile(pDxDevice, "../../CORE/CORE/shaders/TerrainShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0)) )
@@ -559,10 +538,7 @@ void Terrain::BuildEffect()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onRender()
-Purpose: draws the terrain(his submeshes)
-*/
+
 void Terrain::OnRender()
 { 
 	vector<TerrainSubGrid*> visibleSubGrids;

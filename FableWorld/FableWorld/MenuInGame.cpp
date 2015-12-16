@@ -1,15 +1,7 @@
 #include "MenuInGame.h"
-/*
-SourceFile:MenuInGame.cpp
-Purpose:loads the labels for the menu in game and renders them
-*/
-
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:MenuInGame
-Purpose:constructor. It loads all the functionality in the menu in game
-*/
+
 MenuInGame::MenuInGame()
 {
 
@@ -26,10 +18,7 @@ MenuInGame::MenuInGame()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onLostDevice
-Purpose:invokes the corresponding OnLostDevice functions
-*/
+
 void MenuInGame::OnLostDevice()
 {
 	pTextManager->OnLostDevice();
@@ -37,10 +26,7 @@ void MenuInGame::OnLostDevice()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onResetDevice
-Purpose:invokes the corresponding onResetDevice functions
-*/
+
 void MenuInGame::OnResetDevice()
 {
 	pTextManager->OnResetDevice();
@@ -48,10 +34,7 @@ void MenuInGame::OnResetDevice()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onUpdate
-Purpose:updates the labels in the menu in game
-*/
+
 void MenuInGame::OnUpdate(float dt)
 {
 	float w = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth);
@@ -79,10 +62,7 @@ void MenuInGame::OnUpdate(float dt)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onRender
-Purpose:render all
-*/
+
 void MenuInGame::OnRender()
 {
 	pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER , 0xff000000, 1.0f, 0);
@@ -114,12 +94,7 @@ void MenuInGame::OnRender()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:MenuInGame
-Purpose:this function detects various messages sent to the window like WM_CLOSE, WM_ACTIVATE and etc.
-		Used mainly for the textbox and camera mode switching.
-		Isnt used here, because DirectInput works fine for the things we need in menu in game
-*/
+
 LRESULT MenuInGame::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)

@@ -77,9 +77,6 @@
     <ClCompile Include="..\..\CORE\CORE\Button.cpp">
       <Filter>CORE\Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\LuaFunctions.cpp">
-      <Filter>CORE\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\CORE\CORE\Misc.cpp">
       <Filter>CORE\Source Files</Filter>
     </ClCompile>
@@ -128,6 +125,9 @@
     <ClCompile Include="..\..\CORE\CORE\StaticModel.cpp">
       <Filter>CORE\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\LuaFunctions.cpp">
+      <Filter>CORE\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\CORE\CORE\AABB.h">
@@ -152,9 +152,6 @@
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\IBaseScene.h">
-      <Filter>CORE\Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\CORE\CORE\LuaFunctions.h">
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\Misc.h">
@@ -212,6 +209,9 @@
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\StaticModel.h">
+      <Filter>CORE\Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\LuaFunctions.h">
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
   </ItemGroup>

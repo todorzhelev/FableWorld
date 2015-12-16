@@ -5,10 +5,7 @@
 SoundSyst* soundsyst;
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:SoundSyst
-Purpose:constructor.initializes fmod
-*/
+
 SoundSyst::SoundSyst(int nMaxChannels)
 {
 	FMOD_RESULT result;
@@ -29,20 +26,15 @@ SoundSyst::SoundSyst(int nMaxChannels)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:CreateBackgroundSound
-Purpose:creates sound that is played all the time or after ceratin event in the background
-*/
+
+//creates sound that is played all the time or after ceratin event in the background
 void SoundSyst::CreateBackgroundSound(SoundObject& SoundObj)
 {
 	m_pSoundSystem->createSound(SoundObj.m_strSoundFileName.c_str(), FMOD_DEFAULT, 0, &SoundObj.m_pSound);
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:PlayBackgroundSound
-Purpose:playes background sound
-*/
+
 void SoundSyst::PlayBackgroundSound(SoundObject& SoundObj)
 {
 	if( !SoundObj.m_bIsPlaying )
@@ -55,10 +47,7 @@ void SoundSyst::PlayBackgroundSound(SoundObject& SoundObj)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Create3DSound
-Purpose:creates 3d sound. the sound is played after the player has moved close to certain place
-*/
+
 void SoundSyst::Create3DSound(SoundObject& SoundObj)
 {
 	m_pSoundSystem->createSound(SoundObj.m_strSoundFileName.c_str(), FMOD_3D, 0, &SoundObj.m_pSound);
@@ -66,10 +55,7 @@ void SoundSyst::Create3DSound(SoundObject& SoundObj)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Play3DSound
-Purpose:plays 3d sound
-*/
+
 void SoundSyst::Play3DSound(SoundObject& SoundObj)
 {
 	if( !SoundObj.m_bIsPlaying )
@@ -84,10 +70,7 @@ void SoundSyst::Play3DSound(SoundObject& SoundObj)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnUpdate
-Purpose:updates the sound system
-*/
+
 void SoundSyst::OnUpdate()
 {
 	//these positions are needed for 3d sounds, so we can determine if we are close or far from a 3d sound, which impacts on the sound
@@ -107,22 +90,15 @@ void SoundSyst::OnUpdate()
 	m_pSoundSystem->update();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:AddSoundObject
-Purpose:adds sound object to the map
-*/
+
 void SoundSyst::AddSoundObject(SoundObject& SoundObj)
 {
 	m_mapSoundObjects[SoundObj.m_strSoundFileName] = SoundObj;
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:PlayAllSounds
-Purpose:iterates over the sounds in m_mapSoundObjects and playes them
-*/
+
 void SoundSyst::PlayAllSounds()
 {
 	for(map<string, SoundObject>::iterator it = m_mapSoundObjects.begin(); it != m_mapSoundObjects.end(); it++)

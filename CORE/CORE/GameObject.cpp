@@ -15,11 +15,13 @@ void GameObject::OnRender()
 	
 }
 
+//invoked when alt+tab is pressed for instance
 void GameObject::OnLostDevice()
 {
 	
 }
 
+//when we restore from alt+tab
 void GameObject::OnResetDevice()
 {
 	

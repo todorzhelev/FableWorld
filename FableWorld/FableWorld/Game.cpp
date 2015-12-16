@@ -1,18 +1,11 @@
 #include"Game.h"
 #include<math.h>
-/*
-SourceFile:Game.cpp
-Purpose:loads the game models, terrain,skybox, sounds,dialogues for the game, updates and renders them.
-*/
 
 ofstream fout; //for logs.
 lua_State* L;
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Game
-Purpose:constructor. It loads all the functionality in the game
-*/
+
 Game::Game()
 {
 	//checks if it is supported pixel and vertex shader 2.0
@@ -125,11 +118,8 @@ Game::Game()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:InitDebugGraphicsShader
-Purpose:initializes the shader for debug graphics
-*/
 
+//initializes the shader for debug graphics
 void Game::InitDebugGraphicsShader()
 {
 	D3DXCreateEffectFromFile(pDxDevice, "../../CORE/CORE/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
@@ -138,10 +128,7 @@ void Game::InitDebugGraphicsShader()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:~Game
-Purpose:destructor
-*/
+
 Game::~Game()
 {
 	lua_close(L);
@@ -156,10 +143,7 @@ Game::~Game()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onLostDevice
-Purpose:invokes the corresponding OnLostDevice functions
-*/
+
 void Game::OnLostDevice()
 {
 	pSky->OnLostDevice();
@@ -177,10 +161,7 @@ void Game::OnLostDevice()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onResetDevice
-Purpose:invokes the corresponding onResetDevice functions
-*/
+
 void Game::OnResetDevice()
 {
 	pSky->OnResetDevice();
@@ -204,10 +185,7 @@ void Game::OnResetDevice()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onUpdate
-Purpose:updates all the functionallity in game
-*/
+
 void Game::OnUpdate(float dt)
 {
 	//poll starts to listen if any key on the keyboard is pressed
@@ -311,10 +289,10 @@ void Game::OnUpdate(float dt)
 		D3DXVec3TransformCoord(&gameObject->GetTitleForQuestUpVector(), &gameObject->GetTitleForQuestUpVector(), &R);
 	}
 
-	//for(map<string,GameObject*>::iterator it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
-	//{
-	//	DrawLine(pMainHero->m_vPos,gameObject->m_vPos);
-	//}
+	/*for(map<string,GameObject*>::iterator it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	{
+		DrawLine(pMainHero->m_vPos,gameObject->m_vPos);
+	}*/
 
 	//if mainHero is attacking
 	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels())
@@ -423,10 +401,8 @@ void Game::OnUpdate(float dt)
 	
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:MoveObject
-Purpose:makes the camera to follow model in game and moving it with WASD from keyboard and mouse
-*/
+
+//makes the camera to follow model in game and moving it with WASD from keyboard and mouse
 void Game::MoveObject(string objectTitle, float dt)
 {
 	//this vector holds the new direction to move
@@ -496,10 +472,8 @@ void Game::MoveObject(string objectTitle, float dt)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:objectRotation
-Purpose:rotates to model and the camera if the mouse is moved
-*/
+
+//rotates to model and the camera if the mouse is moved
 void Game::RotateObject(string objectTitle, float dt)
 {
 	GameObject* obj = m_pGameObjManager->GetObjectByName(objectTitle);
@@ -526,10 +500,8 @@ void Game::RotateObject(string objectTitle, float dt)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:healthControl
-Purpose:controls the health of the hero and enemy and make them play dead animation if they are at zero health
-*/
+
+//controls the health of the hero and enemy and make them play dead animation if they are at zero health
 void Game::ManageHealthBars()
 {
 	string strEnemy = pMainHero->GetAttackerName();
@@ -557,10 +529,7 @@ void Game::ManageHealthBars()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnRender
-Purpose:render all
-*/
+
 void Game::OnRender()
 {
 
@@ -646,10 +615,7 @@ void Game::OnRender()
 }
 	
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:DrawLine
-Purpose:draws a line
-*/
+
 void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
 {
 	pDxDevice->BeginScene();
@@ -692,10 +658,8 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:IsObjectNear
-Purpose:checks if two models are close
-*/
+
+//checks if two models are close
 bool Game::IsObjectNear(GameObject* obj1,GameObject* obj2)
 {
 	if((obj1->GetPosition().x > obj2->GetPosition().x-30) && (obj1->GetPosition().x < obj2->GetPosition().x+30) &&
@@ -709,11 +673,7 @@ bool Game::IsObjectNear(GameObject* obj1,GameObject* obj2)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:MsgProc
-Purpose:this function detects various messages sent to the window like WM_CLOSE, WM_ACTIVATE and etc.
-		Used mainly for the textbox and camera mode switching
-*/
+
 LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch( msg )

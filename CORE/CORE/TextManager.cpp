@@ -5,10 +5,7 @@
 TextManager* pTextManager = NULL;
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Text
-Purpose:constructor. load the font for drawing on the screen.
-*/
+
 TextManager::TextManager():m_fFPS(0.0)
 {
 	if( AddFontResource("../../Resources/fonts/starcraft.ttf") == 0 )
@@ -39,21 +36,15 @@ TextManager::TextManager():m_fFPS(0.0)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:GetFont2D
-Purpose:returns the used font in the game
-*/
+
 ID3DXFont* TextManager::GetFont2D()
 {
 	return m_pFont2D;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:CreateFontFor3DText
-Purpose:create font for the 3d titles above the models in the game
-*/
+
+//create font for the 3d titles above the models in the game
 void TextManager::CreateFontFor3DText()
 {
 	//creates device context. The device context is needed so the 3d text can be rendered.
@@ -83,10 +74,8 @@ void TextManager::CreateFontFor3DText()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:CreateMeshFor3DText
-Purpose:creates 3D text model for model titles
-*/
+
+//creates 3D text model for model titles
 void TextManager::CreateMeshFor3DText(SkinnedModel* pGameObject)
 {
 	D3DXCreateText(pDxDevice,  
@@ -99,12 +88,11 @@ void TextManager::CreateMeshFor3DText(SkinnedModel* pGameObject)
 				   NULL);
 }
 
+//TODO: why do we need 2 functions for the same thing?
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:CreateMeshFor3DTextQuest
-Purpose:creates 3D text model for quest titles
-*/
+
+//creates 3D text model for quest titles
 void TextManager::CreateMeshFor3DTextQuest(SkinnedModel* pGameObject)
 {
 	D3DXCreateText( pDxDevice,  
@@ -119,10 +107,7 @@ void TextManager::CreateMeshFor3DTextQuest(SkinnedModel* pGameObject)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:RenderText
-Purpose:draw text on the screen
-*/
+
 void TextManager::RenderText(LPCSTR dtext,int x1,int y1,int x2,int y2,int alpha,int color1,int color2,int color3)
 {
 	RECT rec = {x1,y1,x2,y2};
@@ -131,10 +116,7 @@ void TextManager::RenderText(LPCSTR dtext,int x1,int y1,int x2,int y2,int alpha,
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnUpdate
-Purpose:updates the frames per second
-*/
+
 void TextManager::OnUpdate(float dt)
 {
 	//calculate the fps
@@ -154,10 +136,8 @@ void TextManager::OnUpdate(float dt)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:DrawFPS
-Purpose:draws the fps on the screen
-*/
+
+//draws the fps on the screen
 void TextManager::DrawFPS()
 {
 	static char buffer[256];
@@ -172,24 +152,17 @@ void TextManager::DrawFPS()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnResetDevice
-Purpose:invoked when the device is reseted
-*/
+
 void TextManager::OnResetDevice()
 {
 	m_pFont2D->OnResetDevice();	
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnLostDevice
-Purpose:invoked when the device is lost
-*/
+
 void TextManager::OnLostDevice()
 {
 	m_pFont2D->OnLostDevice();
 }
-
 
 /////////////////////////////////////////////////////////////////////////

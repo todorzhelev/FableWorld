@@ -9,7 +9,7 @@
 #include<windows.h>
 #include<d3d9.h>
 #include<d3dx9.h>
-#include<DxErr9.h>
+#include<DxErr.h>
 #include<tchar.h>
 #include<sstream>
 #include<vector>
@@ -35,7 +35,7 @@ class IBaseMenuObject;
 
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"d3dx9.lib")
-#pragma comment(lib, "dxerr9.lib")
+#pragma comment(lib, "dxerr.lib")
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"fmodex_vc.lib")
@@ -93,10 +93,6 @@ public:
 	string					m_strSelectedTextbox;
 
 	IBaseMenuObject*		FindMenuObject(string strObjectId);
-
-	void					InitDebugGraphicsShader();
-
-	void					DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd);
 	
 private:
 
@@ -137,11 +133,6 @@ private:
 	IDirect3DVertexDeclaration9* m_pVertexPositionNormalTextureDecl;
 
 	IDirect3DVertexDeclaration9* m_pVertexPosColDecl;
-
-
-	ID3DXEffect*			m_pDebugGraphicsEffect;
-	D3DXHANDLE 				m_hDebugGraphicsTechnique;
-	D3DXHANDLE				m_hDebugGraphicsWVPMatrix;
 };
 
 //////////////////////////////////////////////////////////////////////////////

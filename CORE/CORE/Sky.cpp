@@ -1,10 +1,7 @@
 #include "Sky.h"
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Sky
-Purpose:constructor
-*/
+
 Sky::Sky(string strSkyTextureFileName, float fSkyRadius)
 	:m_fSkyRadius(fSkyRadius)
 {
@@ -23,10 +20,7 @@ Sky::Sky(string strSkyTextureFileName, float fSkyRadius)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:~Sky
-Purpose:destructor
-*/
+
 Sky::~Sky()
 {
 	releaseX(m_pSkyMesh);
@@ -36,10 +30,7 @@ Sky::~Sky()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnLostDevice
-Purpose:
-*/
+
 void Sky::OnLostDevice()
 {
 	m_pEffect->OnLostDevice();
@@ -47,10 +38,7 @@ void Sky::OnLostDevice()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnResetDevice
-Purpose:
-*/
+
 void Sky::OnResetDevice()
 {
 	m_pEffect->OnResetDevice();
@@ -58,10 +46,7 @@ void Sky::OnResetDevice()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnRender
-Purpose:renders the sky
-*/
+
 void Sky::OnRender()
 {
 	//Translate the sky mesh to the camera position, this way we will never reach the end of the sky

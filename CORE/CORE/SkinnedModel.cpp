@@ -1,12 +1,9 @@
 #include"SkinnedModel.h"
 #include"StaticModel.h"
 
-
+//TODO: substitute frame with bone. i think it is the same
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:SkinnedModel
-Purpose:constructor
-*/
+
 SkinnedModel::SkinnedModel()
 :m_fTransTimeForAttack(0.125f)
 ,m_fTransTimeForIdle(0.25f)
@@ -36,10 +33,7 @@ SkinnedModel::SkinnedModel()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:SkinnedModel
-Purpose:this constructor loads default values for the skinned mesh
-*/
+
 SkinnedModel::SkinnedModel(string strModelName, string ModelFileName, string strTextureFileName,bool bShouldRenderTitles)
 :m_fTransTimeForAttack(0.125f)
 ,m_fTransTimeForIdle(0.25f)
@@ -112,10 +106,7 @@ SkinnedModel::SkinnedModel(string strModelName, string ModelFileName, string str
 	m_bShouldRenderTitles = bShouldRenderTitles;
 }
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:LoadGameObject
-Purpose:loads the animated model
-*/
+
 void SkinnedModel::LoadGameObject()
 {
 	//creates the texture for the model
@@ -173,31 +164,24 @@ void SkinnedModel::LoadGameObject()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:~SkinnedModel
-Purpose:destructor
-*/
+
 SkinnedModel::~SkinnedModel()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:GetFinalBonesMatricesArray
-Purpose:returns the final matrices for each bone which are passed to the shader for rendering.
-		We are returning the adress of the first element of the array, because in the shader we need the beginning of the array and the size of it
-*/
+
+//returns the final matrices for each bone which are passed to the shader for rendering.
+//We are returning the adress of the first element of the array, because in the shader we need the beginning of the array and the size of it
 D3DXMATRIX* SkinnedModel::GetFinalBonesMatricesArray()
 {
 	return &m_vFinalBonesMatrices[0];
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:PlayAnimation()
-Purpose:sets the animation index on the mesh at the current track. 
-This function repeats the animation, i.e. after the animation set ended it starts from the beginning and so on.
-*/
+
+//sets the animation index on the mesh at the current track. 
+//This function repeats the animation, i.e. after the animation set ended it starts from the beginning and so on.
 void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
 {
 	m_pAnimController->GetAnimationSetByName(strAnimationName,&m_pCurrentAnimSet);
@@ -205,13 +189,11 @@ void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:playAnimationOnceAndStop()
-Purpose:plays animation only once then stops( used for dead animation )
-The idea is to slightly move from the current track to the new one, holding the new animation.
-After the new animation is played to the end, we stop it. 
-This way the two animation tracks are with 0.0 weight and thus no animation is played.
-*/
+
+//plays animation only once then stops( used for dead animation )
+//The idea is to slightly move from the current track to the new one, holding the new animation.
+//After the new animation is played to the end, we stop it. 
+//This way the two animation tracks are with 0.0 weight and thus no animation is played.
 void SkinnedModel::PlayAnimationOnceAndStop(LPCSTR strAnimationName)
 {
 	m_pAnimController->GetAnimationSetByName(strAnimationName,&m_pSecondAnimSet);
@@ -234,11 +216,9 @@ void SkinnedModel::PlayAnimationOnceAndStop(LPCSTR strAnimationName)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:playAnimationOnce()
-Purpose:plays animation only once.switches to idle animation( used for transition between idle and attack )
-rand is used so it can be randomly determined which one from the 2 attack animations to be played.
-*/
+
+//plays animation only once.switches to idle animation( used for transition between idle and attack )
+//rand is used so it can be randomly determined which one from the 2 attack animations to be played.
 void SkinnedModel::PlayAnimationOnce(LPCSTR strAnimationName)
 {
 		srand(static_cast<unsigned int>(time(NULL)));
@@ -280,10 +260,8 @@ void SkinnedModel::PlayAnimationOnce(LPCSTR strAnimationName)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:FindFrameWithMesh
-Purpose:finds the frame that contains mesh
-*/
+
+//finds the frame that contains mesh
 D3DXFRAME* SkinnedModel::FindFrameWithMesh(D3DXFRAME* frame)
 {
 	if( frame->pMeshContainer )
@@ -315,10 +293,8 @@ D3DXFRAME* SkinnedModel::FindFrameWithMesh(D3DXFRAME* frame)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:buildSkinnedModel()
-Purpose:creates the mesh and converts it to skinned mesh and also computes normals for the mesh if needed
-*/
+
+//creates the mesh and converts it to skinned mesh and also computes normals for the mesh if needed
 void SkinnedModel::BuildSkinnedModel(ID3DXMesh* pMesh)
 {
 	D3DVERTEXELEMENT9 elements[64];
@@ -356,11 +332,10 @@ void SkinnedModel::BuildSkinnedModel(ID3DXMesh* pMesh)
 
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:BuildToRootMatricesPtrArray()
-Purpose:Stores pointers to the to root matrices of all the bones in the skinned mesh
-		The to root matrices will be updated every frame in OnUpdate, and we will have
-		quick access to these matrices just by index, instead of using D3DXFrameFind every time in OnUpdate
-		These matrices are needed to calculate the final matrix transformation for the vertices
+Stores pointers to the to root matrices of all the bones in the skinned mesh
+The to root matrices will be updated every frame in OnUpdate, and we will have
+quick access to these matrices just by index, instead of using D3DXFrameFind every time in OnUpdate
+These matrices are needed to calculate the final matrix transformation for the vertices
 */
 void SkinnedModel::BuildToRootMatricesPtrArray()
 {
@@ -378,10 +353,8 @@ void SkinnedModel::BuildToRootMatricesPtrArray()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:bindWeaponToModel()
-Purpose:binds static object to animated model's bone
-*/
+
+//binds static object to animated model's bone
 void SkinnedModel::BindWeaponToModel(string strObjectName,string strBoneToBind)
 {
 	GameObject* pGameObject = m_pGameObjManager->GetObjectByName(strObjectName.c_str());
@@ -391,8 +364,7 @@ void SkinnedModel::BindWeaponToModel(string strObjectName,string strBoneToBind)
 
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:BuildToRootMatrices()
-Purpose:Traverse the whole ierarchy of frames and builds the to root matrices for every frame
+Traverse the whole ierarchy of frames and builds the to root matrices for every frame
 here siblings are 2 or more bones that share same parent and child is bone with only one parent.
 The code traverse through the siblings, if there are any, and combines the current bone transformation matrices(scaling,rotation,translation)
 with the transformation matrices of the bone above him(his parent). This way if the parent bone moves the child bone has to move too.
@@ -441,10 +413,7 @@ void SkinnedModel::BuildToRootMatrices(FrameEx* pBone, D3DXMATRIX& ParentBoneToR
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnResetDevice
-Purpose:restores the effect file from onLostDevice status
-*/
+
 void SkinnedModel::OnResetDevice()
 {
 	m_pEffect->OnResetDevice();
@@ -452,10 +421,7 @@ void SkinnedModel::OnResetDevice()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnLostDevice
-Purpose:this can occur if alt+tab is pressed
-*/
+
 void SkinnedModel::OnLostDevice()
 {
 	m_pEffect->OnLostDevice();
@@ -464,10 +430,7 @@ void SkinnedModel::OnLostDevice()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:BuildBoundingBox
-Purpose:builds the bounding box around the model. Used for collision detection tests and visible tests
-*/
+
 void SkinnedModel::BuildBoundingBox()
 {
 	VertexPositionNormalTexture* pVertexBuffer = 0;
@@ -497,10 +460,7 @@ void SkinnedModel::BuildBoundingBox()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:BuildEffect
-Purpose:sets paramateres needed in the effect file
-*/
+
 void SkinnedModel::BuildEffect()
 {
 	if(FAILED(D3DXCreateEffectFromFile(pDxDevice,"../../CORE/CORE/shaders/SkinnedModelShader.fx",0,0,D3DXSHADER_DEBUG,0,&m_pEffect,0)))
@@ -522,10 +482,8 @@ void SkinnedModel::BuildEffect()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:BuildEffectForTitles
-Purpose:sets paramateres needed in the effect file for the titles
-*/
+
+//sets paramateres needed in the effect file for the titles
 void SkinnedModel::BuildEffectForTitles()
 {
 	D3DXCreateEffectFromFile(pDxDevice, "../../CORE/CORE/shaders/Text3DShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pTitlesEffect, 0);
@@ -534,10 +492,7 @@ void SkinnedModel::BuildEffectForTitles()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onUpdate()
-Purpose:updates the mesh bones and current position
-*/
+
 void SkinnedModel::OnUpdate(float fDeltaTime)
 {
 	//this if is the second part of the algorithm for playing animation just once.
@@ -594,10 +549,7 @@ void SkinnedModel::OnUpdate(float fDeltaTime)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnRender
-Purpose:renders the skinned mesh on the screen
-*/
+
 void SkinnedModel::OnRender()
 {
 	if( m_pGameObjManager->ShouldRenderAxis() )
@@ -634,9 +586,9 @@ void SkinnedModel::OnRender()
 		//D3DXVec3TransformCoord(&vRight, &vRight, &BoundingBoxOffset);
 		//D3DXVec3TransformCoord(&vPos, &vPos, &BoundingBoxOffset);
 
-		pApp->DrawLine(vPos,vLook);
+		/*pApp->DrawLine(vPos,vLook);
 		pApp->DrawLine(vPos,vUp);
-		pApp->DrawLine(vPos,vRight);
+		pApp->DrawLine(vPos,vRight);*/
 	}
 
 
@@ -709,10 +661,8 @@ void SkinnedModel::RenderBindedWeapon(GameObject* pSkMesh, string bone)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:RenderTitles
-Purpose:renders the titles above the skinned meshes
-*/
+
+//renders the titles above the skinned meshes
 void SkinnedModel::RenderTitles()
 {
 	D3DXMATRIX T,S,R,R1;
@@ -749,10 +699,8 @@ void SkinnedModel::RenderTitles()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:renderTitlesForQuest
-Purpose:renders the titles for quests above the skinned meshes
-*/
+
+//renders the titles for quests above the skinned meshes
 void SkinnedModel::RenderTitlesForQuest()
 {
 	if( m_bHasDialogue )
@@ -791,10 +739,7 @@ void SkinnedModel::RenderTitlesForQuest()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:RenderBoundingBox
-Purpose:renders the bounding box
-*/
+
 void SkinnedModel::RenderBoundingBox()
 {
 	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
@@ -823,10 +768,8 @@ void SkinnedModel::RenderBoundingBox()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:CreateFrame
-Purpose:Allocates memory for single frame
-*/
+
+//Allocates memory for single frame
 HRESULT AllocateHierarchy::CreateFrame(PCTSTR Name, D3DXFRAME** NewFrame)
 {
 	FrameEx* pFrameEx = new FrameEx();
@@ -852,11 +795,9 @@ HRESULT AllocateHierarchy::CreateFrame(PCTSTR Name, D3DXFRAME** NewFrame)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:CreateMeshContainer
-Purpose:Allocates memory for mesh container. They are used to hold linked list of meshes containers related to one frame
-		In skinned meshes there is one mesh only and the linked list of mesh containers isnt used.
-*/
+
+//Allocates memory for mesh container. They are used to hold linked list of meshes containers related to one frame
+//In skinned meshes there is one mesh only and the linked list of mesh containers isnt used.
 HRESULT AllocateHierarchy::CreateMeshContainer(PCTSTR Name, const D3DXMESHDATA* MeshData, const D3DXMATERIAL* Materials, 
 											   const D3DXEFFECTINSTANCE* EffectInstances, DWORD NumMaterials, 
 											   const DWORD *Adjacency, ID3DXSkinInfo* SkinInfo, D3DXMESHCONTAINER** NewMeshContainer)
@@ -906,10 +847,8 @@ HRESULT AllocateHierarchy::CreateMeshContainer(PCTSTR Name, const D3DXMESHDATA* 
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:DestroyFrame
-Purpose:releases the memory allocated for the frame
-*/
+
+//releases the memory allocated for the frame
 HRESULT AllocateHierarchy::DestroyFrame(D3DXFRAME* frame) 
 {
 	delete[] frame->Name;
@@ -919,10 +858,8 @@ HRESULT AllocateHierarchy::DestroyFrame(D3DXFRAME* frame)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:DestroyMeshContainer
-Purpose:releases the memory allocated for mesh container
-*/
+
+//releases the memory allocated for mesh container
 HRESULT AllocateHierarchy::DestroyMeshContainer(D3DXMESHCONTAINER* MeshContainer)
 {
 	delete[] MeshContainer->Name;
@@ -967,6 +904,8 @@ float SkinnedModel::GetDistanceToPickedObject()
 
 	return -1;
 }
+
+/////////////////////////////////////////////////////////////////////////
 
 bool SkinnedModel::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX combinedMatrix, D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir, float& nDistance)
 {

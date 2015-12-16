@@ -5,10 +5,8 @@
 using namespace std;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-Function:getWorldPickingRay
-Purpose:transforms ray from screen space to world space, used for picking models in the game with the mouse
-*/
+
+//transforms ray from screen space to world space, used for picking models in the game with the mouse
 void GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection)
 {
 	//TR level:Picking
@@ -43,10 +41,8 @@ void GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection)
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-Function:getWidth
-Purpose:gets width of text when drawn on screen
-*/
+
+//gets width of text when drawn on screen
 float GetStringWidth(string strString)
 {
 	RECT rStringInfo;
@@ -61,10 +57,8 @@ float GetStringWidth(string strString)
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-Function:getHeight
-Purpose:gets height of text when drawn on screen
-*/
+
+//gets height of text when drawn on screen
 float GetStringHeight(string strString)
 {
 	RECT rStringInfo;
@@ -79,10 +73,8 @@ float GetStringHeight(string strString)
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-Function:hasNormals()
-Purpose:checks if the mesh got normals
-*/
+
+//checks if the mesh got normals
 bool HasNormals(ID3DXMesh* pMesh)
 {
 	D3DVERTEXELEMENT9 elems[MAX_FVF_DECL_SIZE];
@@ -113,11 +105,8 @@ bool HasNormals(ID3DXMesh* pMesh)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*
-Function:InitVertexDeclarations
-Purpose:initialize vertex declarations. For now only position, normal, texture declaration is used
-		and only it is initalized and saved in the GamepApp, so we can access it later.
-*/
+//initialize vertex declarations. For now only position, normal, texture declaration is used
+//and only it is initalized and saved in the GamepApp, so we can access it later.
 void InitVertexDeclarations()
 {
 	//position only
@@ -171,11 +160,8 @@ void InitVertexDeclarations()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*
-Function:CopyString
-Purpose:this function is used because the name which is passed to create frame is PCTSTR and the name in the frame is LPCSTR
-		and they cannot be casted.
-*/
+//this function is used because the name which is passed to create frame is PCTSTR and the name in the frame is LPCSTR
+//and they cannot be casted.
 void CopyString(const char* input, char** output)
 {
 	if(input)

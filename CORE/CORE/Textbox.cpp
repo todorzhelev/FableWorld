@@ -1,10 +1,5 @@
 #include"Textbox.h"
 #include"TextManager.h"
-/*
-SourceFile: GuiTextbox.cpp
-Purpose: Contains functions for creating and rendering textbox. Textbox is currently not used by the game, it is used in the level editor.
-*/
-
 
 Textbox::Textbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, string strText,string strIdleStateTexFileName, string strMouseOverStateTexFileName,string strId)
 :IBaseMenuObject(vPosition,nWidth,nHeight,strText,strIdleStateTexFileName,strMouseOverStateTexFileName,strId)
@@ -18,10 +13,7 @@ Textbox::Textbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, string strText,
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Init
-Purpose: creates the textbox's sprite and texture
-*/
+
 void Textbox::Init()
 {
 	D3DXCreateSprite(pDxDevice,&m_pSprite);
@@ -34,10 +26,7 @@ void Textbox::Init()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnLostDevice
-Purpose:invokes the OnLostDevice function of the sprite
-*/
+
 void Textbox::OnLostDevice()
 {
 	m_pSprite->OnLostDevice();
@@ -45,10 +34,7 @@ void Textbox::OnLostDevice()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnResetDevice
-Purpose:invokes the OnResetDevice function of the sprite
-*/
+
 void Textbox::OnResetDevice()
 {
 	m_pSprite->OnResetDevice();
@@ -56,10 +42,7 @@ void Textbox::OnResetDevice()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:IsMouseOver
-Purpose:checks if the mouse is over the textbox
-*/
+
 bool Textbox::IsMouseOver()
 {
 	POINT s;
@@ -82,12 +65,8 @@ bool Textbox::IsMouseOver()
 		
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:IsMouseDown
-Purpose:checks if the mouse button is clicked over the textbox
-*/
+
 bool Textbox::IsMouseDown()
 {
 	if(IsMouseOver() && pDinput->IsMouseButtonDown(0))
@@ -99,6 +78,8 @@ bool Textbox::IsMouseDown()
 		return false;
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////
 
 void Textbox::OnClicked()
 {
@@ -124,10 +105,7 @@ void Textbox::OnClicked()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnUpdate
-Purpose:updates the variables of the guiobject
-*/
+
 void Textbox::OnUpdate()
 {
 	if(IsMouseOver())
@@ -150,12 +128,8 @@ void Textbox::OnUpdate()
 
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnRender
-Purpose:renders the textbox's image and text
-*/
+
 void Textbox::OnRender()
 {
 	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
@@ -179,10 +153,7 @@ void Textbox::OnRender()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnRender
-Purpose:renders the textbox's image and text
-*/
+
 void Textbox::OnRender(int a,int r,int g,int b)
 {
 	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
@@ -209,4 +180,6 @@ void Textbox::OnRender(int a,int r,int g,int b)
 			m_vPosition.y+32,255,255,255,255);
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////
 

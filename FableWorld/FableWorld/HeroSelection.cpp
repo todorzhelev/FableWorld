@@ -2,18 +2,10 @@
 #include "Game.h"
 #include "../../CORE/CORE/TextManager.h"
 
-/*
-SourceFile:HeroSelection.cpp
-Purpose:loads the logo and labels for the menu and renders them
-*/
-
 constexpr int rotationSlowFactor = 200000;
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Menu
-Purpose:constructor. It loads all the functionality in the menu
-*/
+
 HeroSelection::HeroSelection()
 {
 	camera->GetPosition() = D3DXVECTOR3(-2,31,-160);
@@ -41,10 +33,7 @@ HeroSelection::HeroSelection()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onLostDevice
-Purpose:invokes the corresponding OnLostDevice functions
-*/
+
 void HeroSelection::OnLostDevice()
 {
 	m_pLabelEnterWorld->OnLostDevice();
@@ -57,10 +46,7 @@ void HeroSelection::OnLostDevice()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onResetDevice
-Purpose:invokes the corresponding OnResetDevice functions
-*/
+
 void HeroSelection::OnResetDevice()
 {
 	m_pLabelEnterWorld->OnResetDevice();
@@ -73,10 +59,7 @@ void HeroSelection::OnResetDevice()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onUpdate
-Purpose:updates all the functionallity in menu
-*/
+
 void HeroSelection::OnUpdate(float dt)
 {
 	pDinput->Poll();
@@ -116,10 +99,7 @@ void HeroSelection::OnUpdate(float dt)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onRender
-Purpose:render all
-*/
+
 void HeroSelection::OnRender()
 {
 	pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
@@ -145,11 +125,7 @@ void HeroSelection::OnRender()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:msgProc
-Purpose:this function detects various messages sent to the window like WM_CLOSE, WM_ACTIVATE and etc.
-		Used mainly for the textbox and camera mode switching.Isnt used here, because DirectInput works fine for the things we need in menu
-*/
+
 LRESULT HeroSelection::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	

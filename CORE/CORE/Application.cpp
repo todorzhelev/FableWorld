@@ -29,10 +29,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:GamepApp
-Purpose:constructor
-*/
+
 Application::Application(HINSTANCE hInstance, string strWindowTitle, D3DDEVTYPE eDeviceType, DWORD vertexProcessingType)
 {
 	m_strWindowTitle		= strWindowTitle;
@@ -48,39 +45,27 @@ Application::Application(HINSTANCE hInstance, string strWindowTitle, D3DDEVTYPE 
 	
 	InitMainWindow();
 	InitDirect3D();
-
-	InitDebugGraphicsShader();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:~GamepApp
-Purpose:destructor
-*/
+
 Application::~Application()
 {
 	releaseX(m_pD3DObject);
 	releaseX(pDxDevice);
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:getAppInst
-Purpose:returns the instance of the program
-*/
+
+//returns the instance of the program
 HINSTANCE Application::GetAppInstance()
 {
 	return m_hAppInstance;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:getMainWnd
-Purpose:returns the handle of the window
-*/
+
+//returns the handle of the window
 HWND Application::GetMainWindow()
 {
 	return m_hMainWindow;
@@ -88,21 +73,15 @@ HWND Application::GetMainWindow()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:GetPresentParameters
-Purpose:returns the present parameters, used for creating the directx device
-*/
+
+//returns the present parameters, used for creating the directx device
 D3DPRESENT_PARAMETERS Application::GetPresentParameters()
 {
 	return m_presentParameters;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:isPaused
-Purpose:checks if the app is paused
-*/
+
 bool Application::IsPaused() const
 {
 	return m_bIsAppPaused;
@@ -115,12 +94,9 @@ void Application::SetPaused(bool bPaused)
 	m_bIsAppPaused = bPaused;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:initMainWindow
-Purpose:initialize the window
-*/
+
+//initialize the window
 void Application::InitMainWindow()
 {
 	WNDCLASS wc;
@@ -175,10 +151,8 @@ void Application::InitMainWindow()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:initDirect3D
-Purpose:initialize direct3d
-*/
+
+//initialize direct3d
 void Application::InitDirect3D()
 {
 	//via d3dObject we can later create the directx device which we will use in the game for rendering and connection with the video card
@@ -228,8 +202,7 @@ void Application::InitDirect3D()
 
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:MainLoop
-Purpose:Here in a loop are invoked onUpdate and onRender functions of the current scene
+Here in a loop are invoked onUpdate and onRender functions of the current scene
 */
 int Application::MainLoop()
 {
@@ -290,10 +263,8 @@ int Application::MainLoop()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:enableFullScreenMode
-Purpose:switches between fullscreen and windowed mode
-*/
+
+//switches between fullscreen and windowed mode
 void Application::SwitchToFullscreen(bool bSwitch)
 {
 	//switch to fullscreen mode
@@ -356,10 +327,8 @@ void Application::SwitchToFullscreen(bool bSwitch)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:isDeviceLost
-Purpose:tests if the directx device is lost(alt+tab)
-*/
+
+//tests if the directx device is lost(alt+tab)
 bool Application::IsDeviceLost()
 {
 	HRESULT hr = pDxDevice->TestCooperativeLevel();
@@ -378,7 +347,6 @@ bool Application::IsDeviceLost()
 		return false;
 	}
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -456,7 +424,6 @@ bool Application::IsShaderVersionSupported()
 
 /////////////////////////////////////////////////////////////////////////
 
-
 void Application::AddUIObject(IBaseMenuObject* pUIObject)
 {
 	m_vUIObjects.push_back(pUIObject);
@@ -475,61 +442,6 @@ IBaseMenuObject* Application::FindMenuObject(string strObjectId)
 	}
 
 	return NULL;
-
 }
 
 /////////////////////////////////////////////////////////////////////////
-
-void Application::InitDebugGraphicsShader()
-{
-	D3DXCreateEffectFromFile(pDxDevice, "../../CORE/CORE/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
-	m_hDebugGraphicsTechnique  = m_pDebugGraphicsEffect->GetTechniqueByName("DebugGraphics3DTech");
-	m_hDebugGraphicsWVPMatrix  = m_pDebugGraphicsEffect->GetParameterByName(0, "WVP");
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-/*
-Function:DrawLine
-Purpose:draws a line
-*/
-void Application::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
-{
-	//pDxDevice->BeginScene();
-
-	m_pDebugGraphicsEffect->SetTechnique(m_hDebugGraphicsTechnique);
-
-	m_pDebugGraphicsEffect->SetMatrix(m_hDebugGraphicsWVPMatrix, &(camera->GetViewProjMatrix()));
-	UINT numPasses = 0;
-	m_pDebugGraphicsEffect->Begin(&numPasses, 0);
-	m_pDebugGraphicsEffect->BeginPass(0);
-
-		IDirect3DVertexBuffer9* pVertexBuffer;
-
-		pDxDevice->CreateVertexBuffer(2 * sizeof (VertexPositionColor), D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &pVertexBuffer, 0);
-
-		VertexPositionColor* v = 0;
-		pVertexBuffer->Lock(0, 0,  (void**)&v, 0);
-
-		v[0].m_vPos = vStart;
-		//v[0].m_color = D3DXCOLOR(1.0f,1.0,1.0f,1.0f);
-
-		v[1].m_vPos = vEnd;
-		//v[1].m_color = D3DXCOLOR(1.0f,1.0,1.0f,1.0f);
-
-		pVertexBuffer->Unlock();
-
-		pDxDevice->SetStreamSource(0, pVertexBuffer, 0, sizeof(VertexPositionColor));
-
-		pDxDevice->SetVertexDeclaration(pApp->GetPosColDeclaration());
-
-		pDxDevice->DrawPrimitive(D3DPT_LINELIST,0,1);
-
-	m_pDebugGraphicsEffect->EndPass();
-	m_pDebugGraphicsEffect->End();
-
-
-	//pDxDevice->EndScene();
-
-	//pDxDevice->Present(0, 0, 0, 0);
-}

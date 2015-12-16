@@ -3,10 +3,7 @@
 #include"Misc.h"
 #include"IBaseMenuObject.h"
 
-/*
-this class contains functions for creating, checking if mouse is over or down and rendering a label
-Label is text which can be tested for mouse over and mouse down. Used in the dialogue system and menu
-*/
+
 class Label: public IBaseMenuObject
 {
 public:

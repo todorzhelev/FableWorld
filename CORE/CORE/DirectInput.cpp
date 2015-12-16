@@ -5,10 +5,8 @@
 DirectInput* pDinput = NULL;
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:DirectInput
-Purpose:constructor. acquires keyboard and mouse devices
-*/
+
+//acquires keyboard and mouse devices
 DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags)
 {
 	ZeroMemory(m_keyboardState, sizeof(m_keyboardState));
@@ -33,12 +31,8 @@ DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags)
 
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:~DirectInput
-Purpose:destructor
-*/
+
 DirectInput::~DirectInput()
 {
 	releaseX(m_pDirectInput);
@@ -48,13 +42,9 @@ DirectInput::~DirectInput()
 	releaseX(m_pMouse);
 }
 
-
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Poll
-Purpose:starting to poll for user input if the devices are accessible. if not it tries to acquire them
-*/
+
+//starting to poll for user input if the devices are accessible. if not it tries to acquire them
 void DirectInput::Poll()
 {
 	//Keyboard
@@ -74,65 +64,47 @@ void DirectInput::Poll()
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:IsKeyDown
-Purpose:test if key is pressed
-		we make bitwise and with 0x80, because according to microsoft the high-order bit in 
-		keyboardstate[key] must be set(i.e. be 1) if the key is down.
-		by making bitwise AND with 0x80, we are clearing the other bits and leaving only the high-order bit to be set if 
-		in the previous value is again set.
-		example: keyboardstate[key] = 1001 1100 & 1000 0000(0x80)  = 1000 0000 -> the high order bit is set, therefore the key is down
-*/
+
+//test if key is pressed
+//we make bitwise and with 0x80, because according to microsoft the high-order bit in 
+//keyboardstate[key] must be set(i.e. be 1) if the key is down.
+//by making bitwise AND with 0x80, we are clearing the other bits and leaving only the high-order bit to be set if 
+//in the previous value is again set.
+//example: keyboardstate[key] = 1001 1100 & 1000 0000(0x80)  = 1000 0000 -> the high order bit is set, therefore the key is down
 bool DirectInput::IsKeyDown(char key)
 {
 	return (m_keyboardState[key] & 0x80) != 0;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:IsMouseButtonDown
-Purpose:test if mouse button is down
-*/
+
 bool DirectInput::IsMouseButtonDown(int button)
 {
 	return (m_mouseState.rgbButtons[button] & 0x80) != 0;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:IsMouseButtonUp
-Purpose:test if mouse button is up
-*/
+
 bool DirectInput::IsMouseButtonUp(int button)
 {
 	return (m_mouseState.rgbButtons[button] & 0x80) == 0;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:GetMouseDX
-Purpose:returns lX for the mouse used in rotation.
-*/
+
+//returns lX for the mouse used in rotation.
 float DirectInput::GetMouseDX()
 {
 	return (float)m_mouseState.lX;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:mouseDY
-Purpose:returns lY for the mouse used in rotation.
-*/
+
+//returns lY for the mouse used in rotation.
 float DirectInput::GetMouseDY()
 {
 	return (float)m_mouseState.lY;
 }
-
 
 /////////////////////////////////////////////////////////////////////////

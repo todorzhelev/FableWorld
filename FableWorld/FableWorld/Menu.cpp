@@ -2,21 +2,11 @@
 #include "Game.h"
 #include "../../CORE/CORE/TextManager.h"
 
-/*
-SourceFile:Menu.cpp
-Purpose:loads the logo and labels for the menu and renders them
-*/
-
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Menu
-Purpose:constructor. It loads all the functionality in the menu
-*/
+
 Menu::Menu()
 {
-	
-	//Dinput is responsibly for mouse move detection, key pressed detection and etc.
+	//Dinput is responsible for mouse move detection, key pressed detection and etc.
 	pDinput = new DirectInput(DISCL_NONEXCLUSIVE|DISCL_FOREGROUND, DISCL_NONEXCLUSIVE|DISCL_FOREGROUND);
 
 	pTextManager = new TextManager;
@@ -38,22 +28,15 @@ Menu::Menu()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onLostDevice
-Purpose:invokes the corresponding OnLostDevice functions
-*/
+
 void Menu::OnLostDevice()
 {
 	pTextManager->OnLostDevice();
 	m_pSpriteForLogo->OnLostDevice();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onResetDevice
-Purpose:invokes the corresponding OnResetDevice functions
-*/
+
 void Menu::OnResetDevice()
 {
 	pTextManager->OnResetDevice();
@@ -65,12 +48,8 @@ void Menu::OnResetDevice()
 	m_pLabelQuit->SetPosition(D3DXVECTOR2(w/2-40.0f,h/2+20.0f));
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onUpdate
-Purpose:updates all the functionallity in menu
-*/
+
 void Menu::OnUpdate(float dt)
 {
 	pDinput->Poll();
@@ -99,10 +78,7 @@ void Menu::OnUpdate(float dt)
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onRender
-Purpose:render all
-*/
+
 void Menu::OnRender()
 {
 	pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
@@ -145,11 +121,7 @@ void Menu::OnRender()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:msgProc
-Purpose:this function detects various messages sent to the window like WM_CLOSE, WM_ACTIVATE and etc.
-		Used mainly for the textbox and camera mode switching.Isnt used here, because DirectInput works fine for the things we need in menu
-*/
+
 LRESULT Menu::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	

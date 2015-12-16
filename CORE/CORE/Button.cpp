@@ -1,11 +1,5 @@
 #include"Button.h"
 
-/*
-SourceFile: GuiButton.cpp
-Purpose: Contains functions for loading and rendering buttons
-*/
-
-
 Button::Button(D3DXVECTOR2 vPosition, int nWidth, int nHeight, string strText,string strIdleStateTexFileName, string strMouseOverStateTexFileName)
 :IBaseMenuObject(vPosition,nWidth,nHeight,strText,strIdleStateTexFileName,strMouseOverStateTexFileName)
 {
@@ -17,44 +11,28 @@ Button::Button(D3DXVECTOR2 vPosition, int nWidth, int nHeight, string strText,st
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Init
-Purpose:creates to sprite for rendering the button and loads the textures of the button:
-		the mouseover texture and normal texture
-*/
+
 void Button::Init()
 {
 
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnLostDevice
-Purpose:invokes the OnLostDevice function of the sprite 
-*/
+
 void Button::OnLostDevice()
 {
 	m_pSprite->OnLostDevice();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnResetDevice
-Purpose:invokes the OnResetDevice function of the sprite 
-*/
+
 void Button::OnResetDevice()
 {
 	m_pSprite->OnResetDevice();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:IsMouseOver
-Purpose:checks if the mouse is over the texture
-*/
+
 bool Button::IsMouseOver()
 {
 	POINT s;
@@ -81,10 +59,7 @@ bool Button::IsMouseOver()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:IsMouseDown
-Purpose:if the mouse is over the image and the mouse button is clicked we got mouse down event
-*/
+
 bool Button::IsMouseDown()
 {
 	//if the mouse is over the area and the left button is pressed then return true
@@ -99,20 +74,14 @@ bool Button::IsMouseDown()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:IsClicked
-Purpose:if the button is clicked
-*/
+
 bool Button::IsClicked()
 {
 	return m_bIsMouseDown;
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnUpdate
-Purpose:updates the variables of the guiobject
-*/
+
 void Button::OnUpdate()
 {
 	if(IsMouseOver())
@@ -135,12 +104,8 @@ void Button::OnUpdate()
 
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnRender
-Purpose:render the button
-*/
+
 void Button::OnRender()
 {
 	D3DXVECTOR3 vPos = D3DXVECTOR3(m_vPosition.x, m_vPosition.y, 0.f);
@@ -160,10 +125,7 @@ void Button::OnRender()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnRender
-Purpose:render the button
-*/
+
 void Button::OnRender(int a,int r,int g,int b)
 {
 	D3DXVECTOR3 vPos = D3DXVECTOR3(m_vPosition.x, m_vPosition.y, 0.f);
@@ -181,5 +143,4 @@ void Button::OnRender(int a,int r,int g,int b)
 	m_pSprite->End();
 }
 
-
-/////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////

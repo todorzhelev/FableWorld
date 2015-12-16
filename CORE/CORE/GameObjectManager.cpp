@@ -18,10 +18,6 @@ GameObjectManager::GameObjectManager(bool bShouldRenderTitles, bool bShouldHighl
 
 /////////////////////////////////////////////////////////////////////////
 
-/*
-Function:addGameObject
-Purpose:puts new GameObject in the map
-*/
 void GameObjectManager::AddGameObject(GameObject* pGameObject)
 {
 	m_gameObjects.push_back(pGameObject);

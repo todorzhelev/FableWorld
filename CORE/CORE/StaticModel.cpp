@@ -1,13 +1,8 @@
 #include"StaticModel.h"
 #include<vector>
-//clean renderbindedweapon and render
-
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:StaticModel
-Purpose:constructor
-*/
+
 StaticModel::StaticModel()
 {
 	//default texture for models that dont have any
@@ -27,10 +22,7 @@ StaticModel::StaticModel()
 
 
 ////////////////////////////////////////////////////////////////////////
-/*
-Function:SkinnedModel
-Purpose:this constructor loads default values for the skinned mesh
-*/
+
 StaticModel::StaticModel(string strModelName, string ModelFileName, string strTextureFileName)
 {
 		//default texture for models that dont have any
@@ -83,10 +75,7 @@ StaticModel::StaticModel(string strModelName, string ModelFileName, string strTe
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:LoadXFile
-Purpose:load model from .x file
-*/
+
 void StaticModel::LoadGameObject()
 {
 	ID3DXMesh* pMesh			 = NULL;
@@ -165,12 +154,8 @@ void StaticModel::LoadGameObject()
 	BuildBoundingBox();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:BuildBoundingBox
-Purpose:generates bounding box for a model
-*/
+
 void StaticModel::BuildBoundingBox()
 {
 	VertexPositionNormalTexture* pVertexBuffer = 0;
@@ -200,20 +185,14 @@ void StaticModel::BuildBoundingBox()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onResetDevice
-Purpose:invoked when the device is reset
-*/
+
 void StaticModel::OnResetDevice()
 {
 	m_pEffect->OnResetDevice();
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:onLostDevice
-Purpose:invoked when the device is lost
-*/
+
 void StaticModel::OnLostDevice()
 {
 	//add check if it already went through here
@@ -221,10 +200,7 @@ void StaticModel::OnLostDevice()
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:update
-Purpose:updates the position of the mesh
-*/
+
 void StaticModel::OnUpdate(float fDeltaTime)
 {
 	//binded models got their own height, based on the bone that they are attached to, other models are just put on the terrain
@@ -235,10 +211,7 @@ void StaticModel::OnUpdate(float fDeltaTime)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:buildEffect
-Purpose:set shader parameters
-*/
+
 void StaticModel::BuildEffect()
 {
 	if( FAILED(D3DXCreateEffectFromFile(pDxDevice,"../../CORE/CORE/shaders/StaticModelShader.fx",0,0,D3DXSHADER_DEBUG,0,&m_pEffect,0)) )
@@ -259,10 +232,8 @@ void StaticModel::BuildEffect()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:render
-Purpose:renders not-binded model
-*/
+
+//renders not-binded model
 void StaticModel::OnRender()
 {
 	//if the model is not binded to skinned mesh's bone render it
@@ -331,12 +302,10 @@ void StaticModel::OnRender()
 	pDxDevice->SetRenderState(D3DRS_ALPHATESTENABLE, false);
 }
 
-
+//TODO: do we need separate function for binded weapons? may be pass a parameter if it is binded or not?
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:renderBindedWeapon
-Purpose:renders binded model
-*/
+
+//renders binded model
 void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 {
 	//the animated model
@@ -497,10 +466,7 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:RenderBoundingBox
-Purpose:renders the bounding box
-*/
+
 void StaticModel::RenderBoundingBox()
 {
 	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
@@ -532,6 +498,8 @@ void StaticModel::RenderBoundingBox()
 
 	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 }
+
+/////////////////////////////////////////////////////////////////////////
 
 float StaticModel::GetDistanceToPickedObject()
 {

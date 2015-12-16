@@ -28,15 +28,15 @@ public:
 
 	~Game();
 
-	virtual void OnLostDevice();
+	virtual void OnLostDevice() override;
 
-	virtual void OnResetDevice();
+	virtual void OnResetDevice() override;
 
-	virtual void OnUpdate(float dt);
+	virtual void OnUpdate(float dt) override;
 
-	virtual void OnRender();
+	virtual void OnRender() override;
 
-    LRESULT		 MsgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 	bool		 IsObjectNear(GameObject* obj1,GameObject* obj2);
 

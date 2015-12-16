@@ -1,9 +1,7 @@
 #include"Label.h"
 #include"TextManager.h"
-/*
-SourceFile: GuiLabel.cpp
-Purpose: Contains functions for loading and rendering labels
-*/
+
+/////////////////////////////////////////////////////////////////////////
 
 Label::Label(D3DXVECTOR2 vPosition, string strText)
 {
@@ -18,10 +16,7 @@ Label::Label(D3DXVECTOR2 vPosition, string strText)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:Init
-Purpose:sets the width and the height of the label
-*/
+
 void Label::Init()
 {
 	m_nHeight = static_cast<int>(GetStringHeight(m_strText));
@@ -33,30 +28,19 @@ void Label::Init()
 
 
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnLostDevice
-Purpose:invokes the OnLostDevice function of the sprite 
-*/
+
 void Label::OnLostDevice()
 {
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnResetDevice
-Purpose:invokes the OnResetDevice function of the sprite 
-*/
+
 void Label::OnResetDevice()
 {
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:IsMouseOver
-Purpose:checks if mouse is over tha label
-*/
+
 bool Label::IsMouseOver()
 {
 	POINT s;
@@ -80,12 +64,8 @@ bool Label::IsMouseOver()
 		
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:IsMouseDown
-Purpose:if mouse is over the label and mouse buttons is clicked and the label isnt hidden it returns true
-*/
+
 bool Label::IsMouseDown()
 {
 	if(IsMouseOver() && pDinput->IsMouseButtonDown(0) && m_bIsVisible)
@@ -98,12 +78,8 @@ bool Label::IsMouseDown()
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnUpdate
-Purpose:updates the variables of the guiobject
-*/
+
 void Label::OnUpdate()
 {
 	if(IsMouseOver())
@@ -125,12 +101,8 @@ void Label::OnUpdate()
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-/*
-Function:OnRender
-Purpose:renders the label
-*/
+
 void Label::OnRender(int a,int r,int g,int b)
 {
 	if( m_bIsVisible )
