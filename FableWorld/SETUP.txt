@@ -21,3 +21,8 @@ How to setup the project:
 6. Press Apply and OK
 
 7. Set the configuration to Debug and start the project
+
+Problems and solutions:
+1. __vsnprintf
+- in the project properties in Linker -> Input in Additional dependencies add legacy_stdio_definitions.lib;
+in order dxerr to work

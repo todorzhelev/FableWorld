@@ -48,7 +48,7 @@ void GameObjectManager::OnUpdate()
 {
 	for(auto& gameObject : m_gameObjects)
 	{
-		if( pDinput->IsMouseButtonDown(0) )
+		//if( pDinput->IsMouseButtonDown(0) )
 		{
 			float dist = gameObject->GetDistanceToPickedObject();
 
