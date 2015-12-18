@@ -46,25 +46,29 @@ void GameObjectManager::SetPickedObject(GameObject* pPickedObject)
 
 void GameObjectManager::OnUpdate()
 {
-	for(auto& gameObject : m_gameObjects)
-	{
-		//if( pDinput->IsMouseButtonDown(0) )
-		{
-			float dist = gameObject->GetDistanceToPickedObject();
 
-			if( dist != -1)
-			{
-				m_mapPickedObjects[dist] = gameObject;
-			}
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void GameObjectManager::UpdatePicking()
+{
+	for (auto& gameObject : m_gameObjects)
+	{
+		float dist = gameObject->GetDistanceToPickedObject();
+
+		if (dist != -1)
+		{
+			m_mapPickedObjects[dist] = gameObject;
 		}
 	}
 
 	//the closest object is picked
 	//in the game skinned models only should be picked. fix this
-	if( !m_mapPickedObjects.empty() )
+	if (!m_mapPickedObjects.empty())
 	{
 		auto pClosestPickedObject = (m_mapPickedObjects.begin()->second);
-		if( pClosestPickedObject )
+		if (pClosestPickedObject)
 		{
 			pClosestPickedObject->SetPicked(true);
 		}
@@ -72,7 +76,6 @@ void GameObjectManager::OnUpdate()
 		m_mapPickedObjects.clear();
 	}
 }
-
 /////////////////////////////////////////////////////////////////////////
 
 std::vector<GameObject*>& GameObjectManager::GetGameObjects()

@@ -207,8 +207,6 @@ void Game::OnUpdate(float dt)
 		gameObject->OnUpdate(dt);
 	}
 
-	m_pGameObjManager->OnUpdate();
-
 	soundsyst->OnUpdate();
 	pTextManager->OnUpdate(dt);
 	camera->OnUpdate(dt);
@@ -751,9 +749,25 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			auto delta = GET_WHEEL_DELTA_WPARAM(wParam);
 
 			camera->ModifyZoom(delta / 10);
+
+			return 0;
 		}
 
-  }
+		case WM_LBUTTONDOWN:
+		{
+			switch (wParam)
+			{
+				case MK_LBUTTON:
+				{
+					m_pGameObjManager->UpdatePicking();
+				}
+				break;
+			}
+
+			return 0;
+		}
+	}
+
 	return DefWindowProc(pApp->GetMainWindow(), msg, wParam, lParam);
 }
 

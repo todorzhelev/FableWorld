@@ -49,6 +49,8 @@ public:
 
 	void OnUpdate();
 
+	void UpdatePicking();
+
 	bool IsPickedStaticObject(GameObject* pObj, float& nDistance);
 
 	bool IsPickedSkinnedObject(D3DXFRAME* pFrame,D3DXMATRIX combinedMatrix,D3DXVECTOR3 vOrigin,D3DXVECTOR3 vDir, float& nDistance );

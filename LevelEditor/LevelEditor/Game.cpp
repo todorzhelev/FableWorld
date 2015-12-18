@@ -943,8 +943,12 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				}
 				break;
 
+				case 'B':
+				{
+					m_pGameObjManager->SetShouldRenderBoundingBoxes(!m_pGameObjManager->ShouldRenderBoundingBoxes());
 
-
+					break;
+				}
 			}
 			return 0;
 
@@ -953,20 +957,21 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				case MK_LBUTTON:
 				{
-					bool bShouldCheck3D = true;
+					//if we are over UI element, dont check for picking in the world
+					bool isMouseOverUIElement = false;
 					for(int i = 0; i < pApp->m_vUIObjects.size(); i++)
 					{
 						if( pApp->m_vUIObjects[i]->IsMouseOver() )
 						{
-							bShouldCheck3D = false;
+							isMouseOverUIElement = true;
 						}
 
 						pApp->m_vUIObjects[i]->OnClicked();
 					}
 
-					if( bShouldCheck3D )
+					if( !isMouseOverUIElement )
 					{
-						m_pGameObjManager->OnUpdate();
+						m_pGameObjManager->UpdatePicking();
 					}
 				}
 			}

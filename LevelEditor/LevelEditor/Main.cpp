@@ -16,7 +16,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 
 	pApp = new Application(hInstance, "Level Editor", D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING);
 	
-	m_pGameObjManager = new GameObjectManager(false,true,true,false,true);
+	m_pGameObjManager = new GameObjectManager(false,true,true,false,false);
 
 	//adds 3 scenes in the scenesContainer and set the active scene to be the menu scene.
 	Menu menu;
