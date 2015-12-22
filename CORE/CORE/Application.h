@@ -23,6 +23,7 @@
 #include<list>
 #include"IBaseScene.h"
 #include<iostream>
+#include<direct.h> //__getcwd
 
 using namespace std;
 

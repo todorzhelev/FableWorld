@@ -74,13 +74,13 @@ Game::Game()
 	//loads the models, sounds and quests from the scripts
 	//luaL_dofile(L, "scripts/animatedModels.lua");
 	//luaL_dofile(L, "scripts/staticModels.lua");
-	luaL_dofile(L, "scripts/level.lua");
-	luaL_dofile(L, "scripts/sounds.lua");
-	luaL_dofile(L, "scripts/quests.lua");
+	luaL_dofile(L, "../../Resources/scripts/level.lua");
+	luaL_dofile(L, "../../Resources/scripts/sounds.lua");
+	luaL_dofile(L, "../../Resources/scripts/quests.lua");
 	//luaL_dofile(L, "scripts/init.lua");
 
 	pDialogueManager = new DialogueManager;
-	pDialogueManager->LoadDialogues("dialogues/dialogue.xml");
+	pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue.xml");
 
 	//creates 3d titles for the models and check for dialogues
 	auto& gameObjects = m_pGameObjManager->GetSkinnedModels();
@@ -122,7 +122,7 @@ Game::Game()
 //initializes the shader for debug graphics
 void Game::InitDebugGraphicsShader()
 {
-	D3DXCreateEffectFromFile(pDxDevice, "../../CORE/CORE/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
+	D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
 	m_hDebugGraphicsTechnique  = m_pDebugGraphicsEffect->GetTechniqueByName("DebugGraphics3DTech");
 	m_hDebugGraphicsWVPMatrix  = m_pDebugGraphicsEffect->GetParameterByName(0, "WVP");
 }

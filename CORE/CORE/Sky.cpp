@@ -8,7 +8,7 @@ Sky::Sky(string strSkyTextureFileName, float fSkyRadius)
 	D3DXCreateSphere(pDxDevice, m_fSkyRadius, 160, 160, &m_pSkyMesh, 0);
 	D3DXCreateCubeTextureFromFile(pDxDevice, strSkyTextureFileName.c_str(), &m_pSkyTexture);
 
-	D3DXCreateEffectFromFile(pDxDevice, "../../CORE/CORE/shaders/SkyShader.fx", 0, 0, 0, 0, &m_pEffect, 0);
+	D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/SkyShader.fx", 0, 0, 0, 0, &m_pEffect, 0);
 
 	m_hEffectTechnique	= m_pEffect->GetTechniqueByName("SkyTech");
 	m_hWVPMatrix		= m_pEffect->GetParameterByName(0, "WVP");

@@ -30,11 +30,11 @@
     <Filter Include="CORE\Source Files\GUI">
       <UniqueIdentifier>{77006854-618a-42cf-81c5-691460296194}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CORE\Source Files\TinyXML">
-      <UniqueIdentifier>{70b95a51-b669-4881-a265-a6a09c087151}</UniqueIdentifier>
+    <Filter Include="CORE\Source Files\TinyXml">
+      <UniqueIdentifier>{5004e16c-28dc-4f3e-a2d1-e8b341f965b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CORE\shaders">
-      <UniqueIdentifier>{e3dd39ce-3b38-4574-9565-44f428be53e7}</UniqueIdentifier>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{dbd7e430-90e4-46de-80b5-66119e59fddd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -52,18 +52,6 @@
     </ClCompile>
     <ClCompile Include="HeroSelection.cpp">
       <Filter>Source Files\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\tinyxmlparser.cpp">
-      <Filter>CORE\Source Files\TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\tinystr.cpp">
-      <Filter>CORE\Source Files\TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\tinyxml.cpp">
-      <Filter>CORE\Source Files\TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\tinyxmlerror.cpp">
-      <Filter>CORE\Source Files\TinyXML</Filter>
     </ClCompile>
     <ClCompile Include="..\..\CORE\CORE\IBaseMenuObject.cpp">
       <Filter>CORE\Source Files\GUI</Filter>
@@ -128,6 +116,9 @@
     <ClCompile Include="..\..\CORE\CORE\LuaFunctions.cpp">
       <Filter>CORE\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\libs\TinyXml2\tinyxml2.cpp">
+      <Filter>CORE\Source Files\TinyXml</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\CORE\CORE\AABB.h">
@@ -187,12 +178,6 @@
     <ClInclude Include="..\..\CORE\CORE\Textbox.h">
       <Filter>CORE\Source Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\CORE\CORE\tinystr.h">
-      <Filter>CORE\Source Files\TinyXML</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\CORE\CORE\tinyxml.h">
-      <Filter>CORE\Source Files\TinyXML</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Source Files\scenes</Filter>
     </ClInclude>
@@ -214,6 +199,9 @@
     <ClInclude Include="..\..\CORE\CORE\LuaFunctions.h">
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\libs\TinyXml2\tinyxml2.h">
+      <Filter>CORE\Source Files\TinyXml</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fonts\28DaysLater.ttf">
@@ -228,26 +216,25 @@
     <None Include="scripts\sounds.lua">
       <Filter>scripts</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\..\CORE\CORE\shaders\DebugGraphicsShader.fx">
-      <Filter>CORE\shaders</Filter>
+    <FxCompile Include="..\..\Resources\shaders\DebugGraphicsShader.fx">
+      <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\SkyShader.fx">
-      <Filter>CORE\shaders</Filter>
+    <FxCompile Include="..\..\Resources\shaders\SkinnedModelShader.fx">
+      <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\TerrainShader.fx">
-      <Filter>CORE\shaders</Filter>
+    <FxCompile Include="..\..\Resources\shaders\SkyShader.fx">
+      <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\Text3DShader.fx">
-      <Filter>CORE\shaders</Filter>
+    <FxCompile Include="..\..\Resources\shaders\StaticModelShader.fx">
+      <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\SkinnedModelShader.fx">
-      <Filter>CORE\shaders</Filter>
+    <FxCompile Include="..\..\Resources\shaders\TerrainShader.fx">
+      <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\StaticModelShader.fx">
-      <Filter>CORE\shaders</Filter>
+    <FxCompile Include="..\..\Resources\shaders\Text3DShader.fx">
+      <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

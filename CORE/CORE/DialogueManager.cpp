@@ -39,12 +39,15 @@ SourceFile: Dialogue.cpp
 */
 void DialogueManager::LoadDialogues(string strDialoguesFileName)
 {
-	TiXmlDocument doc(strDialoguesFileName.c_str());
+	tinyxml2::XMLDocument doc;
 	//loads the xml file
-	if(!doc.LoadFile())
+	tinyxml2::XMLError err = doc.LoadFile(strDialoguesFileName.c_str());
+
+	if( err != tinyxml2::XMLError::XML_SUCCESS )
 	{
 		MessageBox(0,"cant load xml file",0,0);
 	}
+
 	//gets the root element of the whole xml document- Dialogues
 	m_pRoot = doc.FirstChildElement("Dialogues");
 	if(m_pRoot)

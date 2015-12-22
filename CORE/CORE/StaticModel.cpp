@@ -214,7 +214,7 @@ void StaticModel::OnUpdate(float fDeltaTime)
 
 void StaticModel::BuildEffect()
 {
-	if( FAILED(D3DXCreateEffectFromFile(pDxDevice,"../../CORE/CORE/shaders/StaticModelShader.fx",0,0,D3DXSHADER_DEBUG,0,&m_pEffect,0)) )
+	if( FAILED(D3DXCreateEffectFromFile(pDxDevice,"../../Resources/shaders/StaticModelShader.fx",0,0,D3DXSHADER_DEBUG,0,&m_pEffect,0)) )
 	{
 		MessageBox(0,"Failed loading effect file in static mesh",0,0);
 		PostQuitMessage(0);

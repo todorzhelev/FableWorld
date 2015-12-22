@@ -515,7 +515,7 @@ void Terrain::SetLightVector(D3DXVECTOR3 vLightVector)
 //loads the effect parameters and the textures used by the terrain into the shader
 void Terrain::BuildEffect()
 {
-	if( FAILED(D3DXCreateEffectFromFile(pDxDevice, "../../CORE/CORE/shaders/TerrainShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0)) )
+	if( FAILED(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/TerrainShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0)) )
 	{
 		MessageBox(0,"Failed loading effect file in Terrain",0,0);
 		PostQuitMessage(0);

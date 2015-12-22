@@ -104,6 +104,7 @@
     <ClCompile Include="..\..\CORE\CORE\GameObjectManager.cpp" />
     <ClCompile Include="..\..\CORE\CORE\IBaseMenuObject.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Label.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\libs\TinyXml2\tinyxml2.cpp" />
     <ClCompile Include="..\..\CORE\CORE\LuaFunctions.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Misc.cpp" />
     <ClCompile Include="..\..\CORE\CORE\SkinnedModel.cpp" />
@@ -113,10 +114,6 @@
     <ClCompile Include="..\..\CORE\CORE\Terrain.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Textbox.cpp" />
     <ClCompile Include="..\..\CORE\CORE\TextManager.cpp" />
-    <ClCompile Include="..\..\CORE\CORE\tinystr.cpp" />
-    <ClCompile Include="..\..\CORE\CORE\tinyxml.cpp" />
-    <ClCompile Include="..\..\CORE\CORE\tinyxmlerror.cpp" />
-    <ClCompile Include="..\..\CORE\CORE\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Tree.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -136,6 +133,7 @@
     <ClInclude Include="..\..\CORE\CORE\IBaseMenuObject.h" />
     <ClInclude Include="..\..\CORE\CORE\IBaseScene.h" />
     <ClInclude Include="..\..\CORE\CORE\Label.h" />
+    <ClInclude Include="..\..\CORE\CORE\libs\TinyXml2\tinyxml2.h" />
     <ClInclude Include="..\..\CORE\CORE\LuaFunctions.h" />
     <ClInclude Include="..\..\CORE\CORE\Misc.h" />
     <ClInclude Include="..\..\CORE\CORE\SkinnedModel.h" />
@@ -145,8 +143,6 @@
     <ClInclude Include="..\..\CORE\CORE\Terrain.h" />
     <ClInclude Include="..\..\CORE\CORE\Textbox.h" />
     <ClInclude Include="..\..\CORE\CORE\TextManager.h" />
-    <ClInclude Include="..\..\CORE\CORE\tinystr.h" />
-    <ClInclude Include="..\..\CORE\CORE\tinyxml.h" />
     <ClInclude Include="..\..\CORE\CORE\Tree.h" />
     <ClInclude Include="IBaseScene.h" />
     <ClInclude Include="Game.h" />
@@ -154,31 +150,28 @@
     <ClInclude Include="MenuInGame.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Resources\scripts\level.lua" />
+    <None Include="..\..\Resources\scripts\quests.lua" />
+    <None Include="..\..\Resources\scripts\sounds.lua" />
     <None Include="fonts\28DaysLater.ttf" />
-    <None Include="scripts\animatedModels.lua" />
-    <None Include="scripts\init.lua" />
-    <None Include="scripts\level.lua" />
-    <None Include="scripts\quests.lua" />
-    <None Include="scripts\sounds.lua" />
-    <None Include="scripts\staticModels.lua" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\..\CORE\CORE\shaders\DebugGraphicsShader.fx">
+    <FxCompile Include="..\..\Resources\shaders\DebugGraphicsShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\SkinnedModelShader.fx">
+    <FxCompile Include="..\..\Resources\shaders\SkinnedModelShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkinnedModelVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\SkyShader.fx">
+    <FxCompile Include="..\..\Resources\shaders\SkyShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkyVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\StaticModelShader.fx">
+    <FxCompile Include="..\..\Resources\shaders\StaticModelShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StaticModelVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\TerrainShader.fx">
+    <FxCompile Include="..\..\Resources\shaders\TerrainShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TerrainVS</EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\Text3DShader.fx">
+    <FxCompile Include="..\..\Resources\shaders\Text3DShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
     </FxCompile>
   </ItemGroup>

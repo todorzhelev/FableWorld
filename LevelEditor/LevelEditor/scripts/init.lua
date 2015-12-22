@@ -1,3 +1,0 @@
-mainHero = "galio"
-setUpMainHero();
-

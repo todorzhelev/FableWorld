@@ -1,7 +1,7 @@
 #pragma once
 #include"Tree.h"
 #include"Label.h"
-#include"tinyxml.h"
+#include"libs/TinyXml2/tinyxml2.h"
 #include "Misc.h"
 #include <vector>
 #include <string>
@@ -64,9 +64,9 @@ public:
 
 private:
 
-	TiXmlElement* m_pRoot;
-	TiXmlElement* m_pLeaf;
-	TiXmlElement* m_pDialogue;
+	tinyxml2::XMLElement* m_pRoot;
+	tinyxml2::XMLElement* m_pLeaf;
+	tinyxml2::XMLElement* m_pDialogue;
 
 };
 

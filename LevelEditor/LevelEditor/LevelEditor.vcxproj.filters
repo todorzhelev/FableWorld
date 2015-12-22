@@ -24,16 +24,16 @@
     <Filter Include="extern">
       <UniqueIdentifier>{ec22c8ef-08a9-46ac-abe3-b93bd2dd4d86}</UniqueIdentifier>
     </Filter>
-    <Filter Include="extern\shaders">
-      <UniqueIdentifier>{1e8497d9-fa7d-4566-a10e-26f4db8d1eb9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="extern\Source Files">
       <UniqueIdentifier>{5cdd9dee-2705-4046-9d23-3e7b2a28ed66}</UniqueIdentifier>
     </Filter>
     <Filter Include="extern\Source Files\GUI">
       <UniqueIdentifier>{40683a40-c47b-4a13-9863-ec769eb0b2d6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="extern\Source Files\TinyXML">
+    <Filter Include="shaders">
+      <UniqueIdentifier>{e3461190-ba4e-4f57-a40f-519fce298773}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extern\Source Files\TinyXml2">
       <UniqueIdentifier>{3bb4f406-7f66-42c1-9c8d-effb3ae5070c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -64,18 +64,6 @@
     </ClCompile>
     <ClCompile Include="..\..\CORE\CORE\Textbox.cpp">
       <Filter>extern\Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\tinystr.cpp">
-      <Filter>extern\Source Files\TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\tinyxml.cpp">
-      <Filter>extern\Source Files\TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\tinyxmlerror.cpp">
-      <Filter>extern\Source Files\TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\tinyxmlparser.cpp">
-      <Filter>extern\Source Files\TinyXML</Filter>
     </ClCompile>
     <ClCompile Include="..\..\CORE\CORE\Camera.cpp">
       <Filter>extern\Source Files</Filter>
@@ -125,6 +113,9 @@
     <ClCompile Include="..\..\CORE\CORE\StaticModel.cpp">
       <Filter>extern\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\libs\TinyXml2\tinyxml2.cpp">
+      <Filter>extern\Source Files\TinyXml2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\CORE\CORE\Button.h">
@@ -141,12 +132,6 @@
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\Textbox.h">
       <Filter>extern\Source Files\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\CORE\CORE\tinystr.h">
-      <Filter>extern\Source Files\TinyXML</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\CORE\CORE\tinyxml.h">
-      <Filter>extern\Source Files\TinyXML</Filter>
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\AABB.h">
       <Filter>extern\Source Files</Filter>
@@ -211,48 +196,42 @@
     <ClInclude Include="MenuInGame.h">
       <Filter>Source Files\scenes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\libs\TinyXml2\tinyxml2.h">
+      <Filter>extern\Source Files\TinyXml2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fonts\28DaysLater.ttf">
       <Filter>fonts</Filter>
     </None>
-    <None Include="scripts\animatedModels.lua">
+    <None Include="..\..\Resources\scripts\level.lua">
       <Filter>scripts</Filter>
     </None>
-    <None Include="scripts\init.lua">
+    <None Include="..\..\Resources\scripts\quests.lua">
       <Filter>scripts</Filter>
     </None>
-    <None Include="scripts\quests.lua">
-      <Filter>scripts</Filter>
-    </None>
-    <None Include="scripts\sounds.lua">
-      <Filter>scripts</Filter>
-    </None>
-    <None Include="scripts\staticModels.lua">
-      <Filter>scripts</Filter>
-    </None>
-    <None Include="scripts\level.lua">
+    <None Include="..\..\Resources\scripts\sounds.lua">
       <Filter>scripts</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\..\CORE\CORE\shaders\DebugGraphicsShader.fx">
-      <Filter>extern\shaders</Filter>
+    <FxCompile Include="..\..\Resources\shaders\DebugGraphicsShader.fx">
+      <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\SkinnedModelShader.fx">
-      <Filter>extern\shaders</Filter>
+    <FxCompile Include="..\..\Resources\shaders\SkinnedModelShader.fx">
+      <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\SkyShader.fx">
-      <Filter>extern\shaders</Filter>
+    <FxCompile Include="..\..\Resources\shaders\SkyShader.fx">
+      <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\StaticModelShader.fx">
-      <Filter>extern\shaders</Filter>
+    <FxCompile Include="..\..\Resources\shaders\StaticModelShader.fx">
+      <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\TerrainShader.fx">
-      <Filter>extern\shaders</Filter>
+    <FxCompile Include="..\..\Resources\shaders\TerrainShader.fx">
+      <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\CORE\CORE\shaders\Text3DShader.fx">
-      <Filter>extern\shaders</Filter>
+    <FxCompile Include="..\..\Resources\shaders\Text3DShader.fx">
+      <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

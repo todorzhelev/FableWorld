@@ -463,7 +463,7 @@ void SkinnedModel::BuildBoundingBox()
 
 void SkinnedModel::BuildEffect()
 {
-	if(FAILED(D3DXCreateEffectFromFile(pDxDevice,"../../CORE/CORE/shaders/SkinnedModelShader.fx",0,0,D3DXSHADER_DEBUG,0,&m_pEffect,0)))
+	if(FAILED(D3DXCreateEffectFromFile(pDxDevice,"../../Resources/shaders/SkinnedModelShader.fx",0,0,D3DXSHADER_DEBUG,0,&m_pEffect,0)))
 	{
 		MessageBox(0,"Failed loading effect file in SkinnedModel",0,0);
 		PostQuitMessage(0);
@@ -486,7 +486,7 @@ void SkinnedModel::BuildEffect()
 //sets paramateres needed in the effect file for the titles
 void SkinnedModel::BuildEffectForTitles()
 {
-	D3DXCreateEffectFromFile(pDxDevice, "../../CORE/CORE/shaders/Text3DShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pTitlesEffect, 0);
+	D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/Text3DShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pTitlesEffect, 0);
 	m_hTitlesEffectTechnique = m_pTitlesEffect->GetTechniqueByName("text3DTech");
 	m_hTitlesWVPMatrix  	 = m_pTitlesEffect->GetParameterByName(0, "WVP");
 }
