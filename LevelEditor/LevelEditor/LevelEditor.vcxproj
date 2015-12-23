@@ -144,7 +144,6 @@
     <ClInclude Include="..\..\CORE\CORE\Textbox.h" />
     <ClInclude Include="..\..\CORE\CORE\TextManager.h" />
     <ClInclude Include="..\..\CORE\CORE\Tree.h" />
-    <ClInclude Include="IBaseScene.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuInGame.h" />

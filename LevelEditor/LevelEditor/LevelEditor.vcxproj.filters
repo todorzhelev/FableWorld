@@ -187,9 +187,6 @@
     <ClInclude Include="Game.h">
       <Filter>Source Files\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="IBaseScene.h">
-      <Filter>Source Files\scenes</Filter>
-    </ClInclude>
     <ClInclude Include="Menu.h">
       <Filter>Source Files\scenes</Filter>
     </ClInclude>
