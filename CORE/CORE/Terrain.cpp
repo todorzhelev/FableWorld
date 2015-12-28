@@ -199,9 +199,7 @@ void Terrain::GenerateTerrainMesh()
 
 	mesh->UnlockVertexBuffer();
 
-	
-
-	releaseX(mesh);
+	mesh->Release();
 }
 
 

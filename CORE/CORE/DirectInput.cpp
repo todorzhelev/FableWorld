@@ -35,11 +35,11 @@ DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags)
 
 DirectInput::~DirectInput()
 {
-	releaseX(m_pDirectInput);
+	m_pDirectInput->Release();
 	m_pKeyboad->Unacquire();
-	releaseX(m_pKeyboad);
+	m_pKeyboad->Release();
 	m_pMouse->Unacquire();
-	releaseX(m_pMouse);
+	m_pMouse->Release();
 }
 
 /////////////////////////////////////////////////////////////////////////

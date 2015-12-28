@@ -873,8 +873,8 @@ HRESULT AllocateHierarchy::DestroyMeshContainer(D3DXMESHCONTAINER* MeshContainer
 
 	delete[] MeshContainer->pMaterials;
 
-	releaseX(MeshContainer->MeshData.pMesh);
-	releaseX(MeshContainer->pSkinInfo);
+	MeshContainer->MeshData.pMesh->Release();
+	MeshContainer->pSkinInfo->Release();
  
 	delete MeshContainer;
  
@@ -934,7 +934,7 @@ bool SkinnedModel::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX
 		DWORD numHits = 0;
 
 		D3DXIntersect(pMeshContainer->MeshData.pMesh, &vOrigin, &vDir, &hit, &faceIndex, &u, &v, &dist, &allhits, &numHits);
-		releaseX(allhits);
+		allhits->Release();
 
 		nDistance = dist;
 

@@ -23,9 +23,9 @@ Sky::Sky(string strSkyTextureFileName, float fSkyRadius)
 
 Sky::~Sky()
 {
-	releaseX(m_pSkyMesh);
-	releaseX(m_pSkyTexture);
-	releaseX(m_pEffect);
+	m_pSkyMesh->Release();
+	m_pSkyTexture->Release();
+	m_pEffect->Release();
 }
 
 

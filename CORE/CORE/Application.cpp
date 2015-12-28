@@ -51,8 +51,8 @@ Application::Application(HINSTANCE hInstance, string strWindowTitle, D3DDEVTYPE 
 
 Application::~Application()
 {
-	releaseX(m_pD3DObject);
-	releaseX(pDxDevice);
+	m_pD3DObject->Release();
+	pDxDevice->Release();
 }
 
 /////////////////////////////////////////////////////////////////////////
