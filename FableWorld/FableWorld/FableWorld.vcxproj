@@ -155,10 +155,10 @@
     <ClInclude Include="MenuInGame.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Resources\scripts\level.lua" />
+    <None Include="..\..\Resources\scripts\quests.lua" />
+    <None Include="..\..\Resources\scripts\sounds.lua" />
     <None Include="fonts\28DaysLater.ttf" />
-    <None Include="scripts\level.lua" />
-    <None Include="scripts\quests.lua" />
-    <None Include="scripts\sounds.lua" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Resources\shaders\DebugGraphicsShader.fx">

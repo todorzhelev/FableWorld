@@ -207,13 +207,13 @@
     <None Include="fonts\28DaysLater.ttf">
       <Filter>fonts</Filter>
     </None>
-    <None Include="scripts\level.lua">
+    <None Include="..\..\Resources\scripts\level.lua">
       <Filter>scripts</Filter>
     </None>
-    <None Include="scripts\quests.lua">
+    <None Include="..\..\Resources\scripts\quests.lua">
       <Filter>scripts</Filter>
     </None>
-    <None Include="scripts\sounds.lua">
+    <None Include="..\..\Resources\scripts\sounds.lua">
       <Filter>scripts</Filter>
     </None>
   </ItemGroup>

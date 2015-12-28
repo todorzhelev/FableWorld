@@ -29,11 +29,7 @@ TextManager::TextManager():m_fFPS(0.0)
 	//_tcscpy_s(fontDesc.FaceName, _T("Times New Roman"));
 
 	HRESULT hr = D3DXCreateFontIndirect(pDxDevice, &fontDesc, &m_pFont2D);
-	if (FAILED(hr))
-	{
-		std::string message = "Could not load font \nError string:" + string(DXGetErrorString(hr)) + "\nError description:" + DXGetErrorDescription(hr);
-		MessageBox(0, message.c_str(), "Error", MB_CANCELTRYCONTINUE | MB_ICONEXCLAMATION);
-	}
+	CheckHR(hr);
 }
 
 
