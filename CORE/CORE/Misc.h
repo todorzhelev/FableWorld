@@ -2,10 +2,16 @@
 #include"Application.h"
 using namespace std;
 
-#define releaseX(x) { if( x ){ (x)->Release();(x) = nullptr; } }
+#define ReleaseX(X) __ReleaseX(X) 
+inline void __ReleaseX(IUnknown* resource)
+{
+	if(resource != nullptr)
+	{
+		resource->Release();
+	}
+}
 
 #define CheckHR(X) __CheckHR(__FILE__, __LINE__, X)
-
 inline void __CheckHR(std::string file, int line, HRESULT hr)
 {
 	if (FAILED(hr))

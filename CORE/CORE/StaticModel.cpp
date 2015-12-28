@@ -529,7 +529,7 @@ float StaticModel::GetDistanceToPickedObject()
 		ID3DXBuffer* allhits = 0;
 		DWORD numHits = 0;
 		D3DXIntersect(m_pMesh, &vOrigin, &vDir, &hit, &faceIndex, &u, &v, &dist, &allhits, &numHits);
-		releaseX(allhits);
+		ReleaseX(allhits);
 
 		return dist;
 	}
