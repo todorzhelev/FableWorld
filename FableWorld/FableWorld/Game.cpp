@@ -554,7 +554,7 @@ void Game::OnRender()
 				{
 					if (BB.Collide(BB1))
 					{
-						cout << "COLLIDING" << object->GetName() << endl;
+						//cout << "COLLIDING" << object->GetName() << endl;
 					}
 				}
 			}

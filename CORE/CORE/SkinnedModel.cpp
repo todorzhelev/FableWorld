@@ -210,6 +210,7 @@ void SkinnedModel::PlayAnimation()
 {
 	if( strcmp(m_strOldAnimationName, m_strAnimationName) != 0 )
 	{
+
 		m_pAnimController->GetAnimationSetByName(m_strAnimationName, &m_pNewAnimationSet);
 		m_pAnimController->SetTrackAnimationSet(m_nNewAnimationTrack, m_pNewAnimationSet);
 
@@ -492,6 +493,26 @@ void SkinnedModel::OnUpdate(float fDeltaTime)
 	}
 
 	PlayAnimation();
+
+	D3DXTRACK_DESC desc;
+	m_pAnimController->GetTrackDesc(m_nNewAnimationTrack, &desc);
+	ID3DXAnimationSet* set = nullptr;
+	m_pAnimController->GetAnimationSetByName(m_strAnimationName, &set);
+
+	std::cout << this->m_strModelName << " " << m_pAnimController->GetTime() << " speed:" << desc.Speed << " position:" << desc.Position << " weight:" << desc.Weight << " enable:" << desc.Enable << " priority:" << desc.Priority << " pos:" << set->GetPeriod() << std::endl;
+
+	if (m_pAnimController->GetTime() >= set->GetPeriod())
+	{
+		if (m_bPlayOnceAndHalt)
+		{
+			m_pAnimController->KeyTrackSpeed(m_nNewAnimationTrack, 0.0f, 0, set->GetPeriod(), D3DXTRANSITION_LINEAR);
+			m_pAnimController->KeyTrackWeight(m_nNewAnimationTrack, 0.0f, 0, set->GetPeriod(), D3DXTRANSITION_LINEAR);
+			m_bPlayOnceAndHalt = false;
+		}
+
+		m_pAnimController->ResetTime();
+	}
+
 }
 
 /////////////////////////////////////////////////////////////////////////
