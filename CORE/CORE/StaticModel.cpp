@@ -144,7 +144,7 @@ void StaticModel::LoadGameObject()
 			}
 		}
 	}
-	pMaterialBuffer->Release();
+	ReleaseX(pMaterialBuffer);
 
 	//create bounding box
 	BuildBoundingBox();
@@ -311,7 +311,7 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 	GameObject* pBindedObject = this;
 
 	//the bone in the animated model's hierarchy
-	FrameEx* pBone = static_cast<FrameEx*>(D3DXFrameFind(pSkinnedModel->GetRootFrame(), bone.c_str()));
+	Bone* pBone = static_cast<Bone*>(D3DXFrameFind(pSkinnedModel->GetRootFrame(), bone.c_str()));
 
 	//testing variables
 	/*static float angleX = 33.72;
@@ -411,7 +411,7 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,string bone)
 	D3DXMATRIX AnimatedModelCombinedMatrix = SA*R1A*(TA);
 
 	//combined matrix for the bone
-	D3DXMATRIX BoneCombinedMatrix = pBone->TransformationMatrix*pBone->ToRootMatrix;
+	D3DXMATRIX BoneCombinedMatrix = pBone->TransformationMatrix*pBone->m_toRootMatrix;
 
 	m_pEffect->SetTechnique(m_hEffectTechnique);
 

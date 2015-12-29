@@ -59,8 +59,8 @@ Game::Game()
 
 	pSky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
-	//pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
-	pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 1.0f, 1.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	//pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 1.0f, 1.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//the direction to the sun
 	D3DXVECTOR3 lightVector(20.0f, 300.0f, 50.0f);
@@ -304,27 +304,29 @@ void Game::OnUpdate(float dt)
 			m_bIsEnemyHealthBarVisible = true;
 			gameObject->SetAttacked(true);
 			gameObject->SetAttackerName(mainHero);
-			pMainHero->PlayAnimationOnce("attack_1");
-			if( (pMainHero->IsAttacking()) )
-			{
-				m_rEnemyHealthBarRectangle.right-=70;
-			}
+			//TODO: selecte attack 1 or attack 2 at random
+
+			/*int num = rand() % 2;
+			const char * attackAnimation = num % 2 == 0 ? "attack_1" : "attack_2";*/
+			pMainHero->PlayAnimation("attack_2",true,false);
+
+			m_rEnemyHealthBarRectangle.right-=0.001;
 		}
 		
 		// enemy AI
-		if( gameObject->IsAttacked() && IsObjectNear(pMainHero,gameObject))
+		if( gameObject->IsAttacked() && IsObjectNear(pMainHero,gameObject) && 
+			!gameObject->IsDead() && !pMainHero->IsDead())
 		{
 			if( m_rHealthBarRectangle.right > 0.0 )
 			{
 				pMainHero->SetAttackerName(gameObject->GetName());
 				SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(gameObject);
 
-				pSkinnedModel->PlayAnimationOnce("attack_1");
+				/*int num = rand() % 2;
+				const char* attackAnimation = num % 2 == 0 ? "attack_1" : "attack_2";*/
+				pSkinnedModel->PlayAnimation("attack_2",true,false);
 				
-				if( (gameObject->IsAttacking()) )
-				{
-					m_rHealthBarRectangle.right-=70;
-				}
+				m_rHealthBarRectangle.right-=0.001;
 			}
 			else
 			{
@@ -359,7 +361,7 @@ void Game::OnUpdate(float dt)
 			)
 		{
 			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(gameObject);
-			pSkinnedModel->PlayAnimation("run");
+			pSkinnedModel->PlayAnimation("run",false,false);
 			
 			D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
 
@@ -416,28 +418,29 @@ void Game::MoveObject(string objectTitle, float dt)
 	
 	if( pDinput->IsKeyDown(DIK_W) )
 	{
-		pSkinnedModel->PlayAnimation("run");
+		pSkinnedModel->PlayAnimation("run",false,false);
 		dir += pSkinnedModel->GetLookVector();
 	}
 	if( pDinput->IsKeyDown(DIK_S) )
 	{
-		pSkinnedModel->PlayAnimation("run");
+		pSkinnedModel->PlayAnimation("run", false, false);
 		dir -= pSkinnedModel->GetLookVector();
 	}
 	if( pDinput->IsKeyDown(DIK_A) )
 	{
-		pSkinnedModel->PlayAnimation("run");
+		pSkinnedModel->PlayAnimation("run", false, false);
 		dir -= pSkinnedModel->GetRightVector();
 	}
 	if( pDinput->IsKeyDown(DIK_D) )
 	{
-		pSkinnedModel->PlayAnimation("run");
+		pSkinnedModel->PlayAnimation("run", false, false);
 		dir += pSkinnedModel->GetRightVector();
 	}
 
-	if( !pDinput->IsKeyDown(DIK_W) && !pDinput->IsKeyDown(DIK_S) && !pDinput->IsKeyDown(DIK_A) && !pDinput->IsKeyDown(DIK_D) )
+	if( !pDinput->IsKeyDown(DIK_W) && !pDinput->IsKeyDown(DIK_S) && !pDinput->IsKeyDown(DIK_A) && !pDinput->IsKeyDown(DIK_D) &&
+		!pDinput->IsMouseButtonDown(0))
 	{
-		pSkinnedModel->PlayAnimation("idle");
+		pSkinnedModel->PlayAnimation("idle", false, false);
 	}
 	
 	if (camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithoutPressedMouse)
@@ -512,15 +515,12 @@ void Game::ManageHealthBars()
 
 	if( m_rHealthBarRectangle.right <= 0.0 )
 	{
-		pMainHero->PlayAnimationOnceAndStop("dead");
+		pMainHero->PlayAnimation("dead",false,true);
 		pMainHero->SetDead(true);
-		
-		//set the animation of the attacked to idle, because sometimes got bugged and plays run animaiton
-		pEnemy->PlayAnimation("idle");
 	}
 	if( m_rEnemyHealthBarRectangle.right <= 0.0 )
 	{
-		pEnemy->PlayAnimationOnceAndStop("dead");
+		pEnemy->PlayAnimation("dead",false,true);
 		pEnemy->SetDead(true);
 	}
 }
