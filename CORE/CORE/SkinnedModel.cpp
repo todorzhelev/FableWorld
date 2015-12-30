@@ -1,7 +1,6 @@
 #include"SkinnedModel.h"
 #include"StaticModel.h"
 
-//TODO: substitute frame with bone. i think it is the same
 /////////////////////////////////////////////////////////////////////////
 
 SkinnedModel::SkinnedModel()
@@ -27,6 +26,10 @@ SkinnedModel::SkinnedModel()
 	m_whiteMaterial.m_fSpecularPower 	= 48.0f;
 
 	m_bShouldRenderTitles = true;
+	m_strAnimationName = defaultAnimationName;
+	m_strOldAnimationName = m_strAnimationName;
+	m_bPlayOnce = false;
+	m_bPlayOnceAndHalt = false;
 
 	BuildEffect();
 	BuildEffectForTitles();
@@ -93,13 +96,17 @@ SkinnedModel::SkinnedModel(string strModelName, string ModelFileName, string str
 
 	m_bIsAttacked = false;
 	m_bIsAttacking = false;
-	m_nCurrentAnimTrack = 0;
-	m_nNewAnimTrack = 1;
+	m_nCurrentAnimationTrack = 0;
+	m_nNewAnimationTrack = 1;
 	m_bIsSwitched = false;
 	m_bIsDead = false;
 	m_bIsPicked = false;
 	m_bHasDialogue = false;
 	m_strAttackerName = "";
+	m_strAnimationName = defaultAnimationName;
+	m_strOldAnimationName = m_strAnimationName;
+	m_bPlayOnce = false;
+	m_bPlayOnceAndHalt = false;
 
 	m_eGameObjectType = EGameObjectType_Skinned;
 
@@ -120,8 +127,7 @@ void SkinnedModel::LoadGameObject()
 		return;
 	}
 
-	//finds the bone that holds the only mesh.In skinned meshes there is just one model
-	//which is controlled by the bones hiearchy
+	//there should be only one bone containing the whole skinned mesh
 	D3DXFRAME* pFrame = FindFrameWithMesh(m_pRoot);
 
 	if( !pFrame ) 
@@ -147,20 +153,29 @@ void SkinnedModel::LoadGameObject()
 
 	//set the idle animation on the current track and mantain one more track, 
 	//which we will use later to switch to attack or dead animations
-	m_pAnimController->SetTrackEnable( m_nNewAnimTrack, true ); 
-	m_pAnimController->SetTrackEnable( m_nCurrentAnimTrack, true );
-	m_pAnimController->GetAnimationSetByName("idle",&m_pCurrentAnimSet);
-	m_pAnimController->SetTrackAnimationSet(m_nCurrentAnimTrack,m_pCurrentAnimSet);
-	m_pAnimController->KeyTrackSpeed( m_nCurrentAnimTrack, 1.0f, 0.0f, m_fTransTimeForAttack, D3DXTRANSITION_LINEAR );  
-	m_pAnimController->KeyTrackWeight( m_nCurrentAnimTrack, 1.0f, 0.0f, m_fTransTimeForAttack, D3DXTRANSITION_LINEAR ); 
- 
-	m_pAnimController->KeyTrackSpeed( m_nNewAnimTrack, 0.0f, 0.0f, m_fTransTimeForAttack, D3DXTRANSITION_LINEAR );  
-	m_pAnimController->KeyTrackWeight( m_nNewAnimTrack, 0.0f, 0.0f, m_fTransTimeForAttack, D3DXTRANSITION_LINEAR );
+	m_pAnimController->SetTrackEnable( m_nNewAnimationTrack, true ); 
+	m_pAnimController->SetTrackEnable(m_nCurrentAnimationTrack, true );
+	m_pAnimController->GetAnimationSetByName("idle",&m_pCurrentAnimationSet);
+	m_pAnimController->SetTrackAnimationSet(m_nCurrentAnimationTrack,m_pCurrentAnimationSet);
+
+	SetUpTrackData(m_nCurrentAnimationTrack, 1.0, 1.0, m_fTransTimeForAttack);
+	SetUpTrackData(m_nNewAnimationTrack, 0.0, 0.0, m_fTransTimeForAttack);
 	
 	//after the mesh is found it is then changed in order to become skinned mesh
 	BuildSkinnedModel(pMeshContainer->MeshData.pMesh);
 
-	BuildToRootMatricesPtrArray();
+	InitBoneToRootMatricesPointersArray();
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void SkinnedModel::SetUpTrackData(int track, float speedValue, float weightValue, float transitionTime)
+{
+	//m_pAnimController->SetTrackSpeed(track, speedValue);
+	//m_pAnimController->SetTrackWeight(track, weightValue);
+
+	m_pAnimController->KeyTrackSpeed(track, speedValue, m_pAnimController->GetTime(), transitionTime, D3DXTRANSITION_LINEAR);
+	m_pAnimController->KeyTrackWeight(track, weightValue, m_pAnimController->GetTime(), transitionTime, D3DXTRANSITION_LINEAR);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -172,91 +187,38 @@ SkinnedModel::~SkinnedModel()
 /////////////////////////////////////////////////////////////////////////
 
 //returns the final matrices for each bone which are passed to the shader for rendering.
-//We are returning the adress of the first element of the array, because in the shader we need the beginning of the array and the size of it
+//We are returning the adress of the first element of the array, because in the shader we need only the beginning address of the array
+//since the elements are in consecutive order
 D3DXMATRIX* SkinnedModel::GetFinalBonesMatricesArray()
 {
-	return &m_vFinalBonesMatrices[0];
+	return &m_vFinalBonesMatrices.front();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-//sets the animation index on the mesh at the current track. 
-//This function repeats the animation, i.e. after the animation set ended it starts from the beginning and so on.
-void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
+void SkinnedModel::PlayAnimation(LPCSTR animationName, bool bPlayOnce, bool bPlayOnceAndHalt )
 {
-	m_pAnimController->GetAnimationSetByName(strAnimationName,&m_pCurrentAnimSet);
-	m_pAnimController->SetTrackAnimationSet(m_nCurrentAnimTrack,m_pCurrentAnimSet);
+	m_strOldAnimationName = m_strAnimationName;
+	m_strAnimationName = animationName;
+	m_bPlayOnce = bPlayOnce;
+	m_bPlayOnceAndHalt = bPlayOnceAndHalt;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-//plays animation only once then stops( used for dead animation )
-//The idea is to slightly move from the current track to the new one, holding the new animation.
-//After the new animation is played to the end, we stop it. 
-//This way the two animation tracks are with 0.0 weight and thus no animation is played.
-void SkinnedModel::PlayAnimationOnceAndStop(LPCSTR strAnimationName)
+void SkinnedModel::PlayAnimation()
 {
-	m_pAnimController->GetAnimationSetByName(strAnimationName,&m_pSecondAnimSet);
-	m_pAnimController->SetTrackAnimationSet(m_nNewAnimTrack,m_pSecondAnimSet);
+	if( strcmp(m_strOldAnimationName, m_strAnimationName) != 0 )
+	{
 
-	m_pAnimController->KeyTrackSpeed( m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fTransTimeForAttack, D3DXTRANSITION_LINEAR );
-	m_pAnimController->KeyTrackWeight( m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fTransTimeForAttack, D3DXTRANSITION_LINEAR );
-	
-	m_pAnimController->KeyTrackSpeed( m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fTransTimeForAttack, D3DXTRANSITION_LINEAR );  
-	m_pAnimController->KeyTrackWeight( m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fTransTimeForAttack, D3DXTRANSITION_LINEAR );
+		m_pAnimController->GetAnimationSetByName(m_strAnimationName, &m_pNewAnimationSet);
+		m_pAnimController->SetTrackAnimationSet(m_nNewAnimationTrack, m_pNewAnimationSet);
 
-	D3DXTRACK_DESC td;
-	m_pAnimController->GetTrackDesc(m_nNewAnimTrack,&td);
-	if( td.Position >= m_pSecondAnimSet->GetPeriod() - 0.35 )
-	{ 
-		m_pAnimController->KeyTrackSpeed( m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fTransTimeForIdle, D3DXTRANSITION_LINEAR );  
-		m_pAnimController->KeyTrackWeight( m_nNewAnimTrack, 0.1f, m_pAnimController->GetTime(), m_fTransTimeForIdle, D3DXTRANSITION_LINEAR );
+		SetUpTrackData(m_nNewAnimationTrack, 1.0, 1.0, m_fTransTimeForAttack);
+		SetUpTrackData(m_nCurrentAnimationTrack, 0.0, 0.0, m_fTransTimeForAttack);
+
+		m_strOldAnimationName = m_strAnimationName;
 	}
-
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-//plays animation only once.switches to idle animation( used for transition between idle and attack )
-//rand is used so it can be randomly determined which one from the 2 attack animations to be played.
-void SkinnedModel::PlayAnimationOnce(LPCSTR strAnimationName)
-{
-		srand(static_cast<unsigned int>(time(NULL)));
-
-		int i = rand()%2+1;
-		if( i==2 )
-		{
-			m_pAnimController->GetAnimationSetByName("attack_2",&m_pSecondAnimSet);
-			m_pAnimController->SetTrackAnimationSet(m_nNewAnimTrack,m_pSecondAnimSet);
-		}
-		else if( i==1 )
-		{
-			m_pAnimController->GetAnimationSetByName("attack_1",&m_pSecondAnimSet);
-			m_pAnimController->SetTrackAnimationSet(m_nNewAnimTrack,m_pSecondAnimSet);
-		}
-
-		//switches from the current animation for instance idle to the new one which must be played once only
-		D3DXTRACK_DESC td;
-		m_pAnimController->GetTrackDesc(m_nNewAnimTrack,&td);
-		if( !m_bIsSwitched )
-		{
-			m_pAnimController->KeyTrackSpeed( m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fTransTimeForAttack, D3DXTRANSITION_LINEAR );
-			m_pAnimController->KeyTrackWeight( m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fTransTimeForAttack, D3DXTRANSITION_LINEAR );
-
-			m_pAnimController->KeyTrackSpeed( m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fTransTimeForAttack, D3DXTRANSITION_LINEAR );  
-			m_pAnimController->KeyTrackWeight( m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fTransTimeForAttack, D3DXTRANSITION_LINEAR );
-
-			m_bIsSwitched = true;
-			m_bIsAttacking = true;
-			//with this code we just transit from idle to attack. At this moment the attack animation is played, but if the player
-			//releases the mouse button, the attack animation must be switched to idle.
-			//so we wait till the animaiton is over and next part that switches from attack to idle is finished in onUpdate
-		}
-		else 
-		{
-			m_bIsAttacking = false;
-		}
-	
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -266,16 +228,17 @@ D3DXFRAME* SkinnedModel::FindFrameWithMesh(D3DXFRAME* frame)
 {
 	if( frame->pMeshContainer )
 	{
-		if( frame->pMeshContainer->MeshData.pMesh != NULL )
+		if( frame->pMeshContainer->MeshData.pMesh != nullptr)
 		{
 			return frame;
 		}
 	}
 
-	D3DXFRAME* pFrame = NULL;
+	D3DXFRAME* pFrame = nullptr;
 	if(frame->pFrameSibling)
 	{
-		if( pFrame = FindFrameWithMesh(frame->pFrameSibling) )	
+		pFrame = FindFrameWithMesh(frame->pFrameSibling);
+		if( pFrame != nullptr )
 		{
 			return pFrame;
 		}
@@ -283,13 +246,15 @@ D3DXFRAME* SkinnedModel::FindFrameWithMesh(D3DXFRAME* frame)
 
 	if(frame->pFrameFirstChild)
 	{
-		if( pFrame = FindFrameWithMesh(frame->pFrameFirstChild) )
+		pFrame = FindFrameWithMesh(frame->pFrameFirstChild);
+
+		if( pFrame != nullptr )
 		{
 			return pFrame;
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -336,18 +301,20 @@ Stores pointers to the to root matrices of all the bones in the skinned mesh
 The to root matrices will be updated every frame in OnUpdate, and we will have
 quick access to these matrices just by index, instead of using D3DXFrameFind every time in OnUpdate
 These matrices are needed to calculate the final matrix transformation for the vertices
+The function is called only once when the skinned model is loaded, so that we can store pointers
+to the to root matrices
 */
-void SkinnedModel::BuildToRootMatricesPtrArray()
+void SkinnedModel::InitBoneToRootMatricesPointersArray()
 {
 	for(UINT i = 0; i < m_nNumBones; ++i)
 	{
 		const char* boneName = m_pSkinInfo->GetBoneName(i);
 		D3DXFRAME* pFrame	 = D3DXFrameFind(m_pRoot, boneName);
 		
-		if( pFrame )
+		if(pFrame)
 		{
-			FrameEx* pFrameEx = static_cast<FrameEx*>( pFrame );
-			m_vToRootMatrices[i] = &pFrameEx->ToRootMatrix;
+			Bone* pBone = static_cast<Bone*>( pFrame );
+			m_vToRootMatrices[i] = &pBone->m_toRootMatrix;
 		}
 	}
 }
@@ -387,17 +354,17 @@ We do this, because we want when the root is moved all bones in the hierarchy to
 bone5 doesnt have children or siblings, so we continue on bone1 with the same algorithm.
 
 */
-void SkinnedModel::BuildToRootMatrices(FrameEx* pBone, D3DXMATRIX& ParentBoneToRootMatrix) 
+void SkinnedModel::BuildToRootMatrices(Bone* pBone, D3DXMATRIX& ParentBoneToRootMatrix) 
 {
 	//gets the local transformation matrix of the current bone
     D3DXMATRIX BoneLocalMatrix = pBone->TransformationMatrix;
 
-	D3DXMATRIX& ToRootMatrix = pBone->ToRootMatrix;
+	D3DXMATRIX& ToRootMatrix = pBone->m_toRootMatrix;
 	//combines the local transformation matrix of the current bone with the to root matrix of the parent bone
     ToRootMatrix = BoneLocalMatrix * ParentBoneToRootMatrix;
 
-    FrameEx* pSibling	 = (FrameEx*)pBone->pFrameSibling;
-    FrameEx* pFirstChild = (FrameEx*)pBone->pFrameFirstChild;
+	Bone* pSibling	  = static_cast<Bone*>(pBone->pFrameSibling);
+	Bone* pFirstChild = static_cast<Bone*>(pBone->pFrameFirstChild);
 
 	//if this bone has sibling pass the same ParentBoneToRootMatrix as we used in this bone
 	if( pSibling )
@@ -495,34 +462,12 @@ void SkinnedModel::BuildEffectForTitles()
 
 void SkinnedModel::OnUpdate(float fDeltaTime)
 {
-	//this if is the second part of the algorithm for playing animation just once.
-	//after the function for playing animation once starts playing the next animation(for instance we play attack animation)
-	//we need time so the attack animation finishes and we can transit to idle animation again.
-	//thus we need a function that is invoked every frame and therefore playAnimationOnce won't do the job,
-	//since its invoked only when the mouse button is down.
-	if( m_bIsSwitched )
-	{
-		D3DXTRACK_DESC td;
-		m_pAnimController->GetTrackDesc(m_nNewAnimTrack,&td);
-		//after the attack animation has finished we slightly make transition to idle animation.
-		if( td.Position >= m_pSecondAnimSet->GetPeriod() )
-		{ 
-				m_pAnimController->KeyTrackSpeed( m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fTransTimeForIdle, D3DXTRANSITION_LINEAR );  
-				m_pAnimController->KeyTrackWeight( m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fTransTimeForIdle, D3DXTRANSITION_LINEAR ); 
-
-				m_pAnimController->KeyTrackSpeed( m_nCurrentAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fTransTimeForIdle, D3DXTRANSITION_LINEAR );  
-				m_pAnimController->KeyTrackWeight( m_nCurrentAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fTransTimeForIdle, D3DXTRANSITION_LINEAR );
-				m_bIsSwitched = false;
-				m_pAnimController->SetTrackPosition( m_nNewAnimTrack,0.0);
-		}
-	}
-
 	m_pAnimController->AdvanceTime(fDeltaTime, NULL);
 	
 	// Recurse down the tree and builds the toRoot matrix for every bone
 	D3DXMATRIX IdentityMatrix;
 	D3DXMatrixIdentity(&IdentityMatrix);
-	BuildToRootMatrices((FrameEx*)m_pRoot, IdentityMatrix);
+	BuildToRootMatrices((Bone*)m_pRoot, IdentityMatrix);
 
 	//every vertex in the skinned mesh is initially in bind space and has to go through these transformations:
 	//Bind Space --> (Offset transformation) Bone Space --> (To root transformation) Model Space
@@ -546,6 +491,28 @@ void SkinnedModel::OnUpdate(float fDeltaTime)
 		//updates the height of the model, so it can sit above the ground
 		m_vPos.y = pTerrain->GetHeight(m_vPos.x,m_vPos.z) + 0.5f;
 	}
+
+	PlayAnimation();
+
+	D3DXTRACK_DESC desc;
+	m_pAnimController->GetTrackDesc(m_nNewAnimationTrack, &desc);
+	ID3DXAnimationSet* set = nullptr;
+	m_pAnimController->GetAnimationSetByName(m_strAnimationName, &set);
+
+	std::cout << this->m_strModelName << " " << m_pAnimController->GetTime() << " speed:" << desc.Speed << " position:" << desc.Position << " weight:" << desc.Weight << " enable:" << desc.Enable << " priority:" << desc.Priority << " pos:" << set->GetPeriod() << std::endl;
+
+	if (m_pAnimController->GetTime() >= set->GetPeriod())
+	{
+		if (m_bPlayOnceAndHalt)
+		{
+			m_pAnimController->KeyTrackSpeed(m_nNewAnimationTrack, 0.0f, 0, set->GetPeriod(), D3DXTRANSITION_LINEAR);
+			m_pAnimController->KeyTrackWeight(m_nNewAnimationTrack, 0.0f, 0, set->GetPeriod(), D3DXTRANSITION_LINEAR);
+			m_bPlayOnceAndHalt = false;
+		}
+
+		m_pAnimController->ResetTime();
+	}
+
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -772,24 +739,15 @@ void SkinnedModel::RenderBoundingBox()
 //Allocates memory for single frame
 HRESULT AllocateHierarchy::CreateFrame(PCTSTR Name, D3DXFRAME** NewFrame)
 {
-	FrameEx* pFrameEx = new FrameEx();
+	Bone* bone = new Bone(Name);
 
-	if( Name )	
-	{
-		CopyString(Name, &pFrameEx->Name);
-	}
-	else	
-	{
-		CopyString(NULL, &pFrameEx->Name);
-	}
+	bone->pMeshContainer = nullptr;
+	bone->pFrameSibling = nullptr;
+	bone->pFrameFirstChild = nullptr;
+	D3DXMatrixIdentity(&bone->TransformationMatrix);
+	D3DXMatrixIdentity(&bone->m_toRootMatrix);
 
-	pFrameEx->pMeshContainer = 0;
-	pFrameEx->pFrameSibling = 0;
-	pFrameEx->pFrameFirstChild = 0;
-	D3DXMatrixIdentity(&pFrameEx->TransformationMatrix);
-	D3DXMatrixIdentity(&pFrameEx->ToRootMatrix);
-
-	*NewFrame = pFrameEx;
+	*NewFrame = bone;
 
     return D3D_OK;
 }
@@ -811,13 +769,13 @@ HRESULT AllocateHierarchy::CreateMeshContainer(PCTSTR Name, const D3DXMESHDATA* 
 	}
 	else   
 	{
-		CopyString(NULL, &pMeshContainer->Name);
+		CopyString(nullptr, &pMeshContainer->Name);
 	}
 
 	*NewMeshContainer = pMeshContainer;
 	
 	//if the mesh isnt skinned or it doesnt contain any mesh we dont go on
-	if( SkinInfo == 0 || MeshData->Type != D3DXMESHTYPE_MESH)
+	if( SkinInfo == nullptr || MeshData->Type != D3DXMESHTYPE_MESH)
 	{
 		return D3D_OK;
 	}
@@ -834,8 +792,8 @@ HRESULT AllocateHierarchy::CreateMeshContainer(PCTSTR Name, const D3DXMESHDATA* 
 		CopyString(Materials[i].pTextureFilename, &mtrls[i].pTextureFilename);
 	}
 
-	pMeshContainer->pEffects   = 0;
-	pMeshContainer->pAdjacency = 0;
+	pMeshContainer->pEffects   = nullptr;
+	pMeshContainer->pAdjacency = nullptr;
 
 	pMeshContainer->MeshData.Type  = D3DXMESHTYPE_MESH;
 	pMeshContainer->MeshData.pMesh = MeshData->pMesh; 
@@ -930,7 +888,7 @@ bool SkinnedModel::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX
 		float u = 0.0f;
 		float v = 0.0f;
 		float dist = 0.0f;
-		ID3DXBuffer* allhits = 0;
+		ID3DXBuffer* allhits = nullptr;
 		DWORD numHits = 0;
 
 		D3DXIntersect(pMeshContainer->MeshData.pMesh, &vOrigin, &vDir, &hit, &faceIndex, &u, &v, &dist, &allhits, &numHits);
@@ -1197,42 +1155,42 @@ void SkinnedModel::SetAnimationController(ID3DXAnimationController* animControll
 
 LPD3DXANIMATIONSET SkinnedModel::GetCurrentAnimationSet() const
 {
-	return m_pCurrentAnimSet;
+	return m_pCurrentAnimationSet;
 }
 
 void SkinnedModel::SetCurrentAnimationSet(LPD3DXANIMATIONSET currentAnimationSet)
 {
-	m_pCurrentAnimSet = currentAnimationSet;
-}
-
-LPD3DXANIMATIONSET SkinnedModel::GetSecondAnimationSet() const
-{
-	return m_pSecondAnimSet;
-}
-
-void SkinnedModel::SetSecondAnimationSet(LPD3DXANIMATIONSET secondAnimationSet)
-{
-	m_pSecondAnimSet = secondAnimationSet;
+	m_pCurrentAnimationSet = currentAnimationSet;
 }
 
 DWORD SkinnedModel::GetCurrentAnimationTrack() const
 {
-	return m_nCurrentAnimTrack;
+	return m_nCurrentAnimationTrack;
 }
 
 void SkinnedModel::SetCurrentAnimationTrack(DWORD currentAnimationTrack)
 {
-	m_nCurrentAnimTrack = currentAnimationTrack;
+	m_nCurrentAnimationTrack = currentAnimationTrack;
+}
+
+void SkinnedModel::SetNewAnimationSet(LPD3DXANIMATIONSET newAnimationSet)
+{
+	m_pNewAnimationSet = newAnimationSet;
+}
+
+LPD3DXANIMATIONSET SkinnedModel::GetNewAnimationSet() const
+{
+	return m_pNewAnimationSet;
 }
 
 DWORD SkinnedModel::GetNewAnimationTrack() const
 {
-	return m_nNewAnimTrack;
+	return m_nNewAnimationTrack;
 }
 
 void SkinnedModel::SetNewAnimationTrack(DWORD newAnimationTrack)
 {
-	m_nNewAnimTrack = newAnimationTrack;
+	m_nNewAnimationTrack = newAnimationTrack;
 }
 
 bool SkinnedModel::IsSwitched() const

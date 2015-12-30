@@ -2,8 +2,7 @@
 #include"Application.h"
 using namespace std;
 
-#define ReleaseX(X) __ReleaseX(X) 
-inline void __ReleaseX(IUnknown* resource)
+inline void ReleaseX(IUnknown* resource)
 {
 	if(resource != nullptr)
 	{
