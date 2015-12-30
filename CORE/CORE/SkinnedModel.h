@@ -11,21 +11,20 @@
 
 //we extend the D3DXFRAME structure so we can have matrix which will store
 //all the the transformations from the parent of the bone to the root
-//Bone = Frame
 struct Bone : D3DXFRAME
 {
-	Bone(PCTSTR boneName)
+	Bone(PCSTR name)
 	{
-		if (boneName)
+		if (name)
 		{
-			CopyString(boneName, &Name);
+			CopyString(name, &Name);
 		}
 		else
 		{
 			CopyString(nullptr, &Name);
 		}
 	}
-
+	
 	D3DXMATRIX m_toRootMatrix;
 };
 
@@ -35,18 +34,16 @@ struct Bone : D3DXFRAME
 class AllocateHierarchy : public ID3DXAllocateHierarchy 
 {
 public:
-	HRESULT STDMETHODCALLTYPE CreateFrame(THIS_ PCSTR Name, D3DXFRAME** NewFrame) override;                     
+	HRESULT STDMETHODCALLTYPE CreateFrame(THIS_ PCSTR Name, D3DXFRAME** NewFrame);                     
 
 	HRESULT STDMETHODCALLTYPE CreateMeshContainer(PCSTR Name, const D3DXMESHDATA* MeshData,const D3DXMATERIAL* Materials, const D3DXEFFECTINSTANCE* EffectInstances, 
-												  DWORD NumMaterials, const DWORD *Adjacency, ID3DXSkinInfo* SkinInfo, D3DXMESHCONTAINER** NewMeshContainer) override;
+												  DWORD NumMaterials, const DWORD *Adjacency, ID3DXSkinInfo* SkinInfo, D3DXMESHCONTAINER** NewMeshContainer);     
 
-	HRESULT STDMETHODCALLTYPE DestroyFrame(THIS_ D3DXFRAME* frame) override;
-	HRESULT STDMETHODCALLTYPE DestroyMeshContainer(THIS_ D3DXMESHCONTAINER* MeshContainer) override;
+	HRESULT STDMETHODCALLTYPE DestroyFrame(THIS_ D3DXFRAME* frame);              
+	HRESULT STDMETHODCALLTYPE DestroyMeshContainer(THIS_ D3DXMESHCONTAINER* MeshContainer);
 };
 
 //////////////////////////////////////////////////////////////////////////////
-
-const LPCSTR defaultAnimationName = "idle";
 
 //this class contains all the functions for loading animated model, updating his bones, and rendering the model
 class SkinnedModel : public GameObject
@@ -57,7 +54,7 @@ public:
 	~SkinnedModel();
 
 	virtual void 	LoadGameObject() override;
-	
+
 	virtual void 	OnUpdate(float fDeltaTime) override;
 
 	virtual void 	OnRender() override;
@@ -72,14 +69,14 @@ public:
 
 	bool			CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX combinedMatrix, D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir, float& nDistance);
 
-	void			PlayAnimation(LPCSTR animationName, bool bPlayOnce, bool bPlayOnceAndHalt);
-	
-	/*void			PlayAnimation(LPCSTR strAnimationName);
+	void			PlayAnimation(LPCSTR strAnimationName);
 	
 	void 			PlayAnimationOnce(LPCSTR strAnimationName);
+
+	void			UpdateAnimations(float dt);
+
+	void 			PlayDeadAnimation(LPCSTR strAnimationName);
 	
-	void 			PlayAnimationOnceAndStop(LPCSTR strAnimationName);
-	*/
 	void 			BindWeaponToModel(string weapon,string frameToBind);
 
 	D3DXFRAME* 		FindFrameWithMesh(D3DXFRAME* frame);
@@ -167,21 +164,17 @@ public:
 
 	void SetCurrentAnimationSet(LPD3DXANIMATIONSET currentAnimationSet);
 
+	LPD3DXANIMATIONSET GetSecondAnimationSet() const;
+
+	void SetSecondAnimationSet(LPD3DXANIMATIONSET secondAnimationSet);
+
 	DWORD GetCurrentAnimationTrack() const;
 
 	void SetCurrentAnimationTrack(DWORD currentAnimationTrack);
 
-	LPD3DXANIMATIONSET GetNewAnimationSet() const;
-
-	void SetNewAnimationSet(LPD3DXANIMATIONSET secondAnimationSet);
-
 	DWORD GetNewAnimationTrack() const;
 
 	void SetNewAnimationTrack(DWORD newAnimationTrack);
-
-	bool IsSwitched() const;
-
-	void SetIsSwitched(bool isSwitched);
 
 private:
 
@@ -194,8 +187,8 @@ private:
 	void 			BuildBoundingBox();
 	
 	void 			BuildSkinnedModel(ID3DXMesh* pMesh);
-
-	void			InitBoneToRootMatricesPointersArray();
+	
+	void 			InitBonesToRootMatricesPointersArray();
 	
 	void			BuildToRootMatrices(Bone* pBone, D3DXMATRIX& ParentBoneToRootMatrix);
 	
@@ -207,16 +200,11 @@ private:
 
 	bool			IsPicked(D3DXFRAME* pFrame,D3DXMATRIX combinedMatrix,D3DXVECTOR3 vOrigin,D3DXVECTOR3 vDir);
 
-	void			PlayAnimation();
-
-	void			SetUpTrackData(int track, float speedValue, float weightValue, float transitionTime);
-
 	IDirect3DTexture9* m_pWhiteTexture;
 
 	int m_nMaxBonesSupported; 
 
-	const double m_fTransTimeForAttack;
-	const double m_fTransTimeForIdle;
+	const double m_fDefaultTransitionTime;
 
 	//effect parameters for the mesh
 	ID3DXEffect* m_pEffect;
@@ -277,23 +265,13 @@ private:
 	DWORD               m_nNumBones;
 	ID3DXSkinInfo*      m_pSkinInfo;
 	ID3DXAnimationController* m_pAnimController;
+	LPD3DXANIMATIONSET  m_pCurrentAnimSet;
+	LPD3DXANIMATIONSET  m_pSecondAnimSet;
+	DWORD               m_nCurrentAnimTrack;
+	DWORD               m_nNewAnimTrack;
 
-	LPD3DXANIMATIONSET  m_pCurrentAnimationSet;
-	DWORD               m_nCurrentAnimationTrack;
 
-	LPD3DXANIMATIONSET  m_pNewAnimationSet;
-	DWORD               m_nNewAnimationTrack;
-
-	public:
-	LPCSTR				m_strAnimationName;
-	LPCSTR				m_strOldAnimationName;
-
-	private:
-	bool				m_bPlayOnce;
-	bool				m_bPlayOnceAndHalt;
-
-	//for animation switching when attacking
-	bool  m_bIsSwitched;
+	bool  m_bIsPlayingAnimOnce;
 
 	//this map holds which weapon to which bone is attached
 	unordered_map<GameObject*, string> m_mapBindedObjects;
