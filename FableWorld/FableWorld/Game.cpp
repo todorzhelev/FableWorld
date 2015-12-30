@@ -316,7 +316,8 @@ void Game::OnUpdate(float dt)
 		}
 		
 		// enemy AI
-		if( gameObject->IsAttacked() && IsObjectNear(pMainHero,gameObject))
+		if( gameObject->IsAttacked() && IsObjectNear(pMainHero,gameObject) && 
+			!gameObject->IsDead() && !pMainHero->IsDead())
 		{
 			if( m_rHealthBarRectangle.right > 0.0 )
 			{
@@ -516,7 +517,7 @@ void Game::ManageHealthBars()
 		pEnemy = static_cast<SkinnedModel*>(obj);
 	}
 
-	if( m_rHealthBarRectangle.right <= 0.0 )
+	if( m_rHealthBarRectangle.right <= 0.0 && !pMainHero->IsDead())
 	{
 		pMainHero->PlayAnimationOnceAndStopTrack("dead");
 		pMainHero->SetDead(true);
@@ -524,7 +525,7 @@ void Game::ManageHealthBars()
 		//after the enemy has killed the main hero set its animation to idle
 		pEnemy->PlayAnimation("idle");
 	}
-	if( m_rEnemyHealthBarRectangle.right <= 0.0 )
+	if( m_rEnemyHealthBarRectangle.right <= 0.0 && !pEnemy->IsDead() )
 	{
 		pEnemy->PlayAnimationOnceAndStopTrack("dead");
 		pEnemy->SetDead(true);

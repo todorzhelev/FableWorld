@@ -686,7 +686,7 @@ void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
 void SkinnedModel::PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName)
 {
 	auto name = m_pSecondAnimSet->GetName();
-	//if we are currently playing the same animation dont set it again
+	//if we are currently playing such animation dont enter here
 	if (!m_bShouldStopTrackAfterPlayingAnimation)
 	{
 		m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pSecondAnimSet);
@@ -706,6 +706,7 @@ void SkinnedModel::PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName)
 
 void SkinnedModel::PlayAnimationOnce(LPCSTR strAnimationName)
 {
+	//if we are currently playing animation once dont enter here
 	if (!m_bShouldPlayAnimationOnce)
 	{
 		m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pSecondAnimSet);
