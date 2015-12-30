@@ -1,7 +1,6 @@
 #include"SkinnedModel.h"
 #include"StaticModel.h"
 
-//TODO: substitute frame with bone. i think it is the same
 /////////////////////////////////////////////////////////////////////////
 
 SkinnedModel::SkinnedModel()
@@ -119,8 +118,7 @@ void SkinnedModel::LoadGameObject()
 		return;
 	}
 
-	//finds the bone that holds the only mesh.In skinned meshes there is just one model
-	//which is controlled by the bones hiearchy
+	//there should be only one bone containing the whole skinned mesh
 	D3DXFRAME* pFrame = FindFrameWithMesh(m_pRoot);
 
 	if( !pFrame ) 
@@ -171,10 +169,11 @@ SkinnedModel::~SkinnedModel()
 /////////////////////////////////////////////////////////////////////////
 
 //returns the final matrices for each bone which are passed to the shader for rendering.
-//We are returning the adress of the first element of the array, because in the shader we need the beginning of the array and the size of it
+//We are returning the adress of the first element of the array, because in the shader we need only the beginning address of the array
+//since the elements are in consecutive order
 D3DXMATRIX* SkinnedModel::GetFinalBonesMatricesArray()
 {
-	return &m_vFinalBonesMatrices[0];
+	return &m_vFinalBonesMatrices.front();
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -184,16 +183,17 @@ D3DXFRAME* SkinnedModel::FindFrameWithMesh(D3DXFRAME* frame)
 {
 	if( frame->pMeshContainer )
 	{
-		if( frame->pMeshContainer->MeshData.pMesh != NULL )
+		if( frame->pMeshContainer->MeshData.pMesh != nullptr)
 		{
 			return frame;
 		}
 	}
 
-	D3DXFRAME* pFrame = NULL;
+	D3DXFRAME* pFrame = nullptr;
 	if(frame->pFrameSibling)
 	{
-		if( pFrame = FindFrameWithMesh(frame->pFrameSibling) )	
+		pFrame = FindFrameWithMesh(frame->pFrameSibling);
+		if( pFrame != nullptr )
 		{
 			return pFrame;
 		}
@@ -201,13 +201,15 @@ D3DXFRAME* SkinnedModel::FindFrameWithMesh(D3DXFRAME* frame)
 
 	if(frame->pFrameFirstChild)
 	{
-		if( pFrame = FindFrameWithMesh(frame->pFrameFirstChild) )
+		pFrame = FindFrameWithMesh(frame->pFrameFirstChild);
+
+		if( pFrame != nullptr )
 		{
 			return pFrame;
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -314,8 +316,8 @@ void SkinnedModel::BuildToRootMatrices(Bone* pBone, D3DXMATRIX& ParentBoneToRoot
 	//combines the local transformation matrix of the current bone with the to root matrix of the parent bone
     ToRootMatrix = BoneLocalMatrix * ParentBoneToRootMatrix;
 
-	Bone* pSibling	 = (Bone*)pBone->pFrameSibling;
-	Bone* pFirstChild = (Bone*)pBone->pFrameFirstChild;
+	Bone* pSibling	  = static_cast<Bone*>(pBone->pFrameSibling);
+	Bone* pFirstChild = static_cast<Bone*>(pBone->pFrameFirstChild);
 
 	//if this bone has sibling pass the same ParentBoneToRootMatrix as we used in this bone
 	if( pSibling )
@@ -928,7 +930,7 @@ bool SkinnedModel::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX
 		float u = 0.0f;
 		float v = 0.0f;
 		float dist = 0.0f;
-		ID3DXBuffer* allhits = 0;
+		ID3DXBuffer* allhits = nullptr;
 		DWORD numHits = 0;
 
 		D3DXIntersect(pMeshContainer->MeshData.pMesh, &vOrigin, &vDir, &hit, &faceIndex, &u, &v, &dist, &allhits, &numHits);
