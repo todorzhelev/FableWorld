@@ -730,17 +730,14 @@ void SkinnedModel::PlayAnimationOnce(LPCSTR strAnimationName)
 
 void SkinnedModel::UpdateAnimations(float dt)
 {
-	//this if is the second part of the algorithm for playing animation just once.
-	//after the function for playing animation once starts playing the next animation(for instance we play attack animation)
-	//we need time so the attack animation finishes and we can transit to idle animation again.
-	//thus we need a function that is invoked every frame and therefore playAnimationOnce won't do the job,
-	//since its invoked only when the mouse button is down.
+	//after we know that the current animation should be played just once
+	//we see when it is finished and we transit to the first track, which holds the idle animation set
 	if (m_bShouldPlayAnimationOnce)
 	{
-		D3DXTRACK_DESC td;
-		m_pAnimController->GetTrackDesc(m_nNewAnimTrack, &td);
+		D3DXTRACK_DESC trackDescription;
+		m_pAnimController->GetTrackDesc(m_nNewAnimTrack, &trackDescription);
 		//after the attack animation has finished we slightly make transition to idle animation.
-		if (m_pSecondAnimSet && td.Position >= m_pSecondAnimSet->GetPeriod())
+		if (m_pSecondAnimSet && trackDescription.Position >= m_pSecondAnimSet->GetPeriod())
 		{
 			m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
 			m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
@@ -750,10 +747,10 @@ void SkinnedModel::UpdateAnimations(float dt)
 			m_pAnimController->SetTrackPosition(m_nNewAnimTrack, 0.0); //this is very important
 
 			m_bShouldPlayAnimationOnce = false;
-
 		}
 	}
 
+	//after we play the animation once we have to stop the track
 	if (m_bShouldStopTrackAfterPlayingAnimation)
 	{
 		D3DXTRACK_DESC trackDescription;
