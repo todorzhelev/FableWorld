@@ -7,6 +7,8 @@
 #include <time.h>
 #include "StaticModel.h"
 
+class AnimationComponent;
+
 //////////////////////////////////////////////////////////////////////////////
 
 //we extend the D3DXFRAME structure so we can have matrix which will store
@@ -156,26 +158,6 @@ public:
 
 	void SetSkinInfo(ID3DXSkinInfo* skinInfo);
 
-	ID3DXAnimationController* GetAnimationController() const;
-
-	void SetAnimationController(ID3DXAnimationController* animController);
-
-	LPD3DXANIMATIONSET GetCurrentAnimationSet() const;
-
-	void SetCurrentAnimationSet(LPD3DXANIMATIONSET currentAnimationSet);
-
-	LPD3DXANIMATIONSET GetSecondAnimationSet() const;
-
-	void SetSecondAnimationSet(LPD3DXANIMATIONSET secondAnimationSet);
-
-	DWORD GetCurrentAnimationTrack() const;
-
-	void SetCurrentAnimationTrack(DWORD currentAnimationTrack);
-
-	DWORD GetNewAnimationTrack() const;
-
-	void SetNewAnimationTrack(DWORD newAnimationTrack);
-
 private:
 
 	void 			RenderTitles();
@@ -203,8 +185,6 @@ private:
 	IDirect3DTexture9* m_pWhiteTexture;
 
 	int m_nMaxBonesSupported; 
-
-	const double m_fDefaultTransitionTime;
 
 	//effect parameters for the mesh
 	ID3DXEffect* m_pEffect;
@@ -264,15 +244,8 @@ private:
 	DWORD               m_nMaxVertInfluences;
 	DWORD               m_nNumBones;
 	ID3DXSkinInfo*      m_pSkinInfo;
-	ID3DXAnimationController* m_pAnimController;
-	LPD3DXANIMATIONSET  m_pCurrentAnimSet;
-	LPD3DXANIMATIONSET  m_pSecondAnimSet;
-	DWORD               m_nCurrentAnimTrack;
-	DWORD               m_nNewAnimTrack;
 
-
-	bool  m_bShouldPlayAnimationOnce;
-	bool  m_bShouldStopTrackAfterPlayingAnimation;
+	AnimationComponent* m_pAnimationComponent;
 
 	//this map holds which weapon to which bone is attached
 	unordered_map<GameObject*, string> m_mapBindedObjects;

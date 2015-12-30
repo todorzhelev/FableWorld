@@ -147,8 +147,6 @@ int l_addAnimatedModel(lua_State* L)
 
 	pMesh->SetAttacked(false);
 	pMesh->SetAttacking(false);
-	pMesh->SetCurrentAnimationTrack(0);
-	pMesh->SetNewAnimationTrack(1);
 	pMesh->SetDead(false);
 	pMesh->SetPicked(false);
 	pMesh->SetHasDialogue(false);

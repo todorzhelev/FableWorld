@@ -1,10 +1,10 @@
 #include"SkinnedModel.h"
 #include"StaticModel.h"
+#include"AnimationComponent.h"
 
 /////////////////////////////////////////////////////////////////////////
 
 SkinnedModel::SkinnedModel()
-:m_fDefaultTransitionTime(0.125f)
 {
 	//default white texture for models which doesnt have any
 	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture);
@@ -25,8 +25,7 @@ SkinnedModel::SkinnedModel()
 	m_whiteMaterial.m_fSpecularPower 	= 48.0f;
 
 	m_bShouldRenderTitles = true;
-	m_bShouldPlayAnimationOnce = false;
-	m_bShouldStopTrackAfterPlayingAnimation = false;
+	m_pAnimationComponent = new AnimationComponent();
 
 	BuildEffect();
 	BuildEffectForTitles();
@@ -35,11 +34,12 @@ SkinnedModel::SkinnedModel()
 /////////////////////////////////////////////////////////////////////////
 
 SkinnedModel::SkinnedModel(string strModelName, string ModelFileName, string strTextureFileName,bool bShouldRenderTitles)
-:m_fDefaultTransitionTime(0.125f)
 {
 	//code duplication, move it to another function
 	//default white texture for models which doesnt have any
 	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture);
+
+	m_pAnimationComponent = new AnimationComponent();
 
 	//max number of bones that can be supported.Above 60 bones arent rendered correctly
 	m_nMaxBonesSupported = 60;
@@ -92,10 +92,6 @@ SkinnedModel::SkinnedModel(string strModelName, string ModelFileName, string str
 
 	m_bIsAttacked = false;
 	m_bIsAttacking = false;
-	m_nCurrentAnimTrack = 0;
-	m_nNewAnimTrack = 1;
-	m_bShouldPlayAnimationOnce = false;
-	m_bShouldStopTrackAfterPlayingAnimation = false;
 	m_bIsDead = false;
 	m_bIsPicked = false;
 	m_bHasDialogue = false;
@@ -114,11 +110,11 @@ void SkinnedModel::LoadGameObject()
 
 	AllocateHierarchy allocMeshHierarchy;
 
-	if( FAILED( D3DXLoadMeshHierarchyFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM,pDxDevice, &allocMeshHierarchy, 0,&m_pRoot,&m_pAnimController) ) )
-	{
-		fout<<"cannot load animated model. filename:"<<m_strModelFileName.c_str()<<endl;
-		return;
-	}
+	HRESULT err = D3DXLoadMeshHierarchyFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pDxDevice, &allocMeshHierarchy, 0, &m_pRoot, &m_pAnimationComponent->m_pAnimationController);
+	CheckHR(err);
+
+	m_pAnimationComponent->EnableTrack(FirstTrack, true);
+	m_pAnimationComponent->EnableTrack(SecondTrack, true);
 
 	//there should be only one bone containing the whole skinned mesh
 	D3DXFRAME* pFrame = FindFrameWithMesh(m_pRoot);
@@ -146,15 +142,14 @@ void SkinnedModel::LoadGameObject()
 
 	//set the idle animation on the current track and mantain one more track, 
 	//which we will use later to switch to attack or dead animations
-	m_pAnimController->SetTrackEnable( m_nNewAnimTrack, true ); 
-	m_pAnimController->SetTrackEnable( m_nCurrentAnimTrack, true );
-	m_pAnimController->GetAnimationSetByName("idle",&m_pCurrentAnimSet);
-	m_pAnimController->SetTrackAnimationSet(m_nCurrentAnimTrack,m_pCurrentAnimSet);
-	m_pAnimController->KeyTrackSpeed( m_nCurrentAnimTrack, 1.0f, 0.0f, m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR );
-	m_pAnimController->KeyTrackWeight( m_nCurrentAnimTrack, 1.0f, 0.0f, m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR );
+
+	m_pAnimationComponent->SetAnimationOnTrack("idle",FirstTrack);
+
+	m_pAnimationComponent->SetTrackSpeed(FirstTrack, 1.0f, 0.0f);
+	m_pAnimationComponent->SetTrackWeight(FirstTrack, 1.0f, 0.0f);
  
-	m_pAnimController->KeyTrackSpeed( m_nNewAnimTrack, 0.0f, 0.0f, m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR );
-	m_pAnimController->KeyTrackWeight( m_nNewAnimTrack, 0.0f, 0.0f, m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR );
+	m_pAnimationComponent->SetTrackSpeed(SecondTrack, 0.0f, 0.0f);
+	m_pAnimationComponent->SetTrackWeight(SecondTrack, 0.0f, 0.0f);
 	
 	//after the mesh is found it is then changed in order to become skinned mesh
 	BuildSkinnedModel(pMeshContainer->MeshData.pMesh);
@@ -673,10 +668,10 @@ void SkinnedModel::RenderBoundingBox()
 //This function repeats the animation, i.e. after the animation set ended it starts from the beginning and so on.
 void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
 {
-	if(!m_bShouldStopTrackAfterPlayingAnimation && !m_bShouldPlayAnimationOnce )
+	if( !m_pAnimationComponent->ShouldStopTrackAfterPlayingAnimation() && 
+		!m_pAnimationComponent->ShouldPlayAnimationOnce() )
 	{
-		m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pCurrentAnimSet);
-		m_pAnimController->SetTrackAnimationSet(m_nCurrentAnimTrack, m_pCurrentAnimSet);
+		m_pAnimationComponent->SetAnimationOnTrack(strAnimationName,SecondTrack);
 	}
 }
 
@@ -688,20 +683,19 @@ void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
 //This way the two animation tracks are with 0.0 weight and thus no animation is played.
 void SkinnedModel::PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName)
 {
-	auto name = m_pSecondAnimSet->GetName();
+	//auto name = m_pSecondAnimSet->GetName();
 	//if we are currently playing such animation dont enter here
-	if (!m_bShouldStopTrackAfterPlayingAnimation)
+	if (!m_pAnimationComponent->ShouldStopTrackAfterPlayingAnimation())
 	{
-		m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pSecondAnimSet);
-		m_pAnimController->SetTrackAnimationSet(m_nNewAnimTrack, m_pSecondAnimSet);
+		m_pAnimationComponent->SetAnimationOnTrack(strAnimationName, SecondTrack);
 
-		m_pAnimController->KeyTrackSpeed(m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-		m_pAnimController->KeyTrackWeight(m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+		m_pAnimationComponent->SetTrackSpeed(FirstTrack, 0.0f, m_pAnimationComponent->GetGlobalTime());
+		m_pAnimationComponent->SetTrackWeight(FirstTrack, 0.0f, m_pAnimationComponent->GetGlobalTime());
 
-		m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-		m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+		m_pAnimationComponent->SetTrackSpeed(SecondTrack, 1.0f, m_pAnimationComponent->GetGlobalTime());
+		m_pAnimationComponent->SetTrackWeight(SecondTrack, 1.0f, m_pAnimationComponent->GetGlobalTime());
 
-		m_bShouldStopTrackAfterPlayingAnimation = true;
+		m_pAnimationComponent->SetShouldStopTrackAfterPlayingAnimation(true);
 	}
 }
 
@@ -710,18 +704,17 @@ void SkinnedModel::PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName)
 void SkinnedModel::PlayAnimationOnce(LPCSTR strAnimationName)
 {
 	//if we are currently playing animation once dont enter here
-	if (!m_bShouldPlayAnimationOnce)
+	if (!m_pAnimationComponent->ShouldPlayAnimationOnce())
 	{
-		m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pSecondAnimSet);
-		m_pAnimController->SetTrackAnimationSet(m_nNewAnimTrack, m_pSecondAnimSet);
+		m_pAnimationComponent->SetAnimationOnTrack(strAnimationName, SecondTrack);
 
-		m_pAnimController->KeyTrackSpeed(m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-		m_pAnimController->KeyTrackWeight(m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+		m_pAnimationComponent->SetTrackSpeed(FirstTrack, 0.0f, m_pAnimationComponent->GetGlobalTime());
+		m_pAnimationComponent->SetTrackWeight(FirstTrack, 0.0f, m_pAnimationComponent->GetGlobalTime());
 
-		m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-		m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+		m_pAnimationComponent->SetTrackSpeed(SecondTrack, 1.0f, m_pAnimationComponent->GetGlobalTime());
+		m_pAnimationComponent->SetTrackWeight(SecondTrack, 1.0f, m_pAnimationComponent->GetGlobalTime());
 
-		m_bShouldPlayAnimationOnce = true;
+		m_pAnimationComponent->SetShouldPlayAnimationOnce(true);
 		m_bIsAttacking = true;
 	}
 	else
@@ -736,51 +729,47 @@ void SkinnedModel::UpdateAnimations(float dt)
 {
 	//after we know that the current animation should be played just once
 	//we see when it is finished and we transit to the first track, which holds the idle animation set
-	if (m_bShouldPlayAnimationOnce)
+	if (m_pAnimationComponent->ShouldPlayAnimationOnce())
 	{
-		D3DXTRACK_DESC trackDescription;
-		m_pAnimController->GetTrackDesc(m_nNewAnimTrack, &trackDescription);
 		//after the attack animation has finished we slightly make transition to idle animation.
-		if (m_pSecondAnimSet && trackDescription.Position >= m_pSecondAnimSet->GetPeriod())
+		if (m_pAnimationComponent->GetTrackPosition(SecondTrack) >= m_pAnimationComponent->GetTrackAnimationSetDuration(SecondTrack))
 		{
-			m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-			m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+			m_pAnimationComponent->SetTrackSpeed(FirstTrack, 1.0f, m_pAnimationComponent->GetGlobalTime());
+			m_pAnimationComponent->SetTrackWeight(FirstTrack, 1.0f, m_pAnimationComponent->GetGlobalTime());
 
-			m_pAnimController->KeyTrackSpeed(m_nCurrentAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-			m_pAnimController->KeyTrackWeight(m_nCurrentAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-			m_pAnimController->SetTrackPosition(m_nNewAnimTrack, 0.0); //this is very important
+			m_pAnimationComponent->SetTrackSpeed(SecondTrack, 0.0f, m_pAnimationComponent->GetGlobalTime());
+			m_pAnimationComponent->SetTrackWeight(SecondTrack, 0.0f, m_pAnimationComponent->GetGlobalTime());
 
-			m_bShouldPlayAnimationOnce = false;
+			m_pAnimationComponent->SetTrackPosition(SecondTrack, 0.0); //this is very important
+
+			m_pAnimationComponent->SetShouldPlayAnimationOnce(false);
 		}
 	}
 
 	//after we play the animation once we have to stop the track
-	if (m_bShouldStopTrackAfterPlayingAnimation)
+	if (m_pAnimationComponent->ShouldStopTrackAfterPlayingAnimation())
 	{
-		D3DXTRACK_DESC trackDescription;
-		m_pAnimController->GetTrackDesc(m_nNewAnimTrack, &trackDescription);
+		auto trackPosition = m_pAnimationComponent->GetTrackPosition(SecondTrack);
+		auto animSetPeriod = m_pAnimationComponent->GetTrackAnimationSetDuration(SecondTrack);
+		auto transitionPeriod = animSetPeriod / 2.0f;
+		auto difference = animSetPeriod - transitionPeriod;
 
-		auto trackPosition = trackDescription.Position;
-		auto animSetPeriod = m_pSecondAnimSet->GetPeriod();
-		auto transitionPeriod = m_pSecondAnimSet->GetPeriod() / 2.0f;
-		auto difference = m_pSecondAnimSet->GetPeriod() - transitionPeriod;
-
-#ifdef _DEBUG
-		std::cout << "model name:" << this->GetName() << " anim set name:" << m_pSecondAnimSet->GetName() << " track pos:" << trackPosition << " difference:" << difference << std::endl;
-#endif
+//#ifdef _DEBUG
+//		std::cout << "model name:" << this->GetName() << " anim set name:" << m_pSecondAnimSet->GetName() << " track pos:" << trackPosition << " difference:" << difference << std::endl;
+//#endif
 
 		//if we are near the end of the animation, stop it in transitionPeriod time
-		if (trackDescription.Position >= difference)
+		if (trackPosition >= difference)
 		{
-			m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), transitionPeriod - 0.1, D3DXTRANSITION_LINEAR);
+			m_pAnimationComponent->SetTrackSpeed(SecondTrack, 0.0f, m_pAnimationComponent->GetGlobalTime(), transitionPeriod - 0.1);
 			//the track should have atleast small contribution to the animation. Otherwise the model will disappear
-			m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 0.1f, m_pAnimController->GetTime(), transitionPeriod - 0.1, D3DXTRANSITION_LINEAR);
+			m_pAnimationComponent->SetTrackWeight(SecondTrack, 0.1f, m_pAnimationComponent->GetGlobalTime(), transitionPeriod - 0.1);
 
-			m_bShouldStopTrackAfterPlayingAnimation = false;
+			m_pAnimationComponent->SetShouldStopTrackAfterPlayingAnimation(false);
 		}
 	}
 
-	m_pAnimController->AdvanceTime(dt, NULL);
+	m_pAnimationComponent->AdvanceTime(dt);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -1190,54 +1179,4 @@ ID3DXSkinInfo* SkinnedModel::GetSKinInfo() const
 void SkinnedModel::SetSkinInfo(ID3DXSkinInfo* skinInfo)
 {
 	m_pSkinInfo = skinInfo;
-}
-
-ID3DXAnimationController* SkinnedModel::GetAnimationController() const
-{
-	return m_pAnimController;
-}
-
-void SkinnedModel::SetAnimationController(ID3DXAnimationController* animController)
-{
-	m_pAnimController = animController;
-}
-
-LPD3DXANIMATIONSET SkinnedModel::GetCurrentAnimationSet() const
-{
-	return m_pCurrentAnimSet;
-}
-
-void SkinnedModel::SetCurrentAnimationSet(LPD3DXANIMATIONSET currentAnimationSet)
-{
-	m_pCurrentAnimSet = currentAnimationSet;
-}
-
-LPD3DXANIMATIONSET SkinnedModel::GetSecondAnimationSet() const
-{
-	return m_pSecondAnimSet;
-}
-
-void SkinnedModel::SetSecondAnimationSet(LPD3DXANIMATIONSET secondAnimationSet)
-{
-	m_pSecondAnimSet = secondAnimationSet;
-}
-
-DWORD SkinnedModel::GetCurrentAnimationTrack() const
-{
-	return m_nCurrentAnimTrack;
-}
-
-void SkinnedModel::SetCurrentAnimationTrack(DWORD currentAnimationTrack)
-{
-	m_nCurrentAnimTrack = currentAnimationTrack;
-}
-
-DWORD SkinnedModel::GetNewAnimationTrack() const
-{
-	return m_nNewAnimTrack;
-}
-
-void SkinnedModel::SetNewAnimationTrack(DWORD newAnimationTrack)
-{
-	m_nNewAnimTrack = newAnimationTrack;
 }
