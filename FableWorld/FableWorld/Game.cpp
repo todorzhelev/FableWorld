@@ -521,7 +521,7 @@ void Game::ManageHealthBars()
 		pMainHero->PlayDeadAnimation("dead");
 		pMainHero->SetDead(true);
 		
-		//set the animation of the attacked to idle, because sometimes got bugged and plays run animaiton
+		//after the enemy has killed the main hero set its animation to idle
 		pEnemy->PlayAnimation("idle");
 	}
 	if( m_rEnemyHealthBarRectangle.right <= 0.0 )
