@@ -75,7 +75,7 @@ public:
 
 	void			UpdateAnimations(float dt);
 
-	void 			PlayDeadAnimation(LPCSTR strAnimationName);
+	void 			PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName);
 	
 	void 			BindWeaponToModel(string weapon,string frameToBind);
 
@@ -271,7 +271,8 @@ private:
 	DWORD               m_nNewAnimTrack;
 
 
-	bool  m_bIsPlayingAnimOnce;
+	bool  m_bShouldPlayAnimationOnce;
+	bool  m_bShouldStopTrackAfterPlayingAnimation;
 
 	//this map holds which weapon to which bone is attached
 	unordered_map<GameObject*, string> m_mapBindedObjects;

@@ -25,7 +25,8 @@ SkinnedModel::SkinnedModel()
 	m_whiteMaterial.m_fSpecularPower 	= 48.0f;
 
 	m_bShouldRenderTitles = true;
-	m_bIsPlayingAnimOnce = false;
+	m_bShouldPlayAnimationOnce = false;
+	m_bShouldStopTrackAfterPlayingAnimation = false;
 
 	BuildEffect();
 	BuildEffectForTitles();
@@ -93,7 +94,8 @@ SkinnedModel::SkinnedModel(string strModelName, string ModelFileName, string str
 	m_bIsAttacking = false;
 	m_nCurrentAnimTrack = 0;
 	m_nNewAnimTrack = 1;
-	m_bIsPlayingAnimOnce = false;
+	m_bShouldPlayAnimationOnce = false;
+	m_bShouldStopTrackAfterPlayingAnimation = false;
 	m_bIsDead = false;
 	m_bIsPicked = false;
 	m_bHasDialogue = false;
@@ -413,117 +415,6 @@ void SkinnedModel::BuildEffectForTitles()
 
 /////////////////////////////////////////////////////////////////////////
 
-//sets the animation index on the mesh at the current track. 
-//This function repeats the animation, i.e. after the animation set ended it starts from the beginning and so on.
-void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
-{
-	m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pCurrentAnimSet);
-	m_pAnimController->SetTrackAnimationSet(m_nCurrentAnimTrack, m_pCurrentAnimSet);
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-//plays animation only once then stops( used for dead animation )
-//The idea is to slightly move from the current track to the new one, holding the new animation.
-//After the new animation is played to the end, we stop it. 
-//This way the two animation tracks are with 0.0 weight and thus no animation is played.
-void SkinnedModel::PlayDeadAnimation(LPCSTR strAnimationName)
-{
-	auto name = m_pSecondAnimSet->GetName();
-	//if we are currently playing the same animation dont set it again
-	if (m_pSecondAnimSet && strcmp(m_pSecondAnimSet->GetName(), strAnimationName) != 0)
-	{
-		m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pSecondAnimSet);
-		m_pAnimController->SetTrackAnimationSet(m_nNewAnimTrack, m_pSecondAnimSet);
-
-		m_pAnimController->KeyTrackSpeed(m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-		m_pAnimController->KeyTrackWeight(m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-
-		m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-		m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-	}
-
-	D3DXTRACK_DESC trackDescription;
-	m_pAnimController->GetTrackDesc(m_nNewAnimTrack, &trackDescription);
-
-	auto trackPosition = trackDescription.Position;
-	auto animSetPeriod = m_pSecondAnimSet->GetPeriod();
-	auto transitionPeriod = m_pSecondAnimSet->GetPeriod() / 2.0f;
-	auto difference = m_pSecondAnimSet->GetPeriod() - transitionPeriod;
-
-#ifdef _DEBUG
-	std::cout << "model name:" << this->GetName() << " anim set name:" << m_pSecondAnimSet->GetName() << " track pos:" << trackPosition << " difference:" << difference << std::endl;
-#endif
-
-	//if we are near the end of the animation, stop it in transitionPeriod time
-	if (trackDescription.Position >= difference)
-	{
-		m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), transitionPeriod - 0.1, D3DXTRANSITION_LINEAR);
-		//the track should have atleast small contribution to the animation. Otherwise the model will disappear
-		m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 0.1f, m_pAnimController->GetTime(), transitionPeriod - 0.1, D3DXTRANSITION_LINEAR);
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-//plays animation only once.switches to idle animation( used for transition between idle and attack )
-//rand is used so it can be randomly determined which one from the 2 attack animations to be played.
-void SkinnedModel::PlayAnimationOnce(LPCSTR strAnimationName)
-{
-	if (!m_bIsPlayingAnimOnce)
-	{
-		m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pSecondAnimSet);
-		m_pAnimController->SetTrackAnimationSet(m_nNewAnimTrack, m_pSecondAnimSet);
-
-		m_pAnimController->KeyTrackSpeed(m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-		m_pAnimController->KeyTrackWeight(m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-
-		m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-		m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-
-		m_bIsPlayingAnimOnce = true;
-		m_bIsAttacking = true;
-		//with this code we just transit from idle to attack. At this moment the attack animation is played, but if the player
-		//releases the mouse button, the attack animation must be switched to idle.
-		//so we wait till the animaiton is over and next part that switches from attack to idle is finished in onUpdate
-	}
-	else
-	{
-		m_bIsAttacking = false;
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-void SkinnedModel::UpdateAnimations(float dt)
-{
-	//this if is the second part of the algorithm for playing animation just once.
-	//after the function for playing animation once starts playing the next animation(for instance we play attack animation)
-	//we need time so the attack animation finishes and we can transit to idle animation again.
-	//thus we need a function that is invoked every frame and therefore playAnimationOnce won't do the job,
-	//since its invoked only when the mouse button is down.
-	if (m_bIsPlayingAnimOnce)
-	{
-		D3DXTRACK_DESC td;
-		m_pAnimController->GetTrackDesc(m_nNewAnimTrack, &td);
-		//after the attack animation has finished we slightly make transition to idle animation.
-		if (m_pSecondAnimSet && td.Position >= m_pSecondAnimSet->GetPeriod())
-		{
-			m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-			m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-
-			m_pAnimController->KeyTrackSpeed(m_nCurrentAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-			m_pAnimController->KeyTrackWeight(m_nCurrentAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
-			m_bIsPlayingAnimOnce = false;
-			m_pAnimController->SetTrackPosition(m_nNewAnimTrack, 0.0);
-		}
-	}
-
-	m_pAnimController->AdvanceTime(dt, NULL);
-}
-
-/////////////////////////////////////////////////////////////////////////
-
 void SkinnedModel::OnUpdate(float dt)
 {
 	UpdateAnimations(dt);
@@ -774,6 +665,121 @@ void SkinnedModel::RenderBoundingBox()
 
 	m_pEffect->SetValue(m_hMaterial, &m_whiteMaterial, sizeof(Material));	
 	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+//sets the animation index on the mesh at the current track. 
+//This function repeats the animation, i.e. after the animation set ended it starts from the beginning and so on.
+void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
+{
+	m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pCurrentAnimSet);
+	m_pAnimController->SetTrackAnimationSet(m_nCurrentAnimTrack, m_pCurrentAnimSet);
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+//plays animation only once then stops( used for dead animation )
+//The idea is to slightly move from the current track to the new one, holding the new animation.
+//After the new animation is played to the end, we stop it. 
+//This way the two animation tracks are with 0.0 weight and thus no animation is played.
+void SkinnedModel::PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName)
+{
+	auto name = m_pSecondAnimSet->GetName();
+	//if we are currently playing the same animation dont set it again
+	if (!m_bShouldStopTrackAfterPlayingAnimation)
+	{
+		m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pSecondAnimSet);
+		m_pAnimController->SetTrackAnimationSet(m_nNewAnimTrack, m_pSecondAnimSet);
+
+		m_pAnimController->KeyTrackSpeed(m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+		m_pAnimController->KeyTrackWeight(m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+
+		m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+		m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+
+		m_bShouldStopTrackAfterPlayingAnimation = true;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void SkinnedModel::PlayAnimationOnce(LPCSTR strAnimationName)
+{
+	if (!m_bShouldPlayAnimationOnce)
+	{
+		m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pSecondAnimSet);
+		m_pAnimController->SetTrackAnimationSet(m_nNewAnimTrack, m_pSecondAnimSet);
+
+		m_pAnimController->KeyTrackSpeed(m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+		m_pAnimController->KeyTrackWeight(m_nCurrentAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+
+		m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+		m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+
+		m_bShouldPlayAnimationOnce = true;
+		m_bIsAttacking = true;
+	}
+	else
+	{
+		m_bIsAttacking = false;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void SkinnedModel::UpdateAnimations(float dt)
+{
+	//this if is the second part of the algorithm for playing animation just once.
+	//after the function for playing animation once starts playing the next animation(for instance we play attack animation)
+	//we need time so the attack animation finishes and we can transit to idle animation again.
+	//thus we need a function that is invoked every frame and therefore playAnimationOnce won't do the job,
+	//since its invoked only when the mouse button is down.
+	if (m_bShouldPlayAnimationOnce)
+	{
+		D3DXTRACK_DESC td;
+		m_pAnimController->GetTrackDesc(m_nNewAnimTrack, &td);
+		//after the attack animation has finished we slightly make transition to idle animation.
+		if (m_pSecondAnimSet && td.Position >= m_pSecondAnimSet->GetPeriod())
+		{
+			m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+			m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+
+			m_pAnimController->KeyTrackSpeed(m_nCurrentAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+			m_pAnimController->KeyTrackWeight(m_nCurrentAnimTrack, 1.0f, m_pAnimController->GetTime(), m_fDefaultTransitionTime, D3DXTRANSITION_LINEAR);
+			m_pAnimController->SetTrackPosition(m_nNewAnimTrack, 0.0); //this is very important
+
+			m_bShouldPlayAnimationOnce = false;
+
+		}
+	}
+
+	if (m_bShouldStopTrackAfterPlayingAnimation)
+	{
+		D3DXTRACK_DESC trackDescription;
+		m_pAnimController->GetTrackDesc(m_nNewAnimTrack, &trackDescription);
+
+		auto trackPosition = trackDescription.Position;
+		auto animSetPeriod = m_pSecondAnimSet->GetPeriod();
+		auto transitionPeriod = m_pSecondAnimSet->GetPeriod() / 2.0f;
+		auto difference = m_pSecondAnimSet->GetPeriod() - transitionPeriod;
+
+#ifdef _DEBUG
+		std::cout << "model name:" << this->GetName() << " anim set name:" << m_pSecondAnimSet->GetName() << " track pos:" << trackPosition << " difference:" << difference << std::endl;
+#endif
+
+		//if we are near the end of the animation, stop it in transitionPeriod time
+		if (trackDescription.Position >= difference)
+		{
+			m_pAnimController->KeyTrackSpeed(m_nNewAnimTrack, 0.0f, m_pAnimController->GetTime(), transitionPeriod - 0.1, D3DXTRANSITION_LINEAR);
+			//the track should have atleast small contribution to the animation. Otherwise the model will disappear
+			m_pAnimController->KeyTrackWeight(m_nNewAnimTrack, 0.1f, m_pAnimController->GetTime(), transitionPeriod - 0.1, D3DXTRANSITION_LINEAR);
+
+			m_bShouldStopTrackAfterPlayingAnimation = false;
+		}
+	}
+
+	m_pAnimController->AdvanceTime(dt, NULL);
 }
 
 /////////////////////////////////////////////////////////////////////////

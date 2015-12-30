@@ -518,7 +518,7 @@ void Game::ManageHealthBars()
 
 	if( m_rHealthBarRectangle.right <= 0.0 )
 	{
-		pMainHero->PlayDeadAnimation("dead");
+		pMainHero->PlayAnimationOnceAndStopTrack("dead");
 		pMainHero->SetDead(true);
 		
 		//after the enemy has killed the main hero set its animation to idle
@@ -526,7 +526,7 @@ void Game::ManageHealthBars()
 	}
 	if( m_rEnemyHealthBarRectangle.right <= 0.0 )
 	{
-		pEnemy->PlayDeadAnimation("dead");
+		pEnemy->PlayAnimationOnceAndStopTrack("dead");
 		pEnemy->SetDead(true);
 	}
 }
