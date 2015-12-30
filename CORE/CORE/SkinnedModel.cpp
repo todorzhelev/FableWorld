@@ -673,8 +673,11 @@ void SkinnedModel::RenderBoundingBox()
 //This function repeats the animation, i.e. after the animation set ended it starts from the beginning and so on.
 void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
 {
-	m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pCurrentAnimSet);
-	m_pAnimController->SetTrackAnimationSet(m_nCurrentAnimTrack, m_pCurrentAnimSet);
+	if(!m_bShouldStopTrackAfterPlayingAnimation && !m_bShouldPlayAnimationOnce )
+	{
+		m_pAnimController->GetAnimationSetByName(strAnimationName, &m_pCurrentAnimSet);
+		m_pAnimController->SetTrackAnimationSet(m_nCurrentAnimTrack, m_pCurrentAnimSet);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////
