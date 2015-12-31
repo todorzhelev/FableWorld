@@ -309,7 +309,7 @@ void Game::OnUpdate(float dt)
 			int num = rand() % 2;
 			LPCSTR animName = num % 2 == 0 ? "attack_1" : "attack_2";
 			pMainHero->PlayAnimationOnce(animName);
-			if( (pMainHero->IsAttacking()) )
+			if( pMainHero->JustStartedPlayingAnimationOnce() )
 			{
 				m_rEnemyHealthBarRectangle.right-=70;
 			}
@@ -328,7 +328,7 @@ void Game::OnUpdate(float dt)
 				LPCSTR animName = num % 2 == 0 ? "attack_1" : "attack_2";
 				pSkinnedModel->PlayAnimationOnce(animName);
 				
-				if( (gameObject->IsAttacking()) )
+				if( gameObject->JustStartedPlayingAnimationOnce() )
 				{
 					m_rHealthBarRectangle.right-=70;
 				}

@@ -36,9 +36,20 @@ public:
 
 	void SetTrackWeight(AnimationTrack track, float newValue, float startTime, float transitionPeriod = 0.125f);
 
+	void OnUpdate(float dt);
+
+	void PlayAnimation(LPCSTR strAnimationName);
+
+	void PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName);
+
+	void PlayAnimationOnce(LPCSTR strAnimationName);
+
+	bool JustStartedPlayingAnimationOnce();
+
 	double GetGlobalTime();
 
 	void SetTrackPosition(AnimationTrack track, float position);
+
 
 	ID3DXAnimationController* m_pAnimationController;
 
@@ -47,4 +58,6 @@ private:
 	ID3DXAnimationSet*  m_pCurrentAnimationSet;
 	bool  m_bShouldPlayAnimationOnce;
 	bool  m_bShouldStopTrackAfterPlayingAnimation;
+
+	bool  m_bJustStartedPlayingAnimationOnce;
 };

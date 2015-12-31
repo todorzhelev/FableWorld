@@ -75,6 +75,8 @@ public:
 	
 	void 			PlayAnimationOnce(LPCSTR strAnimationName);
 
+	bool			JustStartedPlayingAnimationOnce();
+
 	void			UpdateAnimations(float dt);
 
 	void 			PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName);

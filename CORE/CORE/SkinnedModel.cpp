@@ -412,7 +412,7 @@ void SkinnedModel::BuildEffectForTitles()
 
 void SkinnedModel::OnUpdate(float dt)
 {
-	UpdateAnimations(dt);
+	m_pAnimationComponent->OnUpdate(dt);
 	
 	// Recurse down the tree and builds the toRoot matrix for every bone
 	D3DXMATRIX IdentityMatrix;
@@ -664,112 +664,32 @@ void SkinnedModel::RenderBoundingBox()
 
 /////////////////////////////////////////////////////////////////////////
 
-//sets the animation index on the mesh at the current track. 
-//This function repeats the animation, i.e. after the animation set ended it starts from the beginning and so on.
+
 void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
 {
-	if( !m_pAnimationComponent->ShouldStopTrackAfterPlayingAnimation() && 
-		!m_pAnimationComponent->ShouldPlayAnimationOnce() )
-	{
-		m_pAnimationComponent->SetAnimationOnTrack(strAnimationName,SecondTrack);
-	}
+	m_pAnimationComponent->PlayAnimation(strAnimationName);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-//plays animation only once then stops( used for dead animation )
-//The idea is to slightly move from the current track to the new one, holding the new animation.
-//After the new animation is played to the end, we stop it. 
-//This way the two animation tracks are with 0.0 weight and thus no animation is played.
+
 void SkinnedModel::PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName)
 {
-	//auto name = m_pSecondAnimSet->GetName();
-	//if we are currently playing such animation dont enter here
-	if (!m_pAnimationComponent->ShouldStopTrackAfterPlayingAnimation())
-	{
-		m_pAnimationComponent->SetAnimationOnTrack(strAnimationName, SecondTrack);
-
-		m_pAnimationComponent->SetTrackSpeed(FirstTrack, 0.0f, m_pAnimationComponent->GetGlobalTime());
-		m_pAnimationComponent->SetTrackWeight(FirstTrack, 0.0f, m_pAnimationComponent->GetGlobalTime());
-
-		m_pAnimationComponent->SetTrackSpeed(SecondTrack, 1.0f, m_pAnimationComponent->GetGlobalTime());
-		m_pAnimationComponent->SetTrackWeight(SecondTrack, 1.0f, m_pAnimationComponent->GetGlobalTime());
-
-		m_pAnimationComponent->SetShouldStopTrackAfterPlayingAnimation(true);
-	}
+	m_pAnimationComponent->PlayAnimationOnceAndStopTrack(strAnimationName);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 void SkinnedModel::PlayAnimationOnce(LPCSTR strAnimationName)
 {
-	//if we are currently playing animation once dont enter here
-	if (!m_pAnimationComponent->ShouldPlayAnimationOnce())
-	{
-		m_pAnimationComponent->SetAnimationOnTrack(strAnimationName, SecondTrack);
-
-		m_pAnimationComponent->SetTrackSpeed(FirstTrack, 0.0f, m_pAnimationComponent->GetGlobalTime());
-		m_pAnimationComponent->SetTrackWeight(FirstTrack, 0.0f, m_pAnimationComponent->GetGlobalTime());
-
-		m_pAnimationComponent->SetTrackSpeed(SecondTrack, 1.0f, m_pAnimationComponent->GetGlobalTime());
-		m_pAnimationComponent->SetTrackWeight(SecondTrack, 1.0f, m_pAnimationComponent->GetGlobalTime());
-
-		m_pAnimationComponent->SetShouldPlayAnimationOnce(true);
-		m_bIsAttacking = true;
-	}
-	else
-	{
-		m_bIsAttacking = false;
-	}
+	m_pAnimationComponent->PlayAnimationOnce(strAnimationName);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::UpdateAnimations(float dt)
+bool SkinnedModel::JustStartedPlayingAnimationOnce()
 {
-	//after we know that the current animation should be played just once
-	//we see when it is finished and we transit to the first track, which holds the idle animation set
-	if (m_pAnimationComponent->ShouldPlayAnimationOnce())
-	{
-		//after the attack animation has finished we slightly make transition to idle animation.
-		if (m_pAnimationComponent->GetTrackPosition(SecondTrack) >= m_pAnimationComponent->GetTrackAnimationSetDuration(SecondTrack))
-		{
-			m_pAnimationComponent->SetTrackSpeed(FirstTrack, 1.0f, m_pAnimationComponent->GetGlobalTime());
-			m_pAnimationComponent->SetTrackWeight(FirstTrack, 1.0f, m_pAnimationComponent->GetGlobalTime());
-
-			m_pAnimationComponent->SetTrackSpeed(SecondTrack, 0.0f, m_pAnimationComponent->GetGlobalTime());
-			m_pAnimationComponent->SetTrackWeight(SecondTrack, 0.0f, m_pAnimationComponent->GetGlobalTime());
-
-			m_pAnimationComponent->SetTrackPosition(SecondTrack, 0.0); //this is very important
-
-			m_pAnimationComponent->SetShouldPlayAnimationOnce(false);
-		}
-	}
-
-	//after we play the animation once we have to stop the track
-	if (m_pAnimationComponent->ShouldStopTrackAfterPlayingAnimation())
-	{
-		auto trackPosition = m_pAnimationComponent->GetTrackPosition(SecondTrack);
-		auto animSetPeriod = m_pAnimationComponent->GetTrackAnimationSetDuration(SecondTrack);
-		auto transitionPeriod = animSetPeriod / 2.0f;
-		auto difference = animSetPeriod - transitionPeriod;
-
-//#ifdef _DEBUG
-//		std::cout << "model name:" << this->GetName() << " anim set name:" << m_pSecondAnimSet->GetName() << " track pos:" << trackPosition << " difference:" << difference << std::endl;
-//#endif
-
-		//if we are near the end of the animation, stop it in transitionPeriod time
-		if (trackPosition >= difference)
-		{
-			m_pAnimationComponent->SetTrackSpeed(SecondTrack, 0.0f, m_pAnimationComponent->GetGlobalTime(), transitionPeriod - 0.1);
-			//the track should have atleast small contribution to the animation. Otherwise the model will disappear
-			m_pAnimationComponent->SetTrackWeight(SecondTrack, 0.1f, m_pAnimationComponent->GetGlobalTime(), transitionPeriod - 0.1);
-
-			m_pAnimationComponent->SetShouldStopTrackAfterPlayingAnimation(false);
-		}
-	}
-
-	m_pAnimationComponent->AdvanceTime(dt);
+	return m_pAnimationComponent->JustStartedPlayingAnimationOnce();
 }
 
 /////////////////////////////////////////////////////////////////////////
