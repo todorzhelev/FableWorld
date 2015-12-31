@@ -5,3 +5,6 @@
 /LevelEditor/Release
 logs
 /LevelEditor/FableWorld_levelEditor.sdf
+.vs
+Debug
+bin
