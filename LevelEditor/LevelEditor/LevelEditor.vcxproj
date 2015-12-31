@@ -94,6 +94,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\CORE\CORE\AABB.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\AnimationComponent.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Application.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Button.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Camera.cpp" />
@@ -122,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\CORE\CORE\AABB.h" />
+    <ClInclude Include="..\..\CORE\CORE\AnimationComponent.h" />
     <ClInclude Include="..\..\CORE\CORE\Application.h" />
     <ClInclude Include="..\..\CORE\CORE\Button.h" />
     <ClInclude Include="..\..\CORE\CORE\Camera.h" />

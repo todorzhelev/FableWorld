@@ -116,6 +116,9 @@
     <ClCompile Include="..\..\CORE\CORE\libs\TinyXml2\tinyxml2.cpp">
       <Filter>extern\Source Files\TinyXml2</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\AnimationComponent.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\CORE\CORE\Button.h">
@@ -195,6 +198,9 @@
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\libs\TinyXml2\tinyxml2.h">
       <Filter>extern\Source Files\TinyXml2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\AnimationComponent.h">
+      <Filter>extern\Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
