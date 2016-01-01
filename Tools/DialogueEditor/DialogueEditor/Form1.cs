@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using System.Xml;
+using System.IO;
 
 namespace DialogueEditor
 {
@@ -88,11 +91,82 @@ namespace DialogueEditor
             }
         }
 
-        public TreeNode selectedTreeNode;
-
         private void retrieveInput_Click(object sender, EventArgs e)
         {
             selectedTreeNode.Text = inputText.Text;
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var rootElementName = treeView1.Nodes[0].Text;
+            var rootElement = new XElement(rootElementName, CreateXmlElement(treeView1.Nodes[0].Nodes));
+            var document = new XDocument(rootElement);
+            document.Save("export.xml");
+        }
+
+        private static List<XElement> CreateXmlElement(TreeNodeCollection treeViewNodes)
+        {
+            var elements = new List<XElement>();
+            foreach (TreeNode treeViewNode in treeViewNodes)
+            {
+                var element = new XElement("Node");
+                XAttribute name = new XAttribute("Text", treeViewNode.Text);
+                element.Add(name);
+
+                if (treeViewNode.Nodes.Count > 0)
+                {
+                    element.Add(CreateXmlElement(treeViewNode.Nodes));
+                }
+
+                elements.Add(element);
+            }
+            return elements;
+        }
+
+        public TreeNode selectedTreeNode;
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            XmlDocument dialogueFile = new XmlDocument();
+            XmlNode rootNode;
+            FileStream fs = new FileStream("export.xml", FileMode.Open, FileAccess.Read);
+            dialogueFile.Load(fs);
+            rootNode = dialogueFile.ChildNodes[1];
+            treeView1.Nodes.Clear();
+            treeView1.Nodes.Add(new TreeNode(dialogueFile.DocumentElement.Name));
+            TreeNode tNode;
+            tNode = treeView1.Nodes[0];
+            AddTreeViewNode(rootNode, tNode);
+
+            fs.Close();
+        }
+
+        private void AddTreeViewNode(XmlNode inXmlNode, TreeNode inTreeNode)
+        {
+            XmlNode xNode;
+            TreeNode tNode;
+            XmlNodeList nodeList;
+            int i = 0;
+            if (inXmlNode.HasChildNodes)
+            {
+                nodeList = inXmlNode.ChildNodes;
+                for (i = 0; i <= nodeList.Count - 1; i++)
+                {
+                    xNode = inXmlNode.ChildNodes[i];
+                    inTreeNode.Nodes.Add(new TreeNode(xNode.Name));
+                    tNode = inTreeNode.Nodes[i];
+                    AddTreeViewNode(xNode, tNode);
+                }
+
+                if(inXmlNode.Attributes.GetNamedItem("Text") != null )
+                {
+                    inTreeNode.Text = inXmlNode.Attributes.GetNamedItem("Text").InnerText;
+                }
+            }
+            else
+            {
+                inTreeNode.Text = inXmlNode.Attributes.GetNamedItem("Text").InnerText;
+            }
         }
     }
 }

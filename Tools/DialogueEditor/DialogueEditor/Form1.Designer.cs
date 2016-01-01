@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("You have to...");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("You dont have to");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Hello", new System.Windows.Forms.TreeNode[] {
-            treeNode6,
-            treeNode7});
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("goodbye");
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("RootNode", new System.Windows.Forms.TreeNode[] {
-            treeNode8,
-            treeNode9});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("You have to...");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("You dont have to");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Hello", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2});
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("goodbye");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("RootNode", new System.Windows.Forms.TreeNode[] {
+            treeNode3,
+            treeNode4});
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,28 +51,35 @@
             this.RemoveNode = new System.Windows.Forms.Button();
             this.ExpandAll = new System.Windows.Forms.Button();
             this.inputText = new System.Windows.Forms.TextBox();
+            this.modelTextbox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.questTextbox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeView1
             // 
+            this.treeView1.AllowDrop = true;
             this.treeView1.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.treeView1.Location = new System.Drawing.Point(131, 39);
+            this.treeView1.LabelEdit = true;
+            this.treeView1.Location = new System.Drawing.Point(210, 39);
             this.treeView1.Name = "treeView1";
-            treeNode6.Name = "Node3";
-            treeNode6.Text = "You have to...";
-            treeNode7.Name = "Node4";
-            treeNode7.Text = "You dont have to";
-            treeNode8.Name = "Hello";
-            treeNode8.Text = "Hello";
-            treeNode9.Name = "Node2";
-            treeNode9.Text = "goodbye";
-            treeNode10.Name = "RootNode";
-            treeNode10.Tag = "Root";
-            treeNode10.Text = "RootNode";
+            treeNode1.Name = "Node3";
+            treeNode1.Text = "You have to...";
+            treeNode2.Name = "Node4";
+            treeNode2.Text = "You dont have to";
+            treeNode3.Name = "Hello";
+            treeNode3.Text = "Hello";
+            treeNode4.Name = "Node2";
+            treeNode4.Text = "goodbye";
+            treeNode5.Name = "RootNode";
+            treeNode5.Tag = "Root";
+            treeNode5.Text = "RootNode";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode10});
-            this.treeView1.Size = new System.Drawing.Size(979, 435);
+            treeNode5});
+            this.treeView1.Size = new System.Drawing.Size(795, 432);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -110,12 +117,14 @@
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.openToolStripMenuItem.Text = "Import Dialogue";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.saveToolStripMenuItem.Text = "Eport Dialogue";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // quitToolStripMenuItem
             // 
@@ -178,17 +187,64 @@
             // 
             this.inputText.AcceptsReturn = true;
             this.inputText.AcceptsTab = true;
-            this.inputText.Location = new System.Drawing.Point(131, 500);
+            this.inputText.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.inputText.Location = new System.Drawing.Point(210, 503);
             this.inputText.Name = "inputText";
-            this.inputText.Size = new System.Drawing.Size(979, 20);
+            this.inputText.Size = new System.Drawing.Size(795, 26);
             this.inputText.TabIndex = 6;
             this.inputText.TextChanged += new System.EventHandler(this.NodeText_TextChanged);
+            // 
+            // modelTextbox
+            // 
+            this.modelTextbox.Location = new System.Drawing.Point(12, 190);
+            this.modelTextbox.Name = "modelTextbox";
+            this.modelTextbox.Size = new System.Drawing.Size(192, 20);
+            this.modelTextbox.TabIndex = 7;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 171);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(93, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Attached to model";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(13, 238);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Quest";
+            // 
+            // questTextbox
+            // 
+            this.questTextbox.Location = new System.Drawing.Point(12, 254);
+            this.questTextbox.Name = "questTextbox";
+            this.questTextbox.Size = new System.Drawing.Size(192, 20);
+            this.questTextbox.TabIndex = 10;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(210, 484);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(69, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Dialogue text";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1122, 589);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.questTextbox);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.modelTextbox);
             this.Controls.Add(this.inputText);
             this.Controls.Add(this.ExpandAll);
             this.Controls.Add(this.RemoveNode);
@@ -221,6 +277,11 @@
         private System.Windows.Forms.Button RemoveNode;
         private System.Windows.Forms.Button ExpandAll;
         private System.Windows.Forms.TextBox inputText;
+        private System.Windows.Forms.TextBox modelTextbox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox questTextbox;
+        private System.Windows.Forms.Label label3;
     }
 }
 
