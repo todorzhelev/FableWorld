@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("You have to...");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("You dont have to");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Hello", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("goodbye");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("RootNode", new System.Windows.Forms.TreeNode[] {
-            treeNode3,
-            treeNode4});
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("You have to...");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("You dont have to");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Hello", new System.Windows.Forms.TreeNode[] {
+            treeNode6,
+            treeNode7});
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("goodbye");
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("RootNode", new System.Windows.Forms.TreeNode[] {
+            treeNode8,
+            treeNode9});
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,19 +66,19 @@
             this.treeView1.LabelEdit = true;
             this.treeView1.Location = new System.Drawing.Point(210, 39);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Node3";
-            treeNode1.Text = "You have to...";
-            treeNode2.Name = "Node4";
-            treeNode2.Text = "You dont have to";
-            treeNode3.Name = "Hello";
-            treeNode3.Text = "Hello";
-            treeNode4.Name = "Node2";
-            treeNode4.Text = "goodbye";
-            treeNode5.Name = "RootNode";
-            treeNode5.Tag = "Root";
-            treeNode5.Text = "RootNode";
+            treeNode6.Name = "Node3";
+            treeNode6.Text = "You have to...";
+            treeNode7.Name = "Node4";
+            treeNode7.Text = "You dont have to";
+            treeNode8.Name = "Hello";
+            treeNode8.Text = "Hello";
+            treeNode9.Name = "Node2";
+            treeNode9.Text = "goodbye";
+            treeNode10.Name = "RootNode";
+            treeNode10.Tag = "Root";
+            treeNode10.Text = "RootNode";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode5});
+            treeNode10});
             this.treeView1.Size = new System.Drawing.Size(795, 432);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -200,6 +200,7 @@
             this.modelTextbox.Name = "modelTextbox";
             this.modelTextbox.Size = new System.Drawing.Size(192, 20);
             this.modelTextbox.TabIndex = 7;
+            this.modelTextbox.TextChanged += new System.EventHandler(this.modelTextbox_TextChanged);
             // 
             // label1
             // 
@@ -225,6 +226,7 @@
             this.questTextbox.Name = "questTextbox";
             this.questTextbox.Size = new System.Drawing.Size(192, 20);
             this.questTextbox.TabIndex = 10;
+            this.questTextbox.TextChanged += new System.EventHandler(this.questTextbox_TextChanged);
             // 
             // label3
             // 

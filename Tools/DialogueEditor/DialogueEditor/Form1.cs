@@ -19,8 +19,11 @@ namespace DialogueEditor
         {
             InitializeComponent();
 
-            inputText.KeyDown += new KeyEventHandler(NodeText_KeyDown);
-            //inputText.KeyDown += new KeyEventArgs(NodeText_KeyDown);
+            inputText.KeyDown    += new KeyEventHandler(NodeText_KeyDown);
+            modelTextbox.KeyDown += new KeyEventHandler(modelTextbox_KeyDown);
+            questTextbox.KeyDown += new KeyEventHandler(questTextbox_KeyDown);
+
+            Text = "Dialogue editor";
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -28,19 +31,15 @@ namespace DialogueEditor
             selectedTreeNode = e.Node;
 
             inputText.Text = selectedTreeNode.Text;
+            questTextbox.Text = (string)selectedTreeNode.Tag;
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            treeView1.Nodes.Clear();
-            treeView1.Nodes.Add("Root");
-            treeView1.SelectedNode = treeView1.Nodes[0];
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            treeView1.Nodes.Add("OMG BRAT");
-            treeView1.Nodes[1].Nodes.Add("ebasi");
         }
 
         private void RemoveNode_Click(object sender, EventArgs e)
@@ -55,12 +54,12 @@ namespace DialogueEditor
         {
             if( treeView1.Nodes.Count == 0)
             {
-                treeView1.Nodes.Add("Root");
+                treeView1.Nodes.Add(new TreeNode("Root"));
                 treeView1.SelectedNode = treeView1.Nodes[0];
             }
             else
             {
-                treeView1.SelectedNode.Nodes.Add("test");
+                treeView1.SelectedNode.Nodes.Add(new TreeNode("node"));
                 treeView1.SelectedNode.Expand();
             }
         }
@@ -100,6 +99,9 @@ namespace DialogueEditor
         {
             var rootElementName = treeView1.Nodes[0].Text;
             var rootElement = new XElement(rootElementName, CreateXmlElement(treeView1.Nodes[0].Nodes));
+            var attachedToModelName = new XAttribute("model", attachedToModel);
+            rootElement.Add(attachedToModelName);
+
             var document = new XDocument(rootElement);
             document.Save("export.xml");
         }
@@ -113,6 +115,15 @@ namespace DialogueEditor
                 XAttribute name = new XAttribute("Text", treeViewNode.Text);
                 element.Add(name);
 
+                if (treeViewNode.Tag != null)
+                {
+                    XAttribute quest = new XAttribute("Quest", (string)treeViewNode.Tag);
+                    if ((string)treeViewNode.Tag != " ")
+                    {
+                        element.Add(quest);
+                    }
+                }
+
                 if (treeViewNode.Nodes.Count > 0)
                 {
                     element.Add(CreateXmlElement(treeViewNode.Nodes));
@@ -123,8 +134,6 @@ namespace DialogueEditor
             return elements;
         }
 
-        public TreeNode selectedTreeNode;
-
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             XmlDocument dialogueFile = new XmlDocument();
@@ -132,7 +141,12 @@ namespace DialogueEditor
             FileStream fs = new FileStream("export.xml", FileMode.Open, FileAccess.Read);
             dialogueFile.Load(fs);
             rootNode = dialogueFile.ChildNodes[1];
+
+            var attachedToModelName = rootNode.Attributes.GetNamedItem("model").InnerText;
+            modelTextbox.Text = attachedToModelName;
+
             treeView1.Nodes.Clear();
+
             treeView1.Nodes.Add(new TreeNode(dialogueFile.DocumentElement.Name));
             TreeNode tNode;
             tNode = treeView1.Nodes[0];
@@ -154,6 +168,7 @@ namespace DialogueEditor
                 {
                     xNode = inXmlNode.ChildNodes[i];
                     inTreeNode.Nodes.Add(new TreeNode(xNode.Name));
+
                     tNode = inTreeNode.Nodes[i];
                     AddTreeViewNode(xNode, tNode);
                 }
@@ -162,10 +177,60 @@ namespace DialogueEditor
                 {
                     inTreeNode.Text = inXmlNode.Attributes.GetNamedItem("Text").InnerText;
                 }
+
+                if (inXmlNode.Attributes.GetNamedItem("Quest") != null)
+                {
+                    inTreeNode.Tag = inXmlNode.Attributes.GetNamedItem("Quest").InnerText;
+                }
             }
             else
             {
-                inTreeNode.Text = inXmlNode.Attributes.GetNamedItem("Text").InnerText;
+                inTreeNode.Text  = inXmlNode.Attributes.GetNamedItem("Text").InnerText;
+                if (inXmlNode.Attributes.GetNamedItem("Quest") != null)
+                {
+                    inTreeNode.Tag = inXmlNode.Attributes.GetNamedItem("Quest").InnerText;
+                }
+            }
+        }
+
+        private void modelTextbox_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void modelTextbox_KeyDown(object sender, KeyEventArgs e)
+        {
+            var character = e.KeyData;
+
+            if (e.KeyCode == Keys.Enter)
+            {
+                attachedToModel = modelTextbox.Text;
+            }
+            else
+            {
+                modelTextbox.Text.Insert(modelTextbox.Text.Length, e.KeyData.ToString());
+            }
+        }
+
+        public TreeNode selectedTreeNode;
+
+        public string attachedToModel;
+
+        private void questTextbox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void questTextbox_KeyDown(object sender, KeyEventArgs e)
+        {
+            var character = e.KeyData;
+
+            if (e.KeyCode == Keys.Enter)
+            {
+                selectedTreeNode.Tag = questTextbox.Text;
+            }
+            else
+            {
+                questTextbox.Text.Insert(questTextbox.Text.Length, e.KeyData.ToString());
             }
         }
     }
