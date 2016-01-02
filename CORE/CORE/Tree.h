@@ -32,15 +32,16 @@ public:
 
 	node* InsertNode(node* pNode,string text,int val,float x,float y,string quest);
 
+	void InsertNode(node*& currentNode, node*& parentNode, string text, string quest);
+
 	node* FindNode(node* pNode, int key);
 
 	node* GetRoot();
 
 	void SetRoot(node* pNode);
 
-private:
-
 	node* m_pRoot;
+
 };
 
 

@@ -1,22 +1,27 @@
-<Dialogues>
-	<Dialogue model="ezreal">
-		<Leaf id="1" x="5" y="620">Hello,stranger.I need your help.</Leaf>
-		<Leaf parentid="1" id="2" x="5" y="660">Ok.I can help.</Leaf> 
-		
-			<Leaf parentid="2" id="4" x="5" y="620">Go to Cho and try to kill him. If you do this you will save the world.</Leaf>
-			
-				<Leaf parentid="4" id="5" x="5" y="660" quest="Go to Cho and try to kill him">Ok. Wish me luck.</Leaf>
-				<Leaf parentid="4" id="6" x="5" y="700">I am not super hero. Why do i have to go??</Leaf>
-					<Leaf parentid="6" id="7" x="5" y="620">Because you are the only one who can do it. And i am busy now.. </Leaf>
-						<Leaf parentid="7" id="8" x="5" y="660">Busy??And what is more important than saving the world from Cho??</Leaf>
-							<Leaf parentid="8" id="10" x="5" y="620">I have to wash the dishes or my wife will go mad..</Leaf>
-								<Leaf parentid="10" id="11" x="5" y="660">But you are super hero and you are scared from your wife??</Leaf>
-									<Leaf parentid="11" id="13" x="5" y="620">Look i dont have time for this. Just go kill him and finish this already</Leaf>
-										<Leaf parentid="13" id="14" x="5" y="660" quest="Go to Cho and try to kill him">Ok i will go, but you have to be ashamed!</Leaf>
-										<Leaf parentid="13" id="15" x="5" y="700">No way to do it!</Leaf>
-								<Leaf parentid="10" id="12" x="5" y="700" quest="Go to Cho and try to kill him">Ok i will go then "super hero"</Leaf>
-						<Leaf parentid="7" id="9" x="5" y="700" quest="Go to Cho and try to kill him">Oh i am sorry i disturbed you.Finish your job and i will go to save the world</Leaf>
-				
-		<Leaf parentid="1" id="3" x="5" y="700">No way to help you</Leaf>	
-	</Dialogue>
-</Dialogues>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dialogue model="ezreal">
+  <Node Text="Hello,stranger.I need your help.">
+    <Node Text="Ok.I can help.">
+      <Node Text="Go to Cho and try to kill him. If you do this you will save the world.">
+        <Node Text="Ok. Wish me luck." Quest="Go to Cho and try to kill him" />
+        <Node Text="I am not super hero. Why do i have to go??">
+          <Node Text="Because you are the only one who can do it. And i am busy now..">
+            <Node Text="Busy??And what is more important than saving the world from Cho??">
+              <Node Text="I have to wash the dishes or my wife will go mad..">
+                <Node Text="But you are super hero and you are scared from your wife??">
+                  <Node Text="Look i dont have time for this. Just go kill him and finish this already">
+                    <Node Text="Ok i will go, but you have to be ashamed!" Quest="Go to Cho and try to kill him" />
+                    <Node Text="No way to do it!" />
+                  </Node>
+                </Node>
+                <Node Text="Ok i will go then &quot;super hero&quot;" Quest="Go to Cho and try to kill him" />
+              </Node>
+            </Node>
+            <Node Text="Oh i am sorry i disturbed you.Finish your job and i will go to save the world" />
+          </Node>
+        </Node>
+      </Node>
+    </Node>
+    <Node Text="No way to help you" />
+  </Node>
+</Dialogue>

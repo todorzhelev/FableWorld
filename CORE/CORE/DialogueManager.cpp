@@ -49,11 +49,11 @@ void DialogueManager::LoadDialogues(string strDialoguesFileName)
 	}
 
 	//gets the root element of the whole xml document- Dialogues
-	m_pRoot = doc.FirstChildElement("Dialogues");
+	m_pRoot = doc.FirstChildElement("Dialogue");
 	if(m_pRoot)
 	{
 		//gets the root element of single dialogue
-		m_pDialogue = m_pRoot->FirstChildElement("Dialogue");
+		m_pDialogue = m_pRoot;
 		while(m_pDialogue)
 		{
 				DialogueObject obj;
@@ -61,47 +61,17 @@ void DialogueManager::LoadDialogues(string strDialoguesFileName)
 				obj.m_strModel = m_pDialogue->Attribute("model");
 				m_vGameObjectsWithDialogues.push_back(obj.m_strModel);
 		
-				m_pLeaf = m_pDialogue->FirstChildElement("Leaf");
-				while(m_pLeaf)
-				{
-					int parentid;
-					int id;
-					float x;
-					float y;
-					string quest = "";
-					// if the node doesnt have parentid it is root
-					if( !m_pLeaf->Attribute("parentid") )
-					{
-						m_pLeaf->QueryIntAttribute("id",&id);
-						m_pLeaf->QueryFloatAttribute("x",&x);
-						m_pLeaf->QueryFloatAttribute("y",&y);
-						node* pNode = obj.m_pTree->InsertNode(obj.m_pTree->GetRoot(),m_pLeaf->GetText(),id,x,y,quest);
-						obj.m_pTree->SetRoot(pNode);
-						obj.m_bIsStarted = false;
-						obj.m_bIsClickedDialogueNode = false;
-						obj.m_bIsEnded = false;
-						
-					}
-					else
-					{
-						m_pLeaf->QueryIntAttribute("parentid",&parentid);
-						m_pLeaf->QueryIntAttribute("id",&id);
-						m_pLeaf->QueryFloatAttribute("x",&x);
-						m_pLeaf->QueryFloatAttribute("y",&y);
-					
-						if(m_pLeaf->Attribute("quest"))
-						{
-							quest = m_pLeaf->Attribute("quest");
-						}
-						obj.m_pTree->InsertNode(obj.m_pTree->FindNode(obj.m_pTree->GetRoot(),parentid),m_pLeaf->GetText(),id,x,y,quest);
-					}
-					//goes to the next leaf
-					m_pLeaf = m_pLeaf->NextSiblingElement("Leaf");
-				}
+				m_pNode = m_pDialogue->FirstChildElement("Node");
+		
+				TraverseNodes(m_pNode, obj.m_pTree, obj.m_pTree->m_pRoot,nullptr);
 
 				//when the dialogue is rendered and updated it is passed the current node from it.
 				//This dialogue isnt started yet so the current node is the root
 				obj.m_pCurrentDialogueNode = obj.m_pTree->GetRoot();
+
+				obj.m_bIsStarted = false;
+				obj.m_bIsClickedDialogueNode = false;
+				obj.m_bIsEnded = false;
 
 				//adds the loaded from xml dialogue to map
 				AddDialogueObjects(obj);
@@ -110,10 +80,57 @@ void DialogueManager::LoadDialogues(string strDialoguesFileName)
 				m_pDialogue = m_pDialogue->NextSiblingElement("Dialogue");
 		}
 	}
-
-	
 }
 
+/////////////////////////////////////////////////////////////////////////
+
+//void DialogueManager::TraverseNodes(Tree* tree,tinyxml2::XMLElement* xmlNode, node* treeNode, node* parentTreeNode, bool childNode,bool siblingNode)
+void DialogueManager::TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, node* currentNode, node* parentNode)
+{
+	if(xmlNode == nullptr )
+	{
+		return;
+	}
+	
+	string quest = "";
+	string text = "";
+
+	if (xmlNode->Attribute("Quest"))
+	{
+		quest = xmlNode->Attribute("Quest");
+	}
+
+	if (xmlNode->Attribute("Text"))
+	{
+		text = xmlNode->Attribute("Text");
+	}
+
+	std::cout << text << std::endl;
+
+	if( currentNode == nullptr && parentNode == nullptr )
+	{
+		pTree->InsertNode(pTree->m_pRoot, parentNode, text, quest);
+		currentNode = pTree->m_pRoot;
+	}
+	else
+	{
+		pTree->InsertNode(currentNode, parentNode, text, quest);
+	}
+
+	tinyxml2::XMLElement* pSibling    = xmlNode->NextSiblingElement("Node");
+	tinyxml2::XMLElement* pFirstChild = xmlNode->FirstChildElement("Node");
+
+
+	if (pFirstChild != nullptr)
+	{
+		TraverseNodes(pFirstChild,pTree, nullptr,currentNode);
+	}
+
+	if (pSibling != nullptr)
+	{
+		TraverseNodes(pSibling,pTree,nullptr, parentNode);
+	}
+}
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -125,7 +142,6 @@ void DialogueManager::AddDialogueObjects(DialogueObject& dialogueObject)
 {
 	m_mapModelDialogue[dialogueObject.m_strModel] = dialogueObject; 
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -146,7 +162,6 @@ void DialogueManager::UpdateLabelTree(node* pNode)
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 /*
 invokes the onUpdate function for the root element in the tree
@@ -156,7 +171,6 @@ void DialogueManager::UpdateLabelTreeRoot(node* pNode)
 {
 	pNode->m_pLabel->OnUpdate();
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -173,7 +187,6 @@ void DialogueManager::RenderLabelTree(node* pNode)
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
 //renders the root of the tree only
@@ -181,7 +194,6 @@ void DialogueManager::RenderLabelTreeRoot(node* pNode)
 {
 	pNode->m_pLabel->OnRender(255,255,255,0);
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -219,7 +231,6 @@ void DialogueManager::ChangeDialogue(node* pNode,DialogueObject& dialogueObject)
 		}
 	}
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -276,7 +287,6 @@ void DialogueManager::LabelClicked(DialogueObject& dialogueObject,map<string,Que
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 /*
 checks if the user clicked on root nood and if he did started variable is set to true
@@ -303,7 +313,6 @@ void DialogueManager::StartDialogue(node* pNode,DialogueObject& dialogueObject)
 
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 /*
 hides all the nodes in the tree. This way all the nodes on the screen become hidden i.e. not rendered 
@@ -318,14 +327,12 @@ void DialogueManager::HideAllLabelTree(node* pNode)
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
 void DialogueManager::HideRoot(node* pNode)
 {
 	pNode->m_pLabel->SetVisible(false);
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -341,6 +348,5 @@ bool DialogueManager::AreChildrenHidden(node* pNode)
 	}
 	return false;
 }
-
 
 /////////////////////////////////////////////////////////////////////////

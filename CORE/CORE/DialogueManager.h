@@ -7,6 +7,8 @@
 #include <string>
 #include "GameObjectManager.h"
 
+struct node;
+
 /*
 this is struct that holds all the information needed for one dialogue
 m_strModel - This variable holds the name of the model. When clicking on this model this dialogue will appear
@@ -35,6 +37,10 @@ class DialogueManager
 public:	
 
 	void LoadDialogues(string strDialoguesFileName);
+
+	//void TraverseNodes(Tree* tree, tinyxml2::XMLElement* xmlNode, node* treeNode, node* parentTreeNode, bool childNode, bool siblingNode);
+
+	void TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, node* currentNode, node* parentNode);
 
 	void UpdateLabelTree(node* pNode);
 
@@ -65,7 +71,7 @@ public:
 private:
 
 	tinyxml2::XMLElement* m_pRoot;
-	tinyxml2::XMLElement* m_pLeaf;
+	tinyxml2::XMLElement* m_pNode;
 	tinyxml2::XMLElement* m_pDialogue;
 
 };

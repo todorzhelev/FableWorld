@@ -56,6 +56,35 @@ node* Tree::InsertNode(node* pNode,string text,int val,float x,float y,string qu
 	return pNode;		
 }
 
+void Tree::InsertNode(node*& currentNode, node*& parentNode, string text, string quest)
+{
+	if (currentNode == nullptr && parentNode == nullptr)
+	{
+		currentNode = new node;
+		currentNode->m_pLabel = new Label(D3DXVECTOR2(5, 620), text);
+		//pParentNode->m_nKey = val;
+		currentNode->m_strText = text;
+		currentNode->m_pLabel->SetVisible(false);
+		currentNode->m_strQuest = quest;
+		parentNode = currentNode;
+	}
+	else
+	{
+		int y = 580 + parentNode->m_vNodes.size() * 40;
+
+		currentNode = new node;
+		currentNode->m_pLabel = new Label(D3DXVECTOR2(5, y), text);
+		//pNode->m_nKey = val;
+		currentNode->m_strText = text;
+		currentNode->m_pLabel->SetVisible(false);
+		currentNode->m_strQuest = quest;
+
+		parentNode->m_vNodes.push_back(currentNode);
+	}
+
+	
+}
+
 
 /////////////////////////////////////////////////////////////////////////
 /*
