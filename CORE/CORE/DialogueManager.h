@@ -10,6 +10,22 @@
 struct node;
 
 /*
+this structure holds all the information needed for single node in the tree
+m_nKey - this is the id of the node.
+m_strText - the text of the dialogue
+m_label - the label is need to detect user click on the text
+m_vNodes - this is vector that holds the children of this node.The children can contain children and etc.
+m_strQuest - holds the name of the quest
+*/
+struct DialogueNode
+{
+	string		  m_strText;
+	Label*		  m_pLabel;
+	vector<DialogueNode*> m_vNodes;
+	string		  m_strQuest;
+};
+
+/*
 this is struct that holds all the information needed for one dialogue
 m_strModel - This variable holds the name of the model. When clicking on this model this dialogue will appear
 m_pTree - Holds the ierarchy of dialogue nodes
@@ -23,8 +39,8 @@ struct DialogueObject
 {
 	string  m_strModel;
 	Tree*   m_pTree;
-	node*   m_pCurrentDialogueNode;
-	node*   m_pClickedDialogueNode;
+	DialogueNode*   m_pCurrentDialogueNode;
+	DialogueNode*   m_pClickedDialogueNode;
 	bool    m_bIsClickedDialogueNode;
 	bool    m_bIsStarted;
 	bool    m_bIsEnded;
@@ -40,29 +56,31 @@ public:
 
 	//void TraverseNodes(Tree* tree, tinyxml2::XMLElement* xmlNode, node* treeNode, node* parentTreeNode, bool childNode, bool siblingNode);
 
-	void TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, node* currentNode, node* parentNode);
+	void TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, DialogueNode* currentNode, DialogueNode* parentNode);
 
-	void UpdateLabelTree(node* pNode);
+	void OnUpdate(map<string, QuestObject>& activeQuests);
 
-	void UpdateLabelTreeRoot(node* pNode);
+	void UpdateLabelTree(DialogueNode* pNode);
 
-	void RenderLabelTree(node* pNode);
+	void UpdateLabelTreeRoot(DialogueNode* pNode);
 
-	void RenderLabelTreeRoot(node* pNode);
+	void RenderLabelTree(DialogueNode* pNode);
 
-	void ChangeDialogue(node* pNode,DialogueObject& dialogueObject);
+	void RenderLabelTreeRoot(DialogueNode* pNode);
+
+	void ChangeDialogue(DialogueNode* pNode,DialogueObject& dialogueObject);
 
 	void LabelClicked(DialogueObject& dialogueObject,map<string,QuestObject>& mapActiveQuests,map<string,QuestObject>& mapAvailableQuests);
 
-	void HideAllLabelTree(node* pNode);
+	void HideAllLabelTree(DialogueNode* pNode);
 
-	bool AreChildrenHidden(node* pNode);
+	bool AreChildrenHidden(DialogueNode* pNode);
 
 	void AddDialogueObjects(DialogueObject& dialogueObject);
 
-	void StartDialogue(node* pNode,DialogueObject& dialogueObject);
+	void StartDialogue(DialogueNode* pNode,DialogueObject& dialogueObject);
 
-	void HideRoot(node* pNode);
+	void HideRoot(DialogueNode* pNode);
 
 	map<string,DialogueObject> m_mapModelDialogue;
 

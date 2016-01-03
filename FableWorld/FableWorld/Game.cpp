@@ -213,51 +213,27 @@ void Game::OnUpdate(float dt)
 	
 	soundsyst->PlayAllSounds();
 
-	//updates for the dialogues
-	for(auto& dialogue: pDialogueManager->m_mapModelDialogue)
-	{
-		if( !dialogue.second.m_bIsEnded )
-		{
-			pDialogueManager->UpdateLabelTree(dialogue.second.m_pTree->GetRoot());
-			pDialogueManager->UpdateLabelTreeRoot(dialogue.second.m_pTree->GetRoot());
-			pDialogueManager->StartDialogue(dialogue.second.m_pTree->GetRoot(), dialogue.second);
-			pDialogueManager->ChangeDialogue(dialogue.second.m_pCurrentDialogueNode, dialogue.second);
-			pDialogueManager->LabelClicked(dialogue.second,m_mapActiveQuests,availableQuests);
-		}
-	}
-	
-
-	//binding the camera to mainHero in the game and moving it. mainHero is set in the scripts in init.lua
-	if( !pMainHero->IsDead() && !camera->IsCameraFree() )
-	{
-		MoveObject(mainHero,dt);
-	}
+	pDialogueManager->OnUpdate(m_mapActiveQuests);
 
 	//checking if there is active quest
-	if(!m_mapActiveQuests.empty())
+	if (!m_mapActiveQuests.empty())
 	{
-		for(auto& quest : m_mapActiveQuests)
+		for (auto& quest : m_mapActiveQuests)
 		{
 			SkinnedModel* reqObject = m_pGameObjManager->GetSkinnedModelByName(quest.second.requiredObject);
 
 			//if mainHero is close to the required from the quest object and the required object is dead the quest is completed.
-			if(IsObjectNear(pMainHero, reqObject) && reqObject->IsDead())
+			if (IsObjectNear(pMainHero, reqObject) && reqObject->IsDead())
 			{
 				quest.second.completed = true;
 			}
 		}
 	}
-	
-	//revealing dialogue if model is picked
-	for (auto& dialogue : pDialogueManager->m_mapModelDialogue)
-	{
-		GameObject* obj = m_pGameObjManager->GetObjectByName(dialogue.second.m_strModel);
 
-		if(obj->IsPicked() && !dialogue.second.m_bIsEnded )
-		{
-			dialogue.second.m_pTree->GetRoot()->m_pLabel->SetVisible(true);
-			obj->SetPicked(false);
-		}
+	//binding the camera to mainHero in the game and moving it. mainHero is set in the scripts in init.lua
+	if( !pMainHero->IsDead() && !camera->IsCameraFree() )
+	{
+		MoveObject(mainHero,dt);
 	}
 
 	//updating the models's titles positions
@@ -571,8 +547,8 @@ void Game::OnRender()
 			//draws dialogues
 			for (auto& dialogue : pDialogueManager->m_mapModelDialogue)
 			{
-				pDialogueManager->RenderLabelTreeRoot(dialogue.second.m_pTree->GetRoot());
-				pDialogueManager->RenderLabelTree(dialogue.second.m_pTree->GetRoot());
+				pDialogueManager->RenderLabelTreeRoot(dialogue.second.m_pTree->m_pRoot);
+				pDialogueManager->RenderLabelTree(dialogue.second.m_pTree->m_pRoot);
 			}
 
 			//text->drawText("Press L to switch between the two camera modes",400,40,0,0,255,0,0,0);

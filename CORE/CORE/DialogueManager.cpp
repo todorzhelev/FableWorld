@@ -1,5 +1,6 @@
 #include "DialogueManager.h"
 #include "SkinnedModel.h"
+#include "LuaFunctions.h"
 
 DialogueManager* pDialogueManager = NULL;
 
@@ -15,28 +16,7 @@ SourceFile: Dialogue.cpp
 */
 
 /////////////////////////////////////////////////////////////////////////
-/*
- loads all the dialogues from single xml file.
-	    The xml file is opened and red element by element. There is one element which is root of the others.
-		This element doesnt have parentid attribute.
-		After one element is red its value is saved in tree node.
-	Example of xml:
-	<Dialogues>
-		<Dialogue model="?">
-			<Leaf id="1" x="5" y="400">Hello,stranger.I need your help.</Leaf>
-			<Leaf parentid="1" id="2" x="5" y="420">Ok.I can help.</Leaf> 
-			<Leaf parentid="1" id="3" x="5" y="440">No way</Leaf>
 
-			<Leaf parentid="2" id="4" x="5" y="420">Go to spider</Leaf> 
-			<Leaf parentid="2" id="5" x="5" y="440">Go to car</Leaf>
-
-			<Leaf parentid="4" id="6" x="5" y="420" quest="Go to the spider">Go to the spider and kill him</Leaf>
-		</Dialogue>
-	</Dialogues>
-	Explanation for reading the file:
-	In the code the root variable takes the Dialogues element. 
-	dialogue variable takes Dualogue element and leaf variable takes the Leaf element
-*/
 void DialogueManager::LoadDialogues(string strDialoguesFileName)
 {
 	tinyxml2::XMLDocument doc;
@@ -56,36 +36,36 @@ void DialogueManager::LoadDialogues(string strDialoguesFileName)
 		m_pDialogue = m_pRoot;
 		while(m_pDialogue)
 		{
-				DialogueObject obj;
-				obj.m_pTree = new Tree;
-				obj.m_strModel = m_pDialogue->Attribute("model");
-				m_vGameObjectsWithDialogues.push_back(obj.m_strModel);
+			DialogueObject obj;
+			obj.m_pTree = new Tree;
+			obj.m_strModel = m_pDialogue->Attribute("model");
+			m_vGameObjectsWithDialogues.push_back(obj.m_strModel);
 		
-				m_pNode = m_pDialogue->FirstChildElement("Node");
+			m_pNode = m_pDialogue->FirstChildElement("Node");
 		
-				TraverseNodes(m_pNode, obj.m_pTree, obj.m_pTree->m_pRoot,nullptr);
+			TraverseNodes(m_pNode, obj.m_pTree, obj.m_pTree->m_pRoot,nullptr);
 
-				//when the dialogue is rendered and updated it is passed the current node from it.
-				//This dialogue isnt started yet so the current node is the root
-				obj.m_pCurrentDialogueNode = obj.m_pTree->GetRoot();
+			//when the dialogue is rendered and updated it is passed the current node from it.
+			//This dialogue isnt started yet so the current node is the root
+			obj.m_pCurrentDialogueNode = obj.m_pTree->m_pRoot;
 
-				obj.m_bIsStarted = false;
-				obj.m_bIsClickedDialogueNode = false;
-				obj.m_bIsEnded = false;
+			obj.m_bIsStarted = false;
+			obj.m_bIsClickedDialogueNode = false;
+			obj.m_bIsEnded = false;
 
-				//adds the loaded from xml dialogue to map
-				AddDialogueObjects(obj);
+			//adds the loaded from xml dialogue to map
+			AddDialogueObjects(obj);
 
-				//goes to the next Dialogue element
-				m_pDialogue = m_pDialogue->NextSiblingElement("Dialogue");
+			//goes to the next Dialogue element
+			m_pDialogue = m_pDialogue->NextSiblingElement("Dialogue");
 		}
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-//void DialogueManager::TraverseNodes(Tree* tree,tinyxml2::XMLElement* xmlNode, node* treeNode, node* parentTreeNode, bool childNode,bool siblingNode)
-void DialogueManager::TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, node* currentNode, node* parentNode)
+//void DialogueManager::TraverseNodes(Tree* tree,tinyxml2::XMLElement* xmlNode, DialogueNode* treeNode, DialogueNode* parentTreeNode, bool childNode,bool siblingNode)
+void DialogueManager::TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, DialogueNode* currentNode, DialogueNode* parentNode)
 {
 	if(xmlNode == nullptr )
 	{
@@ -107,19 +87,22 @@ void DialogueManager::TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, 
 
 	std::cout << text << std::endl;
 
+	tinyxml2::XMLElement* pSibling = xmlNode->NextSiblingElement("Node");
+	tinyxml2::XMLElement* pFirstChild = xmlNode->FirstChildElement("Node");
+
+	tinyxml2::XMLElement* pPrevSibling = xmlNode->PreviousSiblingElement("Node");
+
+	bool bAnySiblings = pSibling != nullptr || pPrevSibling != nullptr;
+
 	if( currentNode == nullptr && parentNode == nullptr )
 	{
-		pTree->InsertNode(pTree->m_pRoot, parentNode, text, quest);
+		pTree->InsertNode(pTree->m_pRoot, parentNode, text, quest, bAnySiblings);
 		currentNode = pTree->m_pRoot;
 	}
 	else
 	{
-		pTree->InsertNode(currentNode, parentNode, text, quest);
+		pTree->InsertNode(currentNode, parentNode, text, quest, bAnySiblings);
 	}
-
-	tinyxml2::XMLElement* pSibling    = xmlNode->NextSiblingElement("Node");
-	tinyxml2::XMLElement* pFirstChild = xmlNode->FirstChildElement("Node");
-
 
 	if (pFirstChild != nullptr)
 	{
@@ -129,6 +112,31 @@ void DialogueManager::TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, 
 	if (pSibling != nullptr)
 	{
 		TraverseNodes(pSibling,pTree,nullptr, parentNode);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void DialogueManager::OnUpdate(map<string, QuestObject>& activeQuests)
+{
+	for (auto& dialogue : m_mapModelDialogue)
+	{
+		if (!dialogue.second.m_bIsEnded)
+		{
+			pDialogueManager->UpdateLabelTree(dialogue.second.m_pTree->m_pRoot);
+			pDialogueManager->UpdateLabelTreeRoot(dialogue.second.m_pTree->m_pRoot);
+			pDialogueManager->StartDialogue(dialogue.second.m_pTree->m_pRoot, dialogue.second);
+			pDialogueManager->ChangeDialogue(dialogue.second.m_pCurrentDialogueNode, dialogue.second);
+			pDialogueManager->LabelClicked(dialogue.second, activeQuests, availableQuests);
+		}
+
+		GameObject* obj = m_pGameObjManager->GetObjectByName(dialogue.second.m_strModel);
+
+		if (obj->IsPicked() && !dialogue.second.m_bIsEnded)
+		{
+			dialogue.second.m_pTree->m_pRoot->m_pLabel->SetVisible(true);
+			obj->SetPicked(false);
+		}
 	}
 }
 
@@ -148,7 +156,7 @@ void DialogueManager::AddDialogueObjects(DialogueObject& dialogueObject)
 invokes the onUpdate function for every label in the tree
 This is needed to check for mouse click or mouse over
 */
-void DialogueManager::UpdateLabelTree(node* pNode)
+void DialogueManager::UpdateLabelTree(DialogueNode* pNode)
 {
 	if(pNode == NULL)
 	{
@@ -167,7 +175,7 @@ void DialogueManager::UpdateLabelTree(node* pNode)
 invokes the onUpdate function for the root element in the tree
 This is needed to check for mouse click or mouse over
 */
-void DialogueManager::UpdateLabelTreeRoot(node* pNode)
+void DialogueManager::UpdateLabelTreeRoot(DialogueNode* pNode)
 {
 	pNode->m_pLabel->OnUpdate();
 }
@@ -175,7 +183,7 @@ void DialogueManager::UpdateLabelTreeRoot(node* pNode)
 /////////////////////////////////////////////////////////////////////////
 
 //invokes onRender on every label in the tree
-void DialogueManager::RenderLabelTree(node* pNode)
+void DialogueManager::RenderLabelTree(DialogueNode* pNode)
 {
 	if(pNode == NULL)
 		return;
@@ -190,7 +198,7 @@ void DialogueManager::RenderLabelTree(node* pNode)
 /////////////////////////////////////////////////////////////////////////
 
 //renders the root of the tree only
-void DialogueManager::RenderLabelTreeRoot(node* pNode)
+void DialogueManager::RenderLabelTreeRoot(DialogueNode* pNode)
 {
 	pNode->m_pLabel->OnRender(255,255,255,0);
 }
@@ -203,13 +211,13 @@ Then the current dialogue node is the root, his children are revealed and is exe
 checks if the user clicked on any if the shown children.If any of the children is clicked isClickedDialogueNode is changed to true
 and the clickedDialogueNode variable is changed to the clicked node. The dialogue changing later continues in labelClicked function 
 */
-void DialogueManager::ChangeDialogue(node* pNode,DialogueObject& dialogueObject)
+void DialogueManager::ChangeDialogue(DialogueNode* pNode,DialogueObject& dialogueObject)
 {
 	if( dialogueObject.m_bIsStarted )
 	{
 		if( AreChildrenHidden(pNode) && !pNode->m_vNodes.empty() )
 		{
-			HideAllLabelTree(dialogueObject.m_pTree->GetRoot());
+			HideAllLabelTree(dialogueObject.m_pTree->m_pRoot);
 
 			for(unsigned int i=0;i<pNode->m_vNodes.size();i++)
 			{
@@ -251,7 +259,7 @@ void DialogueManager::LabelClicked(DialogueObject& dialogueObject,map<string,Que
 		//if there is quest attached to this node, take the quest and end the conversation
 		if( !(dialogueObject.m_pClickedDialogueNode->m_strQuest.empty()) )
 		{
-			HideAllLabelTree(dialogueObject.m_pTree->GetRoot());
+			HideAllLabelTree(dialogueObject.m_pTree->m_pRoot);
 			if( mapAvailableQuests.find(dialogueObject.m_pClickedDialogueNode->m_strQuest)!= mapAvailableQuests.end() )
 			{
 				mapActiveQuests[dialogueObject.m_pClickedDialogueNode->m_strQuest] = mapAvailableQuests.find(dialogueObject.m_pClickedDialogueNode->m_strQuest)->second;
@@ -263,7 +271,7 @@ void DialogueManager::LabelClicked(DialogueObject& dialogueObject,map<string,Que
 			pGameObject->SetHasDialogue(false);
 
 			dialogueObject.m_bIsClickedDialogueNode  = false;
-			dialogueObject.m_pCurrentDialogueNode	 = dialogueObject.m_pTree->GetRoot();
+			dialogueObject.m_pCurrentDialogueNode	 = dialogueObject.m_pTree->m_pRoot;
 			dialogueObject.m_bIsStarted				 = false;
 			dialogueObject.m_bIsEnded				 = true;
 			return;
@@ -279,8 +287,8 @@ void DialogueManager::LabelClicked(DialogueObject& dialogueObject,map<string,Que
 		else if( (dialogueObject.m_pClickedDialogueNode->m_strQuest.empty()) && 
 				  dialogueObject.m_pClickedDialogueNode->m_vNodes.empty() )
 		{
-			HideAllLabelTree(dialogueObject.m_pTree->GetRoot());
-			dialogueObject.m_pCurrentDialogueNode	 = dialogueObject.m_pTree->GetRoot();
+			HideAllLabelTree(dialogueObject.m_pTree->m_pRoot);
+			dialogueObject.m_pCurrentDialogueNode	 = dialogueObject.m_pTree->m_pRoot;
 			dialogueObject.m_bIsClickedDialogueNode  = false;
 			dialogueObject.m_bIsStarted				 = false;	
 		}
@@ -293,14 +301,14 @@ checks if the user clicked on root nood and if he did started variable is set to
 this function is invoked in onUpdate in Game.cpp and after the dialogue is started 
 this function becomes inactive and the active is changeDialogue only.
 */
-void DialogueManager::StartDialogue(node* pNode,DialogueObject& dialogueObject)
+void DialogueManager::StartDialogue(DialogueNode* pNode,DialogueObject& dialogueObject)
 {
 	if( pNode->m_pLabel->IsMouseDown() && AreChildrenHidden(pNode) && 
 		!pNode->m_vNodes.empty() && !dialogueObject.m_bIsStarted && !dialogueObject.m_bIsEnded )
 	{
-		HideRoot(dialogueObject.m_pTree->GetRoot());
+		HideRoot(dialogueObject.m_pTree->m_pRoot);
 		
-		HideAllLabelTree(dialogueObject.m_pTree->GetRoot());
+		HideAllLabelTree(dialogueObject.m_pTree->m_pRoot);
 		for(unsigned int i=0;i<pNode->m_vNodes.size();i++)
 		{
 			pNode->m_vNodes[i]->m_pLabel->SetVisible(true);
@@ -318,7 +326,7 @@ void DialogueManager::StartDialogue(node* pNode,DialogueObject& dialogueObject)
 hides all the nodes in the tree. This way all the nodes on the screen become hidden i.e. not rendered 
 and are shown only certain nodes after invoking this function.Used in changeLabel(), labelClicked() and startDialogue()
 */
-void DialogueManager::HideAllLabelTree(node* pNode)
+void DialogueManager::HideAllLabelTree(DialogueNode* pNode)
 {
 	for(unsigned int i=0;i<pNode->m_vNodes.size();i++)
 	{
@@ -329,7 +337,7 @@ void DialogueManager::HideAllLabelTree(node* pNode)
 
 /////////////////////////////////////////////////////////////////////////
 
-void DialogueManager::HideRoot(node* pNode)
+void DialogueManager::HideRoot(DialogueNode* pNode)
 {
 	pNode->m_pLabel->SetVisible(false);
 }
@@ -337,7 +345,7 @@ void DialogueManager::HideRoot(node* pNode)
 /////////////////////////////////////////////////////////////////////////
 
 //this function checks if the children of the passed node are hidden.Used in changeLabel(), labelClicked()
-bool DialogueManager::AreChildrenHidden(node* pNode)
+bool DialogueManager::AreChildrenHidden(DialogueNode* pNode)
 {
 	for(unsigned int i=0;i<pNode->m_vNodes.size();i++)
 	{
