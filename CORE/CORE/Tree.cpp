@@ -29,7 +29,7 @@ void Tree::InsertNode(DialogueNode*& currentNode, DialogueNode*& parentNode, str
 	if (currentNode == nullptr && parentNode == nullptr)
 	{
 		currentNode = new DialogueNode;
-		currentNode->m_pLabel = new Label(D3DXVECTOR2(x, y), text);
+		currentNode->m_pLabel = new Label(D3DXVECTOR2(x, y+40), text);
 		currentNode->m_strText = text;
 		currentNode->m_pLabel->SetVisible(false);
 		currentNode->m_strQuest = quest;

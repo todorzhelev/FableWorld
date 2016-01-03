@@ -110,7 +110,8 @@ Game::Game()
 		pMainHero = static_cast<SkinnedModel*>(obj);
 	}
 	
-	D3DXVECTOR2 spellPosition(0,600);
+	auto height = pApp->GetPresentParameters().BackBufferHeight;
+	D3DXVECTOR2 spellPosition(100, height-80);
 
 	m_pHealSpell = new Button(spellPosition,64,64,"","blueTear.dds","blueTear.dds");
 

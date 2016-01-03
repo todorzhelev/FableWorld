@@ -85,8 +85,6 @@ void DialogueManager::TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, 
 		text = xmlNode->Attribute("Text");
 	}
 
-	std::cout << text << std::endl;
-
 	tinyxml2::XMLElement* pSibling = xmlNode->NextSiblingElement("Node");
 	tinyxml2::XMLElement* pFirstChild = xmlNode->FirstChildElement("Node");
 
