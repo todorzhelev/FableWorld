@@ -7,10 +7,15 @@ You can play the game by downloading it from here: <a href="https://www.dropbox.
 The main features of the game are:<br />
   1.Battle system<br />
   -the player can attack enemies in the game by walking close to the enemy and pressing left mouse button<br /><br />
+  ![alt tag](http://i.imgur.com/VWn3NxV.jpg)
+  ![alt tag](http://i.imgur.com/65Fix8w.jpg)
+
   2.Dialogue system<br />
   -the player can communicate with entities, which have dialogue attached to them.<br />
   The dialogue consist of multiple choices for the player and each choice can lead to different result.<br />
   The dialogues are stored in xml files and are loaded in the game with tinyxml.<br /><br />
+  ![alt tag](http://i.imgur.com/7IwLeUM.jpg)
+  
   3.Terrain<br />
   -different terrains can be created, based on the passed heightmap, which can be easily edited in photoshop.<br />
   The player character moves according to the heights of the terrain.<br /><br />
