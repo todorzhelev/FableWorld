@@ -22,14 +22,16 @@ Main features of the game<br />
   Terrain<br />
 ===
   Different terrains can be created, based on the passed heightmap, which can be easily edited in Photoshop.<br />
-  The player character moves according to the heights of the terrain.<br /><br />
+  The player character moves according to the heights of the terrain.<br />
+  The game supports terrains with up to 1 million vertices.<br /><br />
   Skinned and static models<br />
 ===
-  For loading the models in the game is used the .x file format. <br /><br />
+  For loading the models in the game is used the .x file format. <br />
+  The game supports playing animations of the skinned models. <br /><br />
   Scripts<br />
 ===
-  Models, which must be loaded in the game are described in lua files.<br /> 
-  Every model attribute can be easily modified in the corresponding script file.<br /><br />
+  All the models in the scene are loaded from level file, which is written in lua.<br />
+  The level file is exported from the Level editor. <br /><br />
   Custom UI system<br />
 ===
   The UI system in the game consists of buttons, labels, textboxes and checkboxes<br /><br />
