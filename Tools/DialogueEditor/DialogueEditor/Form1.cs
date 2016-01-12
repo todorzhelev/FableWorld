@@ -28,10 +28,10 @@ namespace DialogueEditor
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            selectedTreeNode = e.Node;
+            m_selectedTreeNode = e.Node;
 
-            inputText.Text = selectedTreeNode.Text;
-            questTextbox.Text = (string)selectedTreeNode.Tag;
+            inputText.Text = m_selectedTreeNode.Text;
+            questTextbox.Text = (string)m_selectedTreeNode.Tag;
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -82,7 +82,7 @@ namespace DialogueEditor
 
             if (e.KeyCode == Keys.Enter)
             {
-                selectedTreeNode.Text = inputText.Text;
+                m_selectedTreeNode.Text = inputText.Text;
             }
             else
             {
@@ -92,21 +92,173 @@ namespace DialogueEditor
 
         private void retrieveInput_Click(object sender, EventArgs e)
         {
-            selectedTreeNode.Text = inputText.Text;
+            m_selectedTreeNode.Text = inputText.Text;
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var rootElementName = treeView1.Nodes[0].Text;
-            var rootElement = new XElement(rootElementName, CreateXmlElement(treeView1.Nodes[0].Nodes));
-            var attachedToModelName = new XAttribute("model", attachedToModel);
-            rootElement.Add(attachedToModelName);
-
-            var document = new XDocument(rootElement);
-            document.Save("export.xml");
+            ExportDialogue();
         }
 
-        private static List<XElement> CreateXmlElement(TreeNodeCollection treeViewNodes)
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ImportDialogue();
+        }
+
+        private void modelTextbox_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void modelTextbox_KeyDown(object sender, KeyEventArgs e)
+        {
+            var character = e.KeyData;
+
+            if (e.KeyCode == Keys.Enter)
+            {
+                m_attachedToModel = modelTextbox.Text;
+            }
+            else
+            {
+                modelTextbox.Text.Insert(modelTextbox.Text.Length, e.KeyData.ToString());
+            }
+        }
+  
+        private void questTextbox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void questTextbox_KeyDown(object sender, KeyEventArgs e)
+        {
+            var character = e.KeyData;
+
+            if (e.KeyCode == Keys.Enter)
+            {
+                m_selectedTreeNode.Tag = questTextbox.Text;
+            }
+            else
+            {
+                questTextbox.Text.Insert(questTextbox.Text.Length, e.KeyData.ToString());
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+       private string OpenFile()
+        {
+            DialogResult result = openFileDialog1.ShowDialog();
+
+            string text = "";
+            if (result == DialogResult.OK) // Test result.
+            {
+                text = openFileDialog1.FileName;
+            }
+
+            return text;
+        }
+
+        /// <summary>
+        /// Imports dialogue from XML file
+        /// </summary>
+        private void ImportDialogue()
+        {
+            DialogResult result = openFileDialog1.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                XmlDocument dialogueFile = new XmlDocument();
+                XmlNode rootNode;
+
+                FileStream fs = new FileStream(openFileDialog1.FileName, FileMode.Open, FileAccess.Read);
+                dialogueFile.Load(fs);
+                rootNode = dialogueFile.ChildNodes[1];
+
+                var attachedToModelName = rootNode.Attributes.GetNamedItem("model").InnerText;
+                modelTextbox.Text = attachedToModelName;
+
+                treeView1.Nodes.Clear();
+
+                treeView1.Nodes.Add(new TreeNode(dialogueFile.DocumentElement.Name));
+                TreeNode tNode;
+                tNode = treeView1.Nodes[0];
+                AddTreeViewNodes(rootNode, tNode);
+
+                fs.Close();
+            }
+        }
+
+        /// <summary>
+        /// creates tree view nodes based on the xml
+        /// </summary>
+        /// <param name="inXmlNode"></param>
+        /// <param name="inTreeNode"></param>
+        private void AddTreeViewNodes(XmlNode inXmlNode, TreeNode inTreeNode)
+        {
+            XmlNode xNode;
+            TreeNode tNode;
+            XmlNodeList nodeList;
+            int i = 0;
+            if (inXmlNode.HasChildNodes)
+            {
+                nodeList = inXmlNode.ChildNodes;
+                for (i = 0; i <= nodeList.Count - 1; i++)
+                {
+                    xNode = inXmlNode.ChildNodes[i];
+                    inTreeNode.Nodes.Add(new TreeNode(xNode.Name));
+
+                    tNode = inTreeNode.Nodes[i];
+                    AddTreeViewNodes(xNode, tNode);
+                }
+
+                if (inXmlNode.Attributes.GetNamedItem("Text") != null)
+                {
+                    inTreeNode.Text = inXmlNode.Attributes.GetNamedItem("Text").InnerText;
+                }
+
+                if (inXmlNode.Attributes.GetNamedItem("Quest") != null)
+                {
+                    inTreeNode.Tag = inXmlNode.Attributes.GetNamedItem("Quest").InnerText;
+                }
+            }
+            else
+            {
+                inTreeNode.Text = inXmlNode.Attributes.GetNamedItem("Text").InnerText;
+                if (inXmlNode.Attributes.GetNamedItem("Quest") != null)
+                {
+                    inTreeNode.Tag = inXmlNode.Attributes.GetNamedItem("Quest").InnerText;
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        // Exports the current dialogue to xml file
+        /// </summary>
+        private void ExportDialogue()
+        {
+            var rootElementName = treeView1.Nodes[0].Text;
+            var rootElement = new XElement(rootElementName, CreateXmlElements(treeView1.Nodes[0].Nodes));
+            var attachedToModelName = new XAttribute("model", m_attachedToModel);
+            rootElement.Add(attachedToModelName);
+
+            DialogResult result = saveFileDialog1.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                string filePath = saveFileDialog1.FileName;
+                var document = new XDocument(rootElement);
+                document.Save(filePath);
+            }
+        }
+
+        /// <summary>
+        /// creates xml elements, based on the nodes in the tree view
+        /// </summary>
+        /// <param name="treeViewNodes"></param>
+        /// <returns></returns>
+        private List<XElement> CreateXmlElements(TreeNodeCollection treeViewNodes)
         {
             var elements = new List<XElement>();
             foreach (TreeNode treeViewNode in treeViewNodes)
@@ -126,7 +278,7 @@ namespace DialogueEditor
 
                 if (treeViewNode.Nodes.Count > 0)
                 {
-                    element.Add(CreateXmlElement(treeViewNode.Nodes));
+                    element.Add(CreateXmlElements(treeViewNode.Nodes));
                 }
 
                 elements.Add(element);
@@ -134,104 +286,11 @@ namespace DialogueEditor
             return elements;
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            XmlDocument dialogueFile = new XmlDocument();
-            XmlNode rootNode;
-            FileStream fs = new FileStream("export.xml", FileMode.Open, FileAccess.Read);
-            dialogueFile.Load(fs);
-            rootNode = dialogueFile.ChildNodes[1];
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            var attachedToModelName = rootNode.Attributes.GetNamedItem("model").InnerText;
-            modelTextbox.Text = attachedToModelName;
 
-            treeView1.Nodes.Clear();
+        private TreeNode m_selectedTreeNode;
 
-            treeView1.Nodes.Add(new TreeNode(dialogueFile.DocumentElement.Name));
-            TreeNode tNode;
-            tNode = treeView1.Nodes[0];
-            AddTreeViewNode(rootNode, tNode);
-
-            fs.Close();
-        }
-
-        private void AddTreeViewNode(XmlNode inXmlNode, TreeNode inTreeNode)
-        {
-            XmlNode xNode;
-            TreeNode tNode;
-            XmlNodeList nodeList;
-            int i = 0;
-            if (inXmlNode.HasChildNodes)
-            {
-                nodeList = inXmlNode.ChildNodes;
-                for (i = 0; i <= nodeList.Count - 1; i++)
-                {
-                    xNode = inXmlNode.ChildNodes[i];
-                    inTreeNode.Nodes.Add(new TreeNode(xNode.Name));
-
-                    tNode = inTreeNode.Nodes[i];
-                    AddTreeViewNode(xNode, tNode);
-                }
-
-                if(inXmlNode.Attributes.GetNamedItem("Text") != null )
-                {
-                    inTreeNode.Text = inXmlNode.Attributes.GetNamedItem("Text").InnerText;
-                }
-
-                if (inXmlNode.Attributes.GetNamedItem("Quest") != null)
-                {
-                    inTreeNode.Tag = inXmlNode.Attributes.GetNamedItem("Quest").InnerText;
-                }
-            }
-            else
-            {
-                inTreeNode.Text  = inXmlNode.Attributes.GetNamedItem("Text").InnerText;
-                if (inXmlNode.Attributes.GetNamedItem("Quest") != null)
-                {
-                    inTreeNode.Tag = inXmlNode.Attributes.GetNamedItem("Quest").InnerText;
-                }
-            }
-        }
-
-        private void modelTextbox_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void modelTextbox_KeyDown(object sender, KeyEventArgs e)
-        {
-            var character = e.KeyData;
-
-            if (e.KeyCode == Keys.Enter)
-            {
-                attachedToModel = modelTextbox.Text;
-            }
-            else
-            {
-                modelTextbox.Text.Insert(modelTextbox.Text.Length, e.KeyData.ToString());
-            }
-        }
-
-        public TreeNode selectedTreeNode;
-
-        public string attachedToModel;
-
-        private void questTextbox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void questTextbox_KeyDown(object sender, KeyEventArgs e)
-        {
-            var character = e.KeyData;
-
-            if (e.KeyCode == Keys.Enter)
-            {
-                selectedTreeNode.Tag = questTextbox.Text;
-            }
-            else
-            {
-                questTextbox.Text.Insert(questTextbox.Text.Length, e.KeyData.ToString());
-            }
-        }
+        private string m_attachedToModel;
     }
 }
