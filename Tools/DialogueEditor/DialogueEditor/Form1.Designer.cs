@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("You have to...");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("You dont have to");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Hello", new System.Windows.Forms.TreeNode[] {
-            treeNode6,
-            treeNode7});
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("goodbye");
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("RootNode", new System.Windows.Forms.TreeNode[] {
-            treeNode8,
-            treeNode9});
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("You have to...");
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("You dont have to");
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Hello", new System.Windows.Forms.TreeNode[] {
+            treeNode11,
+            treeNode12});
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("goodbye");
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("RootNode", new System.Windows.Forms.TreeNode[] {
+            treeNode13,
+            treeNode14});
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,23 +64,23 @@
             // treeView1
             // 
             this.treeView1.AllowDrop = true;
-            this.treeView1.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.treeView1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.treeView1.LabelEdit = true;
             this.treeView1.Location = new System.Drawing.Point(210, 39);
             this.treeView1.Name = "treeView1";
-            treeNode6.Name = "Node3";
-            treeNode6.Text = "You have to...";
-            treeNode7.Name = "Node4";
-            treeNode7.Text = "You dont have to";
-            treeNode8.Name = "Hello";
-            treeNode8.Text = "Hello";
-            treeNode9.Name = "Node2";
-            treeNode9.Text = "goodbye";
-            treeNode10.Name = "RootNode";
-            treeNode10.Tag = "Root";
-            treeNode10.Text = "RootNode";
+            treeNode11.Name = "Node3";
+            treeNode11.Text = "You have to...";
+            treeNode12.Name = "Node4";
+            treeNode12.Text = "You dont have to";
+            treeNode13.Name = "Hello";
+            treeNode13.Text = "Hello";
+            treeNode14.Name = "Node2";
+            treeNode14.Text = "goodbye";
+            treeNode15.Name = "RootNode";
+            treeNode15.Tag = "Root";
+            treeNode15.Text = "RootNode";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode10});
+            treeNode15});
             this.treeView1.Size = new System.Drawing.Size(795, 432);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -157,9 +157,10 @@
             // 
             // AddNode
             // 
+            this.AddNode.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.AddNode.Location = new System.Drawing.Point(12, 39);
             this.AddNode.Name = "AddNode";
-            this.AddNode.Size = new System.Drawing.Size(103, 30);
+            this.AddNode.Size = new System.Drawing.Size(125, 42);
             this.AddNode.TabIndex = 2;
             this.AddNode.Text = "Add Node";
             this.AddNode.UseVisualStyleBackColor = true;
@@ -167,9 +168,10 @@
             // 
             // RemoveNode
             // 
-            this.RemoveNode.Location = new System.Drawing.Point(12, 75);
+            this.RemoveNode.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.RemoveNode.Location = new System.Drawing.Point(12, 87);
             this.RemoveNode.Name = "RemoveNode";
-            this.RemoveNode.Size = new System.Drawing.Size(103, 30);
+            this.RemoveNode.Size = new System.Drawing.Size(125, 40);
             this.RemoveNode.TabIndex = 4;
             this.RemoveNode.Text = "Remove Node";
             this.RemoveNode.UseVisualStyleBackColor = true;
@@ -177,9 +179,10 @@
             // 
             // ExpandAll
             // 
-            this.ExpandAll.Location = new System.Drawing.Point(12, 111);
+            this.ExpandAll.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ExpandAll.Location = new System.Drawing.Point(12, 133);
             this.ExpandAll.Name = "ExpandAll";
-            this.ExpandAll.Size = new System.Drawing.Size(103, 30);
+            this.ExpandAll.Size = new System.Drawing.Size(125, 40);
             this.ExpandAll.TabIndex = 5;
             this.ExpandAll.Text = "Expand Node";
             this.ExpandAll.UseVisualStyleBackColor = true;
@@ -189,25 +192,26 @@
             // 
             this.inputText.AcceptsReturn = true;
             this.inputText.AcceptsTab = true;
-            this.inputText.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.inputText.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.inputText.Location = new System.Drawing.Point(210, 503);
             this.inputText.Name = "inputText";
-            this.inputText.Size = new System.Drawing.Size(795, 26);
+            this.inputText.Size = new System.Drawing.Size(795, 29);
             this.inputText.TabIndex = 6;
             this.inputText.TextChanged += new System.EventHandler(this.NodeText_TextChanged);
             // 
             // modelTextbox
             // 
-            this.modelTextbox.Location = new System.Drawing.Point(12, 190);
+            this.modelTextbox.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.modelTextbox.Location = new System.Drawing.Point(12, 218);
             this.modelTextbox.Name = "modelTextbox";
-            this.modelTextbox.Size = new System.Drawing.Size(192, 20);
+            this.modelTextbox.Size = new System.Drawing.Size(192, 26);
             this.modelTextbox.TabIndex = 7;
             this.modelTextbox.TextChanged += new System.EventHandler(this.modelTextbox_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 171);
+            this.label1.Location = new System.Drawing.Point(9, 202);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(93, 13);
             this.label1.TabIndex = 8;
@@ -216,7 +220,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 238);
+            this.label2.Location = new System.Drawing.Point(9, 262);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 13);
             this.label2.TabIndex = 9;
@@ -224,9 +228,10 @@
             // 
             // questTextbox
             // 
-            this.questTextbox.Location = new System.Drawing.Point(12, 254);
+            this.questTextbox.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.questTextbox.Location = new System.Drawing.Point(12, 278);
             this.questTextbox.Name = "questTextbox";
-            this.questTextbox.Size = new System.Drawing.Size(192, 20);
+            this.questTextbox.Size = new System.Drawing.Size(192, 26);
             this.questTextbox.TabIndex = 10;
             this.questTextbox.TextChanged += new System.EventHandler(this.questTextbox_TextChanged);
             // 
