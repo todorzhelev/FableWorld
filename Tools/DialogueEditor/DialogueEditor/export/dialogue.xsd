@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="Dialogue">
+    <xs:complexType>
+		<xs:sequence>
+			<xs:element name="Node" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="Text" type="xs:string" />
+					<xs:attribute name="Quest" type="xs:string" />
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="model" type="xs:string" />
+    </xs:complexType>
+</xs:element>
+
+</xs:schema> 

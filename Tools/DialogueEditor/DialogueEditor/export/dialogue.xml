@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Dialogue model="ezreal">
+  <Node Text="Hello,stranger.I need your help.">
+    <Node Text="Ok.I can help.">
+      <Node Text="Go to Cho and try to kill him. If you do this you will save the world.">
+        <Node Text="Ok. Wish me luck." Quest="Go to Cho and try to kill him" />
+        <Node Text="I am not super hero. Why do i have to go??">
+          <Node Text="Because you are the only one who can do it. And i am busy now..">
+            <Node Text="Busy??And what is more important than saving the world from Cho??">
+              <Node Text="I have to wash the dishes or my wife will go mad..">
+                <Node Text="But you are super hero and you are scared from your wife??">
+                  <Node Text="Look i dont have time for this. Just go kill him and finish this already">
+                    <Node Text="Ok i will go, but you have to be ashamed!" Quest="Go to Cho and try to kill him" />
+                    <Node Text="No way to do it!" />
+                  </Node>
+                </Node>
+                <Node Text="Ok i will go then &quot;super hero&quot;" Quest="Go to Cho and try to kill him" />
+              </Node>
+            </Node>
+            <Node Text="Oh i am sorry i disturbed you.Finish your job and i will go to save the world" />
+          </Node>
+        </Node>
+      </Node>
+    </Node>
+    <Node Text="No way to help you" />
+  </Node>
+</Dialogue>
