@@ -54,33 +54,23 @@ public:
 
 	void LoadDialogues(string strDialoguesFileName);
 
-	//void TraverseNodes(Tree* tree, tinyxml2::XMLElement* xmlNode, node* treeNode, node* parentTreeNode, bool childNode, bool siblingNode);
-
-	void TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, DialogueNode* currentNode, DialogueNode* parentNode);
+	void TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, DialogueNode* parentNode, DialogueNode* currentNode);
 
 	void OnUpdate(map<string, QuestObject>& activeQuests);
 
-	void UpdateLabelTree(DialogueNode* pNode);
+	void UpdateDialogueTree(DialogueNode* pNode, bool bIsRootNode, DialogueObject& dialogue);
 
-	void UpdateLabelTreeRoot(DialogueNode* pNode);
+	void RenderDialogueTree(DialogueNode* pNode);
 
-	void RenderLabelTree(DialogueNode* pNode);
-
-	void RenderLabelTreeRoot(DialogueNode* pNode);
+	void HideDialogueTree(DialogueNode* pNode);
 
 	void ChangeDialogue(DialogueNode* pNode,DialogueObject& dialogueObject);
 
 	void LabelClicked(DialogueObject& dialogueObject,map<string,QuestObject>& mapActiveQuests,map<string,QuestObject>& mapAvailableQuests);
 
-	void HideAllLabelTree(DialogueNode* pNode);
-
 	bool AreChildrenHidden(DialogueNode* pNode);
 
 	void AddDialogueObjects(DialogueObject& dialogueObject);
-
-	void StartDialogue(DialogueNode* pNode,DialogueObject& dialogueObject);
-
-	void HideRoot(DialogueNode* pNode);
 
 	map<string,DialogueObject> m_mapModelDialogue;
 
@@ -91,7 +81,6 @@ private:
 	tinyxml2::XMLElement* m_pRoot;
 	tinyxml2::XMLElement* m_pNode;
 	tinyxml2::XMLElement* m_pDialogue;
-
 };
 
 extern DialogueManager* pDialogueManager;

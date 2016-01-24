@@ -59,8 +59,8 @@ Game::Game()
 
 	pSky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
-	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
-	//pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 1.0f, 1.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	//pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//the direction to the sun
 	D3DXVECTOR3 lightVector(20.0f, 300.0f, 50.0f);
@@ -548,8 +548,7 @@ void Game::OnRender()
 			//draws dialogues
 			for (auto& dialogue : pDialogueManager->m_mapModelDialogue)
 			{
-				pDialogueManager->RenderLabelTreeRoot(dialogue.second.m_pTree->m_pRoot);
-				pDialogueManager->RenderLabelTree(dialogue.second.m_pTree->m_pRoot);
+				pDialogueManager->RenderDialogueTree(dialogue.second.m_pTree->m_pRoot);
 			}
 
 			//text->drawText("Press L to switch between the two camera modes",400,40,0,0,255,0,0,0);
