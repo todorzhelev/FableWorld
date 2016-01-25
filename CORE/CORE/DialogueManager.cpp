@@ -2,20 +2,11 @@
 #include "SkinnedModel.h"
 #include "LuaFunctions.h"
 
-DialogueManager* pDialogueManager = NULL;
+DialogueManager* pDialogueManager = nullptr;
 
 //TODO: this code should be completly refactored
 
-/*
-SourceFile: Dialogue.cpp
- This file include the definitions of the functions needed to load dialogue render and update it.
-		 The purpose of the dialogue is the player to receive quest depending on his decisions through the dialogue.
-		 The dialogue nodes are displayed as text one below another and the user can follow the dialogue by clicking on the desired dialogue
-		 The dialogue nodes are organised as a tree of GuiLabels.A class that simulates tree is implemented - in Tree.cpp 
-		 and for detecting whether user is clicked on some of the text is used the GuiLabel class.
-*/
-
-/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
 
 void DialogueManager::LoadDialogues(string strDialoguesFileName)
 {
@@ -64,7 +55,6 @@ void DialogueManager::LoadDialogues(string strDialoguesFileName)
 
 /////////////////////////////////////////////////////////////////////////
 
-//void DialogueManager::TraverseNodes(Tree* tree,tinyxml2::XMLElement* xmlNode, DialogueNode* treeNode, DialogueNode* parentTreeNode, bool childNode,bool siblingNode)
 void DialogueManager::TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, DialogueNode* parentNode, DialogueNode* currentNode)
 {
 	if(xmlNode == nullptr )
@@ -138,21 +128,14 @@ void DialogueManager::OnUpdate(map<string, QuestObject>& activeQuests)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-add the passed dialogue object to modelDialogue map.
-This map connects actual model in game(dwarf,robot, etc) with dialogue 
-so when the user clicks on the model the dialogue is displayed
-*/
+
 void DialogueManager::AddDialogueObjects(DialogueObject& dialogueObject)
 {
 	m_mapModelDialogue[dialogueObject.m_strModel] = dialogueObject; 
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-invokes the onUpdate function for the root element in the tree
-This is needed to check for mouse click or mouse over
-*/
+
 void DialogueManager::UpdateDialogueTree(DialogueNode* pNode, bool bIsRootNode, DialogueObject& dialogue)
 {
 	if(bIsRootNode )
@@ -195,13 +178,7 @@ void DialogueManager::UpdateDialogueTree(DialogueNode* pNode, bool bIsRootNode, 
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-This is the function responsible for changing the current dialogue with another until the user reaches the end of the dialogue
-The function first checks if the dialogue is started. The dialogue starts when the user clicks on the root and his children are shown
-Then the current dialogue node is the root, his children are revealed and is executed the else if in this function, which
-checks if the user clicked on any if the shown children.If any of the children is clicked isClickedDialogueNode is changed to true
-and the clickedDialogueNode variable is changed to the clicked node. The dialogue changing later continues in labelClicked function
-*/
+
 void DialogueManager::ChangeDialogue(DialogueNode* pNode, DialogueObject& dialogueObject)
 {
 	if (dialogueObject.m_bIsStarted && !pNode->m_vNodes.empty())
@@ -230,7 +207,7 @@ void DialogueManager::ChangeDialogue(DialogueNode* pNode, DialogueObject& dialog
 }
 
 /////////////////////////////////////////////////////////////////////////
-//invokes onRender on every label in the tree
+
 void DialogueManager::RenderDialogueTree(DialogueNode* pNode)
 {
 	if (pNode == nullptr)
@@ -245,17 +222,7 @@ void DialogueManager::RenderDialogueTree(DialogueNode* pNode)
 }
 
 /////////////////////////////////////////////////////////////////////////
-/*
-when isClickedDialogueNode is true and the user releases the mouse botton this means that 
-dialogue node is selected.
-Then if the node got quest the user receives it and the dialogue ends.
-Otherwise the current dialogue node is changed to the clicked one.
-Both labelClicked() and changeDialogue() functions are invoked in onUpdate() in Game.cpp 
-Firstly labelClicked is inactive and after node is clicked labelClicked becomes active
-and changeDialogue inactive.This way we can detect single click om dialogue - in changeDialogue we detect if the user 
-clicked on node and late in labelClicked we detect if the user released the mouse button. 
-Click and release combination of mouse button ensures single click.
-*/
+
 void DialogueManager::LabelClicked(DialogueObject& dialogueObject,map<string,QuestObject>& mapActiveQuests,map<string,QuestObject>& mapAvailableQuests)
 {
 	if( dialogueObject.m_bIsClickedDialogueNode && pDinput->IsMouseButtonUp(0) )
@@ -317,7 +284,6 @@ void DialogueManager::HideDialogueTree(DialogueNode* pNode)
 
 /////////////////////////////////////////////////////////////////////////
 
-//this function checks if the children of the passed node are hidden.Used in changeLabel(), labelClicked()
 bool DialogueManager::AreChildrenHidden(DialogueNode* pNode)
 {
 	for(auto& node : pNode->m_vNodes)
