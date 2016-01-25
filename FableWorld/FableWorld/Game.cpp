@@ -546,9 +546,9 @@ void Game::OnRender()
 			pTextManager->DrawFPS();
 	
 			//draws dialogues
-			for (auto& dialogue : pDialogueManager->m_mapModelDialogue)
+			for (auto& dialogue : pDialogueManager->GetDialogues())
 			{
-				pDialogueManager->RenderDialogueTree(dialogue.second.m_pTree->m_pRoot);
+				pDialogueManager->RenderDialogueTree(dialogue->m_pTree->m_pRoot);
 			}
 
 			//text->drawText("Press L to switch between the two camera modes",400,40,0,0,255,0,0,0);

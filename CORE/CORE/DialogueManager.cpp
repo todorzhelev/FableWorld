@@ -27,25 +27,25 @@ void DialogueManager::LoadDialogues(string strDialoguesFileName)
 		m_pDialogue = m_pRoot;
 		while(m_pDialogue)
 		{
-			DialogueObject obj;
-			obj.m_pTree = new Tree;
-			obj.m_strModel = m_pDialogue->Attribute("model");
-			m_vGameObjectsWithDialogues.push_back(obj.m_strModel);
+			DialogueObject* pDialogue = new DialogueObject;
+			pDialogue->m_pTree = new Tree;
+			pDialogue->m_strModel = m_pDialogue->Attribute("model");
+			m_vGameObjectsWithDialogues.push_back(pDialogue->m_strModel);
 		
 			m_pNode = m_pDialogue->FirstChildElement("Node");
 		
-			TraverseNodes(m_pNode, obj.m_pTree, nullptr, obj.m_pTree->m_pRoot);
+			TraverseNodes(m_pNode, pDialogue->m_pTree, nullptr, pDialogue->m_pTree->m_pRoot);
 
 			//when the dialogue is rendered and updated it is passed the current node from it.
 			//This dialogue isnt started yet so the current node is the root
-			obj.m_pCurrentDialogueNode = obj.m_pTree->m_pRoot;
+			pDialogue->m_pCurrentDialogueNode = pDialogue->m_pTree->m_pRoot;
 
-			obj.m_bIsStarted = false;
-			obj.m_bIsClickedDialogueNode = false;
-			obj.m_bIsEnded = false;
+			pDialogue->m_bIsStarted = false;
+			pDialogue->m_bIsClickedDialogueNode = false;
+			pDialogue->m_bIsEnded = false;
 
 			//adds the loaded from xml dialogue to map
-			AddDialogueObjects(obj);
+			AddDialogue(pDialogue);
 
 			//goes to the next Dialogue element
 			m_pDialogue = m_pDialogue->NextSiblingElement("Dialogue");
@@ -105,23 +105,30 @@ void DialogueManager::TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, 
 
 /////////////////////////////////////////////////////////////////////////
 
+std::vector<DialogueObject*>& DialogueManager::GetDialogues()
+{
+	return m_dialogues;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
 void DialogueManager::OnUpdate(map<string, QuestObject>& activeQuests)
 {
-	for (auto& dialogue : m_mapModelDialogue)
+	for (auto& dialogue : m_dialogues)
 	{
-		if (!dialogue.second.m_bIsEnded)
+		if (!dialogue->m_bIsEnded)
 		{
-			pDialogueManager->UpdateDialogueTree(dialogue.second.m_pTree->m_pRoot, true,dialogue.second);
+			pDialogueManager->UpdateDialogueTree(dialogue->m_pTree->m_pRoot, true, *dialogue);
 			
-			pDialogueManager->ChangeDialogue(dialogue.second.m_pCurrentDialogueNode, dialogue.second);
-			pDialogueManager->LabelClicked(dialogue.second, activeQuests, availableQuests);
+			pDialogueManager->ChangeDialogue(dialogue->m_pCurrentDialogueNode, *dialogue);
+			pDialogueManager->LabelClicked(*dialogue, activeQuests, availableQuests);
 		}
 
-		GameObject* obj = m_pGameObjManager->GetObjectByName(dialogue.second.m_strModel);
+		GameObject* obj = m_pGameObjManager->GetObjectByName(dialogue->m_strModel);
 
-		if (obj->IsPicked() && !dialogue.second.m_bIsEnded)
+		if (obj->IsPicked() && !dialogue->m_bIsEnded)
 		{
-			dialogue.second.m_pTree->m_pRoot->m_pLabel->SetVisible(true);
+			dialogue->m_pTree->m_pRoot->m_pLabel->SetVisible(true);
 			obj->SetPicked(false);
 		}
 	}
@@ -129,9 +136,9 @@ void DialogueManager::OnUpdate(map<string, QuestObject>& activeQuests)
 
 /////////////////////////////////////////////////////////////////////////
 
-void DialogueManager::AddDialogueObjects(DialogueObject& dialogueObject)
+void DialogueManager::AddDialogue(DialogueObject* dialogueObject)
 {
-	m_mapModelDialogue[dialogueObject.m_strModel] = dialogueObject; 
+	m_dialogues.push_back(dialogueObject);
 }
 
 /////////////////////////////////////////////////////////////////////////

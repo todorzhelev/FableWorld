@@ -82,17 +82,18 @@ public:
 	//this function checks if the children of the passed node are hidden.Used in changeLabel(), labelClicked()
 	bool AreChildrenHidden(DialogueNode* pNode);
 
-	
 	//add the passed dialogue object to modelDialogue map.
 	//This map connects actual model in game(dwarf,robot, etc) with dialogue
 	//so when the user clicks on the model the dialogue is displayed
-	void AddDialogueObjects(DialogueObject& dialogueObject);
+	void AddDialogue(DialogueObject* dialogueObject);
 
-	map<string,DialogueObject> m_mapModelDialogue;
+	std::vector<DialogueObject*>& GetDialogues();
 
 	vector<string> m_vGameObjectsWithDialogues;
 
 private:
+
+	std::vector<DialogueObject*> m_dialogues;
 
 	tinyxml2::XMLElement* m_pRoot;
 	tinyxml2::XMLElement* m_pNode;
