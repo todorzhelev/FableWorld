@@ -180,7 +180,7 @@ void DialogueManager::UpdateDialogueTree(DialogueNode* pNode, bool bIsRootNode, 
 	}
 	else
 	{
-		if (pNode == NULL)
+		if (pNode == nullptr)
 		{
 			return;
 		}
@@ -195,6 +195,41 @@ void DialogueManager::UpdateDialogueTree(DialogueNode* pNode, bool bIsRootNode, 
 }
 
 /////////////////////////////////////////////////////////////////////////
+/*
+This is the function responsible for changing the current dialogue with another until the user reaches the end of the dialogue
+The function first checks if the dialogue is started. The dialogue starts when the user clicks on the root and his children are shown
+Then the current dialogue node is the root, his children are revealed and is executed the else if in this function, which
+checks if the user clicked on any if the shown children.If any of the children is clicked isClickedDialogueNode is changed to true
+and the clickedDialogueNode variable is changed to the clicked node. The dialogue changing later continues in labelClicked function
+*/
+void DialogueManager::ChangeDialogue(DialogueNode* pNode, DialogueObject& dialogueObject)
+{
+	if (dialogueObject.m_bIsStarted && !pNode->m_vNodes.empty())
+	{
+		if (AreChildrenHidden(pNode))
+		{
+			HideDialogueTree(dialogueObject.m_pTree->m_pRoot);
+
+			for (unsigned int i = 0; i<pNode->m_vNodes.size(); i++)
+			{
+				pNode->m_vNodes[i]->m_pLabel->SetVisible(true);
+			}
+		}
+		else
+		{
+			for (unsigned int j = 0; j<pNode->m_vNodes.size(); j++)
+			{
+				if (pNode->m_vNodes[j]->m_pLabel->IsMouseDown())
+				{
+					dialogueObject.m_bIsClickedDialogueNode = true;
+					dialogueObject.m_pClickedDialogueNode = pNode->m_vNodes[j];
+				}
+			}
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////
 //invokes onRender on every label in the tree
 void DialogueManager::RenderDialogueTree(DialogueNode* pNode)
 {
@@ -206,43 +241,6 @@ void DialogueManager::RenderDialogueTree(DialogueNode* pNode)
 	for (unsigned int i = 0; i<pNode->m_vNodes.size(); i++)
 	{
 		RenderDialogueTree(pNode->m_vNodes[i]);
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////
-/*
-This is the function responsible for changing the current dialogue with another until the user reaches the end of the dialogue
-The function first checks if the dialogue is started. The dialogue starts when the user clicks on the root and his children are shown
-Then the current dialogue node is the root, his children are revealed and is executed the else if in this function, which 
-checks if the user clicked on any if the shown children.If any of the children is clicked isClickedDialogueNode is changed to true
-and the clickedDialogueNode variable is changed to the clicked node. The dialogue changing later continues in labelClicked function 
-*/
-void DialogueManager::ChangeDialogue(DialogueNode* pNode,DialogueObject& dialogueObject)
-{
-	if( dialogueObject.m_bIsStarted )
-	{
-		if( AreChildrenHidden(pNode) && !pNode->m_vNodes.empty() )
-		{
-			HideDialogueTree(dialogueObject.m_pTree->m_pRoot);
-
-			for(unsigned int i=0;i<pNode->m_vNodes.size();i++)
-			{
-				pNode->m_vNodes[i]->m_pLabel->SetVisible(true);
-			}
-			return;
-		}
-		else if( !AreChildrenHidden(pNode) && !pNode->m_vNodes.empty() )
-		{
-			for(unsigned int j=0;j<pNode->m_vNodes.size();j++)
-			{
-			
-				if( pNode->m_vNodes[j]->m_pLabel->IsMouseDown() )
-				{
-					dialogueObject.m_bIsClickedDialogueNode = true;
-					dialogueObject.m_pClickedDialogueNode = pNode->m_vNodes[j];	
-				}
-			}
-		}
 	}
 }
 
@@ -276,28 +274,27 @@ void DialogueManager::LabelClicked(DialogueObject& dialogueObject,map<string,Que
 
 			pGameObject->SetHasDialogue(false);
 
-			dialogueObject.m_bIsClickedDialogueNode  = false;
 			dialogueObject.m_pCurrentDialogueNode	 = dialogueObject.m_pTree->m_pRoot;
 			dialogueObject.m_bIsStarted				 = false;
 			dialogueObject.m_bIsEnded				 = true;
-			return;
 		}
-		//if the node we clicked got children save him and continue the dialogue from there
-		else if( (dialogueObject.m_pClickedDialogueNode->m_strQuest.empty()) && 
-				 !dialogueObject.m_pClickedDialogueNode->m_vNodes.empty() )
+		else
 		{
-			dialogueObject.m_bIsClickedDialogueNode = false;
-			dialogueObject.m_pCurrentDialogueNode = dialogueObject.m_pClickedDialogueNode;
+			//if the node we clicked got children save him and continue the dialogue from there
+			if(!dialogueObject.m_pClickedDialogueNode->m_vNodes.empty())
+			{
+				dialogueObject.m_pCurrentDialogueNode = dialogueObject.m_pClickedDialogueNode;
+			}
+			//if we reached the end of the conversation and the node doesnt have quest or anything just end the conversation
+			else
+			{
+				HideDialogueTree(dialogueObject.m_pTree->m_pRoot);
+				dialogueObject.m_pCurrentDialogueNode = dialogueObject.m_pTree->m_pRoot;
+				dialogueObject.m_bIsStarted = false;
+			}
 		}
-		//if we reached the end of the conversation and the node doesnt have quest or anything just end the conversation
-		else if( (dialogueObject.m_pClickedDialogueNode->m_strQuest.empty()) && 
-				  dialogueObject.m_pClickedDialogueNode->m_vNodes.empty() )
-		{
-			HideDialogueTree(dialogueObject.m_pTree->m_pRoot);
-			dialogueObject.m_pCurrentDialogueNode	 = dialogueObject.m_pTree->m_pRoot;
-			dialogueObject.m_bIsClickedDialogueNode  = false;
-			dialogueObject.m_bIsStarted				 = false;	
-		}
+
+		dialogueObject.m_bIsClickedDialogueNode = false;
 	}
 }
 
@@ -312,9 +309,9 @@ void DialogueManager::HideDialogueTree(DialogueNode* pNode)
 
 	pNode->m_pLabel->SetVisible(false);
 
-	for (unsigned int i = 0; i < pNode->m_vNodes.size(); i++)
+	for (auto& node : pNode->m_vNodes)
 	{
-		HideDialogueTree(pNode->m_vNodes[i]);
+		HideDialogueTree(node);
 	}
 }
 
@@ -323,14 +320,15 @@ void DialogueManager::HideDialogueTree(DialogueNode* pNode)
 //this function checks if the children of the passed node are hidden.Used in changeLabel(), labelClicked()
 bool DialogueManager::AreChildrenHidden(DialogueNode* pNode)
 {
-	for(unsigned int i=0;i<pNode->m_vNodes.size();i++)
+	for(auto& node : pNode->m_vNodes)
 	{
-		if( !(pNode->m_vNodes[i]->m_pLabel->IsVisible()) )
+		if(node->m_pLabel->IsVisible() )
 		{
-			return true;
+			return false;
 		}
 	}
-	return false;
+
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////
