@@ -60,8 +60,8 @@ Game::Game()
 
 	pSky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
-	//pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
-	pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	//pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//the direction to the sun
 	D3DXVECTOR3 lightVector(20.0f, 300.0f, 50.0f);
@@ -81,7 +81,7 @@ Game::Game()
 	//luaL_dofile(L, "scripts/init.lua");
 
 	pDialogueManager = new DialogueManager;
-	pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue.xml");
+	pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue2.xml");
 
 	//creates 3d titles for the models and check for dialogues
 	auto& gameObjects = m_pGameObjManager->GetSkinnedModels();
@@ -115,7 +115,7 @@ Game::Game()
 	auto height = pApp->GetPresentParameters().BackBufferHeight;
 	D3DXVECTOR2 spellPosition(100, height-80);
 
-	m_pHealSpell = new Button(spellPosition,64,64,"","blueTear.dds","blueTear.dds");
+	m_pHealSpell = new Button(spellPosition,64,64,"","heal1.dds","heal1.dds");
 
 	InitDebugGraphicsShader();
 }
@@ -719,6 +719,12 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				{
 					//TODO: if the camera becomes attached again align it with the object
 					camera->SetCameraFree(!camera->IsCameraFree());
+
+					break;
+				}
+				case 'Q':
+				{
+					m_rHealthBarRectangle.right += 20;
 
 					break;
 				}
