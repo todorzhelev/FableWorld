@@ -7,8 +7,6 @@
 #include <string>
 #include "GameObjectManager.h"
 
-struct node;
-
 /* This structure holds all the information needed for single node in the tree
 m_nKey - this is the id of the node.
 m_strText - the text of the dialogue

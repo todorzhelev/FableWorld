@@ -81,7 +81,7 @@ Game::Game()
 	//luaL_dofile(L, "scripts/init.lua");
 
 	pDialogueManager = new DialogueManager;
-	pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue2.xml");
+	pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue.xml");
 
 	//creates 3d titles for the models and check for dialogues
 	auto& gameObjects = m_pGameObjManager->GetSkinnedModels();
