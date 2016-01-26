@@ -28,15 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("You have to...");
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("You dont have to");
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Hello", new System.Windows.Forms.TreeNode[] {
-            treeNode11,
-            treeNode12});
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("goodbye");
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("RootNode", new System.Windows.Forms.TreeNode[] {
-            treeNode13,
-            treeNode14});
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,19 +59,6 @@
             this.treeView1.LabelEdit = true;
             this.treeView1.Location = new System.Drawing.Point(210, 39);
             this.treeView1.Name = "treeView1";
-            treeNode11.Name = "Node3";
-            treeNode11.Text = "You have to...";
-            treeNode12.Name = "Node4";
-            treeNode12.Text = "You dont have to";
-            treeNode13.Name = "Hello";
-            treeNode13.Text = "Hello";
-            treeNode14.Name = "Node2";
-            treeNode14.Text = "goodbye";
-            treeNode15.Name = "RootNode";
-            treeNode15.Tag = "Root";
-            treeNode15.Text = "RootNode";
-            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode15});
             this.treeView1.Size = new System.Drawing.Size(795, 432);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);

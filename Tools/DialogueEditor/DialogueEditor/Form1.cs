@@ -36,6 +36,10 @@ namespace DialogueEditor
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            treeView1.Nodes.Clear();
+            m_attachedToModel = "";
+            m_selectedTreeNode = null;
+            questTextbox.Text = modelTextbox.Text = inputText.Text = "";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -150,7 +154,7 @@ namespace DialogueEditor
             DialogResult result = openFileDialog1.ShowDialog();
 
             string text = "";
-            if (result == DialogResult.OK) // Test result.
+            if (result == DialogResult.OK)
             {
                 text = openFileDialog1.FileName;
             }
@@ -176,14 +180,14 @@ namespace DialogueEditor
 
                 var attachedToModelName = rootNode.Attributes.GetNamedItem("model").InnerText;
                 modelTextbox.Text = attachedToModelName;
+                m_attachedToModel = attachedToModelName;
 
                 treeView1.Nodes.Clear();
 
                 treeView1.Nodes.Add(new TreeNode(dialogueFile.DocumentElement.Name));
-                TreeNode tNode;
-                tNode = treeView1.Nodes[0];
-                AddTreeViewNodes(rootNode, tNode);
+                AddTreeViewNodes(rootNode, treeView1.Nodes[0]);
 
+                treeView1.ExpandAll();
                 fs.Close();
             }
         }
@@ -195,40 +199,27 @@ namespace DialogueEditor
         /// <param name="inTreeNode"></param>
         private void AddTreeViewNodes(XmlNode inXmlNode, TreeNode inTreeNode)
         {
-            XmlNode xNode;
-            TreeNode tNode;
-            XmlNodeList nodeList;
-            int i = 0;
-            if (inXmlNode.HasChildNodes)
-            {
-                nodeList = inXmlNode.ChildNodes;
-                for (i = 0; i <= nodeList.Count - 1; i++)
-                {
-                    xNode = inXmlNode.ChildNodes[i];
-                    inTreeNode.Nodes.Add(new TreeNode(xNode.Name));
-
-                    tNode = inTreeNode.Nodes[i];
-                    AddTreeViewNodes(xNode, tNode);
-                }
-
-                if (inXmlNode.Attributes.GetNamedItem("Text") != null)
-                {
-                    inTreeNode.Text = inXmlNode.Attributes.GetNamedItem("Text").InnerText;
-                }
-
-                if (inXmlNode.Attributes.GetNamedItem("Quest") != null)
-                {
-                    inTreeNode.Tag = inXmlNode.Attributes.GetNamedItem("Quest").InnerText;
-                }
-            }
-            else
+            if (inXmlNode.Attributes.GetNamedItem("Text") != null)
             {
                 inTreeNode.Text = inXmlNode.Attributes.GetNamedItem("Text").InnerText;
-                if (inXmlNode.Attributes.GetNamedItem("Quest") != null)
-                {
-                    inTreeNode.Tag = inXmlNode.Attributes.GetNamedItem("Quest").InnerText;
-                }
             }
+
+            if (inXmlNode.Attributes.GetNamedItem("Quest") != null)
+            {
+                inTreeNode.Tag = inXmlNode.Attributes.GetNamedItem("Quest").InnerText;
+            }
+
+            if (inXmlNode.HasChildNodes)
+            {
+                for (int i = 0; i < inXmlNode.ChildNodes.Count; i++)
+                {
+                    XmlNode xmlNode = inXmlNode.ChildNodes[i];
+                    inTreeNode.Nodes.Add(new TreeNode(xmlNode.Name));
+
+                    TreeNode treeNode = inTreeNode.Nodes[i];
+                    AddTreeViewNodes(xmlNode, treeNode);
+                }
+            } 
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -267,11 +258,12 @@ namespace DialogueEditor
                 XAttribute name = new XAttribute("Text", treeViewNode.Text);
                 element.Add(name);
 
+                //if there is something in the tag, we have quest
                 if (treeViewNode.Tag != null)
                 {
-                    XAttribute quest = new XAttribute("Quest", (string)treeViewNode.Tag);
                     if ((string)treeViewNode.Tag != " ")
                     {
+                        XAttribute quest = new XAttribute("Quest", (string)treeViewNode.Tag);
                         element.Add(quest);
                     }
                 }
