@@ -30,7 +30,6 @@ void DialogueManager::LoadDialogues(string strDialoguesFileName)
 			DialogueObject* pDialogue = new DialogueObject;
 			pDialogue->m_pTree = new Tree;
 			pDialogue->m_strModel = m_pDialogue->Attribute("model");
-			m_vGameObjectsWithDialogues.push_back(pDialogue->m_strModel);
 		
 			m_pNode = m_pDialogue->FirstChildElement("Node");
 		
@@ -112,16 +111,13 @@ std::vector<DialogueObject*>& DialogueManager::GetDialogues()
 
 /////////////////////////////////////////////////////////////////////////
 
-void DialogueManager::OnUpdate(map<string, QuestObject>& activeQuests)
+void DialogueManager::OnUpdate()
 {
 	for (auto& dialogue : m_dialogues)
 	{
 		if (!dialogue->m_bIsEnded)
-		{
-			pDialogueManager->UpdateDialogueTree(dialogue->m_pTree->m_pRoot, true, *dialogue);
-			
-			pDialogueManager->ChangeDialogue(dialogue->m_pCurrentDialogueNode, *dialogue);
-			pDialogueManager->LabelClicked(*dialogue, activeQuests, availableQuests);
+		{	
+			UpdateDialogue(dialogue->m_pCurrentDialogueNode, *dialogue);
 		}
 
 		GameObject* obj = m_pGameObjManager->GetObjectByName(dialogue->m_strModel);
@@ -143,56 +139,24 @@ void DialogueManager::AddDialogue(DialogueObject* dialogueObject)
 
 /////////////////////////////////////////////////////////////////////////
 
-void DialogueManager::UpdateDialogueTree(DialogueNode* pNode, bool bIsRootNode, DialogueObject& dialogue)
+void DialogueManager::UpdateDialogue(DialogueNode* pNode, DialogueObject& dialogue)
 {
-	if(bIsRootNode )
+	if (pNode->m_pLabel->IsMouseDown() && !dialogue.m_bIsStarted)
 	{
-		pNode->m_pLabel->OnUpdate();
-
-		//if the dialogue is not started and we click on the root, start it
-		if (pNode->m_pLabel->IsMouseDown() && !dialogue.m_bIsStarted)
-		{
-			HideDialogueTree(dialogue.m_pTree->m_pRoot);
-
-			for (unsigned int i = 0; i<pNode->m_vNodes.size(); i++)
-			{
-				pNode->m_vNodes[i]->m_pLabel->SetVisible(true);
-			}
-
-			dialogue.m_pCurrentDialogueNode = pNode;
-			dialogue.m_bIsStarted = true;
-		}
-
-		if (dialogue.m_bIsStarted)
-		{
-			UpdateDialogueTree(pNode, false, dialogue);
-		}
-	}
-	else
-	{
-		if (pNode == nullptr)
-		{
-			return;
-		}
-
 		for (unsigned int i = 0; i<pNode->m_vNodes.size(); i++)
 		{
-			pNode->m_vNodes[i]->m_pLabel->OnUpdate();
-			UpdateDialogueTree(pNode->m_vNodes[i],false,dialogue);
+			pNode->m_vNodes[i]->m_pLabel->SetVisible(true);
 		}
+
+		dialogue.m_pCurrentDialogueNode = pNode;
+		dialogue.m_bIsStarted = true;
 	}
-	
-}
 
-/////////////////////////////////////////////////////////////////////////
-
-void DialogueManager::ChangeDialogue(DialogueNode* pNode, DialogueObject& dialogueObject)
-{
-	if (dialogueObject.m_bIsStarted && !pNode->m_vNodes.empty())
+	if (dialogue.m_bIsStarted && !pNode->m_vNodes.empty())
 	{
 		if (AreChildrenHidden(pNode))
 		{
-			HideDialogueTree(dialogueObject.m_pTree->m_pRoot);
+			HideDialogueTree(dialogue.m_pTree->m_pRoot);
 
 			for (unsigned int i = 0; i<pNode->m_vNodes.size(); i++)
 			{
@@ -205,11 +169,60 @@ void DialogueManager::ChangeDialogue(DialogueNode* pNode, DialogueObject& dialog
 			{
 				if (pNode->m_vNodes[j]->m_pLabel->IsMouseDown())
 				{
-					dialogueObject.m_bIsClickedDialogueNode = true;
-					dialogueObject.m_pClickedDialogueNode = pNode->m_vNodes[j];
+					dialogue.m_bIsClickedDialogueNode = true;
+					dialogue.m_pClickedDialogueNode = pNode->m_vNodes[j];
 				}
 			}
 		}
+	}
+
+	if (dialogue.m_bIsClickedDialogueNode && pDinput->IsMouseButtonUp(0))
+	{
+		std::string quest = dialogue.m_pClickedDialogueNode->m_strQuest;
+
+		//if there is quest attached to this node, take the quest and end the conversation
+		if (!quest.empty())
+		{
+			HideDialogueTree(dialogue.m_pTree->m_pRoot);
+
+			//erase the quest from active quests
+			auto& quests = GetQuestManager()->GetQuests();
+
+			for (auto it = quests.begin(); it != quests.end(); ++it)
+			{
+				if (!(*it)->m_strTitle.compare(quest))
+				{
+					(*it)->m_bIsCompleted = false;
+					(*it)->m_bIsStarted = true;
+					break;
+				}
+			}
+
+			SkinnedModel* pGameObject = m_pGameObjManager->GetSkinnedModelByName(dialogue.m_strModel);
+
+			pGameObject->SetHasDialogue(false);
+
+			dialogue.m_pCurrentDialogueNode = dialogue.m_pTree->m_pRoot;
+			dialogue.m_bIsStarted = false;
+			dialogue.m_bIsEnded = true;
+		}
+		else
+		{
+			//if the node we clicked got children save him and continue the dialogue from there
+			if (!dialogue.m_pClickedDialogueNode->m_vNodes.empty())
+			{
+				dialogue.m_pCurrentDialogueNode = dialogue.m_pClickedDialogueNode;
+			}
+			//if we reached the end of the conversation and the node doesnt have quest or anything just end the conversation
+			else
+			{
+				HideDialogueTree(dialogue.m_pTree->m_pRoot);
+				dialogue.m_pCurrentDialogueNode = dialogue.m_pTree->m_pRoot;
+				dialogue.m_bIsStarted = false;
+			}
+		}
+
+		dialogue.m_bIsClickedDialogueNode = false;
 	}
 }
 
@@ -230,46 +243,9 @@ void DialogueManager::RenderDialogueTree(DialogueNode* pNode)
 
 /////////////////////////////////////////////////////////////////////////
 
-void DialogueManager::LabelClicked(DialogueObject& dialogueObject,map<string,QuestObject>& mapActiveQuests,map<string,QuestObject>& mapAvailableQuests)
+void DialogueManager::LabelClicked(DialogueObject& dialogueObject)
 {
-	if( dialogueObject.m_bIsClickedDialogueNode && pDinput->IsMouseButtonUp(0) )
-	{
-		//if there is quest attached to this node, take the quest and end the conversation
-		if( !(dialogueObject.m_pClickedDialogueNode->m_strQuest.empty()) )
-		{
-			HideDialogueTree(dialogueObject.m_pTree->m_pRoot);
-			if( mapAvailableQuests.find(dialogueObject.m_pClickedDialogueNode->m_strQuest)!= mapAvailableQuests.end() )
-			{
-				mapActiveQuests[dialogueObject.m_pClickedDialogueNode->m_strQuest] = mapAvailableQuests.find(dialogueObject.m_pClickedDialogueNode->m_strQuest)->second;
-				mapAvailableQuests.erase(dialogueObject.m_pClickedDialogueNode->m_strQuest);
-			}
-
-			SkinnedModel* pGameObject = m_pGameObjManager->GetSkinnedModelByName(dialogueObject.m_strModel);
-
-			pGameObject->SetHasDialogue(false);
-
-			dialogueObject.m_pCurrentDialogueNode	 = dialogueObject.m_pTree->m_pRoot;
-			dialogueObject.m_bIsStarted				 = false;
-			dialogueObject.m_bIsEnded				 = true;
-		}
-		else
-		{
-			//if the node we clicked got children save him and continue the dialogue from there
-			if(!dialogueObject.m_pClickedDialogueNode->m_vNodes.empty())
-			{
-				dialogueObject.m_pCurrentDialogueNode = dialogueObject.m_pClickedDialogueNode;
-			}
-			//if we reached the end of the conversation and the node doesnt have quest or anything just end the conversation
-			else
-			{
-				HideDialogueTree(dialogueObject.m_pTree->m_pRoot);
-				dialogueObject.m_pCurrentDialogueNode = dialogueObject.m_pTree->m_pRoot;
-				dialogueObject.m_bIsStarted = false;
-			}
-		}
-
-		dialogueObject.m_bIsClickedDialogueNode = false;
-	}
+	
 }
 
 /////////////////////////////////////////////////////////////////////////

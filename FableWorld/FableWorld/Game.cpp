@@ -1,5 +1,6 @@
 #include"Game.h"
 #include<math.h>
+#include"QuestManager.h"
 
 ofstream fout; //for logs.
 lua_State* L;
@@ -88,18 +89,19 @@ Game::Game()
 	{
 		//create mesh for 3d text above the models
 		pTextManager->CreateMeshFor3DText(gameObject);
-			
-		//check if certain skinned mesh has dialog attached to it
-		for(auto it1 = pDialogueManager->m_vGameObjectsWithDialogues.begin();it1!=pDialogueManager->m_vGameObjectsWithDialogues.end();it1++)
+	}
+	
+	for(auto& gameObject : gameObjects )
+	{
+		for( auto& dialogue : pDialogueManager->GetDialogues() )
 		{
-			if(gameObject->GetName() == (*it1) )
+			if( !gameObject->GetName().compare(dialogue->m_strModel) )
 			{
 				gameObject->SetHasDialogue(true);
 				pTextManager->CreateMeshFor3DTextQuest(gameObject);
 			}
 		}
 	}
-	
 	// hides the enemy health bar before we attack enemy.
 	m_bIsEnemyHealthBarVisible = false;
 
@@ -214,20 +216,17 @@ void Game::OnUpdate(float dt)
 	
 	soundsyst->PlayAllSounds();
 
-	pDialogueManager->OnUpdate(m_mapActiveQuests);
+	pDialogueManager->OnUpdate();
 
 	//checking if there is active quest
-	if (!m_mapActiveQuests.empty())
+	for (auto& quest : GetQuestManager()->GetQuests())
 	{
-		for (auto& quest : m_mapActiveQuests)
-		{
-			SkinnedModel* reqObject = m_pGameObjManager->GetSkinnedModelByName(quest.second.requiredObject);
+		SkinnedModel* reqObject = m_pGameObjManager->GetSkinnedModelByName(quest->m_strRequiredObject);
 
-			//if mainHero is close to the required from the quest object and the required object is dead the quest is completed.
-			if (IsObjectNear(pMainHero, reqObject) && reqObject->IsDead())
-			{
-				quest.second.completed = true;
-			}
+		//if mainHero is close to the required from the quest object and the required object is dead the quest is completed.
+		if (IsObjectNear(pMainHero, reqObject) && reqObject->IsDead())
+		{
+			quest->m_bIsCompleted = true;
 		}
 	}
 
@@ -554,25 +553,26 @@ void Game::OnRender()
 			//text->drawText("Press L to switch between the two camera modes",400,40,0,0,255,0,0,0);
 
 			//draws quest stuff
-			for(auto& quest: m_mapActiveQuests)
+			for(auto& quest: GetQuestManager()->GetQuests())
 			{
-				if(quest.second.completed)
+				if( quest->m_bIsStarted )
 				{
-					pTextManager->RenderText(quest.second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
-					pTextManager->RenderText("Completed",pApp->GetPresentParameters().BackBufferWidth-590,70,0,0,255,255,255,0);
-				}
-				else if( !pMainHero->IsDead() )
-				{
-					pTextManager->RenderText(quest.second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
-				}
-				else if( !quest.second.completed && pMainHero->IsDead() )
-				{
-					pTextManager->RenderText(quest.second.title.c_str(),pApp->GetPresentParameters().BackBufferWidth-420,70,0,0,255,255,255,0);
-					pTextManager->RenderText("Epic fail!",pApp->GetPresentParameters().BackBufferWidth-570,70,0,0,255,255,255,0);
+					if (quest->m_bIsCompleted)
+					{
+						pTextManager->RenderText(quest->m_strTitle.c_str(), pApp->GetPresentParameters().BackBufferWidth - 420, 70, 0, 0, 255, 255, 255, 0);
+						pTextManager->RenderText("Completed", pApp->GetPresentParameters().BackBufferWidth - 590, 70, 0, 0, 255, 255, 255, 0);
+					}
+					else if (!pMainHero->IsDead())
+					{
+						pTextManager->RenderText(quest->m_strTitle.c_str(), pApp->GetPresentParameters().BackBufferWidth - 420, 70, 0, 0, 255, 255, 255, 0);
+					}
+					else if (!quest->m_bIsCompleted && pMainHero->IsDead())
+					{
+						pTextManager->RenderText(quest->m_strTitle.c_str(), pApp->GetPresentParameters().BackBufferWidth - 420, 70, 0, 0, 255, 255, 255, 0);
+						pTextManager->RenderText("Epic fail!", pApp->GetPresentParameters().BackBufferWidth - 570, 70, 0, 0, 255, 255, 255, 0);
+					}
 				}
 			}
-
-			
 
 			//draws the healthbars
 			m_pInterfaceSprite->Begin(D3DXSPRITE_ALPHABLEND);

@@ -80,17 +80,6 @@ struct SoundObject
 
 /////////////////////////////////////////////////////////////////
 
-//struct for quests
-struct QuestObject
-{
-	string	title;
-	string	content;
-	bool	completed;
-	string	requiredObject;
-};
-
-/////////////////////////////////////////////////////////////////
-
 struct VertexPosition
 {
 	D3DXVECTOR3 m_vPos;

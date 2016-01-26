@@ -1,8 +1,5 @@
 #include"LuaFunctions.h"
 
-//map of the available quests, loaded from the scripts
-map<string,QuestObject> availableQuests;
-
 //the main hero in the game. The camera is attached to him.
 string mainHero;
 
@@ -229,18 +226,22 @@ Purpose:load quest
 */
 int l_addQuest(lua_State* L)
 {
-	QuestObject obj;
+	Quest* quest = new Quest;
 	lua_getglobal(L, "questTitle");
-	obj.title = lua_tostring(L,lua_gettop(L));
+	quest->m_strTitle = lua_tostring(L,lua_gettop(L));
 
 	lua_getglobal(L, "questContent");
-	obj.content = lua_tostring(L,lua_gettop(L));
+	quest->m_strContent = lua_tostring(L,lua_gettop(L));
 
 	lua_getglobal(L, "requiredObject");
-	obj.requiredObject = lua_tostring(L,lua_gettop(L));
+	quest->m_strRequiredObject = lua_tostring(L,lua_gettop(L));
 
-	obj.completed = false;
-	availableQuests[obj.title] = obj;
+	quest->m_bIsCompleted = false;
+	quest->m_bIsStarted = false;
+
+	auto& quests = GetQuestManager()->GetQuests();
+	quests.push_back(quest);
+
 	return 1;
 }
 

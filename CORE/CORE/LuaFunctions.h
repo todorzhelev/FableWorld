@@ -6,6 +6,7 @@
 #include "IBaseScene.h"
 #include <string.h>
 #include "GameObjectManager.h"
+#include "QuestManager.h"
 
 extern "C" 
 {
@@ -14,7 +15,6 @@ extern "C"
 	#include "lauxlib.h"
 }
 
-extern map<string,QuestObject> availableQuests;
 extern string mainHero;
 
 int l_addStaticModel(lua_State* L);

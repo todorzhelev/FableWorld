@@ -1,21 +1,21 @@
-#include "../../CORE/CORE/Misc.h"
-#include "../../CORE/CORE/TextManager.h"
-#include "../../CORE/CORE/DirectInput.h"
-#include "../../CORE/CORE/Terrain.h"
-#include "../../CORE/CORE/Camera.h"
-#include "../../CORE/CORE/StaticModel.h"
-#include "../../CORE/CORE/SkinnedModel.h"
-#include "../../CORE/CORE/Button.h"
-#include "../../CORE/CORE/Textbox.h"
-#include "../../CORE/CORE/Label.h"
-#include "../../CORE/CORE/Sky.h"
-#include "../../CORE/CORE/SoundSyst.h"
-#include "../../CORE/CORE/DialogueManager.h"
-#include "../../CORE/CORE/IBaseScene.h"
+#include "Misc.h"
+#include "TextManager.h"
+#include "DirectInput.h"
+#include "Terrain.h"
+#include "Camera.h"
+#include "StaticModel.h"
+#include "SkinnedModel.h"
+#include "Button.h"
+#include "Textbox.h"
+#include "Label.h"
+#include "Sky.h"
+#include "SoundSyst.h"
+#include "DialogueManager.h"
+#include "IBaseScene.h"
 #include "Menu.h"
 #include "MenuInGame.h"
-#include "../../CORE/CORE/LuaFunctions.h"
-#include "../../CORE/CORE/GameObjectManager.h"
+#include "LuaFunctions.h"
+#include "GameObjectManager.h"
 
 
 using namespace std;
@@ -83,7 +83,4 @@ private:
 	ID3DXEffect* m_pDebugGraphicsEffect;
 	D3DXHANDLE 	 m_hDebugGraphicsTechnique;
 	D3DXHANDLE   m_hDebugGraphicsWVPMatrix;
-
-	//map holding active quests
-	map<string,QuestObject> m_mapActiveQuests;
 };

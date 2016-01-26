@@ -50,11 +50,7 @@ public:
 
 	void TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, DialogueNode* parentNode, DialogueNode* currentNode);
 
-	void OnUpdate(map<string, QuestObject>& activeQuests);
-
-	//invokes the onUpdate function for the root element in the tree
-	//This is needed to check for mouse click or mouse over
-	void UpdateDialogueTree(DialogueNode* pNode, bool bIsRootNode, DialogueObject& dialogue);
+	void OnUpdate();
 
 	//invokes onRender on every label in the tree
 	void RenderDialogueTree(DialogueNode* pNode);
@@ -66,7 +62,7 @@ public:
 	Then the current dialogue node is the root, his children are revealed and is executed the else if in this function, which
 	checks if the user clicked on any if the shown children.If any of the children is clicked isClickedDialogueNode is changed to true
 	and the clickedDialogueNode variable is changed to the clicked node. The dialogue changing later continues in labelClicked function */
-	void ChangeDialogue(DialogueNode* pNode,DialogueObject& dialogueObject);
+	void UpdateDialogue(DialogueNode* pNode, DialogueObject& dialogue);
 
 	/* when isClickedDialogueNode is true and the user releases the mouse botton this means that
 	dialogue node is selected.
@@ -77,7 +73,7 @@ public:
 	and changeDialogue inactive.This way we can detect single click om dialogue - in changeDialogue we detect if the user
 	clicked on node and late in labelClicked we detect if the user released the mouse button.
 	Click and release combination of mouse button ensures single click. */
-	void LabelClicked(DialogueObject& dialogueObject,map<string,QuestObject>& mapActiveQuests,map<string,QuestObject>& mapAvailableQuests);
+	void LabelClicked(DialogueObject& dialogueObject);
 
 	//this function checks if the children of the passed node are hidden.Used in changeLabel(), labelClicked()
 	bool AreChildrenHidden(DialogueNode* pNode);
@@ -88,8 +84,6 @@ public:
 	void AddDialogue(DialogueObject* dialogueObject);
 
 	std::vector<DialogueObject*>& GetDialogues();
-
-	vector<string> m_vGameObjectsWithDialogues;
 
 private:
 
