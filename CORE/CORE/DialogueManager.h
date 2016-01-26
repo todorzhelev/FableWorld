@@ -61,10 +61,8 @@ public:
 	The function first checks if the dialogue is started. The dialogue starts when the user clicks on the root and his children are shown
 	Then the current dialogue node is the root, his children are revealed and is executed the else if in this function, which
 	checks if the user clicked on any if the shown children.If any of the children is clicked isClickedDialogueNode is changed to true
-	and the clickedDialogueNode variable is changed to the clicked node. The dialogue changing later continues in labelClicked function */
-	void UpdateDialogue(DialogueNode* pNode, DialogueObject& dialogue);
-
-	/* when isClickedDialogueNode is true and the user releases the mouse botton this means that
+	and the clickedDialogueNode variable is changed to the clicked node. The dialogue changing later continues in labelClicked function
+	when isClickedDialogueNode is true and the user releases the mouse botton this means that
 	dialogue node is selected.
 	Then if the node got quest the user receives it and the dialogue ends.
 	Otherwise the current dialogue node is changed to the clicked one.
@@ -73,7 +71,7 @@ public:
 	and changeDialogue inactive.This way we can detect single click om dialogue - in changeDialogue we detect if the user
 	clicked on node and late in labelClicked we detect if the user released the mouse button.
 	Click and release combination of mouse button ensures single click. */
-	void LabelClicked(DialogueObject& dialogueObject);
+	void UpdateDialogue(DialogueNode* pNode, DialogueObject& dialogue);
 
 	//this function checks if the children of the passed node are hidden.Used in changeLabel(), labelClicked()
 	bool AreChildrenHidden(DialogueNode* pNode);
