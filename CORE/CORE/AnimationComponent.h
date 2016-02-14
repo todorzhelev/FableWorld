@@ -36,7 +36,7 @@ public:
 
 	void SetTrackWeight(AnimationTrack track, float newValue, float startTime, float transitionPeriod = 0.125f);
 
-	void OnUpdate(float dt);
+	void OnUpdate(float dt, float movementSpeed);
 
 	void PlayAnimation(LPCSTR strAnimationName);
 

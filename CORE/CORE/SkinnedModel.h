@@ -160,6 +160,10 @@ public:
 
 	void SetSkinInfo(ID3DXSkinInfo* skinInfo);
 
+	void SetMovementSpeed(float newSpeed);
+
+	float GetMovementSpeed();
+
 private:
 
 	void 			RenderTitles();
@@ -251,6 +255,8 @@ private:
 
 	//this map holds which weapon to which bone is attached
 	unordered_map<GameObject*, string> m_mapBindedObjects;
+
+	float				m_movementSpeed;
 };
 
 //////////////////////////////////////////////////////////////////////////////

@@ -27,6 +27,7 @@ SkinnedModel::SkinnedModel()
 	m_bShouldRenderTitles = true;
 	m_pAnimationComponent = new AnimationComponent();
 
+	m_movementSpeed = 1;
 	BuildEffect();
 	BuildEffectForTitles();
 }
@@ -96,7 +97,7 @@ SkinnedModel::SkinnedModel(string strModelName, string ModelFileName, string str
 	m_bIsPicked = false;
 	m_bHasDialogue = false;
 	m_strAttackerName = "";
-
+	m_movementSpeed = 1;
 	m_eGameObjectType = EGameObjectType_Skinned;
 
 	m_bShouldRenderTitles = bShouldRenderTitles;
@@ -412,7 +413,7 @@ void SkinnedModel::BuildEffectForTitles()
 
 void SkinnedModel::OnUpdate(float dt)
 {
-	m_pAnimationComponent->OnUpdate(dt);
+	m_pAnimationComponent->OnUpdate(dt, m_movementSpeed);
 	
 	// Recurse down the tree and builds the toRoot matrix for every bone
 	D3DXMATRIX IdentityMatrix;
@@ -1099,4 +1100,14 @@ ID3DXSkinInfo* SkinnedModel::GetSKinInfo() const
 void SkinnedModel::SetSkinInfo(ID3DXSkinInfo* skinInfo)
 {
 	m_pSkinInfo = skinInfo;
+}
+
+void SkinnedModel::SetMovementSpeed(float newSpeed)
+{
+	m_movementSpeed = newSpeed;
+}
+
+float SkinnedModel::GetMovementSpeed()
+{
+	return m_movementSpeed;
 }

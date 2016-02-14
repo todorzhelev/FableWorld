@@ -11,7 +11,7 @@ class GameObjectManager
 {
 public:
 
-	GameObjectManager(bool bShouldRenderTitles, bool bShouldHighlightPickedObjects, bool bShouldRenderAxis, bool bAreObjectsGrounded, bool bShouldRenderBoundingBoxes);
+	GameObjectManager(bool bShouldRenderTitles, bool bShouldHighlightPickedObjects, bool bShouldRenderAxis, bool bAreObjectsGrounded, bool bShouldRenderBoundingBoxes, bool bShouldPickOnlySkinnedModels);
 
 	void AddGameObject(GameObject* pGameObject);
 
@@ -47,13 +47,14 @@ public:
 
 	bool ShouldRenderBoundingBoxes();
 
+	void SetShouldPickOnlySkinnedModels(bool bShouldPickOnlySkinnedModels);
+
+	bool ShouldPickOnlySkinnedModels();
+
 	void OnUpdate();
 
 	void UpdatePicking();
 
-	bool IsPickedStaticObject(GameObject* pObj, float& nDistance);
-
-	bool IsPickedSkinnedObject(D3DXFRAME* pFrame,D3DXMATRIX combinedMatrix,D3DXVECTOR3 vOrigin,D3DXVECTOR3 vDir, float& nDistance );
 
 private:
 
@@ -69,6 +70,8 @@ private:
 	bool		m_bAreObjectsGrounded;
 
 	bool		m_bShouldRenderBoundingBoxes;
+
+	bool		m_bShouldPickOnlySkinnedModels;
 
 	GameObject*	m_pPickedObject;
 

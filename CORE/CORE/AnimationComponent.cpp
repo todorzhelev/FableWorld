@@ -116,10 +116,9 @@ void AnimationComponent::SetTrackPosition(AnimationTrack track, float position)
 //This function repeats the animation, i.e. after the animation set ended it starts from the beginning and so on.
 void AnimationComponent::PlayAnimation(LPCSTR strAnimationName)
 {
-	if (!ShouldStopTrackAfterPlayingAnimation() &&
-		!ShouldPlayAnimationOnce())
+	if (!m_bShouldStopTrackAfterPlayingAnimation && !m_bShouldPlayAnimationOnce)
 	{
-		SetAnimationOnTrack(strAnimationName, SecondTrack);
+		SetAnimationOnTrack(strAnimationName, FirstTrack);
 	}
 }
 
@@ -182,7 +181,7 @@ bool AnimationComponent::JustStartedPlayingAnimationOnce()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AnimationComponent::OnUpdate(float dt)
+void AnimationComponent::OnUpdate(float dt, float movementSpeed)
 {
 	//after we know that the current animation should be played just once
 	//we see when it is finished and we transit to the first track, which holds the idle animation set
@@ -226,7 +225,7 @@ void AnimationComponent::OnUpdate(float dt)
 		}
 	}
 
-	AdvanceTime(dt);
+	AdvanceTime(dt*movementSpeed);
 }
 
 /////////////////////////////////////////////////////////////////////////////

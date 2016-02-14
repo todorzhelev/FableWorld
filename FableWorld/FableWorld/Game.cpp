@@ -60,8 +60,8 @@ Game::Game()
 
 	pSky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
-	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
-	//pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	//pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//the direction to the sun
 	D3DXVECTOR3 lightVector(20.0f, 300.0f, 50.0f);
@@ -81,7 +81,7 @@ Game::Game()
 	//luaL_dofile(L, "scripts/init.lua");
 
 	pDialogueManager = new DialogueManager;
-	pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue.xml");
+	pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue2.xml");
 
 	//creates 3d titles for the models and check for dialogues
 	auto& gameObjects = m_pGameObjManager->GetSkinnedModels();
@@ -438,7 +438,7 @@ void Game::MoveObject(string objectTitle, float dt)
 		}
 	}
 
-	D3DXVECTOR3 newPos = pSkinnedModel->GetPosition() + dir*150.0*dt;
+	D3DXVECTOR3 newPos = pSkinnedModel->GetPosition() + dir*150.0*pSkinnedModel->GetMovementSpeed()*dt;
 	if( pTerrain->IsValidPosition(newPos.x,newPos.z))
 	{
 		pSkinnedModel->SetPosition(newPos);
@@ -728,6 +728,12 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 
 					break;
 				}
+
+				case VK_SHIFT:
+				{
+					pMainHero->SetMovementSpeed(2);
+					break;
+				}
 			}
 
 			return 0;
@@ -754,6 +760,18 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			}
 
 			return 0;
+		}
+
+		case WM_KEYUP:
+		{
+			switch( wParam )
+			{
+				case VK_SHIFT:
+				{
+					pMainHero->SetMovementSpeed(1);
+					break;
+				}
+			}
 		}
 	}
 

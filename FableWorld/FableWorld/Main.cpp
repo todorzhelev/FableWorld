@@ -20,7 +20,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 
 	pApp = new Application(hInstance, "Fable World", D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING);
 	
-	m_pGameObjManager = new GameObjectManager(true,false,false,true,false);
+	m_pGameObjManager = new GameObjectManager(true,false,false,true,false,true);
 
 	//adds 3 scenes in the scenesContainer and set the active scene to be the menu scene.
 	Menu menu;

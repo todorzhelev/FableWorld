@@ -6,14 +6,15 @@ GameObjectManager* m_pGameObjManager = nullptr;
 
 /////////////////////////////////////////////////////////////////////////
 
-GameObjectManager::GameObjectManager(bool bShouldRenderTitles, bool bShouldHighlightPickedObjects, bool bShouldRenderAxis, bool bAreObjectsGrounded, bool bShouldRenderBoundingBoxes)
+GameObjectManager::GameObjectManager(bool bShouldRenderTitles, bool bShouldHighlightPickedObjects, bool bShouldRenderAxis, bool bAreObjectsGrounded, bool bShouldRenderBoundingBoxes, bool bShouldPickOnlySkinnedModels)
 {
 	m_pPickedObject	= nullptr;
 	m_bShouldHighlightPickedObjects = bShouldHighlightPickedObjects;
-	m_bShouldRenderTitles  = bShouldRenderTitles;
-	m_bShouldRenderAxis    = bShouldRenderAxis;
-	m_bAreObjectsGrounded = bAreObjectsGrounded;
-	m_bShouldRenderBoundingBoxes = bShouldRenderBoundingBoxes;
+	m_bShouldRenderTitles			= bShouldRenderTitles;
+	m_bShouldRenderAxis				= bShouldRenderAxis;
+	m_bAreObjectsGrounded			= bAreObjectsGrounded;
+	m_bShouldRenderBoundingBoxes	= bShouldRenderBoundingBoxes;
+	m_bShouldPickOnlySkinnedModels	= bShouldPickOnlySkinnedModels;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -53,7 +54,8 @@ void GameObjectManager::OnUpdate()
 
 void GameObjectManager::UpdatePicking()
 {
-	for (auto& gameObject : m_gameObjects)
+	//TODO: fix this to work with normal objects too
+	for (auto& gameObject : m_skinnedModels)
 	{
 		float dist = gameObject->GetDistanceToPickedObject();
 
@@ -188,6 +190,20 @@ void GameObjectManager::SetShouldRenderBoundingBoxes(bool bShouldRenderBoundingB
 bool GameObjectManager::ShouldRenderBoundingBoxes()
 {
 	return m_bShouldRenderBoundingBoxes;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void GameObjectManager::SetShouldPickOnlySkinnedModels(bool bShouldPickOnlySkinnedModels)
+{
+	m_bShouldPickOnlySkinnedModels = bShouldPickOnlySkinnedModels;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+bool GameObjectManager::ShouldPickOnlySkinnedModels()
+{
+	return m_bShouldPickOnlySkinnedModels;
 }
 
 /////////////////////////////////////////////////////////////////////////
