@@ -34,16 +34,6 @@ class IBaseMenuObject;
 
 //////////////////////////////////////////////////////////////////////////////
 
-#pragma comment(lib,"d3d9.lib")
-#pragma comment(lib,"d3dx9.lib")
-#pragma comment(lib, "dxerr.lib")
-#pragma comment(lib,"dinput8.lib")
-#pragma comment(lib,"dxguid.lib")
-#pragma comment(lib,"fmodex_vc.lib")
-#pragma comment(lib,"lua5.1.lib")
-
-//////////////////////////////////////////////////////////////////////////////
-
 class Application
 {
 public:

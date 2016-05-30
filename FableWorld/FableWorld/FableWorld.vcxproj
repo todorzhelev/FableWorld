@@ -49,8 +49,8 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\boost_1.59.0;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\lua-5.1.4\lua-5.1.4;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath)</LibraryPath>
     <SourcePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SourcePath)</SourcePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\boost_1.59.0;F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;F:\PROJECTS\FableWorld\FableWorld\CORE\CORE;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\lua-5.1.4\lua-5.1.4;$(LibraryPath)</LibraryPath>
@@ -87,13 +87,15 @@
       <InlineExpansion>AnySuitable</InlineExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;$(SolutionDir)..\CORE\CORE;$(SolutionDir)..\CORE\CORE\libs\boost_1.59.0;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;lua5.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;lua5.1.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;fmodex_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -167,21 +169,27 @@
   <ItemGroup>
     <FxCompile Include="..\..\Resources\shaders\DebugGraphicsShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TransformVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\SkinnedModelShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkinnedModelVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SkinnedModelVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\SkyShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkyVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SkyVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\StaticModelShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StaticModelVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">StaticModelVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\TerrainShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TerrainVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TerrainVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\Text3DShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TransformVS</EntryPointName>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
