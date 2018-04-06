@@ -9,7 +9,6 @@
 #include "Textbox.h"
 #include "Label.h"
 #include "Sky.h"
-#include "SoundSyst.h"
 #include "DialogueManager.h"
 #include "IBaseScene.h"
 #include "Menu.h"

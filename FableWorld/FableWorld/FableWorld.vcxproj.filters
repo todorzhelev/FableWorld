@@ -71,9 +71,6 @@
     <ClCompile Include="..\..\CORE\CORE\Sky.cpp">
       <Filter>CORE\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\SoundSyst.cpp">
-      <Filter>CORE\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\CORE\CORE\Terrain.cpp">
       <Filter>CORE\Source Files</Filter>
     </ClCompile>
@@ -155,9 +152,6 @@
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\Sky.h">
-      <Filter>CORE\Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\CORE\CORE\SoundSyst.h">
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\Terrain.h">

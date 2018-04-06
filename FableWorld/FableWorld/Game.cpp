@@ -44,8 +44,6 @@ Game::Game()
 	//here addStaticModel is function in the script.When it is invoked there it actually invokes l_addStaticModel(lua_State* L)
 	lua_register(L,"addStaticModel", l_addStaticModel );
 	lua_register(L,"addAnimatedModel",l_addAnimatedModel);
-	lua_register(L,"add2DSound",l_add2DSound);
-	lua_register(L,"add3DSound",l_add3DSound);
 	lua_register(L,"addQuest",l_addQuest);
 	lua_register(L,"setUpMainHero",l_setUpMainHero);
 
@@ -67,8 +65,6 @@ Game::Game()
 	D3DXVECTOR3 lightVector(20.0f, 300.0f, 50.0f);
 	D3DXVec3Normalize(&lightVector, &lightVector);
 	pTerrain->SetLightVector(lightVector);
-
-	soundsyst = new SoundSyst(100);
 
 	pTextManager->CreateFontFor3DText();
 
@@ -141,7 +137,6 @@ Game::~Game()
 	delete pDinput;
 	delete pApp;
 	delete pDialogueManager;
-	delete soundsyst;
 	delete pSky;
 }
 
@@ -210,11 +205,9 @@ void Game::OnUpdate(float dt)
 		gameObject->OnUpdate(dt);
 	}
 
-	soundsyst->OnUpdate();
 	pTextManager->OnUpdate(dt);
 	camera->OnUpdate(dt);
 	
-	soundsyst->PlayAllSounds();
 
 	pDialogueManager->OnUpdate();
 
