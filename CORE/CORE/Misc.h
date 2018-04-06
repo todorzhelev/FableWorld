@@ -63,23 +63,6 @@ struct Light
 
 /////////////////////////////////////////////////////////////////
 
-//struct for sounds(2d and 3d)
-struct SoundObject
-{
-	string			m_strSoundFileName;
-	FMOD::Sound*	m_pSound;
-	FMOD::Channel*	m_pChannel;
-	float			m_fVolume;
-	FMOD_VECTOR		m_vSoundPosition;
-	float			m_fMinDistance;
-	float			m_fMaxDistance;
-	bool			m_bIsPlaying;
-	bool			m_bIs2D;
-	bool			m_bIs3D;
-};
-
-/////////////////////////////////////////////////////////////////
-
 struct VertexPosition
 {
 	D3DXVECTOR3 m_vPos;

@@ -161,66 +161,6 @@ int l_addAnimatedModel(lua_State* L)
 
 /////////////////////////////////////////////////////////////////////////
 /*
-Function:l_add2DSound
-Purpose:load 2d sound
-*/
-int l_add2DSound(lua_State* L)
-{
-	SoundObject SoundObj;
-	lua_getglobal(L, "soundFileName");
-	SoundObj.m_strSoundFileName = lua_tostring(L,lua_gettop(L));
-
-	lua_getglobal(L, "soundVolume");
-	SoundObj.m_fVolume = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
-
-	SoundObj.m_bIsPlaying = false;
-	SoundObj.m_bIs2D = true;
-	SoundObj.m_bIs3D = false;
-	soundsyst->CreateBackgroundSound(SoundObj);
-	soundsyst->AddSoundObject(SoundObj);
-
-	return 1;
-}
-
-
-/////////////////////////////////////////////////////////////////////////
-/*
-Function:l_add3DSound
-Purpose:load 3d sound
-*/
-int l_add3DSound(lua_State* L)
-{
-	SoundObject SoundObj;
-	lua_getglobal(L, "soundFileName");
-	SoundObj.m_strSoundFileName = lua_tostring(L,lua_gettop(L));
-
-	lua_getglobal(L, "soundVolume");
-	SoundObj.m_fVolume = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
-
-	lua_getglobal(L, "x");
-	SoundObj.m_vSoundPosition.x = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
-
-	lua_getglobal(L, "y");
-	SoundObj.m_vSoundPosition.y = static_cast<float>(lua_tonumber(L,lua_gettop(L))); 
-
-	lua_getglobal(L, "z");
-	SoundObj.m_vSoundPosition.z = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
-
-	lua_getglobal(L, "soundMinDist");
-	SoundObj.m_fMinDistance = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
-	lua_getglobal(L, "soundMaxDist");
-	SoundObj.m_fMaxDistance = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
-	SoundObj.m_bIsPlaying = false;
-	SoundObj.m_bIs2D = false;
-	SoundObj.m_bIs3D = true;
-	soundsyst->Create3DSound(SoundObj);
-	soundsyst->AddSoundObject(SoundObj);
-	return 1;
-}
-
-
-/////////////////////////////////////////////////////////////////////////
-/*
 Function:l_addQuest
 Purpose:load quest
 */
