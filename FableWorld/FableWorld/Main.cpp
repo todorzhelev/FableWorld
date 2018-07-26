@@ -4,8 +4,6 @@
 #include"MenuInGame.h"
 #include"HeroSelection.h"
 #include <string>
-#include <boost/lexical_cast.hpp>
-
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -37,8 +35,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 
 	pApp->SetCurrentScene(&menu);
 	//pApp->SetCurrentScene(nullptr);
-
-	std::string a = boost::lexical_cast<std::string>(4.85);
 
 	pApp->MainLoop();
 }

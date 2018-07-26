@@ -88,7 +88,7 @@
       <InlineExpansion>AnySuitable</InlineExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;$(SolutionDir)..\CORE\CORE\libs\boost_1.59.0;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(SolutionDir)..\CORE\CORE\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(SolutionDir)..\CORE\CORE\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>legacy_stdio_definitions.lib;lua5.1.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
