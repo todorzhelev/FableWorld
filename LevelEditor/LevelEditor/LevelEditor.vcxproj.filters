@@ -89,9 +89,6 @@
     <ClCompile Include="..\..\CORE\CORE\Sky.cpp">
       <Filter>extern\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\CORE\CORE\SoundSyst.cpp">
-      <Filter>extern\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\CORE\CORE\Terrain.cpp">
       <Filter>extern\Source Files</Filter>
     </ClCompile>
@@ -117,6 +114,9 @@
       <Filter>extern\Source Files\TinyXml2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\CORE\CORE\AnimationComponent.cpp">
+      <Filter>extern\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\QuestManager.cpp">
       <Filter>extern\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -169,9 +169,6 @@
     <ClInclude Include="..\..\CORE\CORE\Sky.h">
       <Filter>extern\Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\CORE\CORE\SoundSyst.h">
-      <Filter>extern\Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\Terrain.h">
       <Filter>extern\Source Files</Filter>
     </ClInclude>
@@ -200,6 +197,9 @@
       <Filter>extern\Source Files\TinyXml2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\AnimationComponent.h">
+      <Filter>extern\Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\QuestManager.h">
       <Filter>extern\Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -14,18 +14,19 @@
     <ProjectName>LevelEditor</ProjectName>
     <ProjectGuid>{1B841516-2E1E-46B8-AF1D-7235D31B7598}</ProjectGuid>
     <RootNamespace>diplomna</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -68,11 +69,13 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\CORE\CORE\;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;lua5.1.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,13 +86,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\CORE\CORE\;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>lua5.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;lua5.1.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -108,9 +113,9 @@
     <ClCompile Include="..\..\CORE\CORE\libs\TinyXml2\tinyxml2.cpp" />
     <ClCompile Include="..\..\CORE\CORE\LuaFunctions.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Misc.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\QuestManager.cpp" />
     <ClCompile Include="..\..\CORE\CORE\SkinnedModel.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Sky.cpp" />
-    <ClCompile Include="..\..\CORE\CORE\SoundSyst.cpp" />
     <ClCompile Include="..\..\CORE\CORE\StaticModel.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Terrain.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Textbox.cpp" />
@@ -138,9 +143,9 @@
     <ClInclude Include="..\..\CORE\CORE\libs\TinyXml2\tinyxml2.h" />
     <ClInclude Include="..\..\CORE\CORE\LuaFunctions.h" />
     <ClInclude Include="..\..\CORE\CORE\Misc.h" />
+    <ClInclude Include="..\..\CORE\CORE\QuestManager.h" />
     <ClInclude Include="..\..\CORE\CORE\SkinnedModel.h" />
     <ClInclude Include="..\..\CORE\CORE\Sky.h" />
-    <ClInclude Include="..\..\CORE\CORE\SoundSyst.h" />
     <ClInclude Include="..\..\CORE\CORE\StaticModel.h" />
     <ClInclude Include="..\..\CORE\CORE\Terrain.h" />
     <ClInclude Include="..\..\CORE\CORE\Textbox.h" />
@@ -159,21 +164,27 @@
   <ItemGroup>
     <FxCompile Include="..\..\Resources\shaders\DebugGraphicsShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TransformVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\SkinnedModelShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkinnedModelVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SkinnedModelVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\SkyShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkyVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SkyVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\StaticModelShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StaticModelVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">StaticModelVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\TerrainShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TerrainVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TerrainVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\Text3DShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TransformVS</EntryPointName>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

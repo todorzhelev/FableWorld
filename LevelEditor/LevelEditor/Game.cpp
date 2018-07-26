@@ -43,8 +43,6 @@ Game::Game()
 	D3DXVec3Normalize(&toSun, &toSun);
 	pTerrain->SetLightVector(toSun);
 
-	soundsyst = new SoundSyst(100);
-
 	pTextManager->CreateFontFor3DText();
 	
 	LoadUIComponents();
@@ -199,7 +197,6 @@ Game::~Game()
 	delete wind;
 	delete label;
 	delete textbox;
-	delete soundsyst;
 	delete sky;
 	delete engine;*/
 }

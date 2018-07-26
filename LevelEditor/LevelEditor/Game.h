@@ -10,7 +10,6 @@
 #include "../../CORE/CORE/Label.h"
 #include "../../CORE/CORE/Checkbox.h"
 #include "../../CORE/CORE/Sky.h"
-#include "../../CORE/CORE/SoundSyst.h"
 #include "../../CORE/CORE/DialogueManager.h"
 #include "Menu.h"
 #include "MenuInGame.h"
@@ -112,7 +111,7 @@ private:
 	D3DXVECTOR3 posForIcon;
 	D3DXVECTOR3 posForHealthBar;
 	D3DXVECTOR3 posForEnemyHealthbar;
-	map<string,QuestObject> activeQuests;
+	//map<string,QuestObject> activeQuests;
 
 	
 	
