@@ -16,7 +16,8 @@ void DialogueManager::LoadDialogues(string strDialoguesFileName)
 
 	if( err != tinyxml2::XMLError::XML_SUCCESS )
 	{
-		MessageBox(0,"cant load xml file",0,0);
+		MessageBox(0,"Cannot load dialogue file ",0,0);
+		printf("Dialogue file %s is probably missing \n", strDialoguesFileName.c_str());
 	}
 
 	//gets the root element of the whole xml document- Dialogues
