@@ -1,9 +1,6 @@
 #include"Game.h"
 #include<math.h>
 
-ofstream fout; //for logs.
-lua_State* L;
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //TODO: refactor the whole code 
@@ -48,15 +45,15 @@ Game::Game()
 	LoadUIComponents();
 
 		//init lua
-	L = lua_open();
+	g_luaState = lua_open();
 	//open lua libs
-	luaL_openlibs(L);
+	luaL_openlibs(g_luaState);
 	
 	//with lua_register we bind the functions in the cpp file with the invoked functions in the script file
 	//here addStaticModel is function in the script.When it is invoked there it actually invokes l_addStaticModel(lua_State* L)
-	lua_register(L,"addStaticModel", l_addStaticModel );
-	lua_register(L,"addAnimatedModel",l_addAnimatedModel);
-	lua_register(L,"setUpMainHero",l_setUpMainHero);
+	lua_register(g_luaState,"addStaticModel", l_addStaticModel );
+	lua_register(g_luaState,"addAnimatedModel",l_addAnimatedModel);
+	lua_register(g_luaState,"setUpMainHero",l_setUpMainHero);
 
 	OnResetDevice();
 }
@@ -1255,7 +1252,7 @@ void Game::ImportLevel()
 
 	if (GetOpenFileName(&ofn))
 	{
-		luaL_dofile(L, filename);
+		luaL_dofile(g_luaState, filename);
 	}
 }
 

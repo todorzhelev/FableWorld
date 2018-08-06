@@ -20,7 +20,7 @@ std::string Tree::GetText(DialogueNode* pNode)
 
 ////////////////////////////////////////////////////////////////////////////
 
-void Tree::InsertNode(DialogueNode*& currentNode, DialogueNode*& parentNode, string text, string quest, bool bAnySiblings)
+void Tree::InsertNode(DialogueNode*& currentNode, DialogueNode*& parentNode, std::string text, std::string quest, bool bAnySiblings)
 {
 	int x = 5;
 	int y = 0;

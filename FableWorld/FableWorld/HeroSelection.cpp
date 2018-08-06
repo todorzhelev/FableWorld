@@ -2,13 +2,18 @@
 #include "Game.h"
 #include "../../CORE/CORE/TextManager.h"
 
-constexpr int rotationSlowFactor = 200000;
+//TODO: move this from here...
+constexpr int rotationSlowFactor = 20000;
 
 /////////////////////////////////////////////////////////////////////////
 
 HeroSelection::HeroSelection()
 {
-	camera->GetPosition() = D3DXVECTOR3(-2,31,-160);
+	//TODO:this should be specified in the level file
+	camera->GetPosition() = D3DXVECTOR3(-2, 31, -161);
+
+	//TODO: use level file, instead of hardcoded stuff
+	//luaL_dofile(g_luaState, "../../Resources/scripts/levelHeroSelect.lua");
 
 	SkinnedModel* pMesh = new SkinnedModel("Ezrael","../../Resources/models/ezreal/ezreal_5anm.x","../../Resources/textures/SkinnedModels/Ezreal_ProdigalExplorer.dds",false);
 
@@ -22,7 +27,7 @@ HeroSelection::HeroSelection()
 	
 	pTextManager->CreateMeshFor3DText(pMesh);
 
-	pPesho = pMesh;
+	m_pMainHero = pMesh;
 
 	float posx = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth/2);
 	float posy = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight/2);
@@ -74,16 +79,19 @@ void HeroSelection::OnUpdate(float dt)
 
 	if(pDinput->IsMouseButtonDown(0) )
 	{
-		SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pPesho);
-	
-		float yAngle = pDinput->GetMouseDX() / (rotationSlowFactor*dt);
-		pSkinnedModel->ModifyRotationAngleByY(-yAngle);
-	
-		D3DXMATRIX R;
-		D3DXMatrixRotationY(&R, yAngle);
-		D3DXVec3TransformCoord(&pSkinnedModel->GetRightVector(), &pSkinnedModel->GetRightVector(), &R);
-		D3DXVec3TransformCoord(&pSkinnedModel->GetUpVector() , &pSkinnedModel->GetUpVector() , &R);
-		D3DXVec3TransformCoord(&pSkinnedModel->GetLookVector(), &pSkinnedModel->GetLookVector(), &R);
+		if (m_pMainHero)
+		{
+			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(m_pMainHero);
+
+			float yAngle = pDinput->GetMouseDX() / (rotationSlowFactor*dt);
+			pSkinnedModel->ModifyRotationAngleByY(-yAngle);
+
+			D3DXMATRIX R;
+			D3DXMatrixRotationY(&R, yAngle);
+			D3DXVec3TransformCoord(&pSkinnedModel->GetRightVector(), &pSkinnedModel->GetRightVector(), &R);
+			D3DXVec3TransformCoord(&pSkinnedModel->GetUpVector(), &pSkinnedModel->GetUpVector(), &R);
+			D3DXVec3TransformCoord(&pSkinnedModel->GetLookVector(), &pSkinnedModel->GetLookVector(), &R);
+		}
 	}
 
 	camera->OnUpdate(dt);

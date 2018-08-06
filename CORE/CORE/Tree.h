@@ -1,7 +1,7 @@
 #pragma once
 #include"Misc.h"
 
-using namespace std;
+
 class Label;
 class DialogueNode;
 
@@ -11,9 +11,9 @@ public:
 
 	Tree();
 
-	string GetText(DialogueNode* tr);
+	std::string GetText(DialogueNode* tr);
 
-	void InsertNode(DialogueNode*& currentNode, DialogueNode*& parentNode, string text, string quest,bool bAnySiblings);
+	void InsertNode(DialogueNode*& currentNode, DialogueNode*& parentNode, std::string text, std::string quest,bool bAnySiblings);
 
 	DialogueNode* m_pRoot;
 };

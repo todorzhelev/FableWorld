@@ -8,7 +8,7 @@ class Label: public IBaseMenuObject
 {
 public:
 
-	Label(D3DXVECTOR2 vPosition, string strText);
+	Label(D3DXVECTOR2 vPosition, std::string strText);
 
 	void Init();
 

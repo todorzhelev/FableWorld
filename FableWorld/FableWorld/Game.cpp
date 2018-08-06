@@ -2,9 +2,6 @@
 #include<math.h>
 #include"QuestManager.h"
 
-ofstream fout; //for logs.
-lua_State* L;
-
 /////////////////////////////////////////////////////////////////////////
 
 Game::Game()
@@ -36,16 +33,16 @@ Game::Game()
 	m_vEnemyHealthBarPosition = D3DXVECTOR3(370,5.0,0.0);
 
 	//init lua
-	L = lua_open();
+	g_luaState = lua_open();
 	//open lua libs
-	luaL_openlibs(L);
+	luaL_openlibs(g_luaState);
 	
 	//with lua_register we bind the functions in the cpp file with the invoked functions in the script file
 	//here addStaticModel is function in the script.When it is invoked there it actually invokes l_addStaticModel(lua_State* L)
-	lua_register(L,"addStaticModel", l_addStaticModel );
-	lua_register(L,"addAnimatedModel",l_addAnimatedModel);
-	lua_register(L,"addQuest",l_addQuest);
-	lua_register(L,"setUpMainHero",l_setUpMainHero);
+	lua_register(g_luaState,"addStaticModel", l_addStaticModel );
+	lua_register(g_luaState,"addAnimatedModel",l_addAnimatedModel);
+	lua_register(g_luaState,"addQuest",l_addQuest);
+	lua_register(g_luaState,"setUpMainHero",l_setUpMainHero);
 
 	float fWidth  = (float)pApp->GetPresentParameters().BackBufferWidth;
 	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
@@ -58,8 +55,9 @@ Game::Game()
 
 	pSky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
-	//pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
-	pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	//TODO: this should be specified in the level file
+	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	//pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//the direction to the sun
 	D3DXVECTOR3 lightVector(20.0f, 300.0f, 50.0f);
@@ -69,14 +67,11 @@ Game::Game()
 	pTextManager->CreateFontFor3DText();
 
 	//loads the models, sounds and quests from the scripts
-	//luaL_dofile(L, "scripts/animatedModels.lua");
-	//luaL_dofile(L, "scripts/staticModels.lua");
-	luaL_dofile(L, "../../Resources/scripts/level.lua");
-	luaL_dofile(L, "../../Resources/scripts/sounds.lua");
-	luaL_dofile(L, "../../Resources/scripts/quests.lua");
-	//luaL_dofile(L, "scripts/init.lua");
+	luaL_dofile(g_luaState, "../../Resources/scripts/levelInGame.lua");
+	luaL_dofile(g_luaState, "../../Resources/scripts/quests.lua");
 
 	pDialogueManager = new DialogueManager;
+	//TODO: probably specify this in the level file?
 	pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue.xml");
 
 	//creates 3d titles for the models and check for dialogues
@@ -114,6 +109,13 @@ Game::Game()
 	m_pHealSpell = new Button(spellPosition,64,64,"","heal1.dds","heal1.dds");
 
 	InitDebugGraphicsShader();
+
+	D3DXMATRIX R;
+	D3DXMatrixRotationY(&R, D3DX_PI/2); //rotate this bad boy
+	D3DXVec3TransformCoord(&camera->GetRightVector(), &camera->GetRightVector(), &R);
+	D3DXVec3TransformCoord(&camera->GetUpVector(), &camera->GetUpVector(), &R);
+	D3DXVec3TransformCoord(&camera->GetLookVector(), &camera->GetLookVector(), &R);
+
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -130,7 +132,7 @@ void Game::InitDebugGraphicsShader()
 
 Game::~Game()
 {
-	lua_close(L);
+	lua_close(g_luaState);
 	delete pTextManager;
 	delete pTerrain;
 	delete camera;
@@ -256,7 +258,7 @@ void Game::OnUpdate(float dt)
 		D3DXVec3TransformCoord(&gameObject->GetTitleForQuestUpVector(), &gameObject->GetTitleForQuestUpVector(), &R);
 	}
 
-	/*for(map<string,GameObject*>::iterator it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
+	/*for(std::map<std::string,GameObject*>::iterator it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
 	{
 		DrawLine(pMainHero->m_vPos,gameObject->m_vPos);
 	}*/
@@ -317,7 +319,7 @@ void Game::OnUpdate(float dt)
 			D3DXVECTOR3 vDistanceVector = vActorPosition - vMainHeroPosition;
 			D3DXVec3Normalize(&vDistanceVector,&vDistanceVector);
 
-			//for some reason the look vector is the right vector must be fixed
+			//for some reason the look std::vector is the right std::vector must be fixed
 			float angle = D3DXVec3Dot(&gameObject->GetRightVector(),&vDistanceVector);
 			gameObject->ModifyRotationAngleByY(angle);
 
@@ -377,9 +379,9 @@ void Game::OnUpdate(float dt)
 /////////////////////////////////////////////////////////////////////////
 
 //makes the camera to follow model in game and moving it with WASD from keyboard and mouse
-void Game::MoveObject(string objectTitle, float dt)
+void Game::MoveObject(std::string objectTitle, float dt)
 {
-	//this vector holds the new direction to move
+	//this std::vector holds the new direction to move
 	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
 
 	GameObject* obj = m_pGameObjManager->GetObjectByName(objectTitle);
@@ -393,22 +395,22 @@ void Game::MoveObject(string objectTitle, float dt)
 	if( pDinput->IsKeyDown(DIK_W) )
 	{
 		pSkinnedModel->PlayAnimation("run");
-		dir += pSkinnedModel->GetLookVector();
+		dir += camera->GetLookVector();
 	}
 	if( pDinput->IsKeyDown(DIK_S) )
 	{
 		pSkinnedModel->PlayAnimation("run");
-		dir -= pSkinnedModel->GetLookVector();
+		dir -= camera->GetLookVector();
 	}
 	if( pDinput->IsKeyDown(DIK_A) )
 	{
 		pSkinnedModel->PlayAnimation("run");
-		dir -= pSkinnedModel->GetRightVector();
+		dir -= camera->GetRightVector();
 	}
 	if( pDinput->IsKeyDown(DIK_D) )
 	{
 		pSkinnedModel->PlayAnimation("run");
-		dir += pSkinnedModel->GetRightVector();
+		dir += camera->GetRightVector();
 	}
 
 	if( !pDinput->IsKeyDown(DIK_W) && !pDinput->IsKeyDown(DIK_S) && !pDinput->IsKeyDown(DIK_A) && !pDinput->IsKeyDown(DIK_D) )
@@ -438,7 +440,7 @@ void Game::MoveObject(string objectTitle, float dt)
 	}
 
 	//updates the camera position based on the new position of the model and the zoom
-	//we zoom in the direction of the look vector. If the zoom is negative it will go in the opposite direction
+	//we zoom in the direction of the look std::vector. If the zoom is negative it will go in the opposite direction
 	D3DXVECTOR3 upOffset = D3DXVECTOR3(0, 25, 0);
 	D3DXVECTOR3 cameraPos = pMainHero->GetPosition() + camera->GetLookVector()*camera->GetZoom() + upOffset;
 
@@ -448,7 +450,7 @@ void Game::MoveObject(string objectTitle, float dt)
 /////////////////////////////////////////////////////////////////////////
 
 //rotates to model and the camera if the mouse is moved
-void Game::RotateObject(string objectTitle, float dt)
+void Game::RotateObject(std::string objectTitle, float dt)
 {
 	GameObject* obj = m_pGameObjManager->GetObjectByName(objectTitle);
 	SkinnedModel* pSkinnedModel = nullptr;
@@ -478,7 +480,7 @@ void Game::RotateObject(string objectTitle, float dt)
 //controls the health of the hero and enemy and make them play dead animation if they are at zero health
 void Game::ManageHealthBars()
 {
-	string strEnemy = pMainHero->GetAttackerName();
+	std::string strEnemy = pMainHero->GetAttackerName();
 	GameObject* obj = m_pGameObjManager->GetObjectByName(strEnemy);
 	SkinnedModel* pEnemy = nullptr;
 	if (obj != nullptr)

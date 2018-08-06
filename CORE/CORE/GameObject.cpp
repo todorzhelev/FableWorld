@@ -27,7 +27,7 @@ void GameObject::OnResetDevice()
 	
 }
 
-void GameObject::RenderBindedWeapon(GameObject* pSkMesh, string bone)
+void GameObject::RenderBindedWeapon(GameObject* pSkMesh, std::string bone)
 {
 	
 }
@@ -38,22 +38,22 @@ float GameObject::GetDistanceToPickedObject()
 	return -1;
 }
 
-string GameObject::GetModelFileName() const
+std::string GameObject::GetModelFileName() const
 {
 	return m_strModelFileName;
 }
 
-void GameObject::SetModelFilename(const string& strModelFileName)
+void GameObject::SetModelFilename(const std::string& strModelFileName)
 {
 	m_strModelFileName = strModelFileName;
 }
 
-string& GameObject::GetName()
+std::string& GameObject::GetName()
 {
 	return m_strModelName;
 }
 
-void GameObject::SetName(const string& strName)
+void GameObject::SetName(const std::string& strName)
 {
 	m_strModelName = strName;
 }
@@ -108,22 +108,22 @@ void GameObject::SetMesh(ID3DXMesh* mesh)
 	m_pMesh = mesh;
 }
 
-vector<Material>& GameObject::GetMaterials()
+std::vector<Material>& GameObject::GetMaterials()
 {
 	return m_vMaterials;
 }
 
-void GameObject::SetMaterials(vector<Material> materials)
+void GameObject::SetMaterials(std::vector<Material> materials)
 {
 	m_vMaterials = materials;
 }
 
-vector<IDirect3DTexture9*>& GameObject::GetTextures()
+std::vector<IDirect3DTexture9*>& GameObject::GetTextures()
 {
 	return m_vTextures;
 }
 
-void GameObject::SetTextures(vector<IDirect3DTexture9*> textures)
+void GameObject::SetTextures(std::vector<IDirect3DTexture9*> textures)
 {
 	m_vTextures = textures;
 }
@@ -138,12 +138,12 @@ void GameObject::SetTexture(IDirect3DTexture9* texture)
 	m_pTexture = texture;
 }
 
-string GameObject::GetTextureFilename() const
+std::string GameObject::GetTextureFilename() const
 {
 	return m_strTextureFileName;
 }
 
-void GameObject::SetTextureFilename(const string& filename)
+void GameObject::SetTextureFilename(const std::string& filename)
 {
 	m_strTextureFileName = filename;
 }
@@ -158,22 +158,22 @@ void GameObject::SetIsBindable(int bindable)
 	m_bIsBindable = bindable;
 }
 
-string GameObject::GetBindedToAnimatedModelName() const
+std::string GameObject::GetBindedToAnimatedModelName() const
 {
 	return m_strBindedToAnimatedModelName;
 }
 
-void GameObject::SetBindedToAnimatedModelName(const string& bindedToAnimatedModelName)
+void GameObject::SetBindedToAnimatedModelName(const std::string& bindedToAnimatedModelName)
 {
 	m_strBindedToAnimatedModelName = bindedToAnimatedModelName;
 }
 
-string GameObject::GetBindedToBoneName() const
+std::string GameObject::GetBindedToBoneName() const
 {
 	return m_strBindedToBoneName;
 }
 
-void GameObject::SetBindedToBoneName(const string& bindedToBoneName)
+void GameObject::SetBindedToBoneName(const std::string& bindedToBoneName)
 {
 	m_strBindedToBoneName = bindedToBoneName;
 }

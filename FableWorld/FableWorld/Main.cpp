@@ -14,7 +14,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 	//must research this
 	freopen( "CONOUT$", "wb", stdout);
 
-	fout.open("logs/log.txt");
+	fout.open("log.txt");
 
 	pApp = new Application(hInstance, "Fable World", D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING);
 	

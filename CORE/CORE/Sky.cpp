@@ -2,7 +2,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-Sky::Sky(string strSkyTextureFileName, float fSkyRadius)
+Sky::Sky(std::string strSkyTextureFileName, float fSkyRadius)
 	:m_fSkyRadius(fSkyRadius)
 {
 	D3DXCreateSphere(pDxDevice, m_fSkyRadius, 160, 160, &m_pSkyMesh, 0);

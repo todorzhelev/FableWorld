@@ -10,7 +10,7 @@ Terrain* pTerrain = NULL;
 /////////////////////////////////////////////////////////////////////////
 
 //First the heightmap is loaded,then based on loaded values from heightmap and rows,cols,dx,dz large terrain mesh is generated.
-Terrain::Terrain(string strHeightmapFileName,float fHeightsScale, int nRows,int nCols,float fDX,float fDZ ,const D3DXVECTOR3& vCenterPoint)
+Terrain::Terrain(std::string strHeightmapFileName,float fHeightsScale, int nRows,int nCols,float fDX,float fDZ ,const D3DXVECTOR3& vCenterPoint)
 :m_strHeightmapFileName(strHeightmapFileName)
 ,m_fHeightsScale(fHeightsScale)
 ,m_nRows(nRows)
@@ -47,7 +47,7 @@ LoadHeightmap() opens the passed file for heightmap and read its values in binar
 	  in the loop this is achieved by multiplying the first counter by number of columns and summing with the second counter
 	  so first row will have 0*8+0=0 , 0*8+1 = 1,...., 0*8+7 = 7
 	  second row 1*8+0 = 8.... 1*8+7 = 15 and etc;
-	  so finally the heightmap vector will have something like this
+	  so finally the heightmap std::vector will have something like this
 	  [0] = 41.625000
 	  [1] = 41.291688
 	  [2] = 40.541668
@@ -59,18 +59,18 @@ void Terrain::LoadHeightmap()
 {
 	//we read ascii values of the chars in the heightmap, so we dont need negative values.
 	//Therefore we use unsigned
-	vector<unsigned char> temp(m_nRows*m_nCols);
+	std::vector<unsigned char> temp(m_nRows*m_nCols);
 
-	ifstream fin;
-	fin.open(m_strHeightmapFileName.c_str(), ios_base::binary);
+	std::ifstream fin;
+	fin.open(m_strHeightmapFileName.c_str(), std::ios_base::binary);
 
 	if( !fin )
 	{
 		MessageBox(NULL,"Cant open heightmap for reading",NULL,NULL);
 	}
 
-	//in the first parameter we need the adress of the beginning of the vector.
-	//from there, read is starting to write one char from the file into new element in the vector
+	//in the first parameter we need the adress of the beginning of the std::vector.
+	//from there, read is starting to write one char from the file into new element in the std::vector
 	fin.read((char*)&temp[0], temp.size());
 
 	fin.close();
@@ -97,8 +97,8 @@ Builds the mesh which represents our terrain.
 */
 void Terrain::GenerateTerrainMesh()
 {
-	vector<D3DXVECTOR3> verts;
-	vector<DWORD> indices;
+	std::vector<D3DXVECTOR3> verts;
+	std::vector<DWORD> indices;
 	GenerateVertexBuffer(verts,m_nRows,m_nCols);
 	GenerateIndexBuffer(indices,m_nRows,m_nCols);
 
@@ -137,8 +137,8 @@ void Terrain::GenerateTerrainMesh()
 					   |
 					   |
 					  -z
-		We now want to save texture coordinates for the blend map. Blend map is texture that sits on top of the terrain and got the same dimension as it.
-		Blend map is used so multi-texturing can be performed. The texture coordinates are expressed in this coordinate system:
+		We now want to save texture coordinates for the blend std::map. Blend std::map is texture that sits on top of the terrain and got the same dimension as it.
+		Blend std::map is used so multi-texturing can be performed. The texture coordinates are expressed in this coordinate system:
 					
 					 ----------- +u
 					 | 
@@ -218,7 +218,7 @@ generates the vertex buffer so the vertices are properly positioned and there is
  |
  m_fDZ
 */
-void Terrain::GenerateVertexBuffer(vector<D3DXVECTOR3>& vVertices, int nNumRows,int nNumCols)
+void Terrain::GenerateVertexBuffer(std::vector<D3DXVECTOR3>& vVertices, int nNumRows,int nNumCols)
 {
 	vVertices.resize(nNumRows*nNumCols);
 
@@ -278,7 +278,7 @@ void Terrain::GenerateVertexBuffer(vector<D3DXVECTOR3>& vVertices, int nNumRows,
 /////////////////////////////////////////////////////////////////////////
 
 //generates the indexBuffer for the mesh.
-void Terrain::GenerateIndexBuffer(vector<DWORD>& vIndices,int nNumRows,int nNumCols)
+void Terrain::GenerateIndexBuffer(std::vector<DWORD>& vIndices,int nNumRows,int nNumCols)
 {
 	vIndices.resize((nNumRows-1)*(nNumCols-1)*6);
 	 
@@ -359,8 +359,8 @@ void Terrain::OnResetDevice()
 //Generates the mesh for the subgrid of the terrain
 void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalTexture* pVertices)
 {
-	vector<D3DXVECTOR3> vTempVerts;
-	vector<DWORD> vTempIndices;
+	std::vector<D3DXVECTOR3> vTempVerts;
+	std::vector<DWORD> vTempIndices;
 
 	GenerateVertexBuffer(vTempVerts,k_nSubGridsRowsNumber,k_nSubGridsColsNumber);
 	GenerateIndexBuffer(vTempIndices,k_nSubGridsRowsNumber,k_nSubGridsColsNumber);
@@ -541,7 +541,7 @@ void Terrain::BuildEffect()
 
 void Terrain::OnRender()
 { 
-	vector<TerrainSubGrid*> visibleSubGrids;
+	std::vector<TerrainSubGrid*> visibleSubGrids;
 	for(auto& subGrid : m_vSubGrids)
 	{
 		if (camera->IsBoundingBoxVisible(subGrid->m_subGridBoungingBox))

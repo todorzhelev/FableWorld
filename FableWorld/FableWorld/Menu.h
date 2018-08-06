@@ -4,7 +4,7 @@
 #include "Misc.h"
 #include "Menu.h"
 #include "Label.h"
-using namespace std;
+
 
 //this is the menu scene and contains all the thing needed in the menu
 class Menu: public IBaseScene

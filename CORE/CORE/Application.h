@@ -24,8 +24,6 @@
 #include<iostream>
 #include<direct.h> //__getcwd
 
-using namespace std;
-
 //////////////////////////////////////////////////////////////////////////////
 
 class GameObject;
@@ -37,7 +35,7 @@ class Application
 {
 public:
 
-	Application(HINSTANCE hInstance, string strWindowTitle, D3DDEVTYPE eDeviceType, DWORD requestedVP);
+	Application(HINSTANCE hInstance, std::string strWindowTitle, D3DDEVTYPE eDeviceType, DWORD requestedVP);
 	~Application();
 
 	HINSTANCE				GetAppInstance();
@@ -60,9 +58,9 @@ public:
 
 	IBaseScene*				GetCurrentScene();
 
-	void					AddScene(string strSceneName, IBaseScene* pScene);
+	void					AddScene(std::string strSceneName, IBaseScene* pScene);
 
-	IBaseScene*				GetScene(string strSceneName);
+	IBaseScene*				GetScene(std::string strSceneName);
 
 	bool					IsShaderVersionSupported();
 
@@ -76,13 +74,13 @@ public:
 
 	void					AddUIObject(IBaseMenuObject* pUIObject);
 
-	vector<IBaseMenuObject*> m_vUIObjects;
+	std::vector<IBaseMenuObject*> m_vUIObjects;
 
 	//holds the selected textbox, this must not be here,
 	//MenuManager must be made instead and it has to be moved there.
-	string					m_strSelectedTextbox;
+	std::string					m_strSelectedTextbox;
 
-	IBaseMenuObject*		FindMenuObject(string strObjectId);
+	IBaseMenuObject*		FindMenuObject(std::string strObjectId);
 	
 private:
 
@@ -92,8 +90,8 @@ private:
 
 private:
 
-	//the string in the title bar if we are in windowed mode
-	string					 m_strWindowTitle;
+	//the std::string in the title bar if we are in windowed mode
+	std::string					 m_strWindowTitle;
 
 	//handle to the current application instance.
 	HINSTANCE				m_hAppInstance;
@@ -115,7 +113,7 @@ private:
 	bool					m_bIsAppPaused;
 
 	//map containing all the scenes in the game, currently Menu scene, Game scene and MenuInGame Scene
-	map<string,IBaseScene*> m_mapScenesContainer;
+	std::map<std::string,IBaseScene*> m_mapScenesContainer;
 
 	//pointer to the current scene
 	IBaseScene*				m_pCurrentScene;
@@ -131,6 +129,6 @@ extern Application*		 pApp;
 
 extern IDirect3DDevice9* pDxDevice;
 
-extern ofstream			 fout;
+extern std::ofstream			 fout;
 
 //////////////////////////////////////////////////////////////////////////////

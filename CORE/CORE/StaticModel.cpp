@@ -23,7 +23,7 @@ StaticModel::StaticModel()
 
 ////////////////////////////////////////////////////////////////////////
 
-StaticModel::StaticModel(string strModelName, string ModelFileName, string strTextureFileName)
+StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName)
 {
 		//default texture for models that dont have any
 	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture);	
@@ -165,7 +165,7 @@ void StaticModel::BuildBoundingBox()
 	float height = m_BoundingBox.GetMaxPoint().y - m_BoundingBox.GetMinPoint().y;
 	float depth  = m_BoundingBox.GetMaxPoint().z - m_BoundingBox.GetMinPoint().z;
 
-	fout<<"Bounding box\n"<<width<<endl<<height<<endl<<depth<<endl;
+	fout<<"Bounding box\n"<<width<<std::endl<<height<<std::endl<<depth<<std::endl;
 
 	D3DXCreateBox(pDxDevice, width, height, depth, &m_pBoundingBoxMesh, 0);
 
@@ -302,7 +302,7 @@ void StaticModel::OnRender()
 /////////////////////////////////////////////////////////////////////////
 
 //renders binded model
-void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,string bone)
+void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone)
 {
 	//the animated model
 	SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pSkMesh);

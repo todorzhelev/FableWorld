@@ -7,14 +7,7 @@
 #include "GameObjectManager.h"
 #include "QuestManager.h"
 
-extern "C" 
-{
-	#include "lua.h"
-	#include "lualib.h"
-	#include "lauxlib.h"
-}
-
-extern string mainHero;
+extern std::string mainHero;
 
 int l_addStaticModel(lua_State* L);
 int l_addAnimatedModel(lua_State* L);

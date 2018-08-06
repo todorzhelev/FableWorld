@@ -4,7 +4,7 @@
 #include "TextManager.h"
 #include "DirectInput.h"
 #include "Misc.h"
-using namespace std;
+
 
 //this scenes contains all the things for the menu in game.This menu will appear if in game the games presses escape
 class MenuInGame: public IBaseScene

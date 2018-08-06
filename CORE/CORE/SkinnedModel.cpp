@@ -34,7 +34,7 @@ SkinnedModel::SkinnedModel()
 
 /////////////////////////////////////////////////////////////////////////
 
-SkinnedModel::SkinnedModel(string strModelName, string ModelFileName, string strTextureFileName,bool bShouldRenderTitles)
+SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName,bool bShouldRenderTitles)
 {
 	//code duplication, move it to another function
 	//default white texture for models which doesnt have any
@@ -122,7 +122,7 @@ void SkinnedModel::LoadGameObject()
 
 	if( !pFrame ) 
 	{
-		fout<<"cannot find node with mesh"<<endl;
+		fout<<"cannot find node with mesh"<<std::endl;
 	}
 	
 	D3DXMESHCONTAINER* pMeshContainer = pFrame->pMeshContainer;
@@ -273,7 +273,7 @@ void SkinnedModel::InitBonesToRootMatricesPointersArray()
 /////////////////////////////////////////////////////////////////////////
 
 //binds static object to animated model's bone
-void SkinnedModel::BindWeaponToModel(string strObjectName,string strBoneToBind)
+void SkinnedModel::BindWeaponToModel(std::string strObjectName,std::string strBoneToBind)
 {
 	GameObject* pGameObject = m_pGameObjManager->GetObjectByName(strObjectName.c_str());
 
@@ -550,7 +550,7 @@ void SkinnedModel::OnRender()
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::RenderBindedWeapon(GameObject* pSkMesh, string bone)
+void SkinnedModel::RenderBindedWeapon(GameObject* pSkMesh, std::string bone)
 {
 
 
@@ -912,22 +912,22 @@ void SkinnedModel::SetHasDialogue(bool hasDialogue)
 	m_bHasDialogue = hasDialogue;
 }
 
-string SkinnedModel::GetAttackerName() const
+std::string SkinnedModel::GetAttackerName() const
 {
 	return m_strAttackerName;
 }
 
-void SkinnedModel::SetAttackerName(const string& attackerName)
+void SkinnedModel::SetAttackerName(const std::string& attackerName)
 {
 	m_strAttackerName = attackerName;
 }
 
-string SkinnedModel::GetActorType() const
+std::string SkinnedModel::GetActorType() const
 {
 	return m_strActorType;
 }
 
-void SkinnedModel::SetActorType(const string& actorType)
+void SkinnedModel::SetActorType(const std::string& actorType)
 {
 	m_strActorType = actorType;
 }
@@ -982,12 +982,12 @@ void SkinnedModel::ModifyTitleRotationAnglyByY(float delta)
 	m_fTitleRotationAngleByY += delta;
 }
 
-string SkinnedModel::GetTitleForQuest() const
+std::string SkinnedModel::GetTitleForQuest() const
 {
 	return m_strTitleForQuest;
 }
 
-void SkinnedModel::SetTitleForQuest(const string& titleForQuest)
+void SkinnedModel::SetTitleForQuest(const std::string& titleForQuest)
 {
 	m_strTitleForQuest = titleForQuest;
 }
@@ -1042,22 +1042,22 @@ void SkinnedModel::ModifyTitleForQuestRotationAnglyByY(float delta)
 	m_fTitleForQuestRotationAngleByY += delta;
 }
 
-vector<D3DXMATRIX>& SkinnedModel::GetFinalBonesMatrices()
+std::vector<D3DXMATRIX>& SkinnedModel::GetFinalBonesMatrices()
 {
 	return m_vFinalBonesMatrices;
 }
 
-void SkinnedModel::SetFinalBonesMatrices(vector<D3DXMATRIX> bonesMatrices)
+void SkinnedModel::SetFinalBonesMatrices(std::vector<D3DXMATRIX> bonesMatrices)
 {
 	m_vFinalBonesMatrices = bonesMatrices;
 }
 
-vector<D3DXMATRIX*>& SkinnedModel::GetToRootMatrices()
+std::vector<D3DXMATRIX*>& SkinnedModel::GetToRootMatrices()
 {
 	return m_vToRootMatrices;
 }
 
-void SkinnedModel::SetToRootMatrices(vector<D3DXMATRIX*> toRootMatrices)
+void SkinnedModel::SetToRootMatrices(std::vector<D3DXMATRIX*> toRootMatrices)
 {
 	m_vToRootMatrices = toRootMatrices;
 }

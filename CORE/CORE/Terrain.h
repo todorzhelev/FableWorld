@@ -30,7 +30,7 @@ class Terrain
 {
 public:
 
-	Terrain(string strHeightmapFileName,float fHeightsScale, int nRows,int nCols,float fDX,float fDZ ,const D3DXVECTOR3& vCenterPointr);
+	Terrain(std::string strHeightmapFileName,float fHeightsScale, int nRows,int nCols,float fDX,float fDZ ,const D3DXVECTOR3& vCenterPointr);
 
 	void	OnRender();
 
@@ -50,9 +50,9 @@ public:
 
 	void	GenerateTerrainMesh();
 
-	void	GenerateVertexBuffer(vector<D3DXVECTOR3>& vVertices, int nNumRows,int nNumCols);
+	void	GenerateVertexBuffer(std::vector<D3DXVECTOR3>& vVertices, int nNumRows,int nNumCols);
 
-	void	GenerateIndexBuffer(vector<DWORD>& vIndices,int nNumRows,int nNumCols);
+	void	GenerateIndexBuffer(std::vector<DWORD>& vIndices,int nNumRows,int nNumCols);
 
 	void	BuildEffect();
 
@@ -60,7 +60,7 @@ public:
 
 private:
 
-	string	m_strHeightmapFileName;
+	std::string	m_strHeightmapFileName;
 
 	//modifies the heights by some value
 	float	m_fHeightsScale;
@@ -78,10 +78,10 @@ private:
 	D3DXVECTOR3	m_vCenterPoint;
 
 	//vector containing the height of every vertex in the terrain
-	vector<float> m_vHeightmap;
+	std::vector<float> m_vHeightmap;
 
 	//vector with subgrids of the terrain
-	vector<TerrainSubGrid*> m_vSubGrids;
+	std::vector<TerrainSubGrid*> m_vSubGrids;
 
 	IDirect3DTexture9* m_pBlendMapTexture;
 	IDirect3DTexture9* m_pStoneTexture;

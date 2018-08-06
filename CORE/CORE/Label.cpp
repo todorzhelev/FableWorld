@@ -3,7 +3,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-Label::Label(D3DXVECTOR2 vPosition, string strText)
+Label::Label(D3DXVECTOR2 vPosition, std::string strText)
 {
 	m_vPosition = vPosition;
 	m_strText = strText;

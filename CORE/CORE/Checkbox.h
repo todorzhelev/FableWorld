@@ -10,7 +10,7 @@ this class contains the functions for creating checkbox, checking if it is press
 class Checkbox: public IBaseMenuObject
 {
 public:
-	Checkbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, string strText, string strIdleStateTexFileName, string strMouseOverStateTexFileName,string strId);
+	Checkbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string strText, std::string strIdleStateTexFileName, std::string strMouseOverStateTexFileName,std::string strId);
 
 	void Init();
 

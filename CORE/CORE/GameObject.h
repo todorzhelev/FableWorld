@@ -22,16 +22,16 @@ public:
 	virtual void OnRender();
 	virtual void OnLostDevice();
 	virtual void OnResetDevice();
-	virtual void RenderBindedWeapon(GameObject* pSkMesh, string bone);
+	virtual void RenderBindedWeapon(GameObject* pSkMesh, std::string bone);
 
 	virtual float GetDistanceToPickedObject();
 
-	string GetModelFileName() const;
-	void SetModelFilename(const string& strModelFileName);
+	std::string GetModelFileName() const;
+	void SetModelFilename(const std::string& strModelFileName);
 
-	string& GetName();
+	std::string& GetName();
 
-	void SetName(const string& strName);
+	void SetName(const std::string& strName);
 
 	D3DXVECTOR3 GetPosition() const;
 
@@ -51,37 +51,37 @@ public:
 
 	void SetMesh(ID3DXMesh* mesh);
 
-	vector<Material>& GetMaterials();
+	std::vector<Material>& GetMaterials();
 
-	void SetMaterials(vector<Material> materials);
+	void SetMaterials(std::vector<Material> materials);
 
-	vector<IDirect3DTexture9*>& GetTextures();
+	std::vector<IDirect3DTexture9*>& GetTextures();
 
-	void SetTextures(vector<IDirect3DTexture9*> textures);
+	void SetTextures(std::vector<IDirect3DTexture9*> textures);
 
 	IDirect3DTexture9* GetTexture() const;
 
 	void SetTexture(IDirect3DTexture9* texture);
 
-	string GetTextureFilename() const;
+	std::string GetTextureFilename() const;
 
-	void SetTextureFilename(const string& filename);
+	void SetTextureFilename(const std::string& filename);
 
 	int IsBindable() const;
 
 	void SetIsBindable(int bindable);
 
-	string GetBindedToAnimatedModelName() const;
+	std::string GetBindedToAnimatedModelName() const;
 
-	void SetBindedToAnimatedModelName(const string& bindedToAnimatedModelName);
+	void SetBindedToAnimatedModelName(const std::string& bindedToAnimatedModelName);
 
-	string GetBindedToBoneName() const;
+	std::string GetBindedToBoneName() const;
 
-	void SetBindedToBoneName(const string& bindedToBoneName);
+	void SetBindedToBoneName(const std::string& bindedToBoneName);
 
-	unordered_map<GameObject*, string>& GetBindedObjects();
+	std::unordered_map<GameObject*, std::string>& GetBindedObjects();
 
-	void SetBindedObjects(unordered_map<GameObject*, string> bindedObjects);
+	void SetBindedObjects(std::unordered_map<GameObject*, std::string> bindedObjects);
 
 	
 
@@ -128,10 +128,10 @@ public:
 protected:
 
 	//the name of the .x file
-	string m_strModelFileName;
+	std::string m_strModelFileName;
 
 	//the id of the model
-	string m_strModelName;
+	std::string m_strModelName;
 
 	D3DXVECTOR3 m_vPos;
 	D3DXVECTOR3 m_vLook;
@@ -143,21 +143,21 @@ protected:
 	//the mesh
 	ID3DXMesh* m_pMesh;	
 	
-	vector<Material> m_vMaterials;
+	std::vector<Material> m_vMaterials;
 	
 	//used if we have more than one texture assigned to the model
-	vector<IDirect3DTexture9*> m_vTextures;
+	std::vector<IDirect3DTexture9*> m_vTextures;
 
 	//the texture for the model
 	IDirect3DTexture9* m_pTexture;
 	//the file name of the texture
-	string m_strTextureFileName;
+	std::string m_strTextureFileName;
 
 	//can this model be binded
 	int m_bIsBindable;
 
-	string m_strBindedToAnimatedModelName;
-	string m_strBindedToBoneName;
+	std::string m_strBindedToAnimatedModelName;
+	std::string m_strBindedToBoneName;
 	
 	float m_fRotAngleX;
 	float m_fRotAngleY;

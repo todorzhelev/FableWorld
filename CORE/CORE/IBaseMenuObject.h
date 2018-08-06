@@ -1,7 +1,7 @@
 #pragma once
 #include"Misc.h"
 
-const string strResourcesRelativePath = "../../Resources/textures/GUI/";
+const std::string strResourcesRelativePath = "../../Resources/textures/GUI/";
 
 class IBaseMenuObject
 {
@@ -9,7 +9,7 @@ public:
 
 	IBaseMenuObject() {};
 
-	IBaseMenuObject(D3DXVECTOR2 vPosition, int nWidth, int nHeight, string strText="",string strIdleStateTexFileName="", string strMouseOverStateTexFileName="", string strId="");
+	IBaseMenuObject(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string strText="",std::string strIdleStateTexFileName="", std::string strMouseOverStateTexFileName="", std::string strId="");
 
 	virtual void Init() {};
 
@@ -47,17 +47,17 @@ public:
 
 	bool		 IsVisible();
 
-	void		 SetIdleStateTextureFileName(string strFileName);
+	void		 SetIdleStateTextureFileName(std::string strFileName);
 
-	void		 SetMouseOverStateTextureFileName(string strFileName);
+	void		 SetMouseOverStateTextureFileName(std::string strFileName);
 
 	void		 SetIdleStateTexture(IDirect3DTexture9* pTexture);
 
 	void		 SetMouseOverStateTexture(IDirect3DTexture9* pTexture);
 
-	void		 SetText(string strText);
+	void		 SetText(std::string strText);
 
-	string		 GetText();
+	std::string		 GetText();
 
 	void		 SetWidth(int nWidth);
 
@@ -67,7 +67,7 @@ public:
 
 	int			 GetHeight();
 
-	string		 m_strId;
+	std::string		 m_strId;
 
 	bool		 m_bIsSelected;
 
@@ -86,10 +86,10 @@ protected:
 	bool m_bIsVisible;
 	
 
-	string m_strText;
+	std::string m_strText;
 
-	string m_strIdleStateTextureFileName;
-	string m_strMouseOverStateTextureFileName;
+	std::string m_strIdleStateTextureFileName;
+	std::string m_strMouseOverStateTextureFileName;
 
 	IDirect3DTexture9* m_pIdleStateTexture;
 	IDirect3DTexture9* m_pMouseOverStateTexture;

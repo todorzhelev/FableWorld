@@ -13,7 +13,7 @@ class StaticModel : public GameObject
 {
 public:
 	StaticModel();
-	StaticModel(string strModelName, string ModelFileName, string strTextureFileName);
+	StaticModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName);
 	
 	virtual void LoadGameObject() override;
 
@@ -25,7 +25,7 @@ public:
 
 	virtual void OnLostDevice() override;
 
-	virtual void RenderBindedWeapon(GameObject* pSkMesh, string bone) override;
+	virtual void RenderBindedWeapon(GameObject* pSkMesh, std::string bone) override;
 
 	virtual float GetDistanceToPickedObject() override;
 

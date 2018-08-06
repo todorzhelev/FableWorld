@@ -2,9 +2,10 @@
 #include "IBaseScene.h"
 #include "DirectInput.h"
 #include "Misc.h"
+#include "LuaFunctions.h"
 #include "Menu.h"
 #include "Label.h"
-using namespace std;
+
 
 //this is the menu scene and contains all the thing needed in the menu
 class HeroSelection: public IBaseScene
@@ -25,9 +26,9 @@ public:
 
 private:
 
-	vector<GameObject*> m_SceneObjects;
+	std::vector<GameObject*> m_SceneObjects;
 
-	GameObject* pPesho;
+	GameObject* m_pMainHero;
 
 	Label* m_pLabelEnterWorld;
 };

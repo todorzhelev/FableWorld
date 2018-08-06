@@ -81,7 +81,7 @@ private:
 	//map<string,GameObject*> m_mapGameObjects;
 
 	//stores all the hit objects by the mouse from single click
-	map<int,GameObject*> m_mapPickedObjects;
+	std::map<int,GameObject*> m_mapPickedObjects;
 };
 
 extern GameObjectManager* m_pGameObjManager;

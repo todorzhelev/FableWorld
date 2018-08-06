@@ -13,11 +13,9 @@
 #include "IBaseScene.h"
 #include "Menu.h"
 #include "MenuInGame.h"
-#include "LuaFunctions.h"
 #include "GameObjectManager.h"
+#include "LuaFunctions.h"
 
-
-using namespace std;
 //this is the game scene and contains all the things in the game - terrain, models, etc
 //the Game class inherits from IBaseScene class so later we can change the scenes for instance from menu to game and etc
 class Game : public IBaseScene
@@ -39,9 +37,9 @@ public:
 
 	bool		 IsObjectNear(GameObject* obj1,GameObject* obj2);
 
-	void		 MoveObject(string objectTitle,float dt);
+	void		 MoveObject(std::string objectTitle,float dt);
 
-	void		 RotateObject(string objectTitle,float dt);
+	void		 RotateObject(std::string objectTitle,float dt);
 
 	void		 ManageHealthBars();
 

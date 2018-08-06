@@ -8,9 +8,10 @@
 #include "IBaseMenuObject.h"
 #include "GameObjectManager.h"
 
-Application* pApp = 0;
-IDirect3DDevice9* pDxDevice = 0;
-
+Application* pApp = nullptr;
+IDirect3DDevice9* pDxDevice = nullptr;
+lua_State* g_luaState = nullptr;
+std::ofstream fout;
 
 /////////////////////////////////////////////////////////////////////////
 //LRESULT - long int
@@ -30,7 +31,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 /////////////////////////////////////////////////////////////////////////
 
-Application::Application(HINSTANCE hInstance, string strWindowTitle, D3DDEVTYPE eDeviceType, DWORD vertexProcessingType)
+Application::Application(HINSTANCE hInstance, std::string strWindowTitle, D3DDEVTYPE eDeviceType, DWORD vertexProcessingType)
 {
 	m_strWindowTitle		= strWindowTitle;
 	m_eDeviceType			= eDeviceType;
@@ -392,14 +393,14 @@ IBaseScene* Application::GetCurrentScene()
 
 /////////////////////////////////////////////////////////////////////////
 
-void Application::AddScene(string strSceneName, IBaseScene* pScene)
+void Application::AddScene(std::string strSceneName, IBaseScene* pScene)
 {
 	m_mapScenesContainer[strSceneName] = pScene;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-IBaseScene* Application::GetScene(string strSceneName)
+IBaseScene* Application::GetScene(std::string strSceneName)
 {
 	return m_mapScenesContainer.find(strSceneName)->second;
 }
@@ -431,7 +432,7 @@ void Application::AddUIObject(IBaseMenuObject* pUIObject)
 
 /////////////////////////////////////////////////////////////////////////
 
-IBaseMenuObject* Application::FindMenuObject(string strObjectId)
+IBaseMenuObject* Application::FindMenuObject(std::string strObjectId)
 {
 	for(int i = 0; i < m_vUIObjects.size(); i++)
 	{

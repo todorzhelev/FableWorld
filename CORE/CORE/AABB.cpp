@@ -24,7 +24,7 @@ D3DXVECTOR3& AABB::GetMaxPoint()
 //transforms bounding box according to a matrix
 AABB AABB::TransformByMatrix(const D3DXMATRIX& M)
 {
-	vector<D3DXVECTOR3> corners;
+	std::vector<D3DXVECTOR3> corners;
 	corners.resize(8);
 	//using the min and max points of the untransformed bounding box we 
 	//can calculate the 8 corners of the bounding box

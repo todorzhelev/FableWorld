@@ -7,7 +7,7 @@ class Button: public IBaseMenuObject
 {
 public:
 
-	Button(D3DXVECTOR2 vPosition, int nWidth, int nHeight, string strText, string strIdleStateTexFileName, string strMouseOverStateTexFileName);
+	Button(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string strText, std::string strIdleStateTexFileName, std::string strMouseOverStateTexFileName);
 
 	virtual void OnLostDevice();
 	virtual void OnResetDevice();

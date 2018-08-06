@@ -8,7 +8,7 @@ class Sky
 {
 public:
 
-	Sky(string strSkyTextureFileName, float fSkyRadius);
+	Sky(std::string strSkyTextureFileName, float fSkyRadius);
 
 	~Sky();
 

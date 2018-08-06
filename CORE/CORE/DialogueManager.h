@@ -11,14 +11,14 @@
 m_nKey - this is the id of the node.
 m_strText - the text of the dialogue
 m_label - the label is need to detect user click on the text
-m_vNodes - this is vector that holds the children of this node.The children can contain children and etc.
+m_vNodes - this is std::vector that holds the children of this node.The children can contain children and etc.
 m_strQuest - holds the name of the quest */
 struct DialogueNode
 {
-	string		  m_strText;
+	std::string		  m_strText;
 	Label*		  m_pLabel;
-	vector<DialogueNode*> m_vNodes;
-	string		  m_strQuest;
+	std::vector<DialogueNode*> m_vNodes;
+	std::string		  m_strQuest;
 };
 
 /* This is struct that holds all the information needed for one dialogue
@@ -31,7 +31,7 @@ m_bIsStarted - If true the dilogue is started i.e. the user clicked on the root 
 m_bIsEnded - If true the dialogue ended. */
 struct DialogueObject
 {
-	string  m_strModel;
+	std::string  m_strModel;
 	Tree*   m_pTree;
 	DialogueNode*   m_pCurrentDialogueNode;
 	DialogueNode*   m_pClickedDialogueNode;
@@ -44,7 +44,7 @@ class DialogueManager
 {
 public:	
 
-	void LoadDialogues(string strDialoguesFileName);
+	void LoadDialogues(std::string strDialoguesFileName);
 
 	void TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, DialogueNode* parentNode, DialogueNode* currentNode);
 

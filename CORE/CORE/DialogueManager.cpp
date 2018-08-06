@@ -8,7 +8,7 @@ DialogueManager* pDialogueManager = nullptr;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-void DialogueManager::LoadDialogues(string strDialoguesFileName)
+void DialogueManager::LoadDialogues(std::string strDialoguesFileName)
 {
 	tinyxml2::XMLDocument doc;
 	//loads the xml file
@@ -62,8 +62,8 @@ void DialogueManager::TraverseNodes(tinyxml2::XMLElement* xmlNode, Tree* pTree, 
 		return;
 	}
 	
-	string quest = "";
-	string text = "";
+	std::string quest = "";
+	std::string text = "";
 
 	if (xmlNode->Attribute("Quest"))
 	{

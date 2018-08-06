@@ -2,7 +2,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-IBaseMenuObject::IBaseMenuObject(D3DXVECTOR2 vPosition, int nWidth, int nHeight, string strText,string strIdleStateTexFileName, string strMouseOverStateTexFileName, string strId)
+IBaseMenuObject::IBaseMenuObject(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string strText,std::string strIdleStateTexFileName, std::string strMouseOverStateTexFileName, std::string strId)
 {
 	m_vPosition = vPosition;
 	m_nWidth  = nWidth;
@@ -57,14 +57,14 @@ bool IBaseMenuObject::IsMouseDown()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void IBaseMenuObject::SetIdleStateTextureFileName(string strFileName)
+void IBaseMenuObject::SetIdleStateTextureFileName(std::string strFileName)
 {
 	m_strIdleStateTextureFileName = strFileName;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void IBaseMenuObject::SetMouseOverStateTextureFileName(string strFileName)
+void IBaseMenuObject::SetMouseOverStateTextureFileName(std::string strFileName)
 {
 	m_strMouseOverStateTextureFileName = strFileName;
 }
@@ -99,14 +99,14 @@ bool IBaseMenuObject::IsVisible()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void IBaseMenuObject::SetText(string strText)
+void IBaseMenuObject::SetText(std::string strText)
 {
 	m_strText = strText;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-string IBaseMenuObject::GetText()
+std::string IBaseMenuObject::GetText()
 {
 	return m_strText;
 }

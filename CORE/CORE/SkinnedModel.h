@@ -52,7 +52,7 @@ class SkinnedModel : public GameObject
 {
 public:
 	SkinnedModel();
-	SkinnedModel(string strModelName, string ModelFileName, string strTextureFileName, bool bShouldRenderTitles = true);
+	SkinnedModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName, bool bShouldRenderTitles = true);
 	~SkinnedModel();
 
 	virtual void 	LoadGameObject() override;
@@ -65,7 +65,7 @@ public:
 
 	virtual void 	OnLostDevice() override;
 
-	virtual void	RenderBindedWeapon(GameObject* pSkMesh, string bone) override;
+	virtual void	RenderBindedWeapon(GameObject* pSkMesh, std::string bone) override;
 
 	virtual float	GetDistanceToPickedObject() override;
 
@@ -81,7 +81,7 @@ public:
 
 	void 			PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName);
 	
-	void 			BindWeaponToModel(string weapon,string frameToBind);
+	void 			BindWeaponToModel(std::string weapon,std::string frameToBind);
 
 	D3DXFRAME* 		FindFrameWithMesh(D3DXFRAME* frame);
 
@@ -101,13 +101,13 @@ public:
 
 	void SetHasDialogue(bool hasDialogue);
 
-	string GetAttackerName() const;
+	std::string GetAttackerName() const;
 
-	void SetAttackerName(const string& attackerName);
+	void SetAttackerName(const std::string& attackerName);
 
-	string GetActorType() const;
+	std::string GetActorType() const;
 
-	void SetActorType(const string& actorType);
+	void SetActorType(const std::string& actorType);
 
 	//name above the object in the game
 	ID3DXMesh**		GetTitleMesh();
@@ -123,8 +123,8 @@ public:
 
 	//terrible code duplication fix this .....
 	//text for quest above the object
-	string			GetTitleForQuest() const;
-	void			SetTitleForQuest(const string& titleForQuest);
+	std::string			GetTitleForQuest() const;
+	void			SetTitleForQuest(const std::string& titleForQuest);
 	ID3DXMesh**		GetTitleForQuestMesh();
 	void			SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh);
 	D3DXVECTOR3&	GetTitleForQuestLookVector();
@@ -136,13 +136,13 @@ public:
 	void			SetTitleForQuestRotationAnglyByY(float angle);
 	void			ModifyTitleForQuestRotationAnglyByY(float delta);
 
-	vector<D3DXMATRIX>& GetFinalBonesMatrices();
+	std::vector<D3DXMATRIX>& GetFinalBonesMatrices();
 
-	void SetFinalBonesMatrices(vector<D3DXMATRIX> bonesMatrices);
+	void SetFinalBonesMatrices(std::vector<D3DXMATRIX> bonesMatrices);
 
-	vector<D3DXMATRIX*>& GetToRootMatrices();
+	std::vector<D3DXMATRIX*>& GetToRootMatrices();
 
-	void SetToRootMatrices(vector<D3DXMATRIX*> toRootMatrices);
+	void SetToRootMatrices(std::vector<D3DXMATRIX*> toRootMatrices);
 
 	D3DXFRAME* GetRootFrame() const;
 
@@ -218,10 +218,10 @@ private:
 	bool m_bHasDialogue;
 
 	//which enemy attacked this gameobject
-	string m_strAttackerName;
+	std::string m_strAttackerName;
 
 	//the type of the model in the game: mainHero, neutral, enemy
-	string m_strActorType;
+	std::string m_strActorType;
 
 
 	//title above the model
@@ -234,7 +234,7 @@ private:
 	float       m_fTitleRotationAngleByY;
 
 	//title above the model for a quest
-	string      m_strTitleForQuest;
+	std::string      m_strTitleForQuest;
 	ID3DXMesh*  m_pTitleForQuestMesh;
 	D3DXVECTOR3 m_vTitleForQuestLook;
 	D3DXVECTOR3 m_vTitleForQuestRight;
@@ -244,8 +244,8 @@ private:
 	float       m_fTitleForQuestRotationAngleByY;
 
 	//animated model related variables
-	vector<D3DXMATRIX>  m_vFinalBonesMatrices;
-	vector<D3DXMATRIX*> m_vToRootMatrices;
+	std::vector<D3DXMATRIX>  m_vFinalBonesMatrices;
+	std::vector<D3DXMATRIX*> m_vToRootMatrices;
 	D3DXFRAME*          m_pRoot;
 	DWORD               m_nMaxVertInfluences;
 	DWORD               m_nNumBones;
@@ -253,8 +253,8 @@ private:
 
 	AnimationComponent* m_pAnimationComponent;
 
-	//this map holds which weapon to which bone is attached
-	unordered_map<GameObject*, string> m_mapBindedObjects;
+	//this std::map holds which weapon to which bone is attached
+	std::unordered_map<GameObject*, std::string> m_mapBindedObjects;
 
 	float				m_movementSpeed;
 };

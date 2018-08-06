@@ -2,7 +2,7 @@
 #include"Camera.h"
 #include"TextManager.h"
 #include <string.h>
-using namespace std;
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -43,14 +43,14 @@ void GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //gets width of text when drawn on screen
-float GetStringWidth(string strString)
+float GetStringWidth(std::string str)
 {
 	RECT rStringInfo;
 	ZeroMemory(&rStringInfo, sizeof(RECT));
 
 	if( pTextManager->GetFont2D() != NULL )
 	{
-		pTextManager->GetFont2D()->DrawTextA(NULL, strString.c_str(), strString.length(),&rStringInfo, DT_CALCRECT, D3DCOLOR_XRGB(0,0,0));
+		pTextManager->GetFont2D()->DrawTextA(NULL, str.c_str(), str.length(),&rStringInfo, DT_CALCRECT, D3DCOLOR_XRGB(0,0,0));
 	}
 	return static_cast<float>(rStringInfo.right);
 }
@@ -59,14 +59,14 @@ float GetStringWidth(string strString)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //gets height of text when drawn on screen
-float GetStringHeight(string strString)
+float GetStringHeight(std::string str)
 {
 	RECT rStringInfo;
 	ZeroMemory(&rStringInfo, sizeof(RECT));
 
 	if( pTextManager->GetFont2D() != NULL )
 	{
-		pTextManager->GetFont2D()->DrawTextA(NULL, strString.c_str(), strString.length(),&rStringInfo, DT_CALCRECT, D3DCOLOR_XRGB(0,0,0));
+		pTextManager->GetFont2D()->DrawTextA(NULL, str.c_str(), str.length(),&rStringInfo, DT_CALCRECT, D3DCOLOR_XRGB(0,0,0));
 	}
 	return static_cast<float>(rStringInfo.bottom);
 }

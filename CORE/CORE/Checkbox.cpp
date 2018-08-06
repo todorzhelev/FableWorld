@@ -3,7 +3,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-Checkbox::Checkbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, string strText, string strIdleStateTexFileName, string strMouseOverStateTexFileName, string strId)
+Checkbox::Checkbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string strText, std::string strIdleStateTexFileName, std::string strMouseOverStateTexFileName, std::string strId)
 :IBaseMenuObject(vPosition,nWidth,nHeight,strText,strIdleStateTexFileName,strMouseOverStateTexFileName,strId)
 {
 	D3DXCreateSprite(pDxDevice,&m_pSprite);

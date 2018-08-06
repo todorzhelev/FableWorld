@@ -1,7 +1,6 @@
 #include"LuaFunctions.h"
 
-//the main hero in the game. The camera is attached to him.
-string mainHero;
+std::string mainHero = "";
 
 /////////////////////////////////////////////////////////////////////////
 /*

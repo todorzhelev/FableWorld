@@ -1,6 +1,16 @@
 #pragma once
-#include"Application.h"
-using namespace std;
+#include "Application.h"
+
+extern std::ofstream fout; //for logs.
+
+extern "C"
+{
+	#include "lua.h"
+	#include "lualib.h"
+	#include "lauxlib.h"
+}
+
+extern lua_State* g_luaState;
 
 inline void ReleaseX(IUnknown* resource)
 {
@@ -15,7 +25,7 @@ inline void __CheckHR(std::string file, int line, HRESULT hr)
 {
 	if (FAILED(hr))
 	{
-		std::string message = "File:" + file + " line: " + std::to_string(line) + "\nError string:" + DXGetErrorString(hr) + "\nError description:" + DXGetErrorDescription(hr);
+		std::string message = "File:" + file + " line: " + std::to_string(line) + "\nError std::string:" + DXGetErrorString(hr) + "\nError description:" + DXGetErrorDescription(hr);
 		MessageBox(0, message.c_str(), "Error", MB_CANCELTRYCONTINUE | MB_ICONEXCLAMATION);
 		exit(1);
 	}
@@ -25,15 +35,15 @@ inline void __CheckHR(std::string file, int line, HRESULT hr)
 
 void GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection);
 
-float GetStringWidth(string strString);
+float GetStringWidth(std::string str);
 
-float GetStringHeight(string strString);
+float GetStringHeight(std::string str);
+
+void CopyString(const char* input, char** output);
 
 bool HasNormals(ID3DXMesh* pMesh);
 
 void InitVertexDeclarations();
-
-void CopyString(const char* input, char** output);
 
 /////////////////////////////////////////////////////////////////
 
