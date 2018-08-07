@@ -110,6 +110,8 @@ Game::Game()
 
 	InitDebugGraphicsShader();
 
+	//TODO: this does not work for all cases...
+	//it should be more generic - it should align with the vectors of the main hero.
 	D3DXMATRIX R;
 	D3DXMatrixRotationY(&R, D3DX_PI/2); //rotate this bad boy
 	D3DXVec3TransformCoord(&camera->GetRightVector(), &camera->GetRightVector(), &R);
