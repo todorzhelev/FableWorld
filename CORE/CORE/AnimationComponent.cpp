@@ -1,3 +1,4 @@
+#include <stdafx.h>
 #include "AnimationComponent.h"
 
 AnimationComponent::AnimationComponent()

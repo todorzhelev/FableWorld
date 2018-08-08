@@ -1,3 +1,4 @@
+#include <stdafx.h>
 #include "DialogueManager.h"
 #include "SkinnedModel.h"
 #include "LuaFunctions.h"

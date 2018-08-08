@@ -122,6 +122,9 @@
     <ClCompile Include="..\..\CORE\CORE\QuestManager.cpp">
       <Filter>CORE\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\stdafx.cpp">
+      <Filter>CORE\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\CORE\CORE\AABB.h">
@@ -206,6 +209,9 @@
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\QuestManager.h">
+      <Filter>CORE\Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\stdafx.h">
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
   </ItemGroup>

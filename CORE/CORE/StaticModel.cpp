@@ -1,5 +1,5 @@
-#include"StaticModel.h"
-#include<vector>
+#include <stdafx.h>
+#include "StaticModel.h"
 
 /////////////////////////////////////////////////////////////////////////
 

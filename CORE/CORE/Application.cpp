@@ -1,9 +1,9 @@
+#include <stdafx.h>
 #include "Application.h"
 #include "Camera.h"
 #include "Textbox.h"
 #include "TextManager.h" 
 #include "Misc.h"
-#include "IBaseScene.h"
 #include "GameObject.h"
 #include "IBaseMenuObject.h"
 #include "GameObjectManager.h"

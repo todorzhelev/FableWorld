@@ -1,3 +1,4 @@
+#include <stdafx.h>
 #include "QuestManager.h"
 
 QuestManager* QuestManager::m_pQuestManager = nullptr;

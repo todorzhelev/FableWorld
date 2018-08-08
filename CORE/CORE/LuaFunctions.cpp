@@ -1,3 +1,4 @@
+#include <stdafx.h>
 #include"LuaFunctions.h"
 
 std::string mainHero = "";

@@ -1,6 +1,6 @@
-#include"Game.h"
-#include<math.h>
-#include"QuestManager.h"
+#include <stdafx.h>
+#include "Game.h"
+#include "QuestManager.h"
 
 /////////////////////////////////////////////////////////////////////////
 

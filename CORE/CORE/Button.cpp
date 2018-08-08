@@ -1,4 +1,5 @@
-#include"Button.h"
+#include <stdafx.h>
+#include "Button.h"
 
 Button::Button(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string strText,std::string strIdleStateTexFileName, std::string strMouseOverStateTexFileName)
 :IBaseMenuObject(vPosition,nWidth,nHeight,strText,strIdleStateTexFileName,strMouseOverStateTexFileName)

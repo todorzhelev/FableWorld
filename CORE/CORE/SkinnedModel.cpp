@@ -1,6 +1,7 @@
-#include"SkinnedModel.h"
-#include"StaticModel.h"
-#include"AnimationComponent.h"
+#include <stdafx.h>
+#include "SkinnedModel.h"
+#include "StaticModel.h"
+#include "AnimationComponent.h"
 
 /////////////////////////////////////////////////////////////////////////
 

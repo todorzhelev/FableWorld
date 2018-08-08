@@ -1,4 +1,5 @@
-#include"Tree.h"
+#include <stdafx.h>
+#include "Tree.h"
 #include "Label.h"
 #include "TextManager.h"
 #include "DialogueManager.h"

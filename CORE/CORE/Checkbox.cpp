@@ -1,5 +1,6 @@
-#include"Checkbox.h"
-#include"TextManager.h"
+#include <stdafx.h>
+#include "Checkbox.h"
+#include "TextManager.h"
 
 /////////////////////////////////////////////////////////////////////////
 

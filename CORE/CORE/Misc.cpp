@@ -1,8 +1,7 @@
-#include"Misc.h"
-#include"Camera.h"
-#include"TextManager.h"
-#include <string.h>
-
+#include <stdafx.h>
+#include "Misc.h"
+#include "Camera.h"
+#include "TextManager.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -1,9 +1,9 @@
-#include"Application.h"
-#include"Game.h"
-#include"Menu.h"
-#include"MenuInGame.h"
-#include"HeroSelection.h"
-#include <string>
+#include <stdafx.h>
+#include "Application.h"
+#include "Game.h"
+#include "Menu.h"
+#include "MenuInGame.h"
+#include "HeroSelection.h"
 
 //////////////////////////////////////////////////////////////////////////////
 

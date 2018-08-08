@@ -1,6 +1,8 @@
+#include <stdafx.h>
 #include "DirectInput.h"
 
 //////////////////////////////////////////////////////////////////////////////
+//TODO: should get rid of all this
 
 DirectInput* pDinput = NULL;
 

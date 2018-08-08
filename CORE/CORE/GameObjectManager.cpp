@@ -1,3 +1,4 @@
+#include <stdafx.h>
 #include "GameObjectManager.h"
 #include "DirectInput.h"
 #include "SkinnedModel.h"

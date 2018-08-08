@@ -89,6 +89,8 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <AdditionalIncludeDirectories>$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(SolutionDir)..\CORE\CORE\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>legacy_stdio_definitions.lib;lua5.1.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -119,6 +121,9 @@
     <ClCompile Include="..\..\CORE\CORE\SkinnedModel.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Sky.cpp" />
     <ClCompile Include="..\..\CORE\CORE\StaticModel.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\CORE\CORE\Terrain.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Textbox.cpp" />
     <ClCompile Include="..\..\CORE\CORE\TextManager.cpp" />
@@ -150,6 +155,7 @@
     <ClInclude Include="..\..\CORE\CORE\SkinnedModel.h" />
     <ClInclude Include="..\..\CORE\CORE\Sky.h" />
     <ClInclude Include="..\..\CORE\CORE\StaticModel.h" />
+    <ClInclude Include="..\..\CORE\CORE\stdafx.h" />
     <ClInclude Include="..\..\CORE\CORE\Terrain.h" />
     <ClInclude Include="..\..\CORE\CORE\Textbox.h" />
     <ClInclude Include="..\..\CORE\CORE\TextManager.h" />

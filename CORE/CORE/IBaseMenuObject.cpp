@@ -1,7 +1,8 @@
+#include <stdafx.h>
 #include "IBaseMenuObject.h"
 
 /////////////////////////////////////////////////////////////////////////
-
+ 
 IBaseMenuObject::IBaseMenuObject(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string strText,std::string strIdleStateTexFileName, std::string strMouseOverStateTexFileName, std::string strId)
 {
 	m_vPosition = vPosition;

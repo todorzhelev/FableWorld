@@ -1,3 +1,4 @@
+#include <stdafx.h>
 #include "HeroSelection.h"
 #include "Game.h"
 #include "../../CORE/CORE/TextManager.h"
