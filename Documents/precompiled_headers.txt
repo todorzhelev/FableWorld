@@ -1,0 +1,10 @@
+https://stackoverflow.com/questions/11722944/what-is-the-difference-between-create-precompiled-header-yc-and-use-precom
+
+
+
+Short summary of how to use PCH files in Visual Studio:
+
+- All cpp files in the project have to include stdafx.h (you can change this to something else if you wish)
+- Select project in Solution Explorer and in Properties -> C++ -> Precompiled Headers set 'Create/Use precompiled headers' to 'Use'. Hit Apply
+- While the Property Pages are still shown select stdafx.cpp in solution explorer and set the value to 'Create'
+
