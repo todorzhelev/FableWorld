@@ -1,7 +1,8 @@
-#include"../../CORE/CORE/Application.h"
-#include"Game.h"
-#include"Menu.h"
-#include"MenuInGame.h"
+#include <stdafx.h>
+#include "../../CORE/CORE/Application.h"
+#include "Game.h"
+#include "Menu.h"
+#include "MenuInGame.h"
 
 //////////////////////////////////////////////////////////////////////////////
 

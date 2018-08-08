@@ -1,3 +1,4 @@
+#include <stdafx.h>
 #include "MenuInGame.h"
 /*
 SourceFile:MenuInGame.cpp
