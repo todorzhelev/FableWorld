@@ -83,8 +83,7 @@ void StaticModel::LoadGameObject()
 
 	DWORD nMaterialsAmount = 0;
 
-	HRESULT hr = D3DXLoadMeshFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pDxDevice, 0, &pMaterialBuffer, 0, &nMaterialsAmount, &pMesh);
-	CheckHR(hr);
+	CheckFailed(D3DXLoadMeshFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pDxDevice, 0, &pMaterialBuffer, 0, &nMaterialsAmount, &pMesh));
 
 	bool bHasNormals = HasNormals(pMesh);
 
@@ -210,11 +209,7 @@ void StaticModel::OnUpdate(float fDeltaTime)
 
 void StaticModel::BuildEffect()
 {
-	if( FAILED(D3DXCreateEffectFromFile(pDxDevice,"../../Resources/shaders/StaticModelShader.fx",0,0,D3DXSHADER_DEBUG,0,&m_pEffect,0)) )
-	{
-		MessageBox(0,"Failed loading effect file in static mesh",0,0);
-		PostQuitMessage(0);
-	}
+	CheckFailed(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/StaticModelShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
 
 	m_hEffectTechnique	= m_pEffect->GetTechniqueByName("StaticModelTech");
 	m_hWVPMatrix		= m_pEffect->GetParameterByName(0, "WVP");

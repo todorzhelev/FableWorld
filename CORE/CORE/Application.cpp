@@ -118,7 +118,7 @@ void Application::InitMainWindow()
 		PostQuitMessage(0);
 	}
 
-	fout<<"window created\n";
+	printf("Window created\n");
 
 	int width  = GetSystemMetrics(SM_CXSCREEN);
 	int height = GetSystemMetrics(SM_CYSCREEN);
@@ -186,17 +186,14 @@ void Application::InitDirect3D()
 	m_presentParameters.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;
 	m_presentParameters.PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;	//presents the picture immediately
 
-	if(FAILED(m_pD3DObject->CreateDevice(D3DADAPTER_DEFAULT,				// primary adapter
-										  m_eDeviceType,                    // device type
-										  m_hMainWindow,                    // window associated with device
-										  m_vertexProcessingType,        
-										  &m_presentParameters,                  
-										  &pDxDevice)))            
-	{
-		MessageBox(0, "Creating Device FAILED", 0, 0);
-	}
+	CheckFailed(m_pD3DObject->CreateDevice(D3DADAPTER_DEFAULT,				// primary adapter
+										m_eDeviceType,                    // device type
+										m_hMainWindow,                    // window associated with device
+										m_vertexProcessingType,
+										&m_presentParameters,
+										&pDxDevice));
 
-	fout<<"directx device created\n";
+	printf("DX device created\n");
 	//SwitchToFullscreen(true);
 }
 

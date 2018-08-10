@@ -110,10 +110,7 @@ void Terrain::GenerateTerrainMesh()
 	pApp->GetPositionNormalTextureDecl()->GetDeclaration(elems, &numElems);
 
 	ID3DXMesh* mesh = 0;
-	if( FAILED(D3DXCreateMesh(m_nNumTriangles, m_nNumVertices, D3DPOOL_SCRATCH|D3DXMESH_32BIT, elems, pDxDevice, &mesh)) )
-	{
-		MessageBox(0, "Could not create terrain mesh", 0, 0);
-	}
+	CheckFailed(D3DXCreateMesh(m_nNumTriangles, m_nNumVertices, D3DPOOL_SCRATCH | D3DXMESH_32BIT, elems, pDxDevice, &mesh));
 
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	//LockVertexBuffer() gives us access to the internal mesh data and by v we can write information to the mesh
@@ -516,11 +513,7 @@ void Terrain::SetLightVector(D3DXVECTOR3 vLightVector)
 //loads the effect parameters and the textures used by the terrain into the shader
 void Terrain::BuildEffect()
 {
-	if( FAILED(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/TerrainShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0)) )
-	{
-		MessageBox(0,"Failed loading effect file in Terrain",0,0);
-		PostQuitMessage(0);
-	}
+	CheckFailed(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/TerrainShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
 
 	m_hEffectTechnique	= m_pEffect->GetTechniqueByName("TerrainTech");
 	m_hWVPMatrix		= m_pEffect->GetParameterByName(0, "WVP");

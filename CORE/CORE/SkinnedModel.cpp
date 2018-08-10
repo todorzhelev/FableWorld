@@ -112,8 +112,7 @@ void SkinnedModel::LoadGameObject()
 
 	AllocateHierarchy allocMeshHierarchy;
 
-	HRESULT err = D3DXLoadMeshHierarchyFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pDxDevice, &allocMeshHierarchy, 0, &m_pRoot, &m_pAnimationComponent->m_pAnimationController);
-	CheckHR(err);
+	CheckFailed(D3DXLoadMeshHierarchyFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pDxDevice, &allocMeshHierarchy, 0, &m_pRoot, &m_pAnimationComponent->m_pAnimationController));
 
 	m_pAnimationComponent->EnableTrack(FirstTrack, true);
 	m_pAnimationComponent->EnableTrack(SecondTrack, true);
@@ -382,11 +381,7 @@ void SkinnedModel::BuildBoundingBox()
 
 void SkinnedModel::BuildEffect()
 {
-	if(FAILED(D3DXCreateEffectFromFile(pDxDevice,"../../Resources/shaders/SkinnedModelShader.fx",0,0,D3DXSHADER_DEBUG,0,&m_pEffect,0)))
-	{
-		MessageBox(0,"Failed loading effect file in SkinnedModel",0,0);
-		PostQuitMessage(0);
-	}
+	CheckFailed(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/SkinnedModelShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
 
 	m_hEffectTechnique	  = m_pEffect->GetTechniqueByName("SkinnedModelTech");
 	m_hWVPMatrix		  = m_pEffect->GetParameterByName(0, "WVP");

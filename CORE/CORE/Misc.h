@@ -20,7 +20,7 @@ inline void ReleaseX(IUnknown* resource)
 	}
 }
 
-#define CheckHR(X) __CheckHR(__FILE__, __LINE__, X)
+#define CheckFailed(X) __CheckHR(__FILE__, __LINE__, X)
 inline void __CheckHR(std::string file, int line, HRESULT hr)
 {
 	if (FAILED(hr))
