@@ -1,7 +1,5 @@
 #pragma once
 
-#include<map>
-#include<string>
 #include"GameObject.h"
 #include"SkinnedModel.h"
 
