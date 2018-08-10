@@ -56,7 +56,7 @@ void GameObjectManager::OnUpdate()
 void GameObjectManager::UpdatePicking()
 {
 	//TODO: fix this to work with normal objects too
-	for (auto& gameObject : m_skinnedModels)
+	for (auto& gameObject : m_gameObjects)
 	{
 		float dist = gameObject->GetDistanceToPickedObject();
 

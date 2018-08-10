@@ -1,9 +1,9 @@
-x = 40.6776
-y = 0.5
-z = 87.3309
+x = -12.4995
+y = 5.77486
+z = 120.905
 scale = 0.27
 rotX = 0
-rotY = 0.7
+rotY = 0.0999999
 rotZ = 0
 titleRotY = 0
 modelName = "cho"
@@ -16,7 +16,7 @@ addAnimatedModel();
 x = -63.0846
 y = 0.5
 z = -154.254
-scale = 0.09
+scale = 0.2
 rotX = 0
 rotY = 2.3
 rotZ = 0
@@ -46,7 +46,7 @@ addAnimatedModel();
 x = 195.585
 y = 0
 z = 75.4184
-scale = 0.210003
+scale = 0.480003
 rotX = 0
 rotY = 1.6
 rotZ = 0
@@ -60,7 +60,7 @@ addStaticModel();
 x = -199.646
 y = 0
 z = 62.7301
-scale = 0.190003
+scale = 0.480003
 rotX = 0
 rotY = 4.7
 rotZ = 0
@@ -72,9 +72,9 @@ modelFileName = "../../Resources/models/buildings/building1/building.X"
 addStaticModel();
 
 x = -111.063
-y = 0
+y = 1.82834
 z = 204.37
-scale = 0.200003
+scale = 0.460003
 rotX = 0
 rotY = 0
 rotZ = 0
@@ -86,9 +86,9 @@ modelFileName = "../../Resources/models/buildings/building1/building.X"
 addStaticModel();
 
 x = 61.5676
-y = 0
+y = 1.20898
 z = 205.467
-scale = 0.230003
+scale = 0.470003
 rotX = 0
 rotY = 0
 rotZ = 0
@@ -113,10 +113,10 @@ modelName = "ezr_head"
 modelFileName = "../../Resources/models/head/paladin_head/pal_head.X"
 addStaticModel();
 
-x = 16.4223
-y = 0
-z = -165.482
-scale = 0.760004
+x = 3.96259
+y = 0.15169
+z = -157.267
+scale = 0.460004
 rotX = 0
 rotY = 1.6
 rotZ = 0
@@ -155,12 +155,12 @@ modelName = "sword_hyjal"
 modelFileName = "../../Resources/models/weapons/hyjal_sword/sword_hyjal_big.X"
 addStaticModel();
 
-x = 34.4921
-y = 0
-z = -49.8171
-scale = 0.130003
+x = 40.8688
+y = 53.2337
+z = 192.908
+scale = 0.290003
 rotX = 0
-rotY = 0
+rotY = 3.1
 rotZ = 0
 bindable = 0
 bindToAnModel = ""
@@ -169,10 +169,10 @@ modelName = "tree1"
 modelFileName = "../../Resources/models/deathclaw/deathclaw.X"
 addStaticModel();
 
-x = -59.0652
+x = -55.2375
 y = 0.3967
-z = -57.2905
-scale = 0.430003
+z = -13.7747
+scale = 0.860003
 rotX = 0
 rotY = 0
 rotZ = 6.2
@@ -183,10 +183,10 @@ modelName = "tree2"
 modelFileName = "../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
-x = 87.6272
+x = 16.093
 y = 0
-z = -60.3813
-scale = 0.420003
+z = -13.1846
+scale = 0.880003
 rotX = 0
 rotY = 0
 rotZ = 0
@@ -197,10 +197,10 @@ modelName = "tree3"
 modelFileName = "../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
-x = -99.645
+x = 9.83306
 y = 0
-z = -46.3668
-scale = 0.410003
+z = 46.8229
+scale = 0.820003
 rotX = 0
 rotY = 0
 rotZ = 0
@@ -208,6 +208,20 @@ bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = "tree4"
+modelFileName = "../../Resources/models/trees/tree1/tree.X"
+addStaticModel();
+
+x = -51.4643
+y = 0
+z = 46.8855
+scale = 0.76
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree16"
 modelFileName = "../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 

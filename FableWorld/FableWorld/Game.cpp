@@ -260,10 +260,10 @@ void Game::OnUpdate(float dt)
 		D3DXVec3TransformCoord(&gameObject->GetTitleForQuestUpVector(), &gameObject->GetTitleForQuestUpVector(), &R);
 	}
 
-	/*for(std::map<std::string,GameObject*>::iterator it=m_pGameObjManager->GetGameObjects().begin();it!=m_pGameObjManager->GetGameObjects().end();it++)
-	{
-		DrawLine(pMainHero->m_vPos,gameObject->m_vPos);
-	}*/
+	//for (auto it : m_pGameObjManager->GetGameObjects())
+	//{
+	//	DrawLine(pMainHero->GetPosition(), it->GetPosition());
+	//}
 
 	//if mainHero is attacking
 	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels())

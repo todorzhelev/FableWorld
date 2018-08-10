@@ -25,9 +25,17 @@ inline void __CheckHR(std::string file, int line, HRESULT hr)
 {
 	if (FAILED(hr))
 	{
-		std::string message = "File:" + file + " line: " + std::to_string(line) + "\nError std::string:" + DXGetErrorString(hr) + "\nError description:" + DXGetErrorDescription(hr);
+		std::string errString = DXGetErrorString(hr);
+		std::string message = "File:" + file + " line: " + std::to_string(line) + "\nError std::string:" + errString.c_str() + "\nError description:" + DXGetErrorDescription(hr);
 		MessageBox(0, message.c_str(), "Error", MB_CANCELTRYCONTINUE | MB_ICONEXCLAMATION);
-		PostQuitMessage(0);
+		if (!errString.compare("D3DXERR_INVALIDDATA"))
+		{
+			printf("the filename is either empty or incorrect\n");
+		}
+		else
+		{
+			PostQuitMessage(0);
+		}
 	}
 }
 

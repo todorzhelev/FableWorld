@@ -12,6 +12,7 @@
 
 #include<windows.h>
 #include<direct.h> //__getcwd
+#include<Commdlg.h> //OPENFILENAME
 #include<d3d9.h>
 #include<d3dx9.h>
 #include<DxErr.h>
