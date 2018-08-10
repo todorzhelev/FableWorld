@@ -6,7 +6,7 @@
 StaticModel::StaticModel()
 {
 	//default texture for models that dont have any
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture);	
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));	
 
 	m_light.m_vLight   = D3DXVECTOR3(20.0f, 300.0f, 50.0f);
 	m_light.m_ambient  = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
@@ -26,7 +26,7 @@ StaticModel::StaticModel()
 StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName)
 {
 		//default texture for models that dont have any
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture);	
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));	
 
 	m_light.m_vLight   = D3DXVECTOR3(20.0f, 300.0f, 50.0f);
 	m_light.m_ambient  = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
@@ -60,7 +60,7 @@ StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, st
 	m_strBindedToAnimatedModelName = "";
 	m_strBindedToBoneName = "";
 
-	D3DXCreateTextureFromFile(pDxDevice, strTextureFileName.c_str(), &m_pTexture);	
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, strTextureFileName.c_str(), &m_pTexture));	
 
 	/*if( pMesh->m_bIsBindable && !pMesh->m_strBindedToAnimatedModelName.empty() && !pMesh->m_strBindedToBoneName.empty() )
 	{
@@ -83,7 +83,7 @@ void StaticModel::LoadGameObject()
 
 	DWORD nMaterialsAmount = 0;
 
-	CheckFailed(D3DXLoadMeshFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pDxDevice, 0, &pMaterialBuffer, 0, &nMaterialsAmount, &pMesh));
+	CheckSuccess(D3DXLoadMeshFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pDxDevice, 0, &pMaterialBuffer, 0, &nMaterialsAmount, &pMesh));
 
 	bool bHasNormals = HasNormals(pMesh);
 
@@ -133,7 +133,7 @@ void StaticModel::LoadGameObject()
 				char strTexturePath[80];
 				strcpy_s(strTexturePath,"../../Resources/textures/StaticModels/");
 				strcat_s(strTexturePath,d3dxmtrls[i].pTextureFilename);
-				D3DXCreateTextureFromFile(pDxDevice, strTexturePath, &pTexture);
+				CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, strTexturePath, &pTexture));
 
 				m_vTextures.push_back(pTexture);
 			}
@@ -209,7 +209,7 @@ void StaticModel::OnUpdate(float fDeltaTime)
 
 void StaticModel::BuildEffect()
 {
-	CheckFailed(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/StaticModelShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
+	CheckSuccess(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/StaticModelShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
 
 	m_hEffectTechnique	= m_pEffect->GetTechniqueByName("StaticModelTech");
 	m_hWVPMatrix		= m_pEffect->GetParameterByName(0, "WVP");

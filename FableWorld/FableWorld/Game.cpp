@@ -16,9 +16,9 @@ Game::Game()
 	//sprite for the interface in the game
 	D3DXCreateSprite(pDxDevice,&m_pInterfaceSprite);
 	//textures for the interface
-	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/GUI/healthbar.dds",&m_pHealthBarTexture);
-	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/GUI/healthbar_filled.dds",&m_pHealthBarFilledTexture);
-	D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/GUI/healthbar_filled_enemy.dds",&m_phealthBarFilledEnemyTexture);
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/GUI/healthbar.dds",&m_pHealthBarTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/GUI/healthbar_filled.dds",&m_pHealthBarFilledTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/GUI/healthbar_filled_enemy.dds",&m_phealthBarFilledEnemyTexture));
 	m_rHealthBarRectangle.left = 0;  
 	m_rHealthBarRectangle.top = 0;  
 	m_rHealthBarRectangle.right  = 270;  

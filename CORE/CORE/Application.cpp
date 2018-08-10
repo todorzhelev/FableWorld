@@ -186,7 +186,7 @@ void Application::InitDirect3D()
 	m_presentParameters.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;
 	m_presentParameters.PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;	//presents the picture immediately
 
-	CheckFailed(m_pD3DObject->CreateDevice(D3DADAPTER_DEFAULT,				// primary adapter
+	CheckSuccess(m_pD3DObject->CreateDevice(D3DADAPTER_DEFAULT,				// primary adapter
 										m_eDeviceType,                    // device type
 										m_hMainWindow,                    // window associated with device
 										m_vertexProcessingType,

@@ -20,14 +20,14 @@ inline void ReleaseX(IUnknown* resource)
 	}
 }
 
-#define CheckFailed(X) __CheckHR(__FILE__, __LINE__, X)
+#define CheckSuccess(X) __CheckHR(__FILE__, __LINE__, X)
 inline void __CheckHR(std::string file, int line, HRESULT hr)
 {
 	if (FAILED(hr))
 	{
 		std::string message = "File:" + file + " line: " + std::to_string(line) + "\nError std::string:" + DXGetErrorString(hr) + "\nError description:" + DXGetErrorDescription(hr);
 		MessageBox(0, message.c_str(), "Error", MB_CANCELTRYCONTINUE | MB_ICONEXCLAMATION);
-		exit(1);
+		PostQuitMessage(0);
 	}
 }
 

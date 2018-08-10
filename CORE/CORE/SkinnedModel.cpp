@@ -8,7 +8,7 @@
 SkinnedModel::SkinnedModel()
 {
 	//default white texture for models which doesnt have any
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture);
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
 
 	//max number of bones that can be supported.Above 60 bones arent rendered correctly
 	m_nMaxBonesSupported = 60;
@@ -39,7 +39,7 @@ SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, 
 {
 	//code duplication, move it to another function
 	//default white texture for models which doesnt have any
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture);
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
 
 	m_pAnimationComponent = new AnimationComponent();
 
@@ -108,11 +108,11 @@ SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, 
 void SkinnedModel::LoadGameObject()
 {
 	//creates the texture for the model
-	D3DXCreateTextureFromFile(pDxDevice, m_strTextureFileName.c_str(), &m_pTexture);
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, m_strTextureFileName.c_str(), &m_pTexture));
 
 	AllocateHierarchy allocMeshHierarchy;
 
-	CheckFailed(D3DXLoadMeshHierarchyFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pDxDevice, &allocMeshHierarchy, 0, &m_pRoot, &m_pAnimationComponent->m_pAnimationController));
+	CheckSuccess(D3DXLoadMeshHierarchyFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pDxDevice, &allocMeshHierarchy, 0, &m_pRoot, &m_pAnimationComponent->m_pAnimationController));
 
 	m_pAnimationComponent->EnableTrack(FirstTrack, true);
 	m_pAnimationComponent->EnableTrack(SecondTrack, true);
@@ -139,7 +139,7 @@ void SkinnedModel::LoadGameObject()
 	m_strTextureFileName = str;
 
 	//creates the texture for the model
-	D3DXCreateTextureFromFile(pDxDevice, m_strTextureFileName.c_str(), &m_pTexture);
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, m_strTextureFileName.c_str(), &m_pTexture));
 
 	//set the idle animation on the current track and mantain one more track, 
 	//which we will use later to switch to attack or dead animations
@@ -381,7 +381,7 @@ void SkinnedModel::BuildBoundingBox()
 
 void SkinnedModel::BuildEffect()
 {
-	CheckFailed(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/SkinnedModelShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
+	CheckSuccess(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/SkinnedModelShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
 
 	m_hEffectTechnique	  = m_pEffect->GetTechniqueByName("SkinnedModelTech");
 	m_hWVPMatrix		  = m_pEffect->GetParameterByName(0, "WVP");

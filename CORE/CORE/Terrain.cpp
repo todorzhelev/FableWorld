@@ -28,10 +28,10 @@ Terrain::Terrain(std::string strHeightmapFileName,float fHeightsScale, int nRows
 
 	LoadHeightmap();
 
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/blend_map.dds", &m_pBlendMapTexture);
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/ground0.dds", &m_pDirtTexture);
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/grass-texture-02.dds", &m_pGrassTexture);
-	D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/rocks.dds", &m_pStoneTexture);
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/blend_map.dds", &m_pBlendMapTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/ground0.dds", &m_pDirtTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/grass-texture-02.dds", &m_pGrassTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/rocks.dds", &m_pStoneTexture));
 
 	GenerateTerrainMesh();
 	BuildEffect();	
@@ -110,7 +110,7 @@ void Terrain::GenerateTerrainMesh()
 	pApp->GetPositionNormalTextureDecl()->GetDeclaration(elems, &numElems);
 
 	ID3DXMesh* mesh = 0;
-	CheckFailed(D3DXCreateMesh(m_nNumTriangles, m_nNumVertices, D3DPOOL_SCRATCH | D3DXMESH_32BIT, elems, pDxDevice, &mesh));
+	CheckSuccess(D3DXCreateMesh(m_nNumTriangles, m_nNumVertices, D3DPOOL_SCRATCH | D3DXMESH_32BIT, elems, pDxDevice, &mesh));
 
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	//LockVertexBuffer() gives us access to the internal mesh data and by v we can write information to the mesh
@@ -513,7 +513,7 @@ void Terrain::SetLightVector(D3DXVECTOR3 vLightVector)
 //loads the effect parameters and the textures used by the terrain into the shader
 void Terrain::BuildEffect()
 {
-	CheckFailed(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/TerrainShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
+	CheckSuccess(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/TerrainShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
 
 	m_hEffectTechnique	= m_pEffect->GetTechniqueByName("TerrainTech");
 	m_hWVPMatrix		= m_pEffect->GetParameterByName(0, "WVP");

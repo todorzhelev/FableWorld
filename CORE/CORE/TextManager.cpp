@@ -29,7 +29,7 @@ TextManager::TextManager():m_fFPS(0.0)
 	//_tcscpy_s(fontDesc.FaceName, _T("28 Days Later"));
 	//_tcscpy_s(fontDesc.FaceName, _T("Times New Roman"));
 
-	CheckFailed(D3DXCreateFontIndirect(pDxDevice, &fontDesc, &m_pFont2D));
+	CheckSuccess(D3DXCreateFontIndirect(pDxDevice, &fontDesc, &m_pFont2D));
 }
 
 

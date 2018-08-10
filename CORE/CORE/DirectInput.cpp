@@ -14,7 +14,7 @@ DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags)
 	ZeroMemory(m_keyboardState, sizeof(m_keyboardState));
 	ZeroMemory(&m_mouseState, sizeof(m_mouseState));
 
-	CheckFailed(DirectInput8Create(pApp->GetAppInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_pDirectInput, 0));
+	CheckSuccess(DirectInput8Create(pApp->GetAppInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_pDirectInput, 0));
 
 	//Keyboard
 	m_pDirectInput->CreateDevice(GUID_SysKeyboard, &m_pKeyboad, 0);

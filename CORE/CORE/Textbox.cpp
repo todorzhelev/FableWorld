@@ -6,8 +6,8 @@ Textbox::Textbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string str
 :IBaseMenuObject(vPosition,nWidth,nHeight,strText,strIdleStateTexFileName,strMouseOverStateTexFileName,strId)
 {
 	D3DXCreateSprite(pDxDevice,&m_pSprite);
-	D3DXCreateTextureFromFile(pDxDevice,m_strIdleStateTextureFileName.c_str(),&m_pIdleStateTexture);
-	D3DXCreateTextureFromFile(pDxDevice,m_strMouseOverStateTextureFileName.c_str(),&m_pMouseOverStateTexture);
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,m_strIdleStateTextureFileName.c_str(),&m_pIdleStateTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,m_strMouseOverStateTextureFileName.c_str(),&m_pMouseOverStateTexture));
 
 	m_bIsMouseDown = false;
 	m_bIsMouseOver = false;
@@ -18,8 +18,8 @@ Textbox::Textbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string str
 void Textbox::Init()
 {
 	D3DXCreateSprite(pDxDevice,&m_pSprite);
-	D3DXCreateTextureFromFile(pDxDevice,m_strIdleStateTextureFileName.c_str(),&m_pIdleStateTexture);
-	D3DXCreateTextureFromFile(pDxDevice,m_strMouseOverStateTextureFileName.c_str(),&m_pMouseOverStateTexture);
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,m_strIdleStateTextureFileName.c_str(),&m_pIdleStateTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,m_strMouseOverStateTextureFileName.c_str(),&m_pMouseOverStateTexture));
 
 	m_bIsMouseDown = false;
 	m_bIsMouseOver = false;
