@@ -842,7 +842,7 @@ bool SkinnedModel::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX
 		DWORD faceIndex = -1;
 		float u = 0.0f;
 		float v = 0.0f;
-		float dist = 0.0f;
+		float dist = FLT_MAX;
 		ID3DXBuffer* allhits = nullptr;
 		DWORD numHits = 0;
 

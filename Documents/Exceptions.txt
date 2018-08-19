@@ -1,0 +1,1 @@
+http://preshing.com/20110807/the-cost-of-enabling-exception-handling/

@@ -1,5 +1,7 @@
 #pragma once
 
+#define _HAS_EXCEPTIONS 0
+
 #ifdef _DEBUG
 	#ifndef D3D_DEBUG_INFO
 		#define D3D_DEBUG_INFO
