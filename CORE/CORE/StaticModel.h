@@ -14,7 +14,7 @@ class StaticModel : public GameObject
 public:
 	StaticModel();
 	StaticModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName);
-	
+	virtual ~StaticModel();
 	virtual void LoadGameObject() override;
 
 	virtual void OnUpdate(float fDeltaTime) override;

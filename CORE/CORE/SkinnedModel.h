@@ -53,7 +53,7 @@ class SkinnedModel : public GameObject
 public:
 	SkinnedModel();
 	SkinnedModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName, bool bShouldRenderTitles = true);
-	~SkinnedModel();
+	virtual ~SkinnedModel();
 
 	virtual void 	LoadGameObject() override;
 
@@ -251,7 +251,7 @@ private:
 	DWORD               m_nNumBones;
 	ID3DXSkinInfo*      m_pSkinInfo;
 
-	AnimationComponent* m_pAnimationComponent;
+	std::unique_ptr<AnimationComponent> m_pAnimationComponent;
 
 	//this std::map holds which weapon to which bone is attached
 	std::unordered_map<GameObject*, std::string> m_mapBindedObjects;

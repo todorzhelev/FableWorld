@@ -76,6 +76,14 @@ StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, st
 
 /////////////////////////////////////////////////////////////////////////
 
+StaticModel::~StaticModel()
+{
+	m_pWhiteTexture->Release();
+	m_pEffect->Release();
+}
+
+/////////////////////////////////////////////////////////////////////////
+
 void StaticModel::LoadGameObject()
 {
 	ID3DXMesh* pMesh			 = NULL;

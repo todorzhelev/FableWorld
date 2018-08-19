@@ -17,11 +17,15 @@ class GameObject
 {
 public:
 
+	//todo: should init everything in the constructor
+	GameObject() {};
+	virtual ~GameObject() = 0;
+	virtual void OnUpdate(float dt) = 0;
+	virtual void OnRender() = 0;
+	virtual void OnLostDevice() = 0;
+	virtual void OnResetDevice() = 0;
+
 	virtual void LoadGameObject();
-	virtual void OnUpdate(float dt);
-	virtual void OnRender();
-	virtual void OnLostDevice();
-	virtual void OnResetDevice();
 	virtual void RenderBindedWeapon(GameObject* pSkMesh, std::string bone);
 
 	virtual float GetDistanceToPickedObject();

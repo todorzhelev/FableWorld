@@ -1,6 +1,16 @@
 #include <stdafx.h>
 #include"GameObject.h"
 
+GameObject::~GameObject()
+{
+	m_pMesh->Release();
+	for (auto& texture : m_vTextures)
+	{
+		texture->Release();
+	}
+	m_pBoundingBoxMesh->Release();
+}
+
 void GameObject::LoadGameObject()
 {
 	

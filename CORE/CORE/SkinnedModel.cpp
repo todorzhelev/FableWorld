@@ -26,7 +26,7 @@ SkinnedModel::SkinnedModel()
 	m_whiteMaterial.m_fSpecularPower 	= 48.0f;
 
 	m_bShouldRenderTitles = true;
-	m_pAnimationComponent = new AnimationComponent();
+	m_pAnimationComponent = std::unique_ptr<AnimationComponent>(new AnimationComponent());
 
 	m_movementSpeed = 1;
 	BuildEffect();
@@ -41,7 +41,7 @@ SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, 
 	//default white texture for models which doesnt have any
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
 
-	m_pAnimationComponent = new AnimationComponent();
+	m_pAnimationComponent = std::unique_ptr<AnimationComponent>(new AnimationComponent());
 
 	//max number of bones that can be supported.Above 60 bones arent rendered correctly
 	m_nMaxBonesSupported = 60;
@@ -105,6 +105,26 @@ SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, 
 }
 /////////////////////////////////////////////////////////////////////////
 
+SkinnedModel::~SkinnedModel()
+{
+	m_pWhiteTexture->Release();
+	m_pEffect->Release();
+	m_pTitlesEffect->Release();
+	m_pTitleMesh->Release();
+	m_pTitleForQuestMesh->Release();
+	m_vFinalBonesMatrices.clear();
+	m_vToRootMatrices.clear();
+	m_pSkinInfo->Release();
+
+	//todo::recursively clear everything
+	//m_pRoot;
+	
+	//todo:clear this. GameObjects inside should be smart pointers
+	//m_mapBindedObjects;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
 void SkinnedModel::LoadGameObject()
 {
 	//creates the texture for the model
@@ -156,12 +176,6 @@ void SkinnedModel::LoadGameObject()
 	BuildSkinnedModel(pMeshContainer->MeshData.pMesh);
 
 	InitBonesToRootMatricesPointersArray();
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-SkinnedModel::~SkinnedModel()
-{
 }
 
 /////////////////////////////////////////////////////////////////////////
