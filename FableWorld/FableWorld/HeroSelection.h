@@ -5,6 +5,7 @@
 #include "LuaFunctions.h"
 #include "Menu.h"
 #include "Label.h"
+#include "Sky.h"
 
 
 //this is the menu scene and contains all the thing needed in the menu
@@ -25,6 +26,8 @@ public:
 	virtual LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 private:
+
+	Sky * pSky;
 
 	std::vector<GameObject*> m_SceneObjects;
 

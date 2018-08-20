@@ -11,17 +11,25 @@ constexpr int rotationSlowFactor = 20000;
 HeroSelection::HeroSelection()
 {
 	//TODO:this should be specified in the level file
-	camera->GetPosition() = D3DXVECTOR3(-2, 31, -161);
+	camera->GetPosition() = D3DXVECTOR3(-100, 31, -5);
 
 	//TODO: use level file, instead of hardcoded stuff
 	//luaL_dofile(g_luaState, "../../Resources/scripts/levelHeroSelect.lua");
 
-	SkinnedModel* pMesh = new SkinnedModel("Ezrael","../../Resources/models/ezreal/ezreal_5anm.x","../../Resources/textures/SkinnedModels/Ezreal_ProdigalExplorer.dds",false);
+	//SkinnedModel* pMesh = new SkinnedModel("Ezrael","../../Resources/models/ezreal/ezreal_5anm.x","../../Resources/textures/SkinnedModels/Ezreal_ProdigalExplorer.dds",false);
+	SkinnedModel* pMesh = new SkinnedModel("cho", "../../Resources/models/cho/cho_5anmx.X", "../../Resources/textures/SkinnedModels/chogath_abyss_TX_CM.DDS", false);
 
 	GameObject* pLand = new StaticModel("land","../../Resources/models/land.x","../../Resources/textures/Terrain/grass-texture-02.dds");
 
+	pSky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
+
 	pMesh->LoadGameObject();
 	pLand->LoadGameObject();
+
+	//pLand->SetScale(1.3); 
+	pMesh->SetScale(0.2);
+	pMesh->SetRotationAngleByY(D3DX_PI / 2);
+	pMesh->SetTitleRotationAnglyByY(D3DX_PI / 2);
 
 	m_SceneObjects.push_back(pMesh);
 	m_SceneObjects.push_back(pLand);
@@ -34,7 +42,7 @@ HeroSelection::HeroSelection()
 	float posy = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight/2);
 	int width = GetStringWidth("Enter world");
 
-	m_pLabelEnterWorld = new Label(D3DXVECTOR2(posx-width/2,2*posy - 75),"Enter world");
+	m_pLabelEnterWorld = new Label(D3DXVECTOR2(posx-width/2-20,2*posy - 75),"Enter world");
 	m_pLabelEnterWorld->SetVisible(true);
 }
 
@@ -42,6 +50,7 @@ HeroSelection::HeroSelection()
 
 void HeroSelection::OnLostDevice()
 {
+	pSky->OnLostDevice();
 	m_pLabelEnterWorld->OnLostDevice();
 
 	for( GameObject* pObject : m_SceneObjects )
@@ -55,6 +64,7 @@ void HeroSelection::OnLostDevice()
 
 void HeroSelection::OnResetDevice()
 {
+	pSky->OnResetDevice();
 	m_pLabelEnterWorld->OnResetDevice();
 
 	for( GameObject* pObject : m_SceneObjects )
@@ -114,6 +124,7 @@ void HeroSelection::OnRender()
 	pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
 	pDxDevice->BeginScene();
 
+	pSky->OnRender();
 	for( GameObject* pObject : m_SceneObjects )
 	{
 		pObject->OnRender();
