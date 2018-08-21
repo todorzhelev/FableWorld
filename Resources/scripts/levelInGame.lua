@@ -1,6 +1,6 @@
-x = -12.4995
-y = 30
-z = 120.905
+x = -20.5636
+y = 0.270158
+z = 88.6879
 scale = 0.27
 rotX = 0
 rotY = 0
@@ -172,7 +172,7 @@ addStaticModel();
 x = -55.2375
 y = 0.3967
 z = -13.7747
-scale = 0.860003
+scale = 0.500003
 rotX = 0
 rotY = 0
 rotZ = 6.2
@@ -186,7 +186,7 @@ addStaticModel();
 x = 16.093
 y = 0
 z = -13.1846
-scale = 0.880003
+scale = 0.490003
 rotX = 0
 rotY = 0
 rotZ = 0
@@ -200,7 +200,7 @@ addStaticModel();
 x = 9.83306
 y = 0
 z = 46.8229
-scale = 0.820003
+scale = 0.470003
 rotX = 0
 rotY = 0
 rotZ = 0
@@ -212,9 +212,9 @@ modelFileName = "../../Resources/models/trees/tree1/tree.X"
 addStaticModel();
 
 x = -51.4643
-y = 0
+y = 1.41147
 z = 46.8855
-scale = 0.76
+scale = 0.46
 rotX = 0
 rotY = 0
 rotZ = 0

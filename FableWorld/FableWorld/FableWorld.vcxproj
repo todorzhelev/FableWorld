@@ -133,7 +133,6 @@
     <ClCompile Include="..\..\CORE\CORE\Textbox.cpp" />
     <ClCompile Include="..\..\CORE\CORE\TextManager.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Tree.cpp" />
-    <ClCompile Include="HeroSelection.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -165,7 +164,6 @@
     <ClInclude Include="..\..\CORE\CORE\Textbox.h" />
     <ClInclude Include="..\..\CORE\CORE\TextManager.h" />
     <ClInclude Include="..\..\CORE\CORE\Tree.h" />
-    <ClInclude Include="HeroSelection.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuInGame.h" />

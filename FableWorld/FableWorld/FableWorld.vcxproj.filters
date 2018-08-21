@@ -50,9 +50,6 @@
     <ClCompile Include="MenuInGame.cpp">
       <Filter>Source Files\scenes</Filter>
     </ClCompile>
-    <ClCompile Include="HeroSelection.cpp">
-      <Filter>Source Files\scenes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\CORE\CORE\IBaseMenuObject.cpp">
       <Filter>CORE\Source Files\GUI</Filter>
     </ClCompile>
@@ -182,9 +179,6 @@
       <Filter>CORE\Source Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>Source Files\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="HeroSelection.h">
       <Filter>Source Files\scenes</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">

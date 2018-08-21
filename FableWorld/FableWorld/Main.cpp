@@ -3,7 +3,6 @@
 #include "Game.h"
 #include "Menu.h"
 #include "MenuInGame.h"
-#include "HeroSelection.h"
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -11,7 +10,7 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int showCmd)
 {
 	AllocConsole();
-	//must research this
+
 	freopen( "CONOUT$", "wb", stdout);
 
 	fout.open("log.txt");
@@ -20,7 +19,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 	
 	m_pGameObjManager = new GameObjectManager(true,false,false,true,false,true);
 
-	//adds 3 scenes in the scenesContainer and set the active scene to be the menu scene.
 	Menu menu;
 	pApp->AddScene("menu", &menu);
 
@@ -29,9 +27,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 
 	MenuInGame menuInGame;
 	pApp->AddScene("menuInGame", &menuInGame);
-
-	HeroSelection heroSelection;
-	pApp->AddScene("heroSelect", &heroSelection);
 
 	pApp->SetCurrentScene(&menu);
 

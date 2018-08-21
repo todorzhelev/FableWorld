@@ -544,7 +544,7 @@ void SkinnedModel::OnRender()
 	}
 	m_pEffect->End();
 
-	if(m_bShouldRenderTitles)
+	if(m_bShouldRenderTitles && m_pGameObjManager->ShouldRenderTitles())
 	{
 		RenderTitles();
 		RenderTitlesForQuest();
