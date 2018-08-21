@@ -332,10 +332,12 @@ void Game::OnUpdate(float dt)
 			D3DXVec3TransformCoord(&gameObject->GetUpVector(), &gameObject->GetUpVector(), &R);
 		}
 
+		ManageHealthBars();
+
 		//if mainHero is fighting with enemy, but started to run and is no longer close to the enemy, 
 		//the enemy updates his vectors so he can face the mainHero and run in his direction.
 		//When he is close enough he start to attack again.
-		if( gameObject->IsAttacked() && !gameObject->IsDead() && !IsObjectNear(pMainHero,gameObject)
+		if( gameObject->IsAttacked() && !gameObject->IsDead() && !IsObjectNear(pMainHero,gameObject) && !pMainHero->IsDead()
 			)
 		{
 			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(gameObject);
@@ -373,8 +375,6 @@ void Game::OnUpdate(float dt)
 
 	m_pHealSpell->OnUpdate();
 
-	//controls the health bars of the enemy and the mainHero.
-	ManageHealthBars();
 }
 	
 
@@ -494,9 +494,8 @@ void Game::ManageHealthBars()
 	{
 		pMainHero->PlayAnimationOnceAndStopTrack("dead");
 		pMainHero->SetDead(true);
-		
-		//after the enemy has killed the main hero set its animation to idle
-		pEnemy->PlayAnimation("idle");
+
+		pEnemy->SetAnimationOnTrack("idle",0);
 	}
 	if( m_rEnemyHealthBarRectangle.right <= 0.0 && !pEnemy->IsDead() )
 	{

@@ -125,25 +125,23 @@ void AnimationComponent::PlayAnimation(LPCSTR strAnimationName)
 
 /////////////////////////////////////////////////////////////////////////////
 
-//plays animation only once then stops( used for dead animation )
-//The idea is to slightly move from the current track to the new one, holding the new animation.
-//After the new animation is played to the end, we stop it. 
-//This way the two animation tracks are with 0.0 weight and thus no animation is played.
+//plays animation only once then stops( currently used for dead animation )
+//we use that the second track is occupied by attack animations, so we switch to the first track for
+//these kind of animations
 void AnimationComponent::PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName)
 {
-	//auto name = m_pSecondAnimSet->GetName();
-	//if we are currently playing such animation dont enter here
 	if (!m_bShouldStopTrackAfterPlayingAnimation)
 	{
-		SetAnimationOnTrack(strAnimationName, SecondTrack);
+		SetTrackPosition(FirstTrack, 0.0);
+		SetAnimationOnTrack(strAnimationName, FirstTrack);
 
-		SetTrackSpeed(FirstTrack, 0.0f, GetGlobalTime());
-		SetTrackWeight(FirstTrack, 0.0f, GetGlobalTime());
+		SetTrackSpeed(FirstTrack, 1.0f, GetGlobalTime());
+		SetTrackWeight(FirstTrack, 1.0f, GetGlobalTime());
 
-		SetTrackSpeed(SecondTrack, 1.0f, GetGlobalTime());
-		SetTrackWeight(SecondTrack, 1.0f, GetGlobalTime());
+		SetTrackSpeed(SecondTrack, 0.0f, GetGlobalTime());
+		SetTrackWeight(SecondTrack, 0.0f, GetGlobalTime());
 
-		m_bShouldPlayAnimationOnce = false;
+		m_bShouldPlayAnimationOnce = false; //this fixes sudden track resets
 		m_bShouldStopTrackAfterPlayingAnimation = true;
 	}
 }
@@ -155,6 +153,7 @@ void AnimationComponent::PlayAnimationOnce(LPCSTR strAnimationName)
 	//if we are currently playing animation once dont enter here
 	if (!m_bShouldPlayAnimationOnce)
 	{
+		SetTrackPosition(SecondTrack, 0.0);
 		SetAnimationOnTrack(strAnimationName, SecondTrack);
 
 		SetTrackSpeed(FirstTrack, 0.0f, GetGlobalTime());
@@ -189,8 +188,11 @@ void AnimationComponent::OnUpdate(float dt, float movementSpeed)
 	//we see when it is finished and we transit to the first track, which holds the idle animation set
 	if (m_bShouldPlayAnimationOnce)
 	{
+		auto trackPosition = GetTrackPosition(SecondTrack);
+		auto duration = GetTrackAnimationSetDuration(SecondTrack);
+
 		//after the attack animation has finished we slightly make transition to idle animation.
-		if (GetTrackPosition(SecondTrack) >= GetTrackAnimationSetDuration(SecondTrack))
+		if (abs(trackPosition - duration) < 0.01f)
 		{
 			SetTrackSpeed(FirstTrack, 1.0f, GetGlobalTime());
 			SetTrackWeight(FirstTrack, 1.0f, GetGlobalTime());
@@ -198,7 +200,7 @@ void AnimationComponent::OnUpdate(float dt, float movementSpeed)
 			SetTrackSpeed(SecondTrack, 0.0f, GetGlobalTime());
 			SetTrackWeight(SecondTrack, 0.0f, GetGlobalTime());
 
-			SetTrackPosition(SecondTrack, 0.0); //this is very important
+			SetTrackPosition(SecondTrack, 0.0);
 
 			m_bShouldPlayAnimationOnce = false;
 		}
@@ -207,23 +209,23 @@ void AnimationComponent::OnUpdate(float dt, float movementSpeed)
 	//after we play the animation once we have to stop the track
 	if (m_bShouldStopTrackAfterPlayingAnimation)
 	{
-		auto trackPosition = GetTrackPosition(SecondTrack);
-		auto animSetPeriod = GetTrackAnimationSetDuration(SecondTrack);
-		auto transitionPeriod = animSetPeriod / 2.0f;
-		auto difference = animSetPeriod - transitionPeriod;
-
-		//#ifdef _DEBUG
-		//		std::cout << "model name:" << this->GetName() << " anim set name:" << m_pSecondAnimSet->GetName() << " track pos:" << trackPosition << " difference:" << difference << std::endl;
-		//#endif
-
-		//if we are near the end of the animation, stop it in transitionPeriod time
-		if (trackPosition >= difference)
+		auto trackPosition = GetTrackPosition(FirstTrack);
+		auto duration = GetTrackAnimationSetDuration(FirstTrack);
+		//bigger tolerance is needed because the track position tends to get out of the limits, which resets the track to the initial position
+		//should think of better solution, since now we rely on a number
+		if (abs(trackPosition - duration) < duration*0.25f)
 		{
-			SetTrackSpeed(SecondTrack, 0.0f, GetGlobalTime(), transitionPeriod - 0.1);
-			//the track should have atleast small contribution to the animation. Otherwise the model will disappear
-			SetTrackWeight(SecondTrack, 0.1f, GetGlobalTime(), transitionPeriod - 0.1);
+			SetTrackSpeed(FirstTrack, 0.0f, GetGlobalTime());
+			//setting the weight to 0.1 prevents the object from disappearing
+			SetTrackWeight(FirstTrack, 0.1f, GetGlobalTime());
 
-			m_bShouldStopTrackAfterPlayingAnimation = false;
+			SetTrackSpeed(SecondTrack, 0.0f, GetGlobalTime());
+			SetTrackWeight(SecondTrack, 0.0f, GetGlobalTime());
+
+			SetTrackPosition(SecondTrack, 0.0); 
+
+			//this prevents from setting another animation while we are closing the track
+			//m_bShouldStopTrackAfterPlayingAnimation = false;
 		}
 	}
 

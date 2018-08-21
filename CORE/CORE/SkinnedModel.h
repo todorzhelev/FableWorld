@@ -77,7 +77,7 @@ public:
 
 	bool			JustStartedPlayingAnimationOnce();
 
-	void			UpdateAnimations(float dt);
+	void			SetAnimationOnTrack(std::string strAnimationName, int track);
 
 	void 			PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName);
 	

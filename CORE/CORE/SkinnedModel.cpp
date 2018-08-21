@@ -686,6 +686,12 @@ void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
 
 /////////////////////////////////////////////////////////////////////////
 
+void SkinnedModel::SetAnimationOnTrack(std::string strAnimationName, int track)
+{
+	m_pAnimationComponent->SetAnimationOnTrack(strAnimationName.c_str(), (AnimationTrack)track);
+}
+
+/////////////////////////////////////////////////////////////////////////
 
 void SkinnedModel::PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName)
 {

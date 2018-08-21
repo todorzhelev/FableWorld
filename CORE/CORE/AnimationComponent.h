@@ -59,5 +59,6 @@ private:
 	bool  m_bShouldPlayAnimationOnce;
 	bool  m_bShouldStopTrackAfterPlayingAnimation;
 
+	//should refactor this
 	bool  m_bJustStartedPlayingAnimationOnce;
 };
