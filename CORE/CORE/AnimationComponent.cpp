@@ -133,7 +133,7 @@ void AnimationComponent::PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName)
 {
 	//auto name = m_pSecondAnimSet->GetName();
 	//if we are currently playing such animation dont enter here
-	if (!ShouldStopTrackAfterPlayingAnimation())
+	if (!m_bShouldStopTrackAfterPlayingAnimation)
 	{
 		SetAnimationOnTrack(strAnimationName, SecondTrack);
 
@@ -143,7 +143,8 @@ void AnimationComponent::PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName)
 		SetTrackSpeed(SecondTrack, 1.0f, GetGlobalTime());
 		SetTrackWeight(SecondTrack, 1.0f, GetGlobalTime());
 
-		SetShouldStopTrackAfterPlayingAnimation(true);
+		m_bShouldPlayAnimationOnce = false;
+		m_bShouldStopTrackAfterPlayingAnimation = true;
 	}
 }
 
