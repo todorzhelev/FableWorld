@@ -598,7 +598,10 @@ void SkinnedModel::RenderTitles()
 	m_pTitlesEffect->Begin(&numPasses, 0);
 	m_pTitlesEffect->BeginPass(0);
 
-		m_pTitleMesh->DrawSubset(0);
+		if (m_pTitleMesh)
+		{
+			m_pTitleMesh->DrawSubset(0);
+		}
 
 	m_pTitlesEffect->EndPass();
 	m_pTitlesEffect->End();

@@ -34,7 +34,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 	pApp->AddScene("heroSelect", &heroSelection);
 
 	pApp->SetCurrentScene(&menu);
-	//pApp->SetCurrentScene(nullptr);
 
 	pApp->MainLoop();
 }

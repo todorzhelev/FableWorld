@@ -66,7 +66,8 @@ void Menu::OnUpdate(float dt)
 	{
 		pApp->GetScene("menu")->OnLostDevice();
 
-		IBaseScene* pGameScene = pApp->GetScene("heroSelect");
+		//IBaseScene* pGameScene = pApp->GetScene("heroSelect");
+		IBaseScene* pGameScene = pApp->GetScene("game");
 		pApp->SetCurrentScene(pGameScene);
 	}
 
