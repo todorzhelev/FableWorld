@@ -145,8 +145,8 @@ void TextManager::DrawFPS()
 	int w = pApp->GetPresentParameters().BackBufferWidth;
 	int h = pApp->GetPresentParameters().BackBufferHeight;
 
-	RECT rec = {w-100,5,0,0};
-	m_pFont2D->DrawTextA(0,buffer,-1,&rec,DT_NOCLIP,D3DCOLOR_XRGB(0,0,0));
+	RECT rec = {w-150,5,0,0};
+	m_pFont2D->DrawTextA(0,buffer,-1,&rec,DT_NOCLIP,D3DCOLOR_XRGB(255,255,0));
 }
 
 /////////////////////////////////////////////////////////////////////////
