@@ -69,6 +69,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ExceptionHandling>false</ExceptionHandling>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -115,8 +117,10 @@
     <ClCompile Include="..\..\CORE\CORE\DialogueManager.cpp" />
     <ClCompile Include="..\..\CORE\CORE\DirectInput.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Application.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\EffectSystem.cpp" />
     <ClCompile Include="..\..\CORE\CORE\GameObject.cpp" />
     <ClCompile Include="..\..\CORE\CORE\GameObjectManager.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\GunEffect.cpp" />
     <ClCompile Include="..\..\CORE\CORE\IBaseMenuObject.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Label.cpp" />
     <ClCompile Include="..\..\CORE\CORE\libs\TinyXml2\tinyxml2.cpp" />
@@ -148,8 +152,10 @@
     <ClInclude Include="..\..\CORE\CORE\DialogueManager.h" />
     <ClInclude Include="..\..\CORE\CORE\DirectInput.h" />
     <ClInclude Include="..\..\CORE\CORE\Application.h" />
+    <ClInclude Include="..\..\CORE\CORE\EffectSystem.h" />
     <ClInclude Include="..\..\CORE\CORE\GameObject.h" />
     <ClInclude Include="..\..\CORE\CORE\GameObjectManager.h" />
+    <ClInclude Include="..\..\CORE\CORE\GunEffect.h" />
     <ClInclude Include="..\..\CORE\CORE\IBaseMenuObject.h" />
     <ClInclude Include="..\..\CORE\CORE\IBaseScene.h" />
     <ClInclude Include="..\..\CORE\CORE\Label.h" />
@@ -179,6 +185,10 @@
     <FxCompile Include="..\..\Resources\shaders\DebugGraphicsShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TransformVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\..\Resources\shaders\Effects\GunShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GunEffectVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GunEffectVS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\SkinnedModelShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SkinnedModelVS</EntryPointName>

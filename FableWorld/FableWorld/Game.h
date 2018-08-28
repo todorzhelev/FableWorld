@@ -15,6 +15,7 @@
 #include "MenuInGame.h"
 #include "GameObjectManager.h"
 #include "LuaFunctions.h"
+#include "GunEffect.h"
 
 //this is the game scene and contains all the things in the game - terrain, models, etc
 //the Game class inherits from IBaseScene class so later we can change the scenes for instance from menu to game and etc
@@ -82,4 +83,6 @@ private:
 	ID3DXEffect* m_pDebugGraphicsEffect;
 	D3DXHANDLE 	 m_hDebugGraphicsTechnique;
 	D3DXHANDLE   m_hDebugGraphicsWVPMatrix;
+
+	std::unique_ptr<GunEffect> m_pGunEffect;
 };

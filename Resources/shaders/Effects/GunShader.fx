@@ -44,7 +44,8 @@ VS_OUTPUT GunEffectVS(VS_INPUT inp)
 
 	//o.size = inp.size;
 
-	o.size = 520*inp.size/(1+8*dist);
+	//o.size = 1000*inp.size/(1+8*dist);
+	o.size = 10000;
 
     return o;
 }
@@ -66,8 +67,6 @@ technique GunEffectTech
 	    SrcBlend     = One;
 	    DestBlend    = One;
 	    
-	    // Don't write to depth buffer; that is, particles don't obscure
-	    // the objects behind them.
-	   // ZWriteEnable = false;
+	    ZWriteEnable = false;
     }
 }

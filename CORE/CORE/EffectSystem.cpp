@@ -1,18 +1,19 @@
-#include"EffectSystem.h"
-#include"Camera.h"
+#include <stdafx.h>
+#include "EffectSystem.h"
+#include "Camera.h"
 
-EffectSystem::EffectSystem(string sShaderFileName, string sShaderTechName, string sTextureFileName,int nMaxAmountOfParticles)
+EffectSystem::EffectSystem(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName,int nMaxAmountOfParticles)
 :m_nMaxAmountOfParticles(nMaxAmountOfParticles),m_fTime(0.f)
 {
-	D3DXCreateTextureFromFile(pDxDevice,sTextureFileName.c_str(),&m_pTexture);
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,sTextureFileName.c_str(),&m_pTexture));
 
 
 	InitShader(sShaderFileName,sShaderTechName);
 
 
-	pDxDevice->CreateVertexBuffer(nMaxAmountOfParticles*sizeof (Particle),
+	CheckSuccess(pDxDevice->CreateVertexBuffer(nMaxAmountOfParticles*sizeof (Particle),
 								  D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY|D3DUSAGE_POINTS,
-								  0, D3DPOOL_DEFAULT, &m_pEffectVertexBuffer, 0);
+								  0, D3DPOOL_DEFAULT, &m_pEffectVertexBuffer, 0));
 
 }
 
@@ -35,13 +36,9 @@ void EffectSystem::AddParticle()
 	
 }
 
-void EffectSystem::InitShader(string sShaderFileName, string sShaderTechName)
+void EffectSystem::InitShader(std::string sShaderFileName, std::string sShaderTechName)
 {
-	if(FAILED(D3DXCreateEffectFromFile(pDxDevice,sShaderFileName.c_str(),0,0,D3DXSHADER_DEBUG,0,&m_pEffectShader,0)))
-	{
-		MessageBox(0,"Failed loading effect file in EffectSystem",0,0);
-		PostQuitMessage(0);
-	}
+	CheckSuccess(D3DXCreateEffectFromFile(pDxDevice, sShaderFileName.c_str(), 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffectShader, 0));
 
 	m_hEffectTechnique	  = m_pEffectShader->GetTechniqueByName(sShaderTechName.c_str());
 	m_hWVPMatrix		  = m_pEffectShader->GetParameterByName(0, "WVP");
@@ -62,9 +59,9 @@ void EffectSystem::OnResetDevice()
 {
 	m_pEffectShader->OnResetDevice();
 
-	pDxDevice->CreateVertexBuffer(m_nMaxAmountOfParticles*sizeof(Particle),
+	CheckSuccess(pDxDevice->CreateVertexBuffer(m_nMaxAmountOfParticles*sizeof(Particle),
 								  D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY|D3DUSAGE_POINTS,
-								  0, D3DPOOL_DEFAULT, &m_pEffectVertexBuffer, 0);
+								  0, D3DPOOL_DEFAULT, &m_pEffectVertexBuffer, 0));
 }
 
 void EffectSystem::OnUpdate(float dt)
@@ -91,7 +88,8 @@ void EffectSystem::OnRender()
 
 	pDxDevice->SetStreamSource(0, m_pEffectVertexBuffer, 0, sizeof(Particle));
 
-	pDxDevice->SetVertexDeclaration(pEngine->GetParticleDeclaration());
+	//should be different declaration
+	CheckSuccess(pDxDevice->SetVertexDeclaration(pApp->GetPositionNormalTextureDecl()));
 
 	UINT numPasses = 0;
 	m_pEffectShader->Begin(&numPasses, 0);

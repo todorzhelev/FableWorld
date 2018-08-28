@@ -18,10 +18,10 @@ class EffectSystem
 {
 
 public:
-	EffectSystem(string sShaderFileName, string sShaderTechName,string sTextureFileName,int nMaxAmountOfParticles);
-	~EffectSystem();
+	EffectSystem(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName,int nMaxAmountOfParticles);
+	virtual ~EffectSystem();
 
-	void		InitShader(string sShaderFileName, string sShaderTechName);
+	void		InitShader(std::string sShaderFileName, std::string sShaderTechName);
 
 	virtual void AddParticle();
 
@@ -39,8 +39,8 @@ protected:
 
 	float m_fTime;
 
-	vector<Particle> m_vParticles;
-	vector<Particle*> m_vDeadParticles;
+	std::vector<Particle> m_vParticles;
+	std::vector<Particle*> m_vDeadParticles;
 
 	ID3DXEffect* m_pEffectShader;
 	D3DXHANDLE 	 m_hEffectTechnique;

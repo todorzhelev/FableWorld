@@ -118,6 +118,12 @@ Game::Game()
 	D3DXVec3TransformCoord(&camera->GetUpVector(), &camera->GetUpVector(), &R);
 	D3DXVec3TransformCoord(&camera->GetLookVector(), &camera->GetLookVector(), &R);
 
+	m_pGunEffect = std::unique_ptr<GunEffect>(new GunEffect("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",10000));
+
+	for (int i = 0; i < 10; ++i)
+	{
+		m_pGunEffect->AddParticle();
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -274,6 +280,8 @@ void Game::OnUpdate(float dt)
 	}
 
 	m_pHealSpell->OnUpdate();
+
+	m_pGunEffect->OnUpdate(dt);
 
 }
 
@@ -592,6 +600,8 @@ void Game::OnRender()
 			m_pInterfaceSprite->End();
 			
 			m_pHealSpell->OnRender();
+
+			m_pGunEffect->OnRender();
 
 	pDxDevice->EndScene();
 

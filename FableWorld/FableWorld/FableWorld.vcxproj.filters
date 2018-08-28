@@ -122,6 +122,12 @@
     <ClCompile Include="..\..\CORE\CORE\stdafx.cpp">
       <Filter>CORE\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\EffectSystem.cpp">
+      <Filter>CORE\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CORE\CORE\GunEffect.cpp">
+      <Filter>CORE\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\CORE\CORE\AABB.h">
@@ -208,6 +214,12 @@
     <ClInclude Include="..\..\CORE\CORE\stdafx.h">
       <Filter>CORE\Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\EffectSystem.h">
+      <Filter>CORE\Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CORE\CORE\GunEffect.h">
+      <Filter>CORE\Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fonts\28DaysLater.ttf">
@@ -240,6 +252,9 @@
       <Filter>shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\Text3DShader.fx">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Resources\shaders\Effects\GunShader.fx">
       <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>
