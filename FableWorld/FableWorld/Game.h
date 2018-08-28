@@ -43,8 +43,10 @@ public:
 
 	void		 ManageHealthBars();
 
-	void		DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd);
+	void		 DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd);
 	
+	void		 UpdateAI(float dt);
+
 private:
 
 	void		InitDebugGraphicsShader();

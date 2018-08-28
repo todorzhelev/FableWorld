@@ -265,108 +265,8 @@ void Game::OnUpdate(float dt)
 	//	DrawLine(pMainHero->GetPosition(), it->GetPosition());
 	//}
 
-	//if mainHero is attacking
-	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels())
-	{
-		if( pDinput->IsMouseButtonDown(0) && 
-			IsObjectNear(pMainHero,gameObject) && 
-			pMainHero->GetName() != gameObject->GetName() &&
-			gameObject->GetActorType() == "enemy" &&
-			!pMainHero->IsDead()
-			)
-		{           
-			m_bIsEnemyHealthBarVisible = true;
-			gameObject->SetAttacked(true);
-			gameObject->SetAttackerName(mainHero);
-			
-			int num = rand() % 2;
-			LPCSTR animName = num % 2 == 0 ? "attack_1" : "attack_2";
-			pMainHero->PlayAnimationOnce(animName);
-			if( pMainHero->JustStartedPlayingAnimationOnce() )
-			{
-				m_rEnemyHealthBarRectangle.right-=70;
-			}
-		}
-		
-		// enemy AI
-		if( gameObject->IsAttacked() && IsObjectNear(pMainHero,gameObject) && 
-			!gameObject->IsDead() && !pMainHero->IsDead())
-		{
-			if( m_rHealthBarRectangle.right > 0.0 )
-			{
-				pMainHero->SetAttackerName(gameObject->GetName());
-				SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(gameObject);
-
-				int num = rand() % 2;
-				LPCSTR animName = num % 2 == 0 ? "attack_1" : "attack_2";
-				pSkinnedModel->PlayAnimationOnce(animName);
-				
-				if( gameObject->JustStartedPlayingAnimationOnce() )
-				{
-					m_rHealthBarRectangle.right-=70;
-				}
-			}
-			else
-			{
-				gameObject->SetAttacked(false);
-			}
-		}
-
-		//when the enemy is attacked it updates his rotation so it can face the mainHero
-		if( gameObject->IsAttacked() && !gameObject->IsDead() && IsObjectNear(pMainHero,gameObject) )
-		{
-			D3DXVECTOR3 vActorPosition = gameObject->GetPosition();
-			D3DXVECTOR3 vMainHeroPosition = pMainHero->GetPosition();
-
-			D3DXVECTOR3 vDistanceVector = vActorPosition - vMainHeroPosition;
-			D3DXVec3Normalize(&vDistanceVector,&vDistanceVector);
-
-			//for some reason the look std::vector is the right std::vector must be fixed
-			float angle = D3DXVec3Dot(&gameObject->GetRightVector(),&vDistanceVector);
-			gameObject->ModifyRotationAngleByY(angle);
-
-			D3DXMATRIX R;
-			D3DXMatrixRotationY(&R, angle);
-			D3DXVec3TransformCoord(&gameObject->GetLookVector(), &gameObject->GetLookVector(), &R);
-			D3DXVec3TransformCoord(&gameObject->GetRightVector(), &gameObject->GetRightVector(), &R);
-			D3DXVec3TransformCoord(&gameObject->GetUpVector(), &gameObject->GetUpVector(), &R);
-		}
-
-		ManageHealthBars();
-
-		//if mainHero is fighting with enemy, but started to run and is no longer close to the enemy, 
-		//the enemy updates his vectors so he can face the mainHero and run in his direction.
-		//When he is close enough he start to attack again.
-		if( gameObject->IsAttacked() && !gameObject->IsDead() && !IsObjectNear(pMainHero,gameObject) && !pMainHero->IsDead()
-			)
-		{
-			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(gameObject);
-			pSkinnedModel->PlayAnimation("run");
-			
-			D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
-
-			dir -= gameObject->GetLookVector();
-
-			D3DXVECTOR3 newPos = gameObject->GetPosition()+ dir*40.0*dt;
-			gameObject->SetPosition(newPos);
-
-			//put it in a function. the code is duplicated.
-			D3DXVECTOR3 vActorPosition = gameObject->GetPosition();
-			D3DXVECTOR3 vMainHeroPosition = pMainHero->GetPosition();
-
-			D3DXVECTOR3 vDistanceVector = vActorPosition - vMainHeroPosition;
-			D3DXVec3Normalize(&vDistanceVector,&vDistanceVector);
-
-			float angle = D3DXVec3Dot(&gameObject->GetRightVector(),&vDistanceVector);
-			gameObject->ModifyRotationAngleByY(angle);
-
-			D3DXMATRIX R;
-			D3DXMatrixRotationY(&R, angle);
-			D3DXVec3TransformCoord(&gameObject->GetLookVector(), &gameObject->GetLookVector(), &R);
-			D3DXVec3TransformCoord(&gameObject->GetRightVector(), &gameObject->GetRightVector(), &R);
-			D3DXVec3TransformCoord(&gameObject->GetUpVector(), &gameObject->GetUpVector(), &R);
-		}
-	}
+	ManageHealthBars();
+	UpdateAI(dt);
 
 	if( pDinput->IsMouseButtonUp(0) && m_pHealSpell->IsClicked() )
 	{
@@ -376,7 +276,114 @@ void Game::OnUpdate(float dt)
 	m_pHealSpell->OnUpdate();
 
 }
-	
+
+/////////////////////////////////////////////////////////////////////////
+
+void Game::UpdateAI(float dt)
+{
+	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels())
+	{
+		//main hero attacking enemy
+		if (pDinput->IsMouseButtonDown(0) &&
+			IsObjectNear(pMainHero, gameObject) &&
+			pMainHero->GetName() != gameObject->GetName() &&
+			gameObject->GetActorType() == "enemy" &&
+			!pMainHero->IsDead()
+			)
+		{
+			m_bIsEnemyHealthBarVisible = true;
+			gameObject->SetAttacked(true);
+			gameObject->SetAttackerName(mainHero);
+
+			int num = rand() % 2;
+			LPCSTR animName = num % 2 == 0 ? "attack_1" : "attack_2";
+			pMainHero->PlayAnimationOnce(animName);
+			if (pMainHero->JustStartedPlayingAnimationOnce())
+			{
+				m_rEnemyHealthBarRectangle.right -= 70;
+			}
+		}
+
+		// main hero attacked by enemy
+		if (gameObject->IsAttacked() && IsObjectNear(pMainHero, gameObject) &&
+			!gameObject->IsDead() && !pMainHero->IsDead())
+		{
+			if (m_rHealthBarRectangle.right > 0.0)
+			{
+				pMainHero->SetAttackerName(gameObject->GetName());
+				SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(gameObject);
+
+				int num = rand() % 2;
+				LPCSTR animName = num % 2 == 0 ? "attack_1" : "attack_2";
+				pSkinnedModel->PlayAnimationOnce(animName);
+
+				if (gameObject->JustStartedPlayingAnimationOnce())
+				{
+					m_rHealthBarRectangle.right -= 70;
+				}
+			}
+			else
+			{
+				gameObject->SetAttacked(false);
+			}
+		}
+
+		//when the enemy is attacked it updates his rotation so it can face the mainHero
+		if (gameObject->IsAttacked() && !gameObject->IsDead() && IsObjectNear(pMainHero, gameObject))
+		{
+			D3DXVECTOR3 vActorPosition = gameObject->GetPosition();
+			D3DXVECTOR3 vMainHeroPosition = pMainHero->GetPosition();
+
+			D3DXVECTOR3 vDistanceVector = vActorPosition - vMainHeroPosition;
+			D3DXVec3Normalize(&vDistanceVector, &vDistanceVector);
+
+			//for some reason the look std::vector is the right std::vector must be fixed
+			float angle = D3DXVec3Dot(&gameObject->GetRightVector(), &vDistanceVector);
+			gameObject->ModifyRotationAngleByY(angle);
+
+			D3DXMATRIX R;
+			D3DXMatrixRotationY(&R, angle);
+			D3DXVec3TransformCoord(&gameObject->GetLookVector(), &gameObject->GetLookVector(), &R);
+			D3DXVec3TransformCoord(&gameObject->GetRightVector(), &gameObject->GetRightVector(), &R);
+			D3DXVec3TransformCoord(&gameObject->GetUpVector(), &gameObject->GetUpVector(), &R);
+		}
+
+
+		//if mainHero is fighting with enemy, but started to run and is no longer close to the enemy, 
+		//the enemy updates his vectors so he can face the mainHero and run in his direction.
+		//When he is close enough he start to attack again.
+		if (gameObject->IsAttacked() && !gameObject->IsDead() && !IsObjectNear(pMainHero, gameObject) && !pMainHero->IsDead()
+			)
+		{
+			float speed = 80.f;
+			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(gameObject);
+			pSkinnedModel->PlayAnimation("run");
+
+			D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
+
+			dir -= gameObject->GetLookVector();
+
+			D3DXVECTOR3 newPos = gameObject->GetPosition() + dir * speed*dt;
+			gameObject->SetPosition(newPos);
+
+			//put it in a function. the code is duplicated.
+			D3DXVECTOR3 vActorPosition = gameObject->GetPosition();
+			D3DXVECTOR3 vMainHeroPosition = pMainHero->GetPosition();
+
+			D3DXVECTOR3 vDistanceVector = vActorPosition - vMainHeroPosition;
+			D3DXVec3Normalize(&vDistanceVector, &vDistanceVector);
+
+			float angle = D3DXVec3Dot(&gameObject->GetRightVector(), &vDistanceVector);
+			gameObject->ModifyRotationAngleByY(angle);
+
+			D3DXMATRIX R;
+			D3DXMatrixRotationY(&R, angle);
+			D3DXVec3TransformCoord(&gameObject->GetLookVector(), &gameObject->GetLookVector(), &R);
+			D3DXVec3TransformCoord(&gameObject->GetRightVector(), &gameObject->GetRightVector(), &R);
+			D3DXVec3TransformCoord(&gameObject->GetUpVector(), &gameObject->GetUpVector(), &R);
+		}
+	}
+}
 
 /////////////////////////////////////////////////////////////////////////
 
