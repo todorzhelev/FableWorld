@@ -161,9 +161,9 @@ void EffectSystem::OnRender()
 
 			int nCount = 0;
 
-			for( int i = 0; i < m_particles.size(); i++ )
+			for (int i = 0; i < m_aliveParticles.size(); ++i)
 			{
-				p[nCount] = m_particles[i];
+				p[nCount] = *m_aliveParticles[i];
 				nCount++;
 			}
 
