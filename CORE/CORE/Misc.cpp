@@ -109,14 +109,14 @@ bool HasNormals(ID3DXMesh* pMesh)
 void InitVertexDeclarations()
 {
 	//position only
-	D3DVERTEXELEMENT9 vertexPositionElements[] = 
+	D3DVERTEXELEMENT9 vP[] = 
 	{
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		D3DDECL_END()
 	};	
 
 	//position and color
-	D3DVERTEXELEMENT9 vertexPositionColorElements[] = 
+	D3DVERTEXELEMENT9 vPC[] = 
 	{
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		{0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0},
@@ -124,7 +124,7 @@ void InitVertexDeclarations()
 	};	
 
 	//position and normal
-	D3DVERTEXELEMENT9 vertexPositionNormalElements[] = 
+	D3DVERTEXELEMENT9 vPN[] = 
 	{
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		{0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0},
@@ -132,7 +132,7 @@ void InitVertexDeclarations()
 	};	
 
 	//position and texture
-	D3DVERTEXELEMENT9 vertexPositionTextureElements[] = 
+	D3DVERTEXELEMENT9 vPT[] = 
 	{
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		{0, 12, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
@@ -140,7 +140,7 @@ void InitVertexDeclarations()
 	};	
 
 	//position,normal and texture
-	D3DVERTEXELEMENT9 vertexPositionNormalTextureElements[] = 
+	D3DVERTEXELEMENT9 vPNT[] = 
 	{
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		{0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0},
@@ -148,13 +148,29 @@ void InitVertexDeclarations()
 		D3DDECL_END()
 	};
 
+	D3DVERTEXELEMENT9 vPs[] =
+	{
+		{ 0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 24, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },
+		{ 0, 28, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 2 },
+		{ 0, 32, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 3 },
+		{ 0, 36, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 4 },
+		{ 0, 40, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+		D3DDECL_END()
+	};
+
 	IDirect3DVertexDeclaration9* pDecl = NULL;
-	pDxDevice->CreateVertexDeclaration(vertexPositionNormalTextureElements, &pDecl);
-	pApp->SetPositionNormalTextureDecl(pDecl);
+	pDxDevice->CreateVertexDeclaration(vPNT, &pDecl);
+	pApp->SetPNTDecl(pDecl);
 
 	pDecl = NULL;
-	pDxDevice->CreateVertexDeclaration(vertexPositionColorElements, &pDecl);
-	pApp->SetPosColDeclaration(pDecl);
+	pDxDevice->CreateVertexDeclaration(vPC, &pDecl);
+	pApp->SetPCDecl(pDecl);
+
+	pDecl = NULL;
+	pDxDevice->CreateVertexDeclaration(vPs, &pDecl);
+	pApp->SetParticleDecl(pDecl);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

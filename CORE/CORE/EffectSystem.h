@@ -1,24 +1,25 @@
 #include"Misc.h"
 #include"Camera.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 struct Particle
 {
-	float m_fInitialTime;
-	float m_fMass;
-	D3DXVECTOR3 m_vPos;
-	D3DXVECTOR3 m_vVelocity;
-	float m_fLifetime;
-
-	float       m_fSize;
-	D3DXCOLOR    m_Color;
+	D3DXVECTOR3 m_pos;
+	D3DXVECTOR3 m_velocity;
+	float       m_size;
+	float		m_initialTime;
+	float		m_lifeTime;
+	float		m_mass;
+	D3DXCOLOR   m_color;
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////
 
 class EffectSystem
 {
-
 public:
-	EffectSystem(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName,int nMaxAmountOfParticles);
+	EffectSystem(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName, int nMaxAmountOfParticles, D3DXVECTOR4 accel, float timePerParticle);
 	virtual ~EffectSystem();
 
 	void		InitShader(std::string sShaderFileName, std::string sShaderTechName);
@@ -33,14 +34,20 @@ public:
 
 	virtual void InitParticle(Particle& pParticle) = 0;
 
+	void SetTime(float time);
+
 protected:
 
-	const int m_nMaxAmountOfParticles;
+	int m_particlesAmount;
 
-	float m_fTime;
+	float m_time;
+	int m_timePerParticle;
+	D3DXVECTOR4 m_accel;
 
-	std::vector<Particle> m_vParticles;
-	std::vector<Particle*> m_vDeadParticles;
+	std::vector<Particle> m_particles;
+
+	std::vector<Particle*> m_aliveParticles;
+	std::vector<Particle*> m_deadParticles;
 
 	ID3DXEffect* m_pEffectShader;
 	D3DXHANDLE 	 m_hEffectTechnique;
@@ -48,8 +55,11 @@ protected:
 	D3DXHANDLE 	 m_hTexture;
 	D3DXHANDLE	 m_hTime;
 	D3DXHANDLE	 m_hCameraPos;
+	D3DXHANDLE	 m_hAcceleration;
 
 	IDirect3DTexture9* m_pTexture;
 
 	IDirect3DVertexBuffer9* m_pEffectVertexBuffer;
 };
+
+//////////////////////////////////////////////////////////////////////////////////////////

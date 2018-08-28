@@ -1,11 +1,14 @@
 extern float4x4 WVP;
-extern texture text;
-extern float EffectTime;
-extern float4 CameraPos;
+extern float4   cameraPos;
+extern texture  pTexture;
+extern float    pTime;
+extern float4   pAccel;
+
+///////////////////////////////////////////////////////////
 
 sampler STex = sampler_state
 {
-	Texture = <text>;
+	Texture = <pTexture>;
 	MinFilter = LINEAR;
 	MagFilter = LINEAR;
 	MipFilter = POINT;
@@ -13,47 +16,56 @@ sampler STex = sampler_state
     AddressV  = CLAMP;
 };
  
+///////////////////////////////////////////////////////////
+
 struct VS_OUTPUT
 {
-    float4 pos    : POSITION0;
-	float2 text  : TEXCOORD0;
-	float size   : PSIZE; 
+    float4 pos    	: POSITION0;
+	float2 pTexture : TEXCOORD0;
+	float  size     : PSIZE; 
 };
+
+///////////////////////////////////////////////////////////
+
 struct VS_INPUT
 {
-	float3 pos : POSITION0;
-	float3 velocity: TEXCOORD0;
-	float size:TEXCOORD1;
-	float time:TEXCOORD2;
+	float3 pos 		: POSITION0;
+	float3 vel 		: TEXCOORD0;
+	float  size		: TEXCOORD1;
+	float  time		: TEXCOORD2;
+	float  lifeTime : TEXCOORD3;
+	float  mass		: TEXCOORD4;
+	float4 color 	: COLOR0;
 };
+
+///////////////////////////////////////////////////////////
 
 VS_OUTPUT GunEffectVS(VS_INPUT inp)
 {
 	VS_OUTPUT o = (VS_OUTPUT)0;
 	
-	float t = EffectTime - inp.time;
+	float t = pTime - inp.time;
 
-	//float3 acceleration = float3(0,-9.8,0);
-
-	//inp.pos = (inp.pos + inp.velocity*t + 0.5f * t * t);
-	//inp.pos = (inp.pos + inp.velocity*t);
+	inp.pos = inp.pos + inp.vel*t + 0.5f * pAccel * t * t;
 
 	o.pos = mul(float4(inp.pos, 1.0f), WVP);
 
-	float dist = distance(inp.pos,CameraPos);
+	float d = distance(inp.pos, cameraPos);
 
-	//o.size = inp.size;
-
-	//o.size = 1000*inp.size/(1+8*dist);
-	o.size = 10000;
+	int viewportHeight = 900;
+	o.size = viewportHeight*inp.size/(1.0f + 8.0f*d);
 
     return o;
 }
 
-float4 GunEffectPS(float2 text:TEXCOORD0) : COLOR0
+///////////////////////////////////////////////////////////
+
+float4 GunEffectPS(float2 pTexture:TEXCOORD0) : COLOR0
 {
-	return tex2D(STex, text);
+	return tex2D(STex, pTexture);
 }
+
+///////////////////////////////////////////////////////////
 
 technique GunEffectTech
 {
@@ -70,3 +82,5 @@ technique GunEffectTech
 	    ZWriteEnable = false;
     }
 }
+
+///////////////////////////////////////////////////////////

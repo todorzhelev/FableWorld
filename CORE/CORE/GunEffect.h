@@ -5,7 +5,7 @@ class GunEffect: public EffectSystem
 {
 public:
 
-	 GunEffect(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName,int nMaxAmountOfParticles);
+	GunEffect(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName, int nMaxAmountOfParticles, D3DXVECTOR4 accel, int timePerParticle);
 	virtual ~GunEffect();
 
 	virtual void OnUpdate(float dt) override;

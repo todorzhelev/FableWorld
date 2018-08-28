@@ -2,8 +2,10 @@
 #include "EffectSystem.h"
 #include "Camera.h"
 
-EffectSystem::EffectSystem(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName,int nMaxAmountOfParticles)
-:m_nMaxAmountOfParticles(nMaxAmountOfParticles),m_fTime(0.f)
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+EffectSystem::EffectSystem(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName,int nMaxAmountOfParticles, D3DXVECTOR4 accel, float timePerParticle)
+:m_particlesAmount(nMaxAmountOfParticles),m_time(0.f), m_timePerParticle(timePerParticle), m_accel(accel)
 {
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,sTextureFileName.c_str(),&m_pTexture));
 
@@ -15,26 +17,44 @@ EffectSystem::EffectSystem(std::string sShaderFileName, std::string sShaderTechN
 								  D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY|D3DUSAGE_POINTS,
 								  0, D3DPOOL_DEFAULT, &m_pEffectVertexBuffer, 0));
 
+
+	m_particles.resize(m_particlesAmount);
+	m_aliveParticles.reserve(m_particlesAmount);
+	m_deadParticles.reserve(m_particlesAmount);
+
+	// They start off all dead.
+	for (int i = 0; i < m_particlesAmount; ++i)
+	{
+		m_particles[i].m_lifeTime = -1.0f;
+		m_particles[i].m_initialTime = 0.0f;
+	}
+
+
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 EffectSystem::~EffectSystem()
 {
-	//for(auto it = m_vParticles.begin(); it != m_vParticles.end(); it++)
-	//{
-	//	delete (*it);
-	//}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void EffectSystem::AddParticle()
 {
-	Particle* pNewParticle = new Particle;
+	if (m_deadParticles.size() > 0)
+	{
+		// Reinitialize a particle.
+		Particle* p = m_deadParticles.back();
+		InitParticle(*p);
 
-	InitParticle(*pNewParticle);
-
-	m_vParticles.push_back(*pNewParticle);
-
-	
+		// No longer dead.
+		m_deadParticles.pop_back();
+		m_aliveParticles.push_back(p);
+	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void EffectSystem::InitShader(std::string sShaderFileName, std::string sShaderTechName)
 {
@@ -42,11 +62,13 @@ void EffectSystem::InitShader(std::string sShaderFileName, std::string sShaderTe
 
 	m_hEffectTechnique	  = m_pEffectShader->GetTechniqueByName(sShaderTechName.c_str());
 	m_hWVPMatrix		  = m_pEffectShader->GetParameterByName(0, "WVP");
-	m_hTexture	 		  = m_pEffectShader->GetParameterByName(0, "text");
-	m_hTime				  = m_pEffectShader->GetParameterByName(0, "EffectTime");
-	m_hCameraPos		  = m_pEffectShader->GetParameterByName(0, "CameraPos");
-
+	m_hCameraPos		  = m_pEffectShader->GetParameterByName(0, "cameraPos");
+	m_hTexture	 		  = m_pEffectShader->GetParameterByName(0, "pTexture");
+	m_hTime				  = m_pEffectShader->GetParameterByName(0, "pTime");
+	m_hAcceleration		  = m_pEffectShader->GetParameterByName(0, "pAccel");
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void EffectSystem::OnLostDevice()
 {
@@ -55,20 +77,61 @@ void EffectSystem::OnLostDevice()
 	m_pEffectVertexBuffer->Release();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void EffectSystem::OnResetDevice()
 {
 	m_pEffectShader->OnResetDevice();
 
-	CheckSuccess(pDxDevice->CreateVertexBuffer(m_nMaxAmountOfParticles*sizeof(Particle),
+	CheckSuccess(pDxDevice->CreateVertexBuffer(m_particlesAmount *sizeof(Particle),
 								  D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY|D3DUSAGE_POINTS,
 								  0, D3DPOOL_DEFAULT, &m_pEffectVertexBuffer, 0));
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void EffectSystem::OnUpdate(float dt)
 {
-	
+	m_time += dt;
 
+	m_deadParticles.resize(0);
+	m_aliveParticles.resize(0);
+
+	for (int i = 0; i < m_particlesAmount; ++i)
+	{
+		if ((m_time - m_particles[i].m_initialTime) > m_particles[i].m_lifeTime)
+		{
+			m_deadParticles.push_back(&m_particles[i]);
+		}
+		else
+		{
+			m_aliveParticles.push_back(&m_particles[i]);
+		}
+	}
+
+	// A negative or zero mTimePerParticle value denotes
+	// not to emit any particles.
+	if (m_timePerParticle > 0.0f)
+	{
+		// Emit particles.
+		static float timeAccum = 0.0f;
+		timeAccum += dt;
+		while (timeAccum >= m_timePerParticle)
+		{
+			AddParticle();
+			timeAccum -= m_timePerParticle;
+		}
+	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void EffectSystem::SetTime(float time)
+{
+	m_time = time;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void EffectSystem::OnRender()
 {
@@ -76,24 +139,18 @@ void EffectSystem::OnRender()
 
 	D3DXVECTOR4 vCameraPos = camera->GetPosition();
 
-	/*m_pEffectShader->SetVector(m_hCameraPos,&vCameraPos);
-	m_pEffectShader->SetMatrix(m_hWVPMatrix, &(camera->GetViewProjMatrix()));*/
-
-
 	m_pEffectShader->SetVector(m_hCameraPos,&vCameraPos);
 	m_pEffectShader->SetMatrix(m_hWVPMatrix, &(camera->GetViewProjMatrix()));
-
-	m_pEffectShader->SetFloat(m_hTime,m_fTime);
+	m_pEffectShader->SetFloat(m_hTime,m_time);
 	m_pEffectShader->SetTexture(m_hTexture,m_pTexture);
+	m_pEffectShader->SetVector(m_hAcceleration, &m_accel);
 
 	pDxDevice->SetStreamSource(0, m_pEffectVertexBuffer, 0, sizeof(Particle));
 
-	//should be different declaration
-	CheckSuccess(pDxDevice->SetVertexDeclaration(pApp->GetPositionNormalTextureDecl()));
+	CheckSuccess(pDxDevice->SetVertexDeclaration(pApp->GetParticleDecl()));
 
 	UINT numPasses = 0;
 	m_pEffectShader->Begin(&numPasses, 0);
-	//m_pEffectShader->BeginPass(0);
 
 	for(UINT i =0;i<numPasses;++i)
 	{
@@ -104,11 +161,9 @@ void EffectSystem::OnRender()
 
 			int nCount = 0;
 
-
-
-			for( int i = 0; i < m_vParticles.size(); i++ )
+			for( int i = 0; i < m_particles.size(); i++ )
 			{
-				p[nCount] = m_vParticles[i];
+				p[nCount] = m_particles[i];
 				nCount++;
 			}
 
@@ -123,3 +178,5 @@ void EffectSystem::OnRender()
 	}
 	m_pEffectShader->End();
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////

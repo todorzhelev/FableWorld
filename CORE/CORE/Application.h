@@ -41,13 +41,17 @@ public:
 
 	bool					IsShaderVersionSupported();
 
-	void					SetPositionNormalTextureDecl(IDirect3DVertexDeclaration9* pDecl);
+	//position normal texture
+	void					SetPNTDecl(IDirect3DVertexDeclaration9* pDecl);
+	auto					GetPNTDecl() ->IDirect3DVertexDeclaration9*;
 
-	IDirect3DVertexDeclaration9* GetPositionNormalTextureDecl();
+	//position color
+	void					SetPCDecl(IDirect3DVertexDeclaration9* pDecl);
+	auto					GetPCDecl() ->IDirect3DVertexDeclaration9*;
 
-	IDirect3DVertexDeclaration9* GetPosColDeclaration();
-
-	void					SetPosColDeclaration(IDirect3DVertexDeclaration9* pDecl);
+	//particles
+	void					SetParticleDecl(IDirect3DVertexDeclaration9 * pDecl);
+	auto					GetParticleDecl() ->IDirect3DVertexDeclaration9*;
 
 	void					AddUIObject(IBaseMenuObject* pUIObject);
 
@@ -95,9 +99,9 @@ private:
 	//pointer to the current scene
 	IBaseScene*				m_pCurrentScene;
 
-	IDirect3DVertexDeclaration9* m_pVertexPositionNormalTextureDecl;
-
-	IDirect3DVertexDeclaration9* m_pVertexPosColDecl;
+	IDirect3DVertexDeclaration9* m_pVertexPNTDecl;
+	IDirect3DVertexDeclaration9* m_pVertexPCDecl;
+	IDirect3DVertexDeclaration9* m_pVertexParticleDecl;
 };
 
 //////////////////////////////////////////////////////////////////////////////

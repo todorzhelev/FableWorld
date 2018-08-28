@@ -118,12 +118,8 @@ Game::Game()
 	D3DXVec3TransformCoord(&camera->GetUpVector(), &camera->GetUpVector(), &R);
 	D3DXVec3TransformCoord(&camera->GetLookVector(), &camera->GetLookVector(), &R);
 
-	m_pGunEffect = std::unique_ptr<GunEffect>(new GunEffect("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",10000));
+	m_pGunEffect = std::unique_ptr<GunEffect>(new GunEffect("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",100, D3DXVECTOR4(0, -9.8f, 0.0f,0.0f),-1));
 
-	for (int i = 0; i < 10; ++i)
-	{
-		m_pGunEffect->AddParticle();
-	}
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -283,6 +279,14 @@ void Game::OnUpdate(float dt)
 
 	m_pGunEffect->OnUpdate(dt);
 
+	static float delay = 0.0f;
+	if (pDinput->IsKeyDown(DIK_SPACE) && delay <= 0.0f)
+	{
+		delay = 0.1f;
+		m_pGunEffect->AddParticle();
+	}
+
+	delay -= dt;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -638,7 +642,7 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
 
 		pDxDevice->SetStreamSource(0, pVertexBuffer, 0, sizeof(VertexPositionColor));
 
-		pDxDevice->SetVertexDeclaration(pApp->GetPosColDeclaration());
+		pDxDevice->SetVertexDeclaration(pApp->GetPCDecl());
 
 		pDxDevice->DrawPrimitive(D3DPT_LINELIST,0,1);
 

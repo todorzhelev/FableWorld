@@ -99,7 +99,7 @@ void StaticModel::LoadGameObject()
 	UINT nElementsAmount = 0;
 
 	VertexPositionNormalTexture vertexDeclaration;
-	pApp->GetPositionNormalTextureDecl()->GetDeclaration(elements, &nElementsAmount);
+	pApp->GetPNTDecl()->GetDeclaration(elements, &nElementsAmount);
 
 	ID3DXMesh* pTempMesh = 0;
 	pMesh->CloneMesh(D3DXMESH_SYSTEMMEM, elements, pDxDevice, &pTempMesh);

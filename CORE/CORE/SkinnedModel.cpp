@@ -232,7 +232,7 @@ void SkinnedModel::BuildSkinnedModel(ID3DXMesh* pMesh)
 	D3DVERTEXELEMENT9 elements[64];
 	UINT numElements = 0;
 
-	pApp->GetPositionNormalTextureDecl()->GetDeclaration(elements, &numElements);
+	pApp->GetPNTDecl()->GetDeclaration(elements, &numElements);
 
 	ID3DXMesh* pTempMesh = 0;
 	pMesh->CloneMesh(D3DXMESH_SYSTEMMEM, elements, pDxDevice, &pTempMesh);

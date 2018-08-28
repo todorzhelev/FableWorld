@@ -348,30 +348,44 @@ bool Application::IsDeviceLost()
 
 /////////////////////////////////////////////////////////////////////////
 
-IDirect3DVertexDeclaration9* Application::GetPositionNormalTextureDecl()
+IDirect3DVertexDeclaration9* Application::GetPNTDecl()
 { 
-	return m_pVertexPositionNormalTextureDecl;
+	return m_pVertexPNTDecl;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Application::SetPositionNormalTextureDecl(IDirect3DVertexDeclaration9* pDecl)
+void Application::SetPNTDecl(IDirect3DVertexDeclaration9* pDecl)
 {
-	m_pVertexPositionNormalTextureDecl = pDecl;
+	m_pVertexPNTDecl = pDecl;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-IDirect3DVertexDeclaration9* Application::GetPosColDeclaration()
+IDirect3DVertexDeclaration9* Application::GetParticleDecl()
+{
+	return m_pVertexParticleDecl;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Application::SetParticleDecl(IDirect3DVertexDeclaration9* pDecl)
+{
+	m_pVertexParticleDecl = pDecl;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+IDirect3DVertexDeclaration9* Application::GetPCDecl()
 { 
-	return m_pVertexPosColDecl;
+	return m_pVertexPCDecl;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Application::SetPosColDeclaration(IDirect3DVertexDeclaration9* pDecl)
+void Application::SetPCDecl(IDirect3DVertexDeclaration9* pDecl)
 {
-	m_pVertexPosColDecl = pDecl;
+	m_pVertexPCDecl = pDecl;
 }
 
 /////////////////////////////////////////////////////////////////////////

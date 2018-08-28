@@ -2,25 +2,10 @@
 #include "GunEffect.h"
 
 //////////////////////////////////////////////////////////////////////////////////////
-//TODO:refactor everything
 
-GunEffect::GunEffect(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName,int nMaxAmountOfParticles)
-	:EffectSystem(sShaderFileName,sShaderTechName,sTextureFileName,nMaxAmountOfParticles)
+GunEffect::GunEffect(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName,int nMaxAmountOfParticles, D3DXVECTOR4 accel, int timePerParticle)
+	:EffectSystem(sShaderFileName,sShaderTechName,sTextureFileName,nMaxAmountOfParticles,accel,timePerParticle)
 {
-	for (auto& gameObject : m_pGameObjManager->GetGameObjects())
-	{
-		if (!gameObject->GetName().compare("galio"))
-		{
-			m_pGalio = static_cast<SkinnedModel*>(gameObject);
-			//break;
-		}
-
-		if (!gameObject->GetName().compare("cho"))
-		{
-			m_pCho = static_cast<SkinnedModel*>(gameObject);
-			//break;
-		}
-	}
 	  
 }
 
@@ -32,65 +17,34 @@ GunEffect::~GunEffect()
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-void GunEffect::InitParticle(Particle& pParticle)
+void GunEffect::InitParticle(Particle& outParticle)
 {
-	pParticle.m_vPos = D3DXVECTOR3(-20, 100, -6);
-	//pParticle.m_vPos = camera->GetPosition();
+	//TODO: make it more generic
+	auto initPos = m_pGameObjManager->GetObjectByName("galio")->GetPosition();
 
-	pParticle.m_vPos.y += 3000;
+	outParticle.m_pos = initPos;
 
-	D3DXVECTOR3 diff = m_pGalio->GetPosition() - m_pCho->GetPosition();
+	// Set down a bit so it looks like player is carrying
+	// the gun.
+	outParticle.m_pos.y += 15.0f;
 
-	//D3DXVECTOR3 diff = pEzreal->m_vRight;
-
-	//D3DXVec3Normalize(&diff,&diff);
-
-	//pParticle->m_vPos.y -= 3.0f;
-
+	// Fire in camera's look direction.
 	float speed = 500.0f;
+	outParticle.m_velocity = speed * camera->GetLookVector();
 
-	D3DXVECTOR3 vec = m_pGalio->GetLookVector();
-
-	pParticle.m_vVelocity = speed * vec;
-
-	//pParticle.m_vVelocity = speed*diff;
-
-	pParticle.m_fInitialTime = m_fTime;
-	pParticle.m_fLifetime = 4.0f;
-	pParticle.m_Color = PINK;
-	pParticle.m_fSize = 100.0;
-	pParticle.m_fMass = 1.0f;
+	outParticle.m_initialTime = m_time;
+	outParticle.m_lifeTime = 4.0f;
+	outParticle.m_color = WHITE;
+	outParticle.m_size = 100.f;
+	outParticle.m_mass = 1.0f;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
 
 void GunEffect::OnUpdate(float dt)
 {
-	m_fTime +=dt;
+	EffectSystem::OnUpdate(dt);
 
-	//D3DXVECTOR3 accel(0,-9.8f,0);
-	D3DXVECTOR3 accel(0,1,0);
-	D3DXVec3Normalize(&accel,&accel);
-
-	for(int i=0; i < m_vParticles.size(); i++ )
-	{
-		float t = m_fTime - m_vParticles[i].m_fInitialTime;
-		//float t = 1;
-
-		//m_vParticles[i].m_vPos = m_vParticles[i].m_vPos + m_vParticles[i].m_vVelocity*t + 0.5f *accel* t * t;
-
-		//ddfsd
-		m_vParticles[i].m_vPos = m_vParticles[i].m_vPos + m_vParticles[i].m_vVelocity*t;
-
-		Particle part = m_vParticles.back();
-
-		//m_pGalio->SetPosition(part.m_vPos);
-	}
-	
-
-	//float3 acceleration = float3(0,-9.8,0);
-
-	//inp.pos = (inp.pos + inp.velocity*t + 0.5f * t * t);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
