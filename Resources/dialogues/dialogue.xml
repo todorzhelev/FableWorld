@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Dialogue model="ezreal">
-  <Node Text="Hello,stranger.I need your help.">
+  <Node Text="Hello,stranger.I need your help."> 
     <Node Text="Ok.I can help.">
       <Node Text="Go to Cho and try to kill him. If you do this you will save the world.">
         <Node Text="Ok. Wish me luck." Quest="Go to Cho and try to kill him" />
