@@ -3,7 +3,6 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-//TODO: no singleton, bad name.. wtf man
 Camera* camera = NULL;
 
 /////////////////////////////////////////////////////////////////////////
@@ -257,31 +256,42 @@ void Camera::MoveCamera(float dt)
 	{
 		dir += m_vRightVector;
 	}
-
 	
 	D3DXVECTOR3 newPos = m_vPosition + dir*100.0*dt;
 	m_vPosition = newPos;
 
 	if( pDinput->IsMouseButtonDown(0) )
 	{
+		float angleModifier = 150;
 
-		float pitch  = pDinput->GetMouseDY() / 150.0;
-		float yAngle = pDinput->GetMouseDX() / 150.0f;
+		float upAngleRot	= pDinput->GetMouseDY() / angleModifier;
+		float rightAngleRot = pDinput->GetMouseDX() / angleModifier;
 
-
-		//when we move the mouse up/down we will rotate the camera around the right vector as axis
-		D3DXMATRIX R;
-		D3DXMatrixRotationAxis(&R, &m_vRightVector, pitch);
-		D3DXVec3TransformCoord(&m_vLookVector, &m_vLookVector, &R);
-		D3DXVec3TransformCoord(&m_vUpVector, &m_vUpVector, &R);
-
-
-		// Rotate camera axes about the world's y-axis.
-		D3DXMatrixRotationY(&R, yAngle);
-		D3DXVec3TransformCoord(&m_vRightVector, &m_vRightVector, &R);
-		D3DXVec3TransformCoord(&m_vUpVector, &m_vUpVector, &R);
-		D3DXVec3TransformCoord(&m_vLookVector, &m_vLookVector, &R);
+		RotateUp(upAngleRot);
+		RotateRight(rightAngleRot);
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Camera::RotateRight(float angle)
+{
+	D3DXMATRIX R;
+
+	D3DXMatrixRotationY(&R, angle);
+	D3DXVec3TransformCoord(&m_vRightVector, &m_vRightVector, &R);
+	D3DXVec3TransformCoord(&m_vLookVector, &m_vLookVector, &R);
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Camera::RotateUp(float angle)
+{
+	D3DXMATRIX R;
+
+	D3DXMatrixRotationAxis(&R, &m_vRightVector, angle);
+	D3DXVec3TransformCoord(&m_vLookVector, &m_vLookVector, &R);
+	D3DXVec3TransformCoord(&m_vUpVector, &m_vUpVector, &R);
 }
 
 /////////////////////////////////////////////////////////////////////////

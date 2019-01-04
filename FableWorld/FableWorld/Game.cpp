@@ -47,8 +47,10 @@ Game::Game()
 	float fWidth  = (float)pApp->GetPresentParameters().BackBufferWidth;
 	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
 
-	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 2000.0f,false);
-	camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithPressedMouse);
+	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 2000.0f,true);
+	camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
+	camera->SetPosition(D3DXVECTOR3(0,200,0));
+	camera->RotateUp(-300);
 
 	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.
 	InitVertexDeclarations();
@@ -286,6 +288,36 @@ void Game::OnUpdate(float dt)
 		m_pGunEffect->AddParticle();
 	}
 
+	auto pickedObj = m_pGameObjManager->GetPickedObject();
+	if (pickedObj)
+	{
+		printf("Picked %s \n", pickedObj->GetName().c_str());
+		
+		if (pDinput->IsMouseButtonDown(1))
+		{
+			D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
+			D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
+
+			GetWorldPickingRay(vOrigin, vDir);
+			printf("picking ray origin (%f, %f, %f)\n", vOrigin.x, vOrigin.y, vOrigin.z);
+			printf("picking ray direction (%f, %f, %f)\n", vDir.x, vDir.y, vDir.z);
+
+			D3DXVECTOR3 intersectPoint(0, 0, 0);
+			D3DXPLANE plane;
+			D3DXPlaneFromPointNormal(&plane, &D3DXVECTOR3(0,0,0),&D3DXVECTOR3(0,1,0));
+			printf("constructed plane (%f, %f, %f, %f)\n", plane.a, plane.b, plane.c, plane.d);
+
+			D3DXPlaneIntersectLine(&intersectPoint, &plane, &vOrigin, &vDir);
+			printf("intersectPoint before (%f, %f, %f)\n", intersectPoint.x, intersectPoint.y, intersectPoint.z);
+
+			intersectPoint *= 500;
+
+			printf("intersectPoint after (%f, %f, %f)\n", intersectPoint.x, intersectPoint.y, intersectPoint.z);
+			pickedObj->SetPosition(intersectPoint);
+		}
+	}
+
+
 	delay -= dt;
 }
 
@@ -439,13 +471,13 @@ void Game::MoveObject(std::string objectTitle, float dt)
 		pSkinnedModel->PlayAnimation("idle");
 	}
 	
-	if (camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithoutPressedMouse)
+	if (camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse)
 	{
 		//if we just move the mouse move the camera
 		RotateObject(objectTitle, dt);
 
 	}
-	else if (camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithPressedMouse)
+	else if (camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse)
 	{
 		//if we hold the left mouse button move the camera
 		if (pDinput->IsMouseButtonDown(0))
@@ -539,8 +571,13 @@ void Game::OnRender()
 			for (auto& gameObject : m_pGameObjManager->GetGameObjects())
 			{
 				gameObject->OnRender();
+				//DrawLine(gameObject->GetPosition(), gameObject->GetLookVector());
+				//DrawLine(gameObject->GetPosition(), gameObject->GetUpVector());
+				//DrawLine(gameObject->GetPosition(), gameObject->GetRightVector());
 			}
 			
+			//DrawLine(camera->GetPosition(), camera->GetLookVector());
+
 			auto BB = pMainHero->GetBB();
 			BB = BB.TransformByMatrix(BB.m_transformationMatrix);
 			for (auto& object:m_pGameObjManager->GetGameObjects())
@@ -616,7 +653,7 @@ void Game::OnRender()
 
 void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
 {
-	pDxDevice->BeginScene();
+	//pDxDevice->BeginScene();
 
 	m_pDebugGraphicsEffect->SetTechnique(m_hDebugGraphicsTechnique);
 
@@ -649,9 +686,9 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
 	m_pDebugGraphicsEffect->EndPass();
 	m_pDebugGraphicsEffect->End();
 
-	pDxDevice->EndScene();
+	//pDxDevice->EndScene();
 
-	pDxDevice->Present(0, 0, 0, 0);
+	//pDxDevice->Present(0, 0, 0, 0);
 }
 
 
@@ -715,13 +752,13 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				case 'L':
 				{
-					if( camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithoutPressedMouse )
+					if( camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse )
 					{
-						camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithPressedMouse);
+						camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 					}
-					else if( camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithPressedMouse )
+					else if( camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse )
 					{
-						camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithoutPressedMouse);
+						camera->SetCameraMode(ECameraMode::MoveWithoutPressedMouse);
 					}
 
 					break;

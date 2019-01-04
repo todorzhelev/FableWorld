@@ -8,8 +8,8 @@
 
 enum class ECameraMode
 {
-	ECameraMode_MoveWithoutPressedMouse,
-	ECameraMode_MoveWithPressedMouse
+	MoveWithoutPressedMouse,
+	MoveWithPressedMouse
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -46,6 +46,10 @@ public:
 	ECameraMode		GetCameraMode();
 
 	void			MoveCamera(float dt);
+
+	void			RotateRight(float angle);
+
+	void			RotateUp(float angle);
 
 	bool			IsCameraFree() const;
 

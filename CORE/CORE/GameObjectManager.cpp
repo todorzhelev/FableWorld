@@ -74,6 +74,8 @@ void GameObjectManager::UpdatePicking()
 		if (pClosestPickedObject)
 		{
 			pClosestPickedObject->SetPicked(true);
+
+			m_pPickedObject = pClosestPickedObject;
 		}
 
 		m_mapPickedObjects.clear();
