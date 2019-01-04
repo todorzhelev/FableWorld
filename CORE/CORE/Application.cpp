@@ -123,16 +123,16 @@ void Application::InitMainWindow()
 	int width  = GetSystemMetrics(SM_CXSCREEN);
 	int height = GetSystemMetrics(SM_CYSCREEN);
 
-	//RECT R = {0, 0, 1280,768 };
-	RECT R = { 0, 0, 1440, 900 };
+	RECT R = {0, 0, 1280,768 };
+	//RECT R = { 0, 0, 1440, 900 };
 
 	//WS_OVERLAPPEDWINDOW is a style which gives the window title bar, window menu,sizing border,minimize and maximize buttons. 
 	AdjustWindowRect(&R, WS_OVERLAPPEDWINDOW, false);
 	m_hMainWindow = CreateWindow("D3DWndClassName", 
 								m_strWindowTitle.c_str(), 
 								WS_OVERLAPPEDWINDOW, 
-								250, 
 								100, 
+								50, 
 								R.right, 
 								R.bottom, 
 								0, 

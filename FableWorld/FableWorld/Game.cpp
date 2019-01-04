@@ -557,7 +557,7 @@ void Game::OnRender()
 				}
 			}
 
-			pTextManager->DrawFPS();
+			//pTextManager->DrawFPS();
 	
 			//draws dialogues
 			for (auto& dialogue : pDialogueManager->GetDialogues())
