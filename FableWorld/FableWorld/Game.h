@@ -34,9 +34,9 @@ public:
 
 	virtual void OnRender() override;
 
-    virtual LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
+	bool		IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t=30);
 
-	bool		 IsObjectNear(GameObject* obj1,GameObject* obj2);
+	virtual LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 	void		 MoveObject(std::string objectTitle,float dt);
 
@@ -47,6 +47,8 @@ public:
 	void		 DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd);
 	
 	void		 UpdateAI(float dt);
+
+	void		 RunToTarget(GameObject * runner, D3DXVECTOR3 targetPos, float dt);
 
 private:
 
@@ -79,6 +81,8 @@ private:
 	Button*					m_pHealSpell;
 
 	SkinnedModel* 	pMainHero;
+	bool			m_isAIRunningToTarget;
+	D3DXVECTOR3     m_AIIntersectPoint;
 
 	ID3DXEffect* m_pDebugGraphicsEffect;
 	D3DXHANDLE 	 m_hDebugGraphicsTechnique;

@@ -121,7 +121,9 @@ Game::Game()
 	D3DXVec3TransformCoord(&camera->GetLookVector(), &camera->GetLookVector(), &R);
 
 	m_pGunEffect = std::unique_ptr<GunEffect>(new GunEffect("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",100, D3DXVECTOR4(0, -9.8f, 0.0f,0.0f),-1));
-
+	
+	m_isAIRunningToTarget = false;
+	m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -225,7 +227,7 @@ void Game::OnUpdate(float dt)
 		SkinnedModel* reqObject = m_pGameObjManager->GetSkinnedModelByName(quest->m_strRequiredObject);
 
 		//if mainHero is close to the required from the quest object and the required object is dead the quest is completed.
-		if (IsObjectNear(pMainHero, reqObject) && reqObject->IsDead())
+		if (IsObjectNear(pMainHero->GetPosition(), reqObject->GetPosition()) && reqObject->IsDead())
 		{
 			quest->m_bIsCompleted = true;
 		}
@@ -289,6 +291,7 @@ void Game::OnUpdate(float dt)
 	}
 
 	auto pickedObj = m_pGameObjManager->GetPickedObject();
+
 	if (pickedObj)
 	{
 		printf("Picked %s \n", pickedObj->GetName().c_str());
@@ -302,21 +305,34 @@ void Game::OnUpdate(float dt)
 			printf("picking ray origin (%f, %f, %f)\n", vOrigin.x, vOrigin.y, vOrigin.z);
 			printf("picking ray direction (%f, %f, %f)\n", vDir.x, vDir.y, vDir.z);
 
-			D3DXVECTOR3 intersectPoint(0, 0, 0);
 			D3DXPLANE plane;
 			D3DXPlaneFromPointNormal(&plane, &D3DXVECTOR3(0,0,0),&D3DXVECTOR3(0,1,0));
 			printf("constructed plane (%f, %f, %f, %f)\n", plane.a, plane.b, plane.c, plane.d);
 
-			D3DXPlaneIntersectLine(&intersectPoint, &plane, &vOrigin, &vDir);
-			printf("intersectPoint before (%f, %f, %f)\n", intersectPoint.x, intersectPoint.y, intersectPoint.z);
+			D3DXPlaneIntersectLine(&m_AIIntersectPoint, &plane, &vOrigin, &vDir);
+			printf("intersectPoint before (%f, %f, %f)\n", m_AIIntersectPoint.x, m_AIIntersectPoint.y, m_AIIntersectPoint.z);
 
-			intersectPoint *= 500;
+			//should investigate this mega hack. Why works?
+			m_AIIntersectPoint *= 800;
 
-			printf("intersectPoint after (%f, %f, %f)\n", intersectPoint.x, intersectPoint.y, intersectPoint.z);
-			pickedObj->SetPosition(intersectPoint);
+			m_isAIRunningToTarget = true;
 		}
 	}
 
+	if (m_isAIRunningToTarget && pickedObj)
+	{
+		if (!IsObjectNear(pickedObj->GetPosition(), m_AIIntersectPoint,30))
+		{
+			RunToTarget(pickedObj, m_AIIntersectPoint, dt);
+		}
+		else
+		{
+			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pickedObj);
+			pSkinnedModel->PlayAnimation("idle");
+			m_isAIRunningToTarget = false;
+			m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
+		}
+	}
 
 	delay -= dt;
 }
@@ -329,7 +345,7 @@ void Game::UpdateAI(float dt)
 	{
 		//main hero attacking enemy
 		if (pDinput->IsMouseButtonDown(0) &&
-			IsObjectNear(pMainHero, gameObject) &&
+			IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()) &&
 			pMainHero->GetName() != gameObject->GetName() &&
 			gameObject->GetActorType() == "enemy" &&
 			!pMainHero->IsDead()
@@ -349,8 +365,10 @@ void Game::UpdateAI(float dt)
 		}
 
 		// main hero attacked by enemy
-		if (gameObject->IsAttacked() && IsObjectNear(pMainHero, gameObject) &&
-			!gameObject->IsDead() && !pMainHero->IsDead())
+		if (gameObject->IsAttacked() && 
+			IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()) &&
+			!gameObject->IsDead() && 
+			!pMainHero->IsDead())
 		{
 			if (m_rHealthBarRectangle.right > 0.0)
 			{
@@ -373,7 +391,9 @@ void Game::UpdateAI(float dt)
 		}
 
 		//when the enemy is attacked it updates his rotation so it can face the mainHero
-		if (gameObject->IsAttacked() && !gameObject->IsDead() && IsObjectNear(pMainHero, gameObject))
+		if (gameObject->IsAttacked() && 
+			!gameObject->IsDead() && 
+			IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()))
 		{
 			D3DXVECTOR3 vActorPosition = gameObject->GetPosition();
 			D3DXVECTOR3 vMainHeroPosition = pMainHero->GetPosition();
@@ -396,37 +416,45 @@ void Game::UpdateAI(float dt)
 		//if mainHero is fighting with enemy, but started to run and is no longer close to the enemy, 
 		//the enemy updates his vectors so he can face the mainHero and run in his direction.
 		//When he is close enough he start to attack again.
-		if (gameObject->IsAttacked() && !gameObject->IsDead() && !IsObjectNear(pMainHero, gameObject) && !pMainHero->IsDead()
+		if (gameObject->IsAttacked() && 
+			!gameObject->IsDead() && 
+			!IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()) && 
+			!pMainHero->IsDead()
 			)
 		{
-			float speed = 80.f;
-			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(gameObject);
-			pSkinnedModel->PlayAnimation("run");
-
-			D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
-
-			dir -= gameObject->GetLookVector();
-
-			D3DXVECTOR3 newPos = gameObject->GetPosition() + dir * speed*dt;
-			gameObject->SetPosition(newPos);
-
-			//put it in a function. the code is duplicated.
-			D3DXVECTOR3 vActorPosition = gameObject->GetPosition();
-			D3DXVECTOR3 vMainHeroPosition = pMainHero->GetPosition();
-
-			D3DXVECTOR3 vDistanceVector = vActorPosition - vMainHeroPosition;
-			D3DXVec3Normalize(&vDistanceVector, &vDistanceVector);
-
-			float angle = D3DXVec3Dot(&gameObject->GetRightVector(), &vDistanceVector);
-			gameObject->ModifyRotationAngleByY(angle);
-
-			D3DXMATRIX R;
-			D3DXMatrixRotationY(&R, angle);
-			D3DXVec3TransformCoord(&gameObject->GetLookVector(), &gameObject->GetLookVector(), &R);
-			D3DXVec3TransformCoord(&gameObject->GetRightVector(), &gameObject->GetRightVector(), &R);
-			D3DXVec3TransformCoord(&gameObject->GetUpVector(), &gameObject->GetUpVector(), &R);
+			RunToTarget(gameObject, pMainHero->GetPosition(), dt);
 		}
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt)
+{
+	float speed = 80.f;
+	SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(runner);
+	pSkinnedModel->PlayAnimation("run");
+
+	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
+
+	dir -= runner->GetLookVector();
+
+	D3DXVECTOR3 newPos = runner->GetPosition() + dir * speed*dt;
+	runner->SetPosition(newPos);
+
+	D3DXVECTOR3 vActorPosition = runner->GetPosition();
+
+	D3DXVECTOR3 vDistanceVector = vActorPosition - targetPos;
+	D3DXVec3Normalize(&vDistanceVector, &vDistanceVector);
+
+	float angle = D3DXVec3Dot(&runner->GetRightVector(), &vDistanceVector);
+	runner->ModifyRotationAngleByY(angle);
+
+	D3DXMATRIX R;
+	D3DXMatrixRotationY(&R, angle);
+	D3DXVec3TransformCoord(&runner->GetLookVector(), &runner->GetLookVector(), &R);
+	D3DXVec3TransformCoord(&runner->GetRightVector(), &runner->GetRightVector(), &R);
+	D3DXVec3TransformCoord(&runner->GetUpVector(), &runner->GetUpVector(), &R);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -695,10 +723,11 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
 /////////////////////////////////////////////////////////////////////////
 
 //checks if two models are close
-bool Game::IsObjectNear(GameObject* obj1,GameObject* obj2)
+//i think this should be changed in the future with circles
+bool Game::IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t)
 {
-	if((obj1->GetPosition().x > obj2->GetPosition().x-30) && (obj1->GetPosition().x < obj2->GetPosition().x+30) &&
-	   (obj1->GetPosition().z > obj2->GetPosition().z-30) && (obj1->GetPosition().z < obj2->GetPosition().z+30))
+	if((pos1.x > pos2.x-t) && (pos1.x < pos2.x+t) &&
+	   (pos1.z > pos2.z-t) && (pos1.z < pos2.z+t))
 	{
 	   return true;
 	}
