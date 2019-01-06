@@ -159,8 +159,8 @@ void Terrain::GenerateTerrainMesh()
 					   |
 					   |
 					  -z
-		We now want to save texture coordinates for the blend std::map. Blend std::map is texture that sits on top of the terrain and got the same dimension as it.
-		Blend std::map is used so multi-texturing can be performed. The texture coordinates are expressed in this coordinate system:
+		We now want to save texture coordinates for the blendmap. Blendmap is texture that sits on top of the terrain and got the same dimension as it.
+		Blendmap is used so multi-texturing can be performed. The texture coordinates are expressed in this coordinate system:
 					
 					 ----------- +u
 					 | 

@@ -294,26 +294,21 @@ void Game::OnUpdate(float dt)
 
 	if (pickedObj)
 	{
-		printf("Picked %s \n", pickedObj->GetName().c_str());
-		
 		if (pDinput->IsMouseButtonDown(1))
 		{
 			D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 			D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
 
 			GetWorldPickingRay(vOrigin, vDir);
-			printf("picking ray origin (%f, %f, %f)\n", vOrigin.x, vOrigin.y, vOrigin.z);
-			printf("picking ray direction (%f, %f, %f)\n", vDir.x, vDir.y, vDir.z);
 
 			D3DXPLANE plane;
 			D3DXPlaneFromPointNormal(&plane, &D3DXVECTOR3(0,0,0),&D3DXVECTOR3(0,1,0));
-			printf("constructed plane (%f, %f, %f, %f)\n", plane.a, plane.b, plane.c, plane.d);
 
-			D3DXPlaneIntersectLine(&m_AIIntersectPoint, &plane, &vOrigin, &vDir);
-			printf("intersectPoint before (%f, %f, %f)\n", m_AIIntersectPoint.x, m_AIIntersectPoint.y, m_AIIntersectPoint.z);
-
-			//should investigate this mega hack. Why works?
-			m_AIIntersectPoint *= 800;
+			//I though that only origin and direction is needed and since
+			//line is thought to be endless I am not going to need end point.
+			//looks like we need it. I should really check the API next time, before assuming things.
+			D3DXVECTOR3 lineEndPoint = vOrigin + INT_MAX * vDir;
+			D3DXPlaneIntersectLine(&m_AIIntersectPoint, &plane, &vOrigin, &lineEndPoint);
 
 			m_isAIRunningToTarget = true;
 		}
