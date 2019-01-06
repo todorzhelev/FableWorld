@@ -210,3 +210,66 @@ bool GameObjectManager::ShouldPickOnlySkinnedModels()
 }
 
 /////////////////////////////////////////////////////////////////////////
+
+void GameObjectManager::SpawnAnimatedClone(GameObject* obj)
+{
+	if (!obj)
+	{
+		printf("Attempt to clone null object \n");
+
+		return;
+	}
+
+	SkinnedModel* pMesh = new SkinnedModel;
+
+	pMesh->GetLookVector() = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	pMesh->GetRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	pMesh->GetUpVector() = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+	pMesh->GetTitleLookVector() = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	pMesh->GetTitleRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	pMesh->GetTitleUpVector() = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+	pMesh->GetTitleForQuestLookVector() = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	pMesh->GetTitleForQuestRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	pMesh->GetTitleForQuestUpVector() = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	pMesh->SetTitleForQuestRotationAnglyByY(0.0);
+
+	pMesh->SetPosition(obj->GetPosition());
+
+	pMesh->SetScale(obj->GetScale());
+
+	pMesh->SetRotationAngleByX(obj->GetRotationAngleByX());
+	pMesh->SetRotationAngleByY(obj->GetRotationAngleByY());
+
+	pMesh->SetRotationAngleByZ(0);
+
+	pMesh->SetTitleRotationAnglyByY(obj->GetRotationAngleByY());
+
+	static int id = 1;
+	std::string newName = obj->GetName() + std::to_string(id);
+	pMesh->SetName(newName);
+	++id;
+
+	pMesh->SetTitleForQuest("");
+
+	pMesh->SetModelFilename(obj->GetModelFileName());
+
+	pMesh->SetTextureFilename(obj->GetTextureFilename());
+
+	pMesh->SetActorType("enemy");
+
+	pMesh->SetAttacked(false);
+	pMesh->SetAttacking(false);
+	pMesh->SetDead(false);
+	pMesh->SetPicked(false);
+	pMesh->SetHasDialogue(false);
+	pMesh->SetAttackerName("");
+
+	pMesh->LoadGameObject();
+
+	pMesh->SetObjectType(EGameObjectType_Skinned);
+
+	m_pGameObjManager->AddGameObject(pMesh);
+
+}

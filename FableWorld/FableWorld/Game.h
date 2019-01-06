@@ -34,7 +34,7 @@ public:
 
 	virtual void OnRender() override;
 
-	bool		IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t=30);
+	bool		IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t=60);
 
 	virtual LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 

@@ -124,6 +124,14 @@ Game::Game()
 	
 	m_isAIRunningToTarget = false;
 	m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
+
+	GameObject* objCho = m_pGameObjManager->GetObjectByName("cho");
+	m_pGameObjManager->SpawnAnimatedClone(objCho); //~7.5MB per one cho. Did not expect that wow
+	m_pGameObjManager->SpawnAnimatedClone(objCho);
+	m_pGameObjManager->SpawnAnimatedClone(objCho);
+	m_pGameObjManager->SpawnAnimatedClone(objCho);
+	m_pGameObjManager->SpawnAnimatedClone(objCho);
+	m_pGameObjManager->SpawnAnimatedClone(objCho);
 }
 
 /////////////////////////////////////////////////////////////////////////
