@@ -58,7 +58,7 @@ Game::Game()
 	pSky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
 	//TODO: this should be specified in the level file
-	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,10.0f,10.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
 	//pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//the direction to the sun
@@ -431,8 +431,9 @@ void Game::UpdateAI(float dt)
 
 void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt)
 {
-	float speed = 80.f;
+	float speed = 200.f;
 	SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(runner);
+	pSkinnedModel->SetMovementSpeed(speed / 100);
 	pSkinnedModel->PlayAnimation("run");
 
 	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
