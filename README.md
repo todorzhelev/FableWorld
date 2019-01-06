@@ -27,6 +27,11 @@ FableWorld is 3D game, created with DirectX 9.0c and C++.<br />
   ![alt tag](https://i.imgur.com/tf6L7k4.jpg)
   <br />
   
+  RTS mode<br />
+=======  
+  ![alt tag](https://i.imgur.com/RfF2SJi.jpg)
+  <br />
+  
   Terrain<br />
 =======
 
