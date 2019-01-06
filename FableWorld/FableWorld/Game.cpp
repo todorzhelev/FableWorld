@@ -339,7 +339,7 @@ void Game::UpdateAI(float dt)
 	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels())
 	{
 		//main hero attacking enemy
-		if (pDinput->IsMouseButtonDown(0) &&
+		if (//pDinput->IsMouseButtonDown(0) &&
 			IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()) &&
 			pMainHero->GetName() != gameObject->GetName() &&
 			gameObject->GetActorType() == "enemy" &&

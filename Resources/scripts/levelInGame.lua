@@ -16,9 +16,9 @@ addAnimatedModel();
 x = -63.0846
 y = 0.5
 z = -154.254
-scale = 0.2
+scale = 0.27
 rotX = 0
-rotY = 2.3
+rotY = 0
 rotZ = 0
 titleRotY = 0
 modelName = "ezreal"
@@ -29,11 +29,11 @@ typeInGame = "neutral"
 addAnimatedModel();
 
 x = -170.167
-y = 0.5
+y = 0.27
 z = -152.522
-scale = 0.07
+scale = 0.27
 rotX = 0
-rotY = 7.89999
+rotY = 3
 rotZ = 0
 titleRotY = 0
 modelName = "galio"
