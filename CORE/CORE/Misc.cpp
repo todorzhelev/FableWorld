@@ -108,14 +108,14 @@ bool HasNormals(ID3DXMesh* pMesh)
 //and only it is initalized and saved in the GamepApp, so we can access it later.
 void InitVertexDeclarations()
 {
-	//position only
+	//position only (12B size)
 	D3DVERTEXELEMENT9 vP[] = 
 	{
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		D3DDECL_END()
 	};	
 
-	//position and color
+	//position and color (28B)
 	D3DVERTEXELEMENT9 vPC[] = 
 	{
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
@@ -123,7 +123,7 @@ void InitVertexDeclarations()
 		D3DDECL_END()
 	};	
 
-	//position and normal
+	//position and normal (24B size)
 	D3DVERTEXELEMENT9 vPN[] = 
 	{
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
@@ -131,7 +131,7 @@ void InitVertexDeclarations()
 		D3DDECL_END()
 	};	
 
-	//position and texture
+	//position and texture (20B size)
 	D3DVERTEXELEMENT9 vPT[] = 
 	{
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
@@ -139,7 +139,7 @@ void InitVertexDeclarations()
 		D3DDECL_END()
 	};	
 
-	//position,normal and texture
+	//position,normal and texture (32B size)
 	D3DVERTEXELEMENT9 vPNT[] = 
 	{
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
@@ -148,6 +148,7 @@ void InitVertexDeclarations()
 		D3DDECL_END()
 	};
 
+	//56B. D3DCOLOR is 4x4B floats
 	D3DVERTEXELEMENT9 vPs[] =
 	{
 		{ 0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },

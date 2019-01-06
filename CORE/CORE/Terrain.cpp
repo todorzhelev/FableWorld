@@ -2,6 +2,30 @@
 #include "Terrain.h"
 
 /////////////////////////////////////////////////////////////////////////
+/*
+		   +z
+	----------------
+	|				|
+	|				|
+-x	|		.		| +x
+	|				|
+	|				|
+	----------------
+			-z
+
+if we have 512x512 logical map with 1 logical meter, we will have
+map with coordinates ranging from -256,256 (left up corner) to 256,-256 (down right corner)
+
+physically it feels that 1 logical meter is around 0.03 physical meters
+and 1 physical meter is 35 logical meters
+in this sense 512x512 logical map feels like 15x15 physical map or 225m^2
+
+513x513 = 263169 vertices, 32B per vertex, which results in 8,5MB for the terrain
+5130x5130 => 840MB for the terrain
+
+*/
+
+/////////////////////////////////////////////////////////////////////////
 
 Terrain* pTerrain = NULL;
 
