@@ -259,4 +259,5 @@ void GameObjectManager::SpawnAnimatedClone(GameObject* obj)
 
 	m_pGameObjManager->AddGameObject(pMesh);
 
+	pTextManager->CreateMeshFor3DText(pMesh);
 }

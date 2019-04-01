@@ -559,7 +559,7 @@ void SkinnedModel::OnRender()
 
 	if(m_bShouldRenderTitles && m_pGameObjManager->ShouldRenderTitles())
 	{
-		//RenderTitles();
+		RenderTitles();
 		RenderTitlesForQuest();
 	}
 	
@@ -979,17 +979,17 @@ void SkinnedModel::SetTitleMesh(ID3DXMesh* titleMesh)
 	m_pTitleMesh = titleMesh;
 }
 
-D3DXVECTOR3& SkinnedModel::GetTitleLookVector()
+D3DXVECTOR3 SkinnedModel::GetTitleLookVector() const
 {
 	return m_vTitleLook;
 }
 
-D3DXVECTOR3& SkinnedModel::GetTitleRightVector()
+D3DXVECTOR3 SkinnedModel::GetTitleRightVector() const
 {
 	return m_vTitleRight;
 }
 
-D3DXVECTOR3& SkinnedModel::GetTitleUpVector()
+D3DXVECTOR3 SkinnedModel::GetTitleUpVector() const
 {
 	return m_vTitleUp;
 }
@@ -1039,17 +1039,17 @@ void SkinnedModel::SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh)
 	m_pTitleForQuestMesh = titleForQuestMesh;
 }
 
-D3DXVECTOR3& SkinnedModel::GetTitleForQuestLookVector()
+D3DXVECTOR3 SkinnedModel::GetTitleForQuestLookVector() const
 {
 	return m_vTitleForQuestLook;
 }
 
-D3DXVECTOR3& SkinnedModel::GetTitleForQuestRightVector()
+D3DXVECTOR3 SkinnedModel::GetTitleForQuestRightVector() const
 {
 	return m_vTitleForQuestRight;
 }
 
-D3DXVECTOR3& SkinnedModel::GetTitleForQuestUpVector()
+D3DXVECTOR3 SkinnedModel::GetTitleForQuestUpVector() const
 {
 	return m_vTitleForQuestUp;
 }
@@ -1077,6 +1077,17 @@ void SkinnedModel::SetTitleForQuestRotationAnglyByY(float angle)
 void SkinnedModel::ModifyTitleForQuestRotationAnglyByY(float delta)
 {
 	m_fTitleForQuestRotationAngleByY += delta;
+}
+
+void SkinnedModel::TransformTitleByMatrix(D3DXMATRIX matrix)
+{
+	D3DXVec3TransformCoord(&m_vTitleLook,  &m_vTitleLook,  &matrix);
+	D3DXVec3TransformCoord(&m_vTitleRight, &m_vTitleRight, &matrix);
+	D3DXVec3TransformCoord(&m_vTitleUp,    &m_vTitleUp,    &matrix);
+
+	D3DXVec3TransformCoord(&m_vTitleForQuestLook,  &m_vTitleForQuestLook,  &matrix);
+	D3DXVec3TransformCoord(&m_vTitleForQuestRight, &m_vTitleForQuestRight, &matrix);
+	D3DXVec3TransformCoord(&m_vTitleForQuestUp,    &m_vTitleForQuestUp,    &matrix);
 }
 
 std::vector<D3DXMATRIX>& SkinnedModel::GetFinalBonesMatrices()

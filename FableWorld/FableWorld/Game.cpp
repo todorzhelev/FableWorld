@@ -250,26 +250,12 @@ void Game::OnUpdate(float dt)
 	{
 		float angle = D3DXVec3Dot(&gameObject->GetTitleRightVector(),&camera->GetLookVector());
 		gameObject->ModifyTitleRotationAnglyByY(angle);
-
-		D3DXMATRIX R;
-		D3DXMatrixRotationY(&R, angle);
-		D3DXVec3TransformCoord(&gameObject->GetTitleLookVector(), &gameObject->GetTitleLookVector(), &R);
-		D3DXVec3TransformCoord(&gameObject->GetTitleRightVector(), &gameObject->GetTitleRightVector(), &R);
-		D3DXVec3TransformCoord(&gameObject->GetTitleUpVector(), &gameObject->GetTitleUpVector(), &R);
-	}
-
-	//updating the models's title's quest positions. 
-	//At the moment these titles are ? signs above the head of the model if he got dialogue attached.
-	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels())
-	{
-		float angle = D3DXVec3Dot(&gameObject->GetTitleForQuestRightVector(),&camera->GetLookVector());
 		gameObject->ModifyTitleForQuestRotationAnglyByY(angle);
 
 		D3DXMATRIX R;
 		D3DXMatrixRotationY(&R, angle);
-		D3DXVec3TransformCoord(&gameObject->GetTitleForQuestLookVector(), &gameObject->GetTitleForQuestLookVector(), &R);
-		D3DXVec3TransformCoord(&gameObject->GetTitleForQuestRightVector(), &gameObject->GetTitleForQuestRightVector(), &R);
-		D3DXVec3TransformCoord(&gameObject->GetTitleForQuestUpVector(), &gameObject->GetTitleForQuestUpVector(), &R);
+
+		gameObject->TransformTitleByMatrix(R);
 	}
 
 	//for (auto it : m_pGameObjManager->GetGameObjects())
