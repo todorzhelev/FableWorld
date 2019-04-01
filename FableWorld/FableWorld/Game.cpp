@@ -49,8 +49,8 @@ Game::Game()
 
 	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 2000.0f,true);
 	camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
-	camera->SetPosition(D3DXVECTOR3(0,200,0));
-	camera->RotateUp(-300);
+	camera->SetPosition(D3DXVECTOR3(0,200,100));
+	//camera->RotateUp(-300);
 
 	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.
 	InitVertexDeclarations();
@@ -120,7 +120,7 @@ Game::Game()
 	D3DXVec3TransformCoord(&camera->GetUpVector(), &camera->GetUpVector(), &R);
 	D3DXVec3TransformCoord(&camera->GetLookVector(), &camera->GetLookVector(), &R);
 
-	m_pGunEffect = std::unique_ptr<GunEffect>(new GunEffect("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",100, D3DXVECTOR4(0, -9.8f, 0.0f,0.0f),-1));
+	m_pGunEffect = std::unique_ptr<GunEffect>(new GunEffect("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",100, D3DXVECTOR4(0, -9.8f, 0.0f,0.0f)));
 	
 	m_isAIRunningToTarget = false;
 	m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
@@ -294,8 +294,12 @@ void Game::OnUpdate(float dt)
 	static float delay = 0.0f;
 	if (pDinput->IsKeyDown(DIK_SPACE) && delay <= 0.0f)
 	{
-		delay = 0.1f;
-		m_pGunEffect->AddParticle();
+		auto pickedObj = m_pGameObjManager->GetPickedObject();
+		if (pickedObj)
+		{
+			delay = 0.1f;
+			m_pGunEffect->AddParticle(pickedObj);
+		}
 	}
 
 	auto pickedObj = m_pGameObjManager->GetPickedObject();

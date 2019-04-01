@@ -681,6 +681,11 @@ void SkinnedModel::RenderBoundingBox()
 
 void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
 {
+	if (!m_pAnimationComponent)
+	{
+		return;
+	}
+
 	m_pAnimationComponent->PlayAnimation(strAnimationName);
 }
 

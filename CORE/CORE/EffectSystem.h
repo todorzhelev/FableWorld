@@ -19,12 +19,12 @@ struct Particle
 class EffectSystem
 {
 public:
-	EffectSystem(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName, int nMaxAmountOfParticles, D3DXVECTOR4 accel, float timePerParticle);
+	EffectSystem(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName, int nMaxAmountOfParticles, D3DXVECTOR4 accel);
 	virtual ~EffectSystem();
 
 	void		InitShader(std::string sShaderFileName, std::string sShaderTechName);
 
-	virtual void AddParticle();
+	virtual void AddParticle(GameObject* object);
 
 	virtual void OnLostDevice();
 	virtual void OnResetDevice();
@@ -32,7 +32,7 @@ public:
 	virtual void OnRender();
 	virtual void OnUpdate(float dt);
 
-	virtual void InitParticle(Particle& pParticle) = 0;
+	virtual void InitParticle(Particle& pParticle, GameObject* object) = 0;
 
 	void SetTime(float time);
 
@@ -41,7 +41,6 @@ protected:
 	int m_particlesAmount;
 
 	float m_time;
-	int m_timePerParticle;
 	D3DXVECTOR4 m_accel;
 
 	std::vector<Particle> m_particles;
