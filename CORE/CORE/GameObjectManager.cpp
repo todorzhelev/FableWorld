@@ -222,19 +222,6 @@ void GameObjectManager::SpawnAnimatedClone(GameObject* obj)
 
 	SkinnedModel* pMesh = new SkinnedModel;
 
-	pMesh->GetLookVector() = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	pMesh->GetRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pMesh->GetUpVector() = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-
-	pMesh->GetTitleLookVector() = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	pMesh->GetTitleRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pMesh->GetTitleUpVector() = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-
-	pMesh->GetTitleForQuestLookVector() = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	pMesh->GetTitleForQuestRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pMesh->GetTitleForQuestUpVector() = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	pMesh->SetTitleForQuestRotationAnglyByY(0.0);
-
 	pMesh->SetPosition(obj->GetPosition());
 
 	pMesh->SetScale(obj->GetScale());

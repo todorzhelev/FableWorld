@@ -31,6 +31,19 @@ SkinnedModel::SkinnedModel()
 	m_movementSpeed = 1;
 	BuildEffect();
 	BuildEffectForTitles();
+
+	m_vLook  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	m_vRight = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	m_vUp    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+	m_vTitleLook  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	m_vTitleRight = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	m_vTitleUp    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+	m_vTitleForQuestLook  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	m_vTitleForQuestRight = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	m_vTitleForQuestUp	  = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	m_fTitleForQuestRotationAngleByY = 0.0;
 }
 
 /////////////////////////////////////////////////////////////////////////
