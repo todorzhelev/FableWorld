@@ -25,11 +25,11 @@ public:
 
 	D3DXMATRIX		GetViewProjMatrix() const;
 
-	D3DXVECTOR3&	GetRightVector();
+	D3DXVECTOR3		GetRightVector() const;
 
-	D3DXVECTOR3&	GetUpVector();
+	D3DXVECTOR3		GetUpVector() const;
 
-	D3DXVECTOR3&	GetLookVector();
+	D3DXVECTOR3		GetLookVector() const;
 
 	D3DXVECTOR3&	GetPosition();
 
@@ -60,6 +60,8 @@ public:
 	void			ModifyZoom(int delta);
 
 	int				GetZoom();
+
+	void			TransformByMatrix(D3DXMATRIX matrix);
 
 private:
 

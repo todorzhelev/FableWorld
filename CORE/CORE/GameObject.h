@@ -87,7 +87,7 @@ public:
 
 	void SetBindedObjects(std::unordered_map<GameObject*, std::string> bindedObjects);
 
-	
+	void TransformByMatrix(D3DXMATRIX matrix);
 
 	float GetRotationAngleByX() const;
 	void SetRotationAngleByX(float rotationAngleByX);

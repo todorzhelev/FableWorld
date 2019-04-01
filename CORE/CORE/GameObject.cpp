@@ -189,6 +189,13 @@ void GameObject::SetBindedToBoneName(const std::string& bindedToBoneName)
 	m_strBindedToBoneName = bindedToBoneName;
 }
 
+void GameObject::TransformByMatrix(D3DXMATRIX matrix)
+{
+	D3DXVec3TransformCoord(&m_vLook,	&m_vLook,	&matrix);
+	D3DXVec3TransformCoord(&m_vRight,	&m_vRight,	&matrix);
+	D3DXVec3TransformCoord(&m_vUp,		&m_vUp,		&matrix);
+}
+
 float GameObject::GetRotationAngleByX() const
 {
 	return m_fRotAngleX;

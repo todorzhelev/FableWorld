@@ -52,21 +52,21 @@ D3DXMATRIX Camera::GetViewProjMatrix() const
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3& Camera::GetRightVector()
+D3DXVECTOR3 Camera::GetRightVector() const
 {
 	return m_vRightVector;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3& Camera::GetUpVector() 
+D3DXVECTOR3 Camera::GetUpVector() const
 {
 	return m_vUpVector;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3& Camera::GetLookVector() 
+D3DXVECTOR3 Camera::GetLookVector() const
 {
 	return m_vLookVector;
 }
@@ -339,6 +339,15 @@ void Camera::ModifyZoom(int delta)
 int Camera::GetZoom()
 {
 	return m_zoom;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Camera::TransformByMatrix(D3DXMATRIX matrix)
+{
+	D3DXVec3TransformCoord(&m_vLookVector,	&m_vLookVector,	 &matrix);
+	D3DXVec3TransformCoord(&m_vRightVector, &m_vRightVector, &matrix);
+	D3DXVec3TransformCoord(&m_vUpVector,	&m_vUpVector,	 &matrix);
 }
 
 /////////////////////////////////////////////////////////////////////////

@@ -116,9 +116,7 @@ Game::Game()
 	//it should be more generic - it should align with the vectors of the main hero.
 	D3DXMATRIX R;
 	D3DXMatrixRotationY(&R, D3DX_PI/2); //rotate this bad boy
-	D3DXVec3TransformCoord(&camera->GetRightVector(), &camera->GetRightVector(), &R);
-	D3DXVec3TransformCoord(&camera->GetUpVector(), &camera->GetUpVector(), &R);
-	D3DXVec3TransformCoord(&camera->GetLookVector(), &camera->GetLookVector(), &R);
+	camera->TransformByMatrix(R);
 
 	m_pGunEffect = std::unique_ptr<GunEffect>(new GunEffect("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",100, D3DXVECTOR4(0, -9.8f, 0.0f,0.0f)));
 	
@@ -414,9 +412,7 @@ void Game::UpdateAI(float dt)
 
 			D3DXMATRIX R;
 			D3DXMatrixRotationY(&R, angle);
-			D3DXVec3TransformCoord(&gameObject->GetLookVector(), &gameObject->GetLookVector(), &R);
-			D3DXVec3TransformCoord(&gameObject->GetRightVector(), &gameObject->GetRightVector(), &R);
-			D3DXVec3TransformCoord(&gameObject->GetUpVector(), &gameObject->GetUpVector(), &R);
+			gameObject->TransformByMatrix(R);
 		}
 
 
@@ -460,9 +456,7 @@ void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt)
 
 	D3DXMATRIX R;
 	D3DXMatrixRotationY(&R, angle);
-	D3DXVec3TransformCoord(&runner->GetLookVector(), &runner->GetLookVector(), &R);
-	D3DXVec3TransformCoord(&runner->GetRightVector(), &runner->GetRightVector(), &R);
-	D3DXVec3TransformCoord(&runner->GetUpVector(), &runner->GetUpVector(), &R);
+	runner->TransformByMatrix(R);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -554,9 +548,8 @@ void Game::RotateObject(std::string objectTitle, float dt)
 	
 	D3DXMATRIX R;
 	D3DXMatrixRotationY(&R, yAngle);
-	D3DXVec3TransformCoord(&camera->GetRightVector(), &camera->GetRightVector(), &R);
-	D3DXVec3TransformCoord(&camera->GetUpVector(), &camera->GetUpVector(), &R);
-	D3DXVec3TransformCoord(&camera->GetLookVector(), &camera->GetLookVector(), &R);
+
+	camera->TransformByMatrix(R);
 
 	pSkinnedModel->GetLookVector()  = camera->GetLookVector();
 	pSkinnedModel->GetRightVector() = camera->GetRightVector();
