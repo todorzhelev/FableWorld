@@ -5,12 +5,15 @@ extern texture tex1;
 extern texture tex2;
 extern texture blendMap;
 
-//we repeat the same texture so we can have better quality
-static float texScale = 48.0f;
+//we repeat the same texture so we can have better quality. why this works?
+static float texScale = 50;
 
 //in the terrain we got 3 textures, which are controlled by the blend map
 
-sampler Tex0S = sampler_state
+////////////////////////////////////////////////////////////////////
+
+//stone texture
+sampler TexStoneSampler = sampler_state
 {
 	Texture = <tex0>;
 	MinFilter = ANISOTROPIC;
@@ -21,7 +24,10 @@ sampler Tex0S = sampler_state
     AddressV  = WRAP;
 };
 
-sampler Tex1S = sampler_state
+////////////////////////////////////////////////////////////////////
+
+//dirt texture
+sampler TexDirtSampler = sampler_state
 {
 	Texture = <tex1>;
 	MinFilter = ANISOTROPIC;
@@ -32,7 +38,10 @@ sampler Tex1S = sampler_state
     AddressV  = WRAP;
 };
 
-sampler Tex2S = sampler_state
+////////////////////////////////////////////////////////////////////
+
+//grass texture
+sampler TexGrassSampler = sampler_state
 {
 	Texture = <tex2>;
 	MinFilter = ANISOTROPIC;
@@ -42,6 +51,8 @@ sampler Tex2S = sampler_state
 	AddressU  = WRAP;
     AddressV  = WRAP;
 };
+
+////////////////////////////////////////////////////////////////////
 
 sampler BlendMapS = sampler_state
 {
@@ -53,19 +64,26 @@ sampler BlendMapS = sampler_state
     AddressV  = WRAP;
 };
  
+////////////////////////////////////////////////////////////////////
+
 struct VS_OUTPUT
 {
-    float4 pos         : POSITION0;
-    float2 tiledTex    : TEXCOORD0;
+    float4 pos          : POSITION0;
+    float2 tiledTex     : TEXCOORD0;
     float2 blendMapText : TEXCOORD1;
     float  light        : TEXCOORD2;
 };
+
+////////////////////////////////////////////////////////////////////
+
 struct VS_INPUT
 {
-	float3 pos : POSITION0;
-	float3 norm : NORMAL0;
-	float2 tex: TEXCOORD0;
+	float3 pos		    : POSITION0;
+	float3 norm			: NORMAL0;
+	float2 blendMapTex  : TEXCOORD0;
 };
+
+////////////////////////////////////////////////////////////////////
 
 VS_OUTPUT TerrainVS(VS_INPUT inp)
 {
@@ -74,29 +92,33 @@ VS_OUTPUT TerrainVS(VS_INPUT inp)
 	//saturate makes the result between [0,1]. Outside this interval the light is strange.
     outVS.light = saturate(dot(inp.norm, lightVector) + 0.3);
     
-	outVS.pos = mul(float4(inp.pos, 1.0f), WVP);//on huge steep terrains this instruction takes most of the time
-	outVS.tiledTex = inp.tex * texScale; 
-	outVS.blendMapText = inp.tex;
+	outVS.pos		    = mul(float4(inp.pos, 1.0f), WVP);//on huge steep terrains this instruction takes most of the time
+	outVS.tiledTex		= inp.blendMapTex * texScale;
+	outVS.blendMapText  = inp.blendMapTex;
 	
     return outVS;
 }
 
+////////////////////////////////////////////////////////////////////
+
 float4 TerrainPS(VS_OUTPUT inp) : COLOR
 {
-    float3 tex0Color = tex2D(Tex0S, inp.tiledTex);
-    float3 tex1Color = tex2D(Tex1S, inp.tiledTex);
-    float3 tex2Color = tex2D(Tex2S, inp.tiledTex);
+    float3 texStoneColor = tex2D(TexStoneSampler, inp.tiledTex);
+    float3 texDirtColor  = tex2D(TexDirtSampler,  inp.tiledTex);
+    float3 texGrassColor = tex2D(TexGrassSampler, inp.tiledTex);
     
     float3 blendMapColor = tex2D(BlendMapS, inp.blendMapText);
     
-    tex2Color *= blendMapColor.r;
-    tex1Color *= blendMapColor.g;
-    tex0Color *= blendMapColor.b;
+	texStoneColor *= blendMapColor.b;
+	texDirtColor  *= blendMapColor.g;
+	texGrassColor *= blendMapColor.r;
 	
-    float3 final = (tex0Color + tex1Color + tex2Color) * inp.light;
+    float3 final = (texStoneColor + texDirtColor + texGrassColor) * inp.light;
  
     return float4(final, 1.0f);
 }
+
+////////////////////////////////////////////////////////////////////
 
 technique TerrainTech
 {
@@ -106,3 +128,5 @@ technique TerrainTech
         pixelShader  = compile ps_2_0 TerrainPS();
     }
 }
+
+////////////////////////////////////////////////////////////////////
