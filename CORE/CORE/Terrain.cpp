@@ -52,7 +52,7 @@ Terrain::Terrain(std::string strHeightmapFileName,float fHeightsScale, int nRows
 
 	LoadHeightmap();
 
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/blend_map.dds", &m_pBlendMapTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/BlendMap_new.dds", &m_pBlendMapTexture));
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/ground0.dds", &m_pDirtTexture));
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/grass-texture-02.dds", &m_pGrassTexture));
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/rocks.dds", &m_pStoneTexture));

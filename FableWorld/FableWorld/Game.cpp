@@ -47,7 +47,7 @@ Game::Game()
 	float fWidth  = (float)pApp->GetPresentParameters().BackBufferWidth;
 	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
 
-	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 2000.0f,true);
+	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 3000,true);
 	camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 	camera->SetPosition(D3DXVECTOR3(0,200,100));
 	//camera->RotateUp(-300);
@@ -58,7 +58,7 @@ Game::Game()
 	pSky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
 	//TODO: this should be specified in the level file
-	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1,1,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",0.0f,513,513,5,5,D3DXVECTOR3(0.0f,0.0f,0.0f));
 	//pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//the direction to the sun
