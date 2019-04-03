@@ -1181,10 +1181,13 @@ string Game::GetModelNameFromFilePath(string strFilePath)
 
 void Game::ExportLevel()
 {
-	ofstream staticModelsFile("export/staticModels.lua");
-	ofstream animatedModelsFile("export/animatedModels.lua");
-	ofstream mainHeroFile("export/init.lua");
-	ofstream level("export/level.lua");
+	//currently not needed
+	//ofstream staticModelsFile("export/staticModels.lua");
+	//ofstream animatedModelsFile("export/animatedModels.lua");
+	//ofstream mainHeroFile("export/init.lua");
+
+	std::string exportFileName = "export/level.lua";
+	ofstream level(exportFileName);
 
 	//exports static models
 	if( level.is_open() )
@@ -1240,7 +1243,15 @@ void Game::ExportLevel()
 		}
 
 		level.close();
+
+		char cCurrentPath[MAX_PATH];
+		_getcwd(cCurrentPath, sizeof(cCurrentPath));
+
+		std::string message = "Export finished at " + std::string(cCurrentPath) + "\\" + exportFileName;
+
+		MessageBox(0, message.c_str(), 0, 0);
 	}
+
 	else cout << "Unable to open file";
 }
 
