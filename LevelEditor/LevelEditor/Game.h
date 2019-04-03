@@ -45,6 +45,9 @@ public:
 	void healthControl();
 	void ImportStaticModel();
 	void LoadAnimatedModel();
+	bool IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t);
+	void RunToTarget(GameObject * runner, D3DXVECTOR3 targetPos, float dt);
+
 
 	void LoadUIComponents();
 	void pickedModelControl(GameObject& obj, float dt);
@@ -112,7 +115,4 @@ private:
 	D3DXVECTOR3 posForHealthBar;
 	D3DXVECTOR3 posForEnemyHealthbar;
 	//map<string,QuestObject> activeQuests;
-
-	
-	
 };

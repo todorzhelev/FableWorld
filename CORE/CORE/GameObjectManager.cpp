@@ -73,8 +73,13 @@ void GameObjectManager::UpdatePicking()
 		auto pClosestPickedObject = (m_mapPickedObjects.begin()->second);
 		if (pClosestPickedObject)
 		{
-			pClosestPickedObject->SetPicked(true);
+			//the old picked object is no longer picked
+			if (m_pPickedObject)
+			{
+				m_pPickedObject->SetPicked(false);
+			}
 
+			pClosestPickedObject->SetPicked(true);
 			m_pPickedObject = pClosestPickedObject;
 		}
 
