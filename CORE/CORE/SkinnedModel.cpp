@@ -1159,3 +1159,49 @@ float SkinnedModel::GetMovementSpeed()
 {
 	return m_movementSpeed;
 }
+
+bool SkinnedModel::SpawnClone()
+{
+	SkinnedModel* pMesh = new SkinnedModel;
+
+	pMesh->SetPosition(GetPosition());
+
+	pMesh->SetScale(GetScale());
+
+	pMesh->SetRotationAngleByX(GetRotationAngleByX());
+	pMesh->SetRotationAngleByY(GetRotationAngleByY());
+
+	pMesh->SetRotationAngleByZ(0);
+
+	pMesh->SetTitleRotationAnglyByY(GetRotationAngleByY());
+
+	static int id = 1;
+	std::string newName = GetName() + std::to_string(id);
+	pMesh->SetName(newName);
+	++id;
+
+	pMesh->SetTitleForQuest("");
+
+	pMesh->SetModelFilename(GetModelFileName());
+
+	pMesh->SetTextureFilename(GetTextureFilename());
+
+	pMesh->SetActorType("enemy");
+
+	pMesh->SetAttacked(false);
+	pMesh->SetAttacking(false);
+	pMesh->SetDead(false);
+	pMesh->SetPicked(false);
+	pMesh->SetHasDialogue(false);
+	pMesh->SetAttackerName("");
+
+	pMesh->LoadGameObject();
+
+	pMesh->SetObjectType(EGameObjectType_Skinned);
+
+	m_pGameObjManager->AddGameObject(pMesh);
+
+	pTextManager->CreateMeshFor3DText(pMesh);
+
+	return true;
+}

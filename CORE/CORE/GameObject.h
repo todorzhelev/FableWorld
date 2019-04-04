@@ -30,10 +30,12 @@ public:
 
 	virtual float GetDistanceToPickedObject();
 
+	virtual bool SpawnClone() =0;
+
 	std::string GetModelFileName() const;
 	void SetModelFilename(const std::string& strModelFileName);
 
-	std::string& GetName();
+	std::string GetName() const;
 
 	void SetName(const std::string& strName);
 

@@ -29,6 +29,8 @@ public:
 
 	virtual float GetDistanceToPickedObject() override;
 
+	virtual bool SpawnClone() override;
+
 	void		 BuildBoundingBox();
 
 	void		 RenderBoundingBox();

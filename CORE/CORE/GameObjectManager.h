@@ -49,8 +49,6 @@ public:
 
 	bool ShouldPickOnlySkinnedModels();
 
-	void SpawnAnimatedClone(GameObject * obj);
-
 	void OnUpdate();
 
 	void UpdatePicking();

@@ -59,7 +59,7 @@ void GameObject::SetModelFilename(const std::string& strModelFileName)
 	m_strModelFileName = strModelFileName;
 }
 
-std::string& GameObject::GetName()
+std::string GameObject::GetName() const
 {
 	return m_strModelName;
 }

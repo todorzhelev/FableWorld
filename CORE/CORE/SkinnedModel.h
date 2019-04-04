@@ -69,6 +69,8 @@ public:
 
 	virtual float	GetDistanceToPickedObject() override;
 
+	virtual bool	SpawnClone() override;
+
 	bool			CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX combinedMatrix, D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir, float& nDistance);
 
 	void			PlayAnimation(LPCSTR strAnimationName);

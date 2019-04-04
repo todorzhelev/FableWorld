@@ -843,6 +843,16 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 			switch(wParam)
 			{
+				case 'V':
+				{
+					auto* obj = m_pGameObjManager->GetPickedObject();
+					if (obj)
+					{
+						obj->SpawnClone();
+					}
+					break;
+				}
+
 				case 'L':
 				{
 					if( camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse )

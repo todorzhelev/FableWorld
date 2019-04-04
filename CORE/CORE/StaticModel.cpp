@@ -546,3 +546,40 @@ float StaticModel::GetDistanceToPickedObject()
 }
 
 /////////////////////////////////////////////////////////////////////////
+
+bool StaticModel::SpawnClone()
+{
+	StaticModel* pMesh = new StaticModel;
+
+	pMesh->SetPosition(GetPosition());
+
+	pMesh->SetScale(GetScale());
+
+	pMesh->SetRotationAngleByX(GetRotationAngleByX());
+	pMesh->SetRotationAngleByY(GetRotationAngleByY());
+	pMesh->SetRotationAngleByZ(GetRotationAngleByZ());
+
+	pMesh->SetIsBindable(IsBindable());
+
+	pMesh->SetBindedToAnimatedModelName(GetBindedToAnimatedModelName());
+	pMesh->SetBindedToBoneName(GetBindedToBoneName());
+
+	static int id = 1;
+	std::string newName = GetName() + std::to_string(id);
+	pMesh->SetName(newName);
+	++id;
+
+	pMesh->SetModelFilename(GetModelFileName());
+
+	pMesh->SetPicked(false);
+
+	pMesh->LoadGameObject();
+
+	pMesh->SetObjectType(EGameObjectType_Static);
+
+	m_pGameObjManager->AddGameObject(pMesh);
+
+	return true;
+}
+
+/////////////////////////////////////////////////////////////////////////
