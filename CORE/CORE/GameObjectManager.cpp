@@ -215,3 +215,28 @@ bool GameObjectManager::ShouldPickOnlySkinnedModels()
 }
 
 /////////////////////////////////////////////////////////////////////////
+
+void GameObjectManager::RemoveObject(std::string objId)
+{
+	auto it = std::find_if(m_gameObjects.begin(), m_gameObjects.end(), [objId](GameObject* obj) { return !obj->GetName().compare(objId); });
+
+	if (it != m_gameObjects.end())
+	{
+		GameObject* obj = *it;
+		if (obj->GetObjectType() == EGameObjectType_Skinned)
+		{
+			auto skinnedIt = std::find_if(m_skinnedModels.begin(), m_skinnedModels.end(), [objId](GameObject* obj) { return !obj->GetName().compare(objId); });
+
+			if (skinnedIt != m_skinnedModels.end())
+			{
+				m_skinnedModels.erase(skinnedIt);
+			}
+		}
+
+		obj->Destroy();
+
+		m_gameObjects.erase(it);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////

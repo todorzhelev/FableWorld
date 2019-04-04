@@ -35,7 +35,7 @@ Game::Game()
 	sky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
 	//init terrain
-	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",0.0f,513,513,5.0f,5.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));;
+	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",0.0f,513,513,4.0f,4.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));;
 	D3DXVECTOR3 toSun(-20.0f, 300.0f, 50.0f);
 	D3DXVec3Normalize(&toSun, &toSun);
 	pTerrain->SetLightVector(toSun);
@@ -843,6 +843,18 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 			switch(wParam)
 			{
+				case VK_DELETE:
+				{
+					auto* pickedObj = m_pGameObjManager->GetPickedObject();
+					if (pickedObj)
+					{
+						m_pGameObjManager->RemoveObject(pickedObj->GetName());
+					}
+
+					printf("omg");
+					break;
+				}
+
 				case 'V':
 				{
 					auto* obj = m_pGameObjManager->GetPickedObject();

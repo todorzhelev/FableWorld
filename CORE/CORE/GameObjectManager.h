@@ -49,6 +49,8 @@ public:
 
 	bool ShouldPickOnlySkinnedModels();
 
+	void RemoveObject(std::string objId);
+
 	void OnUpdate();
 
 	void UpdatePicking();
@@ -73,6 +75,7 @@ private:
 
 	GameObject*	m_pPickedObject;
 
+	//must be unique pointers so I dont need some retarded destroy function for the meshes
 	std::vector<GameObject*> m_gameObjects;
 	std::vector<SkinnedModel*> m_skinnedModels;
 

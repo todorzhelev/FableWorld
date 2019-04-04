@@ -69,7 +69,7 @@ Game::Game()
 	pTextManager->CreateFontFor3DText();
 
 	//loads the models, sounds and quests from the scripts
-	luaL_dofile(g_luaState, "../../Resources/scripts/levelInGame.lua");
+	luaL_dofile(g_luaState, "../../Resources/scripts/levelInGame_new.lua");
 	luaL_dofile(g_luaState, "../../Resources/scripts/quests.lua");
 
 	pDialogueManager = new DialogueManager;
@@ -124,12 +124,12 @@ Game::Game()
 	m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
 
 	GameObject* objCho = m_pGameObjManager->GetObjectByName("cho");
-	m_pGameObjManager->SpawnAnimatedClone(objCho); //~7.5MB per one cho. Did not expect that wow
-	m_pGameObjManager->SpawnAnimatedClone(objCho);
-	m_pGameObjManager->SpawnAnimatedClone(objCho);
-	m_pGameObjManager->SpawnAnimatedClone(objCho);
-	m_pGameObjManager->SpawnAnimatedClone(objCho);
-	m_pGameObjManager->SpawnAnimatedClone(objCho);
+	objCho->SpawnClone();//~7.5MB per one cho. Did not expect that wow
+	objCho->SpawnClone();
+	objCho->SpawnClone();
+	objCho->SpawnClone();
+	objCho->SpawnClone();
+	objCho->SpawnClone();
 }
 
 /////////////////////////////////////////////////////////////////////////

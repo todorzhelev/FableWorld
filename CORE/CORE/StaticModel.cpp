@@ -64,7 +64,7 @@ StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, st
 	m_strBindedToAnimatedModelName = "";
 	m_strBindedToBoneName = "";
 
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, strTextureFileName.c_str(), &m_pTexture));	
+	D3DXCreateTextureFromFile(pDxDevice, strTextureFileName.c_str(), &m_pTexture);	
 
 	/*if( pMesh->m_bIsBindable && !pMesh->m_strBindedToAnimatedModelName.empty() && !pMesh->m_strBindedToBoneName.empty() )
 	{
@@ -82,8 +82,7 @@ StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, st
 
 StaticModel::~StaticModel()
 {
-	m_pWhiteTexture->Release();
-	m_pEffect->Release();
+	Destroy();
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -580,6 +579,14 @@ bool StaticModel::SpawnClone()
 	m_pGameObjManager->AddGameObject(pMesh);
 
 	return true;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void StaticModel::Destroy()
+{
+	m_pWhiteTexture->Release();
+	m_pEffect->Release();
 }
 
 /////////////////////////////////////////////////////////////////////////

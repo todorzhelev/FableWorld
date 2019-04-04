@@ -124,7 +124,7 @@ void DialogueManager::OnUpdate()
 
 		GameObject* obj = m_pGameObjManager->GetObjectByName(dialogue->m_strModel);
 
-		if (obj->IsPicked() && !dialogue->m_bIsEnded)
+		if (obj && obj->IsPicked() && !dialogue->m_bIsEnded)
 		{
 			dialogue->m_pTree->m_pRoot->m_pLabel->SetVisible(true);
 			obj->SetPicked(false);

@@ -120,20 +120,7 @@ SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, 
 
 SkinnedModel::~SkinnedModel()
 {
-	m_pWhiteTexture->Release();
-	m_pEffect->Release();
-	m_pTitlesEffect->Release();
-	m_pTitleMesh->Release();
-	m_pTitleForQuestMesh->Release();
-	m_vFinalBonesMatrices.clear();
-	m_vToRootMatrices.clear();
-	m_pSkinInfo->Release();
-
-	//todo::recursively clear everything
-	//m_pRoot;
-	
-	//todo:clear this. GameObjects inside should be smart pointers
-	//m_mapBindedObjects;
+	Destroy();
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -1204,4 +1191,36 @@ bool SkinnedModel::SpawnClone()
 	pTextManager->CreateMeshFor3DText(pMesh);
 
 	return true;
+}
+
+void SkinnedModel::Destroy()
+{
+	m_pWhiteTexture->Release();
+	m_pEffect->Release();
+	m_pTitlesEffect->Release();
+	//m_pTitleMesh->Release();
+	//m_pTitleForQuestMesh->Release();
+	m_vFinalBonesMatrices.clear();
+	m_vToRootMatrices.clear();
+	m_pSkinInfo->Release();
+
+	//todo::recursively clear everything
+	//m_pRoot;
+	
+	//clear the binded objects
+	auto& gameObjects = m_pGameObjManager->GetGameObjects();
+	for (auto& el : m_mapBindedObjects)
+	{
+		std::string name = el.first->GetName();
+
+		auto it = std::find_if(gameObjects.begin(), gameObjects.end(), [name](GameObject* obj) { return !obj->GetName().compare(name); });
+
+		if (it != gameObjects.end())
+		{
+			GameObject* obj = *it;
+			obj->Destroy();
+
+			gameObjects.erase(it);
+		}
+	}
 }

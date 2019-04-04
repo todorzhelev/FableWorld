@@ -1,7 +1,22 @@
-x = -20.5636
-y = 0.270158
-z = 88.6879
-scale = 0.27
+x = 128.683
+y = 0
+z = 104.539
+scale = 0.3
+rotX = 0
+rotY = 0
+rotZ = 0
+titleRotY = 0
+modelName = "galio"
+titleForQuest = "?"
+modelFileName = "../../Resources/models/galio/galio_5anmx.X"
+textureFileName = "../../Resources/textures/SkinnedModels/galio_base_TX_CM.dds"
+typeInGame = "mainHero"
+addAnimatedModel();
+
+x = 691.899
+y = 0
+z = 660.795
+scale = 0.3
 rotX = 0
 rotY = 0
 rotZ = 0
@@ -13,230 +28,368 @@ textureFileName = "../../Resources/textures/SkinnedModels/chogath_abyss_TX_CM.DD
 typeInGame = "enemy"
 addAnimatedModel();
 
-x = -63.0846
-y = 0.5
-z = -154.254
-scale = 0.27
+x = 284.403
+y = 6.10352e-05
+z = 626.615
+scale = 3.76
 rotX = 0
 rotY = 0
 rotZ = 0
-titleRotY = 0
-modelName = "ezreal"
-titleForQuest = "?"
-modelFileName = "../../Resources/models/ezreal/ezreal_5anm.X"
-textureFileName = "../../Resources/textures/SkinnedModels/Ezreal_ProdigalExplorer.dds"
-typeInGame = "neutral"
-addAnimatedModel();
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree320"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
 
-x = -170.167
-y = 0.27
-z = -152.522
-scale = 0.27
+x = -467.38
+y = -6.10352e-05
+z = -730.921
+scale = 2.91
 rotX = 0
-rotY = 3
+rotY = 0
 rotZ = 0
-titleRotY = 0
-modelName = "galio"
-titleForQuest = "?"
-modelFileName = "../../Resources/models/galio/galio_5anmx.X"
-textureFileName = "../../Resources/textures/SkinnedModels/galio_base_TX_CM.dds"
-typeInGame = "mainHero"
-addAnimatedModel();
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree3201"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
 
-x = 195.585
+x = -362.125
 y = 0
-z = 75.4184
-scale = 0.480003
+z = -849.323
+scale = 2.91
 rotX = 0
-rotY = 1.6
+rotY = 0
 rotZ = 0
 bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
-modelName = "building1"
-modelFileName = "../../Resources/models/buildings/building1/building.X"
+modelName = "tree3202"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
-x = -199.646
+x = -370.497
 y = 0
-z = 62.7301
-scale = 0.480003
-rotX = 0
-rotY = 4.7
-rotZ = 0
-bindable = 0
-bindToAnModel = ""
-bindToAnModelBone = ""
-modelName = "building2"
-modelFileName = "../../Resources/models/buildings/building1/building.X"
-addStaticModel();
-
-x = -111.063
-y = 1.82834
-z = 204.37
-scale = 0.460003
+z = -709.894
+scale = 2.88
 rotX = 0
 rotY = 0
 rotZ = 0
 bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
-modelName = "building3"
-modelFileName = "../../Resources/models/buildings/building1/building.X"
+modelName = "tree3203"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
-x = 61.5676
-y = 1.20898
-z = 205.467
-scale = 0.470003
+x = -658.158
+y = 6.10352e-05
+z = -445.422
+scale = 2.91
 rotX = 0
 rotY = 0
 rotZ = 0
 bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
-modelName = "building4"
-modelFileName = "../../Resources/models/buildings/building1/building.X"
+modelName = "tree3204"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
-x = -10.2376
-y = -30.3347
-z = 4.57869
-scale = 5.11002
-rotX = -0.3
-rotY = 50.1998
-rotZ = -114.199
-bindable = 1
-bindToAnModel = "ezreal"
-bindToAnModelBone = "head"
-modelName = "ezr_head"
-modelFileName = "../../Resources/models/head/paladin_head/pal_head.X"
-addStaticModel();
-
-x = 3.96259
-y = 0.15169
-z = -157.267
-scale = 0.460004
-rotX = 0
-rotY = 1.6
-rotZ = 0
-bindable = 0
-bindToAnModel = ""
-bindToAnModelBone = ""
-modelName = "ezreal_house"
-modelFileName = "../../Resources/models/buildings/house1/house1.X"
-addStaticModel();
-
-x = -9.04183
-y = 0.447831
-z = 96.3665
-scale = 6.18005
-rotX = -1.6
-rotY = 1.4
-rotZ = 1.4
-bindable = 1
-bindToAnModel = "galio"
-bindToAnModelBone = "Bone18"
-modelName = "gal_head"
-modelFileName = "../../Resources/models/head/warrior_brown/warrior_head.X"
-addStaticModel();
-
-x = 86.7488
-y = 109.542
-z = 63.1512
-scale = 4.17
-rotX = 5.8
-rotY = -0.0999999
-rotZ = 1.3
-bindable = 1
-bindToAnModel = "galio"
-bindToAnModelBone = "right_hand"
-modelName = "sword_hyjal"
-modelFileName = "../../Resources/models/weapons/hyjal_sword/sword_hyjal_big.X"
-addStaticModel();
-
-x = 40.8688
-y = 53.2337
-z = 192.908
-scale = 0.290003
-rotX = 0
-rotY = 3.1
-rotZ = 0
-bindable = 0
-bindToAnModel = ""
-bindToAnModelBone = ""
-modelName = "tree1"
-modelFileName = "../../Resources/models/deathclaw/deathclaw.X"
-addStaticModel();
-
-x = -55.2375
-y = 0.3967
-z = -13.7747
-scale = 0.500003
-rotX = 0
-rotY = 0
-rotZ = 6.2
-bindable = 0
-bindToAnModel = ""
-bindToAnModelBone = ""
-modelName = "tree2"
-modelFileName = "../../Resources/models/trees/tree1/tree.X"
-addStaticModel();
-
-x = 16.093
+x = -753.372
 y = 0
-z = -13.1846
-scale = 0.490003
+z = -510.363
+scale = 2.59
 rotX = 0
 rotY = 0
 rotZ = 0
 bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
-modelName = "tree3"
-modelFileName = "../../Resources/models/trees/tree1/tree.X"
+modelName = "tree3205"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
-x = 9.83306
+x = -838.196
 y = 0
-z = 46.8229
-scale = 0.470003
+z = -392.191
+scale = 4.18
 rotX = 0
 rotY = 0
 rotZ = 0
 bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
-modelName = "tree4"
-modelFileName = "../../Resources/models/trees/tree1/tree.X"
+modelName = "tree3206"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
-x = -51.4643
-y = 1.41147
-z = 46.8855
-scale = 0.46
+x = 328.321
+y = 6.10352e-05
+z = 810.303
+scale = 4.05
 rotX = 0
 rotY = 0
 rotZ = 0
 bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
-modelName = "tree16"
-modelFileName = "../../Resources/models/trees/tree1/tree.X"
+modelName = "tree3207"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
-x = -425.988
+x = 800.71
+y = 0.00012207
+z = 248.754
+scale = 4.40001
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree3208"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = 415.932
 y = 0
-z = -739.152
-scale = 1.85
+z = 617.121
+scale = 3.62
 rotX = 0
 rotY = 0
 rotZ = 0
 bindable = 0
 bindToAnModel = ""
 bindToAnModelBone = ""
-modelName = "tree17"
-modelFileName = "../../Resources/models/trees/tree1/tree.X"
+modelName = "tree32089"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = 313.94
+y = 0
+z = -346.941
+scale = 3.3
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree320810"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = 690.902
+y = 0
+z = 377.754
+scale = 3.92
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree320811"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = 906.377
+y = 0
+z = 314.892
+scale = 4.19
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree32081012"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = 251.952
+y = 0.00012207
+z = -221.232
+scale = 4.05
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree32081013"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = -400.42
+y = 0
+z = 312.777
+scale = 3.93
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree32081014"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = -246.615
+y = 0.00012207
+z = 87.1708
+scale = 3.82
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree32081015"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = -288.288
+y = -0.00012207
+z = 399.443
+scale = 3.69
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree32081016"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = 449.604
+y = 0
+z = -219.754
+scale = 3.56
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree32081017"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = 44.8323
+y = -0.00012207
+z = -280.832
+scale = 3.45
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree32081018"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = -133.622
+y = 0
+z = 316.901
+scale = 3.93
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree3208101419"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = -289.095
+y = 6.10352e-05
+z = 217.867
+scale = 3.93
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree3208101420"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = 289.763
+y = 0
+z = -19.4434
+scale = 3.93
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree3208101421"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = 151.043
+y = 0.00012207
+z = -144.778
+scale = 3.93
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree3208101422"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = 410.475
+y = 0.00012207
+z = -114.026
+scale = 3.93
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree3208101423"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = -135.585
+y = 0
+z = 119.923
+scale = 3.93
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree3208101424"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = 17.7933
+y = 0.00012207
+z = 235.769
+scale = 3.93
+rotX = 0
+rotY = 0
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "tree3208101425"
+modelFileName = "../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
 mainHero = "galio"

@@ -24,7 +24,7 @@ public:
 	virtual void OnRender() = 0;
 	virtual void OnLostDevice() = 0;
 	virtual void OnResetDevice() = 0;
-
+	virtual void Destroy() = 0;
 	virtual void LoadGameObject();
 	virtual void RenderBindedWeapon(GameObject* pSkMesh, std::string bone);
 

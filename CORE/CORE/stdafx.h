@@ -26,6 +26,7 @@
 #include<conio.h>
 #include<math.h>
 #include<map>
+#include<algorithm>
 #include<unordered_map>
 #include<vector>
 #include"IBaseScene.h"
