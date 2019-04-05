@@ -44,6 +44,8 @@ SkinnedModel::SkinnedModel()
 	m_vTitleForQuestRight = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 	m_vTitleForQuestUp	  = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_fTitleForQuestRotationAngleByY = 0.0;
+
+	m_pTitleMesh = nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -115,6 +117,8 @@ SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, 
 	m_eGameObjectType = EGameObjectType_Skinned;
 
 	m_bShouldRenderTitles = bShouldRenderTitles;
+
+	m_pTitleMesh = nullptr;
 }
 /////////////////////////////////////////////////////////////////////////
 
@@ -1161,11 +1165,6 @@ bool SkinnedModel::SpawnClone()
 	pMesh->SetRotationAngleByZ(0);
 
 	pMesh->SetTitleRotationAnglyByY(GetRotationAngleByY());
-
-	static int id = 1;
-	std::string newName = GetName() + std::to_string(id);
-	pMesh->SetName(newName);
-	++id;
 
 	pMesh->SetTitleForQuest("");
 

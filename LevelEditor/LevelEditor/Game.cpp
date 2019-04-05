@@ -23,6 +23,7 @@ Game::Game()
 
 	D3DXVECTOR3 vCameraPosition = D3DXVECTOR3(0,100,0);
 	camera->SetPosition(vCameraPosition);
+	camera->SetSpeed(500);
 
 	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.
 	InitVertexDeclarations();
@@ -348,7 +349,7 @@ void Game::OnUpdate(float dt)
 
 			}
 
-			textbox_modelName->SetText(skinnedModel->GetName());
+			textbox_modelName->SetText(std::to_string(skinnedModel->GetId()));
 			textbox_typeInGame->SetText(skinnedModel->GetActorType()); //TODO: fix this
 			textbox_titleForQuest->SetText(skinnedModel->GetTitleForQuest());
 
@@ -375,7 +376,7 @@ void Game::OnUpdate(float dt)
 				textbox_typeInGame->SetVisible(false);
 			}
 
-			textbox_modelName->SetText(pickedObj->GetName());
+			textbox_modelName->SetText(std::to_string(pickedObj->GetId()));
 			textbox_bindToAnModel->SetText(pickedObj->GetBindedToAnimatedModelName());
 			textbox_bindToAnModelBone->SetText(pickedObj->GetBindedToBoneName());
 

@@ -27,6 +27,8 @@ Camera::Camera(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, fl
 	m_vLookVector  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 
 	BuildProjectionMatrix(fFovAngle,fAspectRatio,fFrustumNearPlaneZ,fFrustumFarPlaneZ);
+
+	m_speed = 100;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -257,7 +259,7 @@ void Camera::MoveCamera(float dt)
 		dir += m_vRightVector;
 	}
 	
-	D3DXVECTOR3 newPos = m_vPosition + dir*100.0*dt;
+	D3DXVECTOR3 newPos = m_vPosition + dir* m_speed *dt;
 	m_vPosition = newPos;
 
 	if( pDinput->IsMouseButtonDown(0) )
@@ -270,6 +272,13 @@ void Camera::MoveCamera(float dt)
 		RotateUp(upAngleRot);
 		RotateRight(rightAngleRot);
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Camera::SetSpeed(int speed)
+{
+	m_speed = speed;
 }
 
 /////////////////////////////////////////////////////////////////////////

@@ -18,7 +18,7 @@ class GameObject
 public:
 
 	//todo: should init everything in the constructor
-	GameObject() {};
+	GameObject();
 	virtual ~GameObject() = 0;
 	virtual void OnUpdate(float dt) = 0;
 	virtual void OnRender() = 0;
@@ -38,6 +38,10 @@ public:
 	std::string GetName() const;
 
 	void SetName(const std::string& strName);
+
+	int GetId() const;
+
+	void SetId(int id);
 
 	D3DXVECTOR3 GetPosition() const;
 
@@ -181,6 +185,8 @@ protected:
 	EGameObjectType m_eGameObjectType;
 
 	D3DXMATRIX  m_CombinedTransformationMatrix;
+
+	int m_id;
 };
 
 //////////////////////////////////////////////////////////////////////////////

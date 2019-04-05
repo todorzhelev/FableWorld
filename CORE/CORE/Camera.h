@@ -47,6 +47,8 @@ public:
 
 	void			MoveCamera(float dt);
 
+	void			SetSpeed(int speed);
+
 	void			RotateRight(float angle);
 
 	void			RotateUp(float angle);
@@ -93,6 +95,8 @@ private:
 	int m_minZoom;
 
 	int m_zoom;
+
+	int m_speed;
 };
 
 //////////////////////////////////////////////////////////////////////////////

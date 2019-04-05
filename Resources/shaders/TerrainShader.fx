@@ -111,7 +111,7 @@ float4 TerrainPS(VS_OUTPUT inp) : COLOR
     
 	texStoneColor *= blendMapColor.b;
 	texDirtColor  *= blendMapColor.r;
-	texGrassColor *= blendMapColor.g;
+	texGrassColor *= blendMapColor.g*0.8;
 	
     float3 final = (texStoneColor + texDirtColor + texGrassColor) * inp.light;
  

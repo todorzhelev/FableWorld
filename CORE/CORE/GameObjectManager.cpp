@@ -5,6 +5,8 @@
 
 GameObjectManager* m_pGameObjManager = nullptr;
 
+int GameObjectManager::m_lastObjectId = 0;
+
 /////////////////////////////////////////////////////////////////////////
 
 GameObjectManager::GameObjectManager(bool bShouldRenderTitles, bool bShouldHighlightPickedObjects, bool bShouldRenderAxis, bool bAreObjectsGrounded, bool bShouldRenderBoundingBoxes, bool bShouldPickOnlySkinnedModels)
@@ -22,6 +24,9 @@ GameObjectManager::GameObjectManager(bool bShouldRenderTitles, bool bShouldHighl
 
 void GameObjectManager::AddGameObject(GameObject* pGameObject)
 {
+	m_lastObjectId++;
+	pGameObject->SetId(m_lastObjectId);
+
 	m_gameObjects.push_back(pGameObject);
 
 	if( pGameObject->GetObjectType() == EGameObjectType_Skinned )

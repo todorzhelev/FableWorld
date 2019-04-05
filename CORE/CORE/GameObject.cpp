@@ -1,6 +1,11 @@
 #include <stdafx.h>
 #include"GameObject.h"
 
+GameObject::GameObject()
+{
+	m_id = -1;
+}
+
 GameObject::~GameObject()
 {
 	m_pMesh->Release();
@@ -67,6 +72,16 @@ std::string GameObject::GetName() const
 void GameObject::SetName(const std::string& strName)
 {
 	m_strModelName = strName;
+}
+
+int GameObject::GetId() const
+{
+	return m_id;
+}
+
+void GameObject::SetId(int id)
+{
+	m_id = id;
 }
 
 D3DXVECTOR3 GameObject::GetPosition() const

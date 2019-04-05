@@ -563,11 +563,6 @@ bool StaticModel::SpawnClone()
 	pMesh->SetBindedToAnimatedModelName(GetBindedToAnimatedModelName());
 	pMesh->SetBindedToBoneName(GetBindedToBoneName());
 
-	static int id = 1;
-	std::string newName = GetName() + std::to_string(id);
-	pMesh->SetName(newName);
-	++id;
-
 	pMesh->SetModelFilename(GetModelFileName());
 
 	pMesh->SetPicked(false);
