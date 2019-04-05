@@ -135,6 +135,10 @@ public:
 
 	void SetCombinedTransfMatrix(D3DXMATRIX mat);
 
+	int GetHealth();
+
+	void SetHealth(int health);
+
 protected:
 
 	//the name of the .x file
@@ -187,6 +191,8 @@ protected:
 	D3DXMATRIX  m_CombinedTransformationMatrix;
 
 	int m_id;
+
+	int m_health;
 };
 
 //////////////////////////////////////////////////////////////////////////////

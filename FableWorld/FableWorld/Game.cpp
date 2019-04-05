@@ -50,6 +50,8 @@ Game::Game()
 	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 3000,true);
 	camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 	camera->SetPosition(D3DXVECTOR3(0,200,100));
+	camera->SetSpeed(500);
+
 	//camera->RotateUp(-300);
 
 	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.

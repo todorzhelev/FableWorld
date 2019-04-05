@@ -4,6 +4,8 @@
 GameObject::GameObject()
 {
 	m_id = -1;
+
+	m_health = 100;
 }
 
 GameObject::~GameObject()
@@ -325,4 +327,14 @@ D3DXMATRIX GameObject::GetCombinedTransfMatrix() const
 void GameObject::SetCombinedTransfMatrix(D3DXMATRIX mat)
 {
 	m_CombinedTransformationMatrix = mat;
+}
+
+int GameObject::GetHealth()
+{
+	return m_health;
+}
+
+void GameObject::SetHealth(int health)
+{
+	m_health = health;
 }
