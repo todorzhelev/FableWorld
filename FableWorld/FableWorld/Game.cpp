@@ -60,7 +60,7 @@ Game::Game()
 	pSky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
 	//TODO: this should be specified in the level file
-	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",0.0f,513,513,4,4,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	pTerrain = new Terrain("../../Resources/heightmaps/heightmap_new.raw",0.5f,513,513,4,4,D3DXVECTOR3(0.0f,0.0f,0.0f));
 	//pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//the direction to the sun

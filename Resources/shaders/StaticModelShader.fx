@@ -74,7 +74,7 @@ float4 StaticModelPS(VS_OUTPUT inp) : COLOR
 
 	if( !picked )
 	{
-		color = (ambient + diffuse)*texColor;
+		color = (ambient + diffuse*3)*texColor;
 	}
 	else
 	{
