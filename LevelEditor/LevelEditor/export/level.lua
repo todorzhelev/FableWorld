@@ -1,9 +1,9 @@
-x = -732.591
-y = 0
-z = -760.495
-scale = 0.979999
+x = -678.058
+y = 0.00012207
+z = -740.879
+scale = 0.469999
 rotX = 0
-rotY = 0.7
+rotY = -5.7
 rotZ = 0
 titleRotY = 0
 modelName = "galio"
@@ -13,10 +13,10 @@ textureFileName = "../../Resources/textures/SkinnedModels/galio_base_TX_CM.dds"
 typeInGame = "mainHero"
 addAnimatedModel();
 
-x = 616.947
-y = 0
-z = 712.49
-scale = 1.29
+x = 709.665
+y = 0.00012207
+z = 733.581
+scale = 0.700001
 rotX = 0
 rotY = 0.7
 rotZ = 0
@@ -25,6 +25,36 @@ modelName = "cho"
 titleForQuest = "?"
 modelFileName = "../../Resources/models/cho/cho_5anmx.X"
 textureFileName = "../../Resources/textures/SkinnedModels/chogath_abyss_TX_CM.DDS"
+typeInGame = "enemy"
+addAnimatedModel();
+
+x = -791.38
+y = 0.00012207
+z = 711.954
+scale = 0.51
+rotX = 0
+rotY = -7.3
+rotZ = 0
+titleRotY = 0
+modelName = "ezreal_5anm85"
+titleForQuest = "?"
+modelFileName = "../../Resources/models/ezreal/ezreal_5anm.X"
+textureFileName = "../../Resources/textures/SkinnedModels/Ezreal_ProdigalExplorer.dds"
+typeInGame = "neutral"
+addAnimatedModel();
+
+x = 793.879
+y = 0
+z = -780.797
+scale = 0.49
+rotX = 0
+rotY = -4.3
+rotZ = 0
+titleRotY = -4.3
+modelName = ""
+titleForQuest = ""
+modelFileName = "../../Resources/models/ezreal/ezreal_5anm.X"
+textureFileName = "../../Resources/textures/SkinnedModels/Ezreal_ProdigalExplorer.dds"
 typeInGame = "enemy"
 addAnimatedModel();
 
@@ -143,7 +173,7 @@ addStaticModel();
 x = -699.762
 y = -0.000244141
 z = 302.553
-scale = 1.89
+scale = 1.98
 rotX = 0
 rotY = 0
 rotZ = 0
@@ -280,9 +310,9 @@ modelName = "tree32081017"
 modelFileName = "../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
-x = 83.5687
-y = 0.00012207
-z = -125.64
+x = 116.717
+y = 6.10352e-05
+z = -254.388
 scale = 1.89
 rotX = 0
 rotY = 0
@@ -742,10 +772,10 @@ modelName = ""
 modelFileName = "../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
-x = -676.666
-y = 0.00012207
-z = 451.871
-scale = 1.89
+x = -687.481
+y = 0
+z = 432.867
+scale = 1.72
 rotX = 0
 rotY = 0
 rotZ = 0
@@ -1146,6 +1176,34 @@ bindToAnModel = ""
 bindToAnModelBone = ""
 modelName = ""
 modelFileName = "../../Resources/models/trees/tree3/tree3.X"
+addStaticModel();
+
+x = -906.541
+y = 0
+z = 815.325
+scale = 0.999999
+rotX = 0
+rotY = -20.4
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = "house185"
+modelFileName = "../../Resources/models/buildings/house1/house1.X"
+addStaticModel();
+
+x = 924.745
+y = 0
+z = -846.288
+scale = 0.959999
+rotX = 0
+rotY = -17.3
+rotZ = 0
+bindable = 0
+bindToAnModel = ""
+bindToAnModelBone = ""
+modelName = ""
+modelFileName = "../../Resources/models/buildings/house1/house1.X"
 addStaticModel();
 
 mainHero = "galio"
