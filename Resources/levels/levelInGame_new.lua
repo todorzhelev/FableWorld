@@ -1,7 +1,7 @@
-x = -663.771
-y = -6.10352e-05
-z = -734.645
-scale = 0.3
+x = -732.591
+y = 0
+z = -760.495
+scale = 0.979999
 rotX = 0
 rotY = 0.7
 rotZ = 0
@@ -13,10 +13,10 @@ textureFileName = "../../Resources/textures/SkinnedModels/galio_base_TX_CM.dds"
 typeInGame = "mainHero"
 addAnimatedModel();
 
-x = 663.465
-y = -6.10352e-05
-z = 663.473
-scale = 0.3
+x = 616.947
+y = 0
+z = 712.49
+scale = 1.29
 rotX = 0
 rotY = 0.7
 rotZ = 0
@@ -42,9 +42,9 @@ modelName = "tree320"
 modelFileName = "../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
-x = -355.587
+x = -385.424
 y = 0
-z = -616.489
+z = -607.226
 scale = 1.89
 rotX = 0
 rotY = 0
@@ -70,9 +70,9 @@ modelName = "tree3202"
 modelFileName = "../../Resources/models/trees/tree3/tree3.X"
 addStaticModel();
 
-x = -321.163
-y = 0
-z = -537.372
+x = -330.042
+y = 0.00012207
+z = -540.214
 scale = 1.89
 rotX = 0
 rotY = 0

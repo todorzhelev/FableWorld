@@ -60,14 +60,30 @@ void GameObjectManager::OnUpdate()
 
 void GameObjectManager::UpdatePicking()
 {
-	//TODO: fix this to work with normal objects too
-	for (auto& gameObject : m_gameObjects)
-	{
-		float dist = gameObject->GetDistanceToPickedObject();
+	auto& mapPickedObjects = m_mapPickedObjects;
+
+	//dont want to capture everything
+	auto lambda = [&mapPickedObjects](GameObject* obj) {
+		float dist = obj->GetDistanceToPickedObject();
 
 		if (dist != -1)
 		{
-			m_mapPickedObjects[dist] = gameObject;
+			mapPickedObjects[dist] = obj;
+		}
+	};
+
+	if (!m_bShouldPickOnlySkinnedModels)
+	{
+		for (auto& obj : m_gameObjects)
+		{
+			lambda(obj);
+		}
+	}
+	else
+	{
+		for (auto& obj : m_skinnedModels)
+		{
+			lambda(obj);
 		}
 	}
 

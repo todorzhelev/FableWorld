@@ -71,7 +71,7 @@ Game::Game()
 	pTextManager->CreateFontFor3DText();
 
 	//loads the models, sounds and quests from the scripts
-	luaL_dofile(g_luaState, "../../Resources/scripts/levelInGame_new.lua");
+	luaL_dofile(g_luaState, "../../Resources/levels/levelInGame_new.lua");
 	luaL_dofile(g_luaState, "../../Resources/scripts/quests.lua");
 
 	pDialogueManager = new DialogueManager;
