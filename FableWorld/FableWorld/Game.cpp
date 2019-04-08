@@ -125,13 +125,13 @@ Game::Game()
 	m_isAIRunningToTarget = false;
 	m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
 
-	GameObject* objCho = m_pGameObjManager->GetObjectByName("cho");
-	objCho->SpawnClone();//~7.5MB per one cho. Did not expect that wow
-	objCho->SpawnClone();
-	objCho->SpawnClone();
-	objCho->SpawnClone();
-	objCho->SpawnClone();
-	objCho->SpawnClone();
+	//GameObject* objCho = m_pGameObjManager->GetObjectByName("cho");
+	//objCho->SpawnClone();//~7.5MB per one cho. Did not expect that wow
+	//objCho->SpawnClone();
+	//objCho->SpawnClone();
+	//objCho->SpawnClone();
+	//objCho->SpawnClone();
+	//objCho->SpawnClone();
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -431,7 +431,10 @@ void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt)
 
 	dir -= runner->GetLookVector();
 
-	D3DXVECTOR3 newPos = runner->GetPosition() + dir * speed*dt;
+	//what is the point to have 2 speed variables you might ask?
+	//well the first one changes the animation speed, which must be looked into at some point
+	float speedModifier = 3;
+	D3DXVECTOR3 newPos = runner->GetPosition() + dir * speed*speedModifier*dt;
 	runner->SetPosition(newPos);
 
 	D3DXVECTOR3 vActorPosition = runner->GetPosition();

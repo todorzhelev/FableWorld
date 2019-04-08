@@ -1,9 +1,9 @@
-x = -678.058
-y = 0.00012207
-z = -740.879
+x = 704.392
+y = -6.10352e-05
+z = 702.909
 scale = 0.469999
 rotX = 0
-rotY = -5.7
+rotY = -9.4
 rotZ = 0
 titleRotY = 0
 modelName = "galio"
@@ -13,12 +13,12 @@ textureFileName = "../../Resources/textures/SkinnedModels/galio_base_TX_CM.dds"
 typeInGame = "mainHero"
 addAnimatedModel();
 
-x = 709.665
-y = 0.00012207
-z = 733.581
+x = -656.031
+y = 0
+z = -668.756
 scale = 0.700001
 rotX = 0
-rotY = 0.7
+rotY = -6.1
 rotZ = 0
 titleRotY = 0
 modelName = "cho"
@@ -28,35 +28,91 @@ textureFileName = "../../Resources/textures/SkinnedModels/chogath_abyss_TX_CM.DD
 typeInGame = "enemy"
 addAnimatedModel();
 
-x = -791.38
-y = 0.00012207
-z = 711.954
-scale = 0.51
+x = -775.046
+y = -7.62939e-06
+z = 699.933
+scale = 0.76
 rotX = 0
 rotY = -7.3
 rotZ = 0
 titleRotY = 0
-modelName = "ezreal_5anm85"
+modelName = "ezreal"
 titleForQuest = "?"
 modelFileName = "../../Resources/models/ezreal/ezreal_5anm.X"
 textureFileName = "../../Resources/textures/SkinnedModels/Ezreal_ProdigalExplorer.dds"
 typeInGame = "neutral"
 addAnimatedModel();
 
-x = 793.879
+x = 753.926
 y = 0
-z = -780.797
-scale = 0.49
+z = -756.178
+scale = 0.84
 rotX = 0
 rotY = -4.3
 rotZ = 0
 titleRotY = -4.3
-modelName = ""
+modelName = "ezreal1"
 titleForQuest = ""
 modelFileName = "../../Resources/models/ezreal/ezreal_5anm.X"
 textureFileName = "../../Resources/textures/SkinnedModels/Ezreal_ProdigalExplorer.dds"
 typeInGame = "enemy"
 addAnimatedModel();
+
+x = -9.04183
+y = 0.447831
+z = 96.3665
+scale = 6.18005
+rotX = -1.6
+rotY = 1.4
+rotZ = 1.4
+bindable = 1
+bindToAnModel = "galio"
+bindToAnModelBone = "Bone18"
+modelName = "gal_head"
+modelFileName = "../../Resources/models/head/warrior_brown/warrior_head.X"
+addStaticModel();
+
+x = 86.7488
+y = 109.542
+z = 63.1512
+scale = 4.17
+rotX = 5.8
+rotY = -0.0999999
+rotZ = 1.3
+bindable = 1
+bindToAnModel = "galio"
+bindToAnModelBone = "right_hand"
+modelName = "sword_hyjal"
+modelFileName = "../../Resources/models/weapons/hyjal_sword/sword_hyjal_big.X"
+addStaticModel();
+
+x = -10.2376
+y = -30.3347
+z = 4.57869
+scale = 5.11002
+rotX = -0.3
+rotY = 50.1998
+rotZ = -114.199
+bindable = 1
+bindToAnModel = "ezreal"
+bindToAnModelBone = "head"
+modelName = "ezr_head"
+modelFileName = "../../Resources/models/head/paladin_head/pal_head.X"
+addStaticModel();
+
+x = -10.2376
+y = -30.3347
+z = 4.57869
+scale = 5.11002
+rotX = -0.3
+rotY = 50.1998
+rotZ = -114.199
+bindable = 1
+bindToAnModel = "ezreal1"
+bindToAnModelBone = "head"
+modelName = "ezr_head"
+modelFileName = "../../Resources/models/head/paladin_head/pal_head.X"
+addStaticModel();
 
 x = 270.067
 y = 0
