@@ -30,3 +30,9 @@
 #include<unordered_map>
 #include<vector>
 #include"IBaseScene.h"
+
+#include <cstring>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
