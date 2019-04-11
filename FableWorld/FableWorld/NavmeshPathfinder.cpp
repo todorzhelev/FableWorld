@@ -1399,3 +1399,24 @@ void NavmeshPathfinder::drawAgent(const float* pos, float r, float h, float c, c
 
 	//dd.depthMask(true);
 }
+
+void NavmeshPathfinder::FindPath(float startPosition[3], float endPosition[3])
+{
+	if (!m_navMesh)
+	{
+		return;
+	}
+
+	m_navQuery->findNearestPoly(startPosition, m_polyPickExt, &m_filter, &m_startRef, 0);
+	m_navQuery->findNearestPoly(endPosition, m_polyPickExt, &m_filter, &m_endRef, 0);
+
+	m_navQuery->findPath(m_startRef, m_endRef, startPosition, endPosition, &m_filter, m_polys, &m_npolys, MAX_POLYS);
+
+	m_nsmoothPath = 0;
+
+	if (m_npolys)
+	{
+
+		printf("found \n");
+	}
+}

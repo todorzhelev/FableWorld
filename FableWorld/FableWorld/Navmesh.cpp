@@ -954,3 +954,23 @@ void Navmesh::saveAll(const char* path, const dtNavMesh* mesh)
 
 	fclose(fp);
 }
+
+void Navmesh::FindPath(D3DXVECTOR3 startPos, D3DXVECTOR3 endPos)
+{
+	if (!m_navMesh)
+	{
+		return;
+	}
+
+	float startPosition[3];
+	startPosition[0] = -startPos.x; //for some reason it is inversed
+	startPosition[1] = -startPos.y; //for some reason it is inversed
+	startPosition[2] = startPos.z;
+
+	float endPosition[3];
+	endPosition[0] = -endPos.x; //for some reason it is inversed
+	endPosition[1] = -endPos.y; //for some reason it is inversed
+	endPosition[2] = endPos.z;
+
+	m_tool->FindPath(startPosition, endPosition);
+}

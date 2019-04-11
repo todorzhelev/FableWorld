@@ -320,7 +320,9 @@ void Game::OnUpdate(float dt)
 
 	if (m_isAIRunningToTarget && pickedObj)
 	{
-		if (!IsObjectNear(pickedObj->GetPosition(), m_AIIntersectPoint,30))
+		m_navmesh->FindPath(pickedObj->GetPosition(), m_AIIntersectPoint);
+
+		/*if (!IsObjectNear(pickedObj->GetPosition(), m_AIIntersectPoint,30))
 		{
 			RunToTarget(pickedObj, m_AIIntersectPoint, dt);
 		}
@@ -330,7 +332,7 @@ void Game::OnUpdate(float dt)
 			pSkinnedModel->PlayAnimation("idle");
 			m_isAIRunningToTarget = false;
 			m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
-		}
+		}*/
 	}
 
 	delay -= dt;
