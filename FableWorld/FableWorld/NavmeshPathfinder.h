@@ -3,6 +3,21 @@
 #include "../CORE/Recast/Detour/DetourNavMesh.h"
 #include "../CORE/Recast/Detour/DetourNavMeshQuery.h"
 
+/// Tool types.
+enum NavmeshToolType
+{
+	TOOL_NONE = 0,
+	TOOL_TILE_EDIT,
+	TOOL_TILE_HIGHLIGHT,
+	TOOL_TEMP_OBSTACLE,
+	TOOL_NAVMESH_TESTER,
+	TOOL_NAVMESH_PRUNE,
+	TOOL_OFFMESH_CONNECTION,
+	TOOL_CONVEX_VOLUME,
+	TOOL_CROWD,
+	MAX_TOOLS
+};
+
 struct NavmeshTool
 {
 	virtual ~NavmeshTool() {}

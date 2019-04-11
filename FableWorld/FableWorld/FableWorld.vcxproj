@@ -168,10 +168,17 @@
     <ClCompile Include="..\..\CORE\CORE\Textbox.cpp" />
     <ClCompile Include="..\..\CORE\CORE\TextManager.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Tree.cpp" />
+    <ClCompile Include="ChunkyTriMesh.cpp" />
+    <ClCompile Include="InputGeom.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MenuInGame.cpp" />
+    <ClCompile Include="MeshLoaderObj.cpp" />
+    <ClCompile Include="Navmesh.cpp" />
+    <ClCompile Include="NavmeshInterfaces.cpp" />
+    <ClCompile Include="NavmeshPathfinder.cpp" />
+    <ClCompile Include="PerfTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\CORE\CORE\AABB.h" />
@@ -225,9 +232,16 @@
     <ClInclude Include="..\..\CORE\CORE\Textbox.h" />
     <ClInclude Include="..\..\CORE\CORE\TextManager.h" />
     <ClInclude Include="..\..\CORE\CORE\Tree.h" />
+    <ClInclude Include="ChunkyTriMesh.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="InputGeom.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuInGame.h" />
+    <ClInclude Include="MeshLoaderObj.h" />
+    <ClInclude Include="Navmesh.h" />
+    <ClInclude Include="NavmeshInterfaces.h" />
+    <ClInclude Include="NavmeshPathfinder.h" />
+    <ClInclude Include="PerfTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Resources\scripts\level.lua" />

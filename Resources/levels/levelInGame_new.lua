@@ -83,7 +83,7 @@ bindable = 1
 bindToAnModel = "galio"
 bindToAnModelBone = "right_hand"
 modelName = "sword_hyjal"
-modelFileName = "../../Resources/models/weapons/hyjal_sword/sword_hyjal_big.X"
+modelFileName = "../../Resources/models/weapons/black_axe/axe_yellow.X"
 addStaticModel();
 
 x = -10.2376

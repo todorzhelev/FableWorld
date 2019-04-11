@@ -54,6 +54,9 @@
     <Filter Include="CORE\Source Files\Recast\DetourTileCache">
       <UniqueIdentifier>{4bbe5c1e-0084-40b5-b86e-371f94b019ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Navmesh">
+      <UniqueIdentifier>{587a63e1-c761-4d72-a452-2238bf2ae8b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -236,6 +239,27 @@
     <ClCompile Include="..\..\CORE\CORE\Recast\DebugUtils\RecastDump.cpp">
       <Filter>CORE\Source Files\Recast\DebugUtils</Filter>
     </ClCompile>
+    <ClCompile Include="MeshLoaderObj.cpp">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Navmesh.cpp">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClCompile>
+    <ClCompile Include="ChunkyTriMesh.cpp">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClCompile>
+    <ClCompile Include="InputGeom.cpp">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClCompile>
+    <ClCompile Include="NavmeshInterfaces.cpp">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClCompile>
+    <ClCompile Include="PerfTimer.cpp">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClCompile>
+    <ClCompile Include="NavmeshPathfinder.cpp">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\CORE\CORE\AABB.h">
@@ -399,6 +423,27 @@
     </ClInclude>
     <ClInclude Include="..\..\CORE\CORE\Recast\DebugUtils\RecastDump.h">
       <Filter>CORE\Source Files\Recast\DebugUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="Navmesh.h">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshLoaderObj.h">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="InputGeom.h">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkyTriMesh.h">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="NavmeshInterfaces.h">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="PerfTimer.h">
+      <Filter>Source Files\Navmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="NavmeshPathfinder.h">
+      <Filter>Source Files\Navmesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
