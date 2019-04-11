@@ -265,8 +265,10 @@ void Navmesh::collectSettings(BuildSettings& settings)
 
 void Navmesh::resetCommonSettings()
 {
-	m_cellSize = 0.3f;
-	m_cellHeight = 0.2f;
+	//m_cellSize = 0.3f;
+	//m_cellHeight = 0.2f;
+	m_cellSize = 1.f;
+	m_cellHeight = 1.f;
 	m_agentHeight = 2.0f;
 	m_agentRadius = 0.6f;
 	m_agentMaxClimb = 0.9f;
@@ -278,7 +280,7 @@ void Navmesh::resetCommonSettings()
 	m_vertsPerPoly = 6.0f;
 	m_detailNavmeshDist = 6.0f;
 	m_detailNavmeshMaxError = 1.0f;
-	m_partitionType = NAVMESH_PARTITION_WATERSHED;
+	m_partitionType = NAVMESH_PARTITION_MONOTONE;
 }
 
 void Navmesh::handleCommonSettings()
@@ -359,6 +361,32 @@ void Navmesh::handleStep()
 	if (m_tool)
 		m_tool->handleStep();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+void Navmesh::loadGeometry()
+{
+	delete m_geom;
+	m_geom = 0;
+
+	std::string path = "../../Resources/navmesh/navmesh.obj";
+
+	m_geom = new InputGeom;
+	if (!m_geom->load(m_ctx, path))
+	{
+		delete m_geom;
+		m_geom = 0;
+
+		printf("failed to load navmesh geometry \n");
+	}
+
+	if (m_geom)
+	{
+		handleMeshChanged(m_geom);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 bool Navmesh::handleBuild()
 {
@@ -733,13 +761,13 @@ bool Navmesh::handleBuild()
 		}
 	}
 
-	m_ctx->stopTimer(RC_TIMER_TOTAL);
+	//m_ctx->stopTimer(RC_TIMER_TOTAL);
 
 	// Show performance stats.
-	duLogBuildTimes(*m_ctx, m_ctx->getAccumulatedTime(RC_TIMER_TOTAL));
-	m_ctx->log(RC_LOG_PROGRESS, ">> Polymesh: %d vertices  %d polygons", m_pmesh->nverts, m_pmesh->npolys);
+	//duLogBuildTimes(*m_ctx, m_ctx->getAccumulatedTime(RC_TIMER_TOTAL));
+	//m_ctx->log(RC_LOG_PROGRESS, ">> Polymesh: %d vertices  %d polygons", m_pmesh->nverts, m_pmesh->npolys);
 
-	m_totalBuildTimeMs = m_ctx->getAccumulatedTime(RC_TIMER_TOTAL) / 1000.0f;
+	//m_totalBuildTimeMs = m_ctx->getAccumulatedTime(RC_TIMER_TOTAL) / 1000.0f;
 
 	if (m_tool)
 		m_tool->init(this);

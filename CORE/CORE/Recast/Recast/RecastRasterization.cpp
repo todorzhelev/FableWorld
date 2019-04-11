@@ -171,7 +171,7 @@ bool rcAddSpan(rcContext* ctx, rcHeightfield& hf, const int x, const int y,
 			   const unsigned short smin, const unsigned short smax,
 			   const unsigned char area, const int flagMergeThr)
 {
-	rcAssert(ctx);
+	//rcAssert(ctx);
 
 	if (!addSpan(hf, x, y, smin, smax, area, flagMergeThr))
 	{
@@ -345,9 +345,9 @@ bool rcRasterizeTriangle(rcContext* ctx, const float* v0, const float* v1, const
 						 const unsigned char area, rcHeightfield& solid,
 						 const int flagMergeThr)
 {
-	rcAssert(ctx);
+	//rcAssert(ctx);
 
-	rcScopedTimer timer(ctx, RC_TIMER_RASTERIZE_TRIANGLES);
+	//rcScopedTimer timer(ctx, RC_TIMER_RASTERIZE_TRIANGLES);
 
 	const float ics = 1.0f/solid.cs;
 	const float ich = 1.0f/solid.ch;
@@ -369,9 +369,9 @@ bool rcRasterizeTriangles(rcContext* ctx, const float* verts, const int /*nv*/,
 						  const int* tris, const unsigned char* areas, const int nt,
 						  rcHeightfield& solid, const int flagMergeThr)
 {
-	rcAssert(ctx);
+	//rcAssert(ctx);
 
-	rcScopedTimer timer(ctx, RC_TIMER_RASTERIZE_TRIANGLES);
+	////rcScopedTimer timer(ctx, RC_TIMER_RASTERIZE_TRIANGLES);
 	
 	const float ics = 1.0f/solid.cs;
 	const float ich = 1.0f/solid.ch;
@@ -401,9 +401,9 @@ bool rcRasterizeTriangles(rcContext* ctx, const float* verts, const int /*nv*/,
 						  const unsigned short* tris, const unsigned char* areas, const int nt,
 						  rcHeightfield& solid, const int flagMergeThr)
 {
-	rcAssert(ctx);
+	//rcAssert(ctx);
 
-	rcScopedTimer timer(ctx, RC_TIMER_RASTERIZE_TRIANGLES);
+	//rcScopedTimer timer(ctx, RC_TIMER_RASTERIZE_TRIANGLES);
 	
 	const float ics = 1.0f/solid.cs;
 	const float ich = 1.0f/solid.ch;
@@ -432,9 +432,9 @@ bool rcRasterizeTriangles(rcContext* ctx, const float* verts, const int /*nv*/,
 bool rcRasterizeTriangles(rcContext* ctx, const float* verts, const unsigned char* areas, const int nt,
 						  rcHeightfield& solid, const int flagMergeThr)
 {
-	rcAssert(ctx);
+	//rcAssert(ctx);
 	
-	rcScopedTimer timer(ctx, RC_TIMER_RASTERIZE_TRIANGLES);
+	//rcScopedTimer timer(ctx, RC_TIMER_RASTERIZE_TRIANGLES);
 	
 	const float ics = 1.0f/solid.cs;
 	const float ich = 1.0f/solid.ch;

@@ -37,9 +37,9 @@
 /// @see rcHeightfield, rcConfig
 void rcFilterLowHangingWalkableObstacles(rcContext* ctx, const int walkableClimb, rcHeightfield& solid)
 {
-	rcAssert(ctx);
+	//rcAssert(ctx);
 
-	rcScopedTimer timer(ctx, RC_TIMER_FILTER_LOW_OBSTACLES);
+	////rcScopedTimer timer(ctx, RC_TIMER_FILTER_LOW_OBSTACLES);
 	
 	const int w = solid.width;
 	const int h = solid.height;
@@ -84,9 +84,9 @@ void rcFilterLowHangingWalkableObstacles(rcContext* ctx, const int walkableClimb
 void rcFilterLedgeSpans(rcContext* ctx, const int walkableHeight, const int walkableClimb,
 						rcHeightfield& solid)
 {
-	rcAssert(ctx);
+	//rcAssert(ctx);
 	
-	rcScopedTimer timer(ctx, RC_TIMER_FILTER_BORDER);
+	////rcScopedTimer timer(ctx, RC_TIMER_FILTER_BORDER);
 
 	const int w = solid.width;
 	const int h = solid.height;
@@ -178,9 +178,9 @@ void rcFilterLedgeSpans(rcContext* ctx, const int walkableHeight, const int walk
 /// @see rcHeightfield, rcConfig
 void rcFilterWalkableLowHeightSpans(rcContext* ctx, int walkableHeight, rcHeightfield& solid)
 {
-	rcAssert(ctx);
+	//rcAssert(ctx);
 	
-	rcScopedTimer timer(ctx, RC_TIMER_FILTER_WALKABLE);
+	//rcScopedTimer timer(ctx, RC_TIMER_FILTER_WALKABLE);
 	
 	const int w = solid.width;
 	const int h = solid.height;

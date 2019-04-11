@@ -1,6 +1,7 @@
 #include <stdafx.h>
 #include "Game.h"
 #include "QuestManager.h"
+#include "Navmesh.h"
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -132,6 +133,11 @@ Game::Game()
 	//objCho->SpawnClone();
 	//objCho->SpawnClone();
 	//objCho->SpawnClone();
+
+	m_navmesh = new Navmesh;
+	m_navmesh->resetCommonSettings();
+	m_navmesh->loadGeometry();
+	m_navmesh->handleBuild();
 }
 
 /////////////////////////////////////////////////////////////////////////

@@ -17,6 +17,8 @@
 #include "LuaFunctions.h"
 #include "GunEffect.h"
 
+class Navmesh;
+
 //this is the game scene and contains all the things in the game - terrain, models, etc
 //the Game class inherits from IBaseScene class so later we can change the scenes for instance from menu to game and etc
 class Game : public IBaseScene
@@ -89,4 +91,6 @@ private:
 	D3DXHANDLE   m_hDebugGraphicsWVPMatrix;
 
 	std::unique_ptr<GunEffect> m_pGunEffect;
+
+	Navmesh* m_navmesh;
 };

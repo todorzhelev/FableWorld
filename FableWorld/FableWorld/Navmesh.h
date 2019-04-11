@@ -95,6 +95,8 @@ public:
 	void resetCommonSettings();
 	void handleCommonSettings();
 
+	void loadGeometry();
+
 private:
 	// Explicitly disabled copy constructor and copy assignment operator.
 	Navmesh(const Navmesh&);
