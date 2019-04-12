@@ -265,10 +265,10 @@ void Navmesh::collectSettings(BuildSettings& settings)
 
 void Navmesh::resetCommonSettings()
 {
-	//m_cellSize = 0.3f;
-	//m_cellHeight = 0.2f;
-	m_cellSize = 1.f;
-	m_cellHeight = 1.f;
+	m_cellSize = 0.5f;
+	m_cellHeight = 0.5f;
+	//m_cellSize = 1.f;
+	//m_cellHeight = 1.f;
 	m_agentHeight = 2.0f;
 	m_agentRadius = 0.6f;
 	m_agentMaxClimb = 0.9f;
@@ -916,6 +916,8 @@ dtNavMesh* Navmesh::loadAll(const char* path)
 	return mesh;
 }
 
+/////////////////////////////////////////////////////////////////////////
+
 void Navmesh::saveAll(const char* path, const dtNavMesh* mesh)
 {
 	if (!mesh) return;
@@ -955,6 +957,8 @@ void Navmesh::saveAll(const char* path, const dtNavMesh* mesh)
 	fclose(fp);
 }
 
+/////////////////////////////////////////////////////////////////////////
+
 void Navmesh::FindPath(D3DXVECTOR3 startPos, D3DXVECTOR3 endPos)
 {
 	if (!m_navMesh)
@@ -974,3 +978,12 @@ void Navmesh::FindPath(D3DXVECTOR3 startPos, D3DXVECTOR3 endPos)
 
 	m_tool->FindPath(startPosition, endPosition);
 }
+
+/////////////////////////////////////////////////////////////////////////
+
+std::vector<D3DXVECTOR3> Navmesh::GetCalculatedPath()
+{
+	return m_tool->GetCalculatedPath();
+}
+
+/////////////////////////////////////////////////////////////////////////

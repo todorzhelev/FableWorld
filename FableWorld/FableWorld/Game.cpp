@@ -138,6 +138,8 @@ Game::Game()
 	m_navmesh->resetCommonSettings();
 	m_navmesh->loadGeometry();
 	m_navmesh->handleBuild();
+
+	m_currentPathfindingEndIndex = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -300,6 +302,7 @@ void Game::OnUpdate(float dt)
 	{
 		if (pDinput->IsMouseButtonDown(1))
 		{
+			m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
 			D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 			D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
 
@@ -314,25 +317,41 @@ void Game::OnUpdate(float dt)
 			D3DXVECTOR3 lineEndPoint = vOrigin + INT_MAX * vDir;
 			D3DXPlaneIntersectLine(&m_AIIntersectPoint, &plane, &vOrigin, &lineEndPoint);
 
+			m_navmesh->FindPath(pickedObj->GetPosition(), m_AIIntersectPoint);
+
+			m_currentPath.clear();
+			m_currentPath = m_navmesh->GetCalculatedPath();
+
+			m_currentPathfindingEndIndex = 0;
 			m_isAIRunningToTarget = true;
 		}
 	}
 
 	if (m_isAIRunningToTarget && pickedObj)
 	{
-		m_navmesh->FindPath(pickedObj->GetPosition(), m_AIIntersectPoint);
-
-		/*if (!IsObjectNear(pickedObj->GetPosition(), m_AIIntersectPoint,30))
+		//TODO: there is a bug with long distances I suppose it is from this 10 down below
+		m_currentPathfindingEndIndex+=10;
+		if (m_currentPathfindingEndIndex < m_currentPath.size())
 		{
-			RunToTarget(pickedObj, m_AIIntersectPoint, dt);
+			auto pos = m_currentPath[m_currentPathfindingEndIndex];
+
+			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pickedObj);
+
+			pSkinnedModel->SetAnimationSpeed(2.8);
+			pSkinnedModel->PlayAnimation("run");
+
+			pSkinnedModel->AlignToDirection(pos);
+
+			pSkinnedModel->SetPosition(pos);
 		}
 		else
 		{
 			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pickedObj);
+			pSkinnedModel->SetAnimationSpeed(1);
 			pSkinnedModel->PlayAnimation("idle");
+
 			m_isAIRunningToTarget = false;
-			m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
-		}*/
+		}
 	}
 
 	delay -= dt;
@@ -430,32 +449,20 @@ void Game::UpdateAI(float dt)
 
 void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt)
 {
-	float speed = 200.f;
+	float speed = 400.f;
 	SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(runner);
 	pSkinnedModel->SetMovementSpeed(speed / 100);
+	pSkinnedModel->SetAnimationSpeed(speed / 100);
 	pSkinnedModel->PlayAnimation("run");
 
 	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
 
 	dir -= runner->GetLookVector();
 
-	//what is the point to have 2 speed variables you might ask?
-	//well the first one changes the animation speed, which must be looked into at some point
-	float speedModifier = 3;
-	D3DXVECTOR3 newPos = runner->GetPosition() + dir * speed*speedModifier*dt;
+	D3DXVECTOR3 newPos = runner->GetPosition() + dir * speed*dt;
 	runner->SetPosition(newPos);
 
-	D3DXVECTOR3 vActorPosition = runner->GetPosition();
-
-	D3DXVECTOR3 vDistanceVector = vActorPosition - targetPos;
-	D3DXVec3Normalize(&vDistanceVector, &vDistanceVector);
-
-	float angle = D3DXVec3Dot(&runner->GetRightVector(), &vDistanceVector);
-	runner->ModifyRotationAngleByY(angle);
-
-	D3DXMATRIX R;
-	D3DXMatrixRotationY(&R, angle);
-	runner->TransformByMatrix(R);
+	pSkinnedModel->AlignToDirection(targetPos);
 }
 
 /////////////////////////////////////////////////////////////////////////

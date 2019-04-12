@@ -139,6 +139,8 @@ public:
 
 	void SetHealth(int health);
 
+	void AlignToDirection(D3DXVECTOR3 targetPosition);
+
 protected:
 
 	//the name of the .x file

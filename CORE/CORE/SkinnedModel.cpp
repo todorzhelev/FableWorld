@@ -57,7 +57,7 @@ SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, 
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
 
 	m_pAnimationComponent = std::unique_ptr<AnimationComponent>(new AnimationComponent());
-
+	m_pAnimationComponent->SetAnimationSpeed(1);
 	//max number of bones that can be supported.Above 60 bones arent rendered correctly
 	m_nMaxBonesSupported = 60;
 
@@ -427,7 +427,7 @@ void SkinnedModel::BuildEffectForTitles()
 
 void SkinnedModel::OnUpdate(float dt)
 {
-	m_pAnimationComponent->OnUpdate(dt, m_movementSpeed);
+	m_pAnimationComponent->OnUpdate(dt);
 	
 	// Recurse down the tree and builds the toRoot matrix for every bone
 	D3DXMATRIX IdentityMatrix;
@@ -1149,6 +1149,25 @@ void SkinnedModel::SetMovementSpeed(float newSpeed)
 float SkinnedModel::GetMovementSpeed()
 {
 	return m_movementSpeed;
+}
+
+void SkinnedModel::SetAnimationSpeed(float newSpeed)
+{
+	if (!m_pAnimationComponent)
+	{
+		return;
+	}
+
+	m_pAnimationComponent->SetAnimationSpeed(newSpeed);
+}
+
+float SkinnedModel::GetAnimationSpeed()
+{
+	if (!m_pAnimationComponent)
+	{
+		return 0;
+	}
+	return m_pAnimationComponent->GetAnimationSpeed();
 }
 
 bool SkinnedModel::SpawnClone()

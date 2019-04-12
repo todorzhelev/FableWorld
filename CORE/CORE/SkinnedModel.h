@@ -170,6 +170,10 @@ public:
 
 	float GetMovementSpeed();
 
+	void SetAnimationSpeed(float newSpeed);
+
+	float GetAnimationSpeed();
+
 private:
 
 	void 			RenderTitles();

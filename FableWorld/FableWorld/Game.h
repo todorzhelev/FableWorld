@@ -93,4 +93,6 @@ private:
 	std::unique_ptr<GunEffect> m_pGunEffect;
 
 	Navmesh* m_navmesh;
+	int m_currentPathfindingEndIndex;
+	std::vector<D3DXVECTOR3> m_currentPath;
 };

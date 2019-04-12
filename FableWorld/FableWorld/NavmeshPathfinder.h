@@ -32,6 +32,7 @@ struct NavmeshTool
 	virtual void handleStep() = 0;
 	virtual void handleUpdate(const float dt) = 0;
 	virtual void FindPath(float startPosition[3], float endPosition[3]) =0;
+	virtual std::vector<D3DXVECTOR3> GetCalculatedPath() =0;
 };
 
 
@@ -132,4 +133,5 @@ public:
 	void recalc();
 	void drawAgent(const float* pos, float r, float h, float c, const unsigned int col);
 	void FindPath(float startPosition[3], float endPosition[3]) override;
+	std::vector<D3DXVECTOR3> GetCalculatedPath() override;
 };

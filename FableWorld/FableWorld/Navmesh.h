@@ -98,6 +98,8 @@ public:
 	void loadGeometry();
 	void FindPath(D3DXVECTOR3 startPos, D3DXVECTOR3 endPos);
 
+	std::vector<D3DXVECTOR3> GetCalculatedPath();
+
 private:
 	// Explicitly disabled copy constructor and copy assignment operator.
 	Navmesh(const Navmesh&);
