@@ -269,8 +269,8 @@ void Navmesh::resetCommonSettings()
 	m_cellSize = 1.f;
 	m_cellHeight = 1.f;
 #else
-	m_cellSize = 0.5f;
-	m_cellHeight = 0.5f;
+	m_cellSize = 0.8f;
+	m_cellHeight = 0.8f;
 #endif
 
 	m_agentHeight = 2.0f;
