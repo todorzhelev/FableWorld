@@ -137,7 +137,11 @@ Game::Game()
 	m_navmesh = new Navmesh;
 	m_navmesh->resetCommonSettings();
 	m_navmesh->loadGeometry();
-	m_navmesh->handleBuild();
+	bool success = m_navmesh->handleBuild();
+	if (!success)
+	{
+		printf("failed to build navmesh \n");
+	}
 
 	m_currentPathfindingEndIndex = 0;
 }

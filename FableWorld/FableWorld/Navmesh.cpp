@@ -265,10 +265,14 @@ void Navmesh::collectSettings(BuildSettings& settings)
 
 void Navmesh::resetCommonSettings()
 {
+#ifdef _DEBUG
+	m_cellSize = 1.f;
+	m_cellHeight = 1.f;
+#else
 	m_cellSize = 0.5f;
 	m_cellHeight = 0.5f;
-	//m_cellSize = 1.f;
-	//m_cellHeight = 1.f;
+#endif
+
 	m_agentHeight = 2.0f;
 	m_agentRadius = 0.6f;
 	m_agentMaxClimb = 0.9f;
