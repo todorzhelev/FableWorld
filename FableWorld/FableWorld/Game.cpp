@@ -48,7 +48,7 @@ Game::Game()
 	float fWidth  = (float)pApp->GetPresentParameters().BackBufferWidth;
 	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
 
-	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 3000,true);
+	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 4000,true);
 	camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 	camera->SetPosition(D3DXVECTOR3(0,200,100));
 	camera->SetSpeed(500);

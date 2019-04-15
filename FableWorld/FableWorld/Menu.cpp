@@ -90,11 +90,11 @@ void Menu::OnRender()
 		
 	if(pApp->GetPresentParameters().Windowed)
 	{
-		m_pSpriteForLogo->Draw(m_pLogoInWindowTexture,NULL,NULL,&posForLogo,D3DXCOLOR(255,255,255,255));
+		//m_pSpriteForLogo->Draw(m_pLogoInWindowTexture,NULL,NULL,&posForLogo,D3DXCOLOR(255,255,255,255));
 	}
 	else
 	{
-		m_pSpriteForLogo->Draw(m_pLogoInFullscreenTexture,NULL,NULL,&posForLogo,D3DXCOLOR(255,255,255,255));
+		//m_pSpriteForLogo->Draw(m_pLogoInFullscreenTexture,NULL,NULL,&posForLogo,D3DXCOLOR(255,255,255,255));
 	}
 	m_pSpriteForLogo->End();
 

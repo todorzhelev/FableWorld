@@ -25,7 +25,8 @@ void Tree::InsertNode(DialogueNode*& currentNode, DialogueNode*& parentNode, std
 {
 	int x = 5;
 	int y = 0;
-	bAnySiblings ? y = 620 : y = 580;
+	//TODO: fix all these hardcodes
+	bAnySiblings ? y = 520 : y = 480;
 
 	if (currentNode == nullptr && parentNode == nullptr)
 	{
