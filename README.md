@@ -1,7 +1,7 @@
-FableWorld
+War Lord
 ==========
 
-FableWorld is RTS game, created with DirectX 9.0c and C++.<br />
+War Lord is RTS game, created with DirectX 9.0c and C++.<br />
 For the pathfinding Recast&Detour is used <br /> <br />
 ![alt tag](https://i.imgur.com/JpNOIw1.jpg)
 <br/> <br />
