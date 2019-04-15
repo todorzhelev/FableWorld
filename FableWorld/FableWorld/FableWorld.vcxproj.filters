@@ -445,6 +445,7 @@
     <ClInclude Include="NavmeshPathfinder.h">
       <Filter>Source Files\Navmesh</Filter>
     </ClInclude>
+    <ClInclude Include="resource2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fonts\28DaysLater.ttf">
@@ -482,5 +483,15 @@
     <FxCompile Include="..\..\Resources\shaders\Effects\GunShader.fx">
       <Filter>shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="WarLord2.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\Resources\icons\icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
