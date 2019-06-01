@@ -333,7 +333,6 @@ void Game::OnUpdate(float dt)
 
 	if (m_isAIRunningToTarget && pickedObj)
 	{
-		//TODO: there is a bug with long distances I suppose it is from this 10 down below
 		m_currentPathfindingEndIndex+=10;
 		if (m_currentPathfindingEndIndex < m_currentPath.size())
 		{

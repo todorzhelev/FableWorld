@@ -75,7 +75,7 @@ class NavmeshPathfinder : public NavmeshTool
 	int m_straightPathOptions;
 
 	static const int MAX_POLYS = 256;
-	static const int MAX_SMOOTH = 2048;
+	static const int MAX_SMOOTH = 8192;
 
 	dtPolyRef m_startRef;
 	dtPolyRef m_endRef;
