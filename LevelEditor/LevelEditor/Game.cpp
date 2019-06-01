@@ -639,7 +639,7 @@ void Game::OnRender()
 			{
 				if (BB.Collide(BB1))
 				{
-					cout << "COLLIDING" << obj->GetName() << endl;
+					//cout << "COLLIDING" << obj->GetName() << endl;
 				}
 			}
 		}
@@ -852,7 +852,6 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 						m_pGameObjManager->RemoveObject(pickedObj->GetName());
 					}
 
-					printf("omg");
 					break;
 				}
 
