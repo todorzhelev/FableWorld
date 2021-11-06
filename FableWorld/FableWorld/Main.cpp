@@ -7,16 +7,12 @@
 //////////////////////////////////////////////////////////////////////////////
 
 //entry point for the game
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int showCmd)
-{
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int showCmd) {
 	AllocConsole();
-
 	freopen( "CONOUT$", "wb", stdout);
-
 	fout.open("log.txt");
 
 	pApp = new Application(hInstance, "War Lord", D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING);
-	
 	m_pGameObjManager = new GameObjectManager(true,true,false,true,false,true);
 
 	Menu menu;

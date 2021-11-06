@@ -54,7 +54,8 @@ void Sky::OnRender()
 	D3DXMATRIX TranslationMatrix;
 	D3DXVECTOR3 vCameraPos = camera->GetPosition();
 	D3DXMatrixTranslation(&TranslationMatrix, vCameraPos.x, vCameraPos.y, vCameraPos.z);
-	m_pEffect->SetMatrix(m_hWVPMatrix, &(TranslationMatrix * camera->GetViewProjMatrix()));
+	D3DXMATRIX finalMatrix = TranslationMatrix * camera->GetViewProjMatrix();
+	m_pEffect->SetMatrix(m_hWVPMatrix, &finalMatrix);
 	
 	UINT nNumPasses = 0;
 	m_pEffect->Begin(&nNumPasses, 0);

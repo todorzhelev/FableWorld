@@ -515,8 +515,9 @@ void SkinnedModel::OnRender()
 	m_CombinedTransformationMatrix = S*(R*R1*R2)*T;
 
 	m_pEffect->SetTechnique(m_hEffectTechnique);
-			
-	m_pEffect->SetMatrix(m_hWVPMatrix,&(m_CombinedTransformationMatrix * (camera->GetViewProjMatrix())));
+		
+	D3DXMATRIX finalMatrix = m_CombinedTransformationMatrix * camera->GetViewProjMatrix();
+	m_pEffect->SetMatrix(m_hWVPMatrix, &finalMatrix);
 	if( m_pTexture )
 	{
 		m_pEffect->SetTexture(m_hTexture,m_pTexture);
@@ -597,7 +598,8 @@ void SkinnedModel::RenderTitles()
 
 	m_pTitlesEffect->SetTechnique(m_hTitlesEffectTechnique);
 
-	m_pTitlesEffect->SetMatrix(m_hTitlesWVPMatrix, &(S*R*T*camera->GetViewProjMatrix()));
+	D3DXMATRIX finalMatrix = S * R * T * camera->GetViewProjMatrix();
+	m_pTitlesEffect->SetMatrix(m_hTitlesWVPMatrix, &finalMatrix);
 	UINT numPasses = 0;
 	m_pTitlesEffect->Begin(&numPasses, 0);
 	m_pTitlesEffect->BeginPass(0);
@@ -639,7 +641,8 @@ void SkinnedModel::RenderTitlesForQuest()
 
 		m_pTitlesEffect->SetTechnique(m_hTitlesEffectTechnique);
 
-		m_pTitlesEffect->SetMatrix(m_hTitlesWVPMatrix, &(S*R*T*camera->GetViewProjMatrix()));
+		D3DXMATRIX finalMatrix = S * R * T * camera->GetViewProjMatrix();
+		m_pTitlesEffect->SetMatrix(m_hTitlesWVPMatrix, &finalMatrix);
 		UINT numPasses = 0;
 		m_pTitlesEffect->Begin(&numPasses, 0);
 		m_pTitlesEffect->BeginPass(0);
@@ -669,7 +672,8 @@ void SkinnedModel::RenderBoundingBox()
 
 	m_BoundingBox.m_transformationMatrix = m_BoundingBoxOffset*meshCombined;
 
-	m_pEffect->SetMatrix(m_hWVPMatrix, &(m_BoundingBoxOffset*meshCombined * camera->GetViewProjMatrix()));
+	D3DXMATRIX finalMatrix = m_BoundingBoxOffset * meshCombined * camera->GetViewProjMatrix();
+	m_pEffect->SetMatrix(m_hWVPMatrix, &finalMatrix);
 
 	m_pEffect->SetValue(m_hMaterial, &m_BoundingBoxMaterial, sizeof(Material));
 	m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);

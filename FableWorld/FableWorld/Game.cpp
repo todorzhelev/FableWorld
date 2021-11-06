@@ -262,7 +262,9 @@ void Game::OnUpdate(float dt)
 	//updating the models's titles positions
 	for(auto& gameObject : m_pGameObjManager->GetSkinnedModels())
 	{
-		float angle = D3DXVec3Dot(&gameObject->GetTitleRightVector(),&camera->GetLookVector());
+		D3DXVECTOR3 titleRightVector = gameObject->GetTitleRightVector();
+		D3DXVECTOR3 cameraLookVector = camera->GetLookVector();
+		float angle = D3DXVec3Dot(&titleRightVector,&cameraLookVector);
 		gameObject->ModifyTitleRotationAnglyByY(angle);
 		gameObject->ModifyTitleForQuestRotationAnglyByY(angle);
 
@@ -313,7 +315,9 @@ void Game::OnUpdate(float dt)
 			GetWorldPickingRay(vOrigin, vDir);
 
 			D3DXPLANE plane;
-			D3DXPlaneFromPointNormal(&plane, &D3DXVECTOR3(0,0,0),&D3DXVECTOR3(0,1,0));
+			D3DXVECTOR3 vPoint(0.0f, 0.0f, 0.0f);
+			D3DXVECTOR3 vNormal(0.0f, 1.0f, 0.0f);
+			D3DXPlaneFromPointNormal(&plane, &vPoint, &vNormal);
 
 			//I though that only origin and direction is needed and since
 			//line is thought to be endless I am not going to need end point.
@@ -695,7 +699,8 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
 
 	m_pDebugGraphicsEffect->SetTechnique(m_hDebugGraphicsTechnique);
 
-	m_pDebugGraphicsEffect->SetMatrix(m_hDebugGraphicsWVPMatrix, &(camera->GetViewProjMatrix()));
+	D3DXMATRIX viewProjMatrix = camera->GetViewProjMatrix();
+	m_pDebugGraphicsEffect->SetMatrix(m_hDebugGraphicsWVPMatrix, &viewProjMatrix);
 	UINT numPasses = 0;
 	m_pDebugGraphicsEffect->Begin(&numPasses, 0);
 	m_pDebugGraphicsEffect->BeginPass(0);

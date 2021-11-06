@@ -569,8 +569,8 @@ void Terrain::OnRender()
 	}
 
 	//dont compute anything for subgrids that are not visible
-
-	m_pEffect->SetMatrix(m_hWVPMatrix, &camera->GetViewProjMatrix());
+	D3DXMATRIX viewProjMatrix = camera->GetViewProjMatrix();
+	m_pEffect->SetMatrix(m_hWVPMatrix, &viewProjMatrix);
 	m_pEffect->SetTechnique(m_hEffectTechnique);
 	UINT numPasses = 0;
 	m_pEffect->Begin(&numPasses, 0);
