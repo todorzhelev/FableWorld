@@ -31,7 +31,7 @@ void GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection)
 
 	//makes inverse of the view matrix, to transform the coordinates to world space
 	D3DXMATRIX InverseViewMatrix;
-	D3DXMATRIX cameraViewMatrix;
+	D3DXMATRIX cameraViewMatrix = camera->GetViewMatrix();
 	D3DXMatrixInverse(&InverseViewMatrix, 0, &cameraViewMatrix);
 
 	D3DXVec3TransformCoord(&vOrigin, &origin, &InverseViewMatrix);
