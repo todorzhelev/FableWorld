@@ -36,7 +36,7 @@ public:
 
 	void SetTrackWeight(AnimationTrack track, float newValue, float startTime, float transitionPeriod = 0.125f);
 
-	void OnUpdate(float dt, float movementSpeed);
+	void OnUpdate(float dt);
 
 	void PlayAnimation(LPCSTR strAnimationName);
 
@@ -50,6 +50,9 @@ public:
 
 	void SetTrackPosition(AnimationTrack track, float position);
 
+	void SetAnimationSpeed(int animationSpeed);
+
+	int GetAnimationSpeed();
 
 	ID3DXAnimationController* m_pAnimationController;
 
@@ -61,4 +64,6 @@ private:
 
 	//should refactor this
 	bool  m_bJustStartedPlayingAnimationOnce;
+
+	int m_animationSpeed;
 };

@@ -5,6 +5,8 @@
 
 GameObjectManager* m_pGameObjManager = nullptr;
 
+int GameObjectManager::m_lastObjectId = 0;
+
 /////////////////////////////////////////////////////////////////////////
 
 GameObjectManager::GameObjectManager(bool bShouldRenderTitles, bool bShouldHighlightPickedObjects, bool bShouldRenderAxis, bool bAreObjectsGrounded, bool bShouldRenderBoundingBoxes, bool bShouldPickOnlySkinnedModels)
@@ -22,6 +24,9 @@ GameObjectManager::GameObjectManager(bool bShouldRenderTitles, bool bShouldHighl
 
 void GameObjectManager::AddGameObject(GameObject* pGameObject)
 {
+	m_lastObjectId++;
+	pGameObject->SetId(m_lastObjectId);
+
 	m_gameObjects.push_back(pGameObject);
 
 	if( pGameObject->GetObjectType() == EGameObjectType_Skinned )
@@ -55,14 +60,30 @@ void GameObjectManager::OnUpdate()
 
 void GameObjectManager::UpdatePicking()
 {
-	//TODO: fix this to work with normal objects too
-	for (auto& gameObject : m_gameObjects)
-	{
-		float dist = gameObject->GetDistanceToPickedObject();
+	auto& mapPickedObjects = m_mapPickedObjects;
+
+	//dont want to capture everything
+	auto lambda = [&mapPickedObjects](GameObject* obj) {
+		float dist = obj->GetDistanceToPickedObject();
 
 		if (dist != -1)
 		{
-			m_mapPickedObjects[dist] = gameObject;
+			mapPickedObjects[dist] = obj;
+		}
+	};
+
+	if (!m_bShouldPickOnlySkinnedModels)
+	{
+		for (auto& obj : m_gameObjects)
+		{
+			lambda(obj);
+		}
+	}
+	else
+	{
+		for (auto& obj : m_skinnedModels)
+		{
+			lambda(obj);
 		}
 	}
 
@@ -73,7 +94,14 @@ void GameObjectManager::UpdatePicking()
 		auto pClosestPickedObject = (m_mapPickedObjects.begin()->second);
 		if (pClosestPickedObject)
 		{
+			//the old picked object is no longer picked
+			if (m_pPickedObject)
+			{
+				m_pPickedObject->SetPicked(false);
+			}
+
 			pClosestPickedObject->SetPicked(true);
+			m_pPickedObject = pClosestPickedObject;
 		}
 
 		m_mapPickedObjects.clear();
@@ -205,6 +233,31 @@ void GameObjectManager::SetShouldPickOnlySkinnedModels(bool bShouldPickOnlySkinn
 bool GameObjectManager::ShouldPickOnlySkinnedModels()
 {
 	return m_bShouldPickOnlySkinnedModels;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void GameObjectManager::RemoveObject(std::string objId)
+{
+	auto it = std::find_if(m_gameObjects.begin(), m_gameObjects.end(), [objId](GameObject* obj) { return !obj->GetName().compare(objId); });
+
+	if (it != m_gameObjects.end())
+	{
+		GameObject* obj = *it;
+		if (obj->GetObjectType() == EGameObjectType_Skinned)
+		{
+			auto skinnedIt = std::find_if(m_skinnedModels.begin(), m_skinnedModels.end(), [objId](GameObject* obj) { return !obj->GetName().compare(objId); });
+
+			if (skinnedIt != m_skinnedModels.end())
+			{
+				m_skinnedModels.erase(skinnedIt);
+			}
+		}
+
+		obj->Destroy();
+
+		m_gameObjects.erase(it);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////

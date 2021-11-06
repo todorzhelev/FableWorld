@@ -12,11 +12,6 @@ int l_addStaticModel(lua_State* L)
 {
 	GameObject* pMesh = new StaticModel;
 
-	//GameObject obj;
-	pMesh->GetLookVector()	 = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	pMesh->GetRightVector()  = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pMesh->GetUpVector()	 = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-
 	D3DXVECTOR3 pos;
 	lua_getglobal(L, "x");
 	pos.x = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
@@ -86,19 +81,6 @@ Purpose:load animated model
 int l_addAnimatedModel(lua_State* L)
 {
 	SkinnedModel* pMesh = new SkinnedModel;
-
-	pMesh->GetLookVector()  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	pMesh->GetRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pMesh->GetUpVector()    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-
-	pMesh->GetTitleLookVector()  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	pMesh->GetTitleRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pMesh->GetTitleUpVector()    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-
-	pMesh->GetTitleForQuestLookVector()  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	pMesh->GetTitleForQuestRightVector() = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pMesh->GetTitleForQuestUpVector()    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	pMesh->SetTitleForQuestRotationAnglyByY(0.0);
 
 	D3DXVECTOR3 pos;
 

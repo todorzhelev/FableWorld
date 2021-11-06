@@ -4,8 +4,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-EffectSystem::EffectSystem(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName,int nMaxAmountOfParticles, D3DXVECTOR4 accel, float timePerParticle)
-:m_particlesAmount(nMaxAmountOfParticles),m_time(0.f), m_timePerParticle(timePerParticle), m_accel(accel)
+EffectSystem::EffectSystem(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName,int nMaxAmountOfParticles, D3DXVECTOR4 accel)
+:m_particlesAmount(nMaxAmountOfParticles),m_time(0.f), m_accel(accel)
 {
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,sTextureFileName.c_str(),&m_pTexture));
 
@@ -40,13 +40,18 @@ EffectSystem::~EffectSystem()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void EffectSystem::AddParticle()
+void EffectSystem::AddParticle(GameObject* object)
 {
+	if (!object)
+	{
+		return;
+	}
+
 	if (m_deadParticles.size() > 0)
 	{
 		// Reinitialize a particle.
 		Particle* p = m_deadParticles.back();
-		InitParticle(*p);
+		InitParticle(*p, object);
 
 		// No longer dead.
 		m_deadParticles.pop_back();
@@ -106,20 +111,6 @@ void EffectSystem::OnUpdate(float dt)
 		else
 		{
 			m_aliveParticles.push_back(&m_particles[i]);
-		}
-	}
-
-	// A negative or zero mTimePerParticle value denotes
-	// not to emit any particles.
-	if (m_timePerParticle > 0.0f)
-	{
-		// Emit particles.
-		static float timeAccum = 0.0f;
-		timeAccum += dt;
-		while (timeAccum >= m_timePerParticle)
-		{
-			AddParticle();
-			timeAccum -= m_timePerParticle;
 		}
 	}
 }

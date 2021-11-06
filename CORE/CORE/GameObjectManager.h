@@ -49,6 +49,8 @@ public:
 
 	bool ShouldPickOnlySkinnedModels();
 
+	void RemoveObject(std::string objId);
+
 	void OnUpdate();
 
 	void UpdatePicking();
@@ -73,11 +75,14 @@ private:
 
 	GameObject*	m_pPickedObject;
 
+	//must be unique pointers so I dont need some retarded destroy function for the meshes
 	std::vector<GameObject*> m_gameObjects;
 	std::vector<SkinnedModel*> m_skinnedModels;
 
 	//stores all the hit objects by the mouse from single click
 	std::map<int,GameObject*> m_mapPickedObjects;
+
+	static int m_lastObjectId;
 };
 
 extern GameObjectManager* m_pGameObjManager;

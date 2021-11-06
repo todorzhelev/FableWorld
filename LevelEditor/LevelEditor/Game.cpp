@@ -18,11 +18,12 @@ Game::Game()
 	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
 
 	//init and setup camera
-	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 2000.0f,true);
-	camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithPressedMouse);
+	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 3000,true);
+	camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 
 	D3DXVECTOR3 vCameraPosition = D3DXVECTOR3(0,100,0);
 	camera->SetPosition(vCameraPosition);
+	camera->SetSpeed(500);
 
 	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.
 	InitVertexDeclarations();
@@ -35,7 +36,7 @@ Game::Game()
 	sky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
 	//init terrain
-	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",0.85f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));;
+	pTerrain = new Terrain("../../Resources/heightmaps/heightmap_new.raw",0.5f,513,513,4.0f,4.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));;
 	D3DXVECTOR3 toSun(-20.0f, 300.0f, 50.0f);
 	D3DXVec3Normalize(&toSun, &toSun);
 	pTerrain->SetLightVector(toSun);
@@ -319,18 +320,17 @@ void Game::OnUpdate(float dt)
 		ImportLevel();
 	}
 
-	
-	//TODO this must not be made like this. When something is picked it should do the job automatically, 
-	//even if a callback is needed.
-	//iterates through all animated models and checks if any of them is picked
-	for (auto& obj : m_pGameObjManager->GetGameObjects())
+	auto pickedObj = m_pGameObjManager->GetPickedObject();
+
+	//show info for picked object
+	if (pickedObj)
 	{
-		if( obj->GetObjectType() == EGameObjectType_Skinned )
-		{		
-			SkinnedModel* skinnedModel = static_cast<SkinnedModel*>(obj);
+		if (pickedObj->GetObjectType() == EGameObjectType_Skinned)
+		{
+			SkinnedModel* skinnedModel = static_cast<SkinnedModel*>(pickedObj);
 
 			//it it is picked reveals animated model's related textboxes and labels
-			if(obj->IsPicked() && !label_typeInGame->IsVisible())
+			if (!label_typeInGame->IsVisible())
 			{
 				label_modelName->SetVisible(true);
 				textbox_modelName->SetVisible(true);
@@ -341,7 +341,6 @@ void Game::OnUpdate(float dt)
 				label_bindToAnModelBone->SetVisible(false);
 				textbox_bindToAnModelBone->SetVisible(false);
 
-
 				label_titleForQuest->SetVisible(true);
 				textbox_titleForQuest->SetVisible(true);
 
@@ -350,30 +349,15 @@ void Game::OnUpdate(float dt)
 
 			}
 
-			//with switchedPicked we control if we picked new model and unpicked old one
-			if( m_pGameObjManager->GetPickedObject() == NULL && obj->IsPicked() ||
-				m_pGameObjManager->GetPickedObject() != NULL && 
-				obj->IsPicked() &&
-				m_pGameObjManager->GetPickedObject()->GetName().compare(obj->GetName()) )
-			{
-				textbox_typeInGame->SetText(skinnedModel->GetActorType()); //TODO: fix this
-				textbox_modelName->SetText(obj->GetName());
-				textbox_titleForQuest->SetText(skinnedModel->GetTitleForQuest());
-				
-				if( m_pGameObjManager->GetPickedObject() != NULL &&  
-					m_pGameObjManager->GetPickedObject()->GetName().compare(obj->GetName()) )
-				{
-					m_pGameObjManager->GetPickedObject()->SetPicked(false);
-				}
+			textbox_modelName->SetText(std::to_string(skinnedModel->GetId()));
+			textbox_typeInGame->SetText(skinnedModel->GetActorType()); //TODO: fix this
+			textbox_titleForQuest->SetText(skinnedModel->GetTitleForQuest());
 
-				m_pGameObjManager->SetPickedObject(obj);
-			}
-
-			pickedModelControl(*obj, dt);
+			pickedModelControl(*pickedObj, dt);
 		}
-		else if( obj->GetObjectType() == EGameObjectType_Static )
+		else if (pickedObj->GetObjectType() == EGameObjectType_Static)
 		{
-			if( obj->IsPicked() && !label_bindToAnModel->IsVisible() )
+			if (!label_bindToAnModel->IsVisible())
 			{
 				label_modelName->SetVisible(true);
 				textbox_modelName->SetVisible(true);
@@ -392,35 +376,45 @@ void Game::OnUpdate(float dt)
 				textbox_typeInGame->SetVisible(false);
 			}
 
-			//with switchedPicked we control if we picked new model and unpicked old one
-			if( m_pGameObjManager->GetPickedObject() == NULL && obj->IsPicked() || 
-				m_pGameObjManager->GetPickedObject() != NULL && 
-				obj->IsPicked() && 
-				m_pGameObjManager->GetPickedObject()->GetName().compare(obj->GetName()) )
-			{
-				//textbox_typeInGame->SetText((*it).second->m_strActorType);
-				textbox_modelName->SetText(obj->GetName());
-				//textbox_titleForQuest->SetText((*it).second->m_strTitleForQuest);
-				
-				if( m_pGameObjManager->GetPickedObject() != NULL &&  
-					m_pGameObjManager->GetPickedObject()->GetName().compare(obj->GetName()) )
-				{
-					m_pGameObjManager->GetPickedObject()->SetPicked(false);
-				}
+			textbox_modelName->SetText(std::to_string(pickedObj->GetId()));
+			textbox_bindToAnModel->SetText(pickedObj->GetBindedToAnimatedModelName());
+			textbox_bindToAnModelBone->SetText(pickedObj->GetBindedToBoneName());
 
-				m_pGameObjManager->SetPickedObject(obj);
-			}
+			pickedModelControl(*pickedObj, dt);
+		}
+	}
 
-			pickedModelControl(*obj, dt);
+	//move picked object to desired destination
+	if (pickedObj)
+	{
+		if (pDinput->IsMouseButtonDown(1))
+		{
+			D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
+			D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
+
+			D3DXVECTOR3 AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
+
+			GetWorldPickingRay(vOrigin, vDir);
+
+			D3DXPLANE plane;
+			D3DXPlaneFromPointNormal(&plane, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 1, 0));
+
+			//I though that only origin and direction is needed and since
+			//line is thought to be endless I am not going to need end point.
+			//looks like we need it. I should really check the API next time, before assuming things.
+			D3DXVECTOR3 lineEndPoint = vOrigin + INT_MAX * vDir;
+			D3DXPlaneIntersectLine(&AIIntersectPoint, &plane, &vOrigin, &lineEndPoint);
+
+			RunToTarget(pickedObj, AIIntersectPoint, dt);
 		}
 	}
 
 	//unpick model that its picked with K
 	//TODO: two panels should be made, which will be used to hide/show all of their children elements
-	if( pDinput->IsKeyDown(DIK_K) )
+	if (pDinput->IsKeyDown(DIK_K))
 	{
-		if( m_pGameObjManager->GetPickedObject() != nullptr )
-		{	
+		if (pickedObj)
+		{
 			//TODO : fix this
 			//m_pGameObjManager->GetGameObjects().erase(m_pGameObjManager->GetPickedObject()->GetName());
 
@@ -436,6 +430,45 @@ void Game::OnUpdate(float dt)
 			textbox_bindToAnModelBone->SetVisible(false);
 		}
 	}
+
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt)
+{
+	float speed = 200.f;
+	SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(runner);
+
+	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
+
+	dir -= runner->GetLookVector();
+	runner->SetPosition(targetPos);
+
+	D3DXVECTOR3 vActorPosition = runner->GetPosition();
+
+	D3DXVECTOR3 vDistanceVector = vActorPosition - targetPos;
+	D3DXVec3Normalize(&vDistanceVector, &vDistanceVector);
+
+	float angle = D3DXVec3Dot(&runner->GetRightVector(), &vDistanceVector);
+	runner->ModifyRotationAngleByY(angle);
+
+	D3DXMATRIX R;
+	D3DXMatrixRotationY(&R, angle);
+	runner->TransformByMatrix(R);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool Game::IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t)
+{
+	if ((pos1.x > pos2.x - t) && (pos1.x < pos2.x + t) &&
+		(pos1.z > pos2.z - t) && (pos1.z < pos2.z + t))
+	{
+		return true;
+	}
+
+	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -501,9 +534,7 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationY(&R, yAngle);
-				D3DXVec3TransformCoord(&obj.GetRightVector(), &obj.GetRightVector(), &R);
-				D3DXVec3TransformCoord(&obj.GetUpVector(), &obj.GetUpVector(), &R);
-				D3DXVec3TransformCoord(&obj.GetLookVector(), &obj.GetLookVector(), &R);
+				obj.TransformByMatrix(R);
 			}
 			else if (pDinput->IsMouseButtonDown(1))
 			{
@@ -513,9 +544,8 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 				D3DXMATRIX R;
 				//it is -yAngle, because we rotate on the other side
 				D3DXMatrixRotationY(&R, -yAngle);
-				D3DXVec3TransformCoord(&obj.GetRightVector(), &obj.GetRightVector(), &R);
-				D3DXVec3TransformCoord(&obj.GetUpVector(), &obj.GetUpVector(), &R);
-				D3DXVec3TransformCoord(&obj.GetLookVector(), &obj.GetLookVector(), &R);
+
+				obj.TransformByMatrix(R);
 			}
 		}
 
@@ -528,9 +558,7 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationX(&R, yAngle);
-				D3DXVec3TransformCoord(&obj.GetRightVector(), &obj.GetRightVector(), &R);
-				D3DXVec3TransformCoord(&obj.GetUpVector(), &obj.GetUpVector(), &R);
-				D3DXVec3TransformCoord(&obj.GetLookVector(), &obj.GetLookVector(), &R);
+				obj.TransformByMatrix(R);
 			}
 			else if (pDinput->IsMouseButtonDown(1))
 			{
@@ -539,9 +567,7 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationX(&R, -yAngle);
-				D3DXVec3TransformCoord(&obj.GetRightVector(), &obj.GetRightVector(), &R);
-				D3DXVec3TransformCoord(&obj.GetUpVector(), &obj.GetUpVector(), &R);
-				D3DXVec3TransformCoord(&obj.GetLookVector(), &obj.GetLookVector(), &R);
+				obj.TransformByMatrix(R);
 			}
 		}
 
@@ -554,9 +580,7 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationZ(&R, yAngle);
-				D3DXVec3TransformCoord(&obj.GetRightVector(), &obj.GetRightVector(), &R);
-				D3DXVec3TransformCoord(&obj.GetUpVector(), &obj.GetUpVector(), &R);
-				D3DXVec3TransformCoord(&obj.GetLookVector(), &obj.GetLookVector(), &R);
+				obj.TransformByMatrix(R);
 			}
 			else if (pDinput->IsMouseButtonDown(1))
 			{
@@ -565,9 +589,7 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 
 				D3DXMATRIX R;
 				D3DXMatrixRotationZ(&R, -yAngle);
-				D3DXVec3TransformCoord(&obj.GetRightVector(), &obj.GetRightVector(), &R);
-				D3DXVec3TransformCoord(&obj.GetUpVector(), &obj.GetUpVector(), &R);
-				D3DXVec3TransformCoord(&obj.GetLookVector(), &obj.GetLookVector(), &R);
+				obj.TransformByMatrix(R);
 			}
 		}
 
@@ -617,7 +639,7 @@ void Game::OnRender()
 			{
 				if (BB.Collide(BB1))
 				{
-					cout << "COLLIDING" << obj->GetName() << endl;
+					//cout << "COLLIDING" << obj->GetName() << endl;
 				}
 			}
 		}
@@ -687,20 +709,21 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			switch(wParam)
 			{
 				//this is the code for enter
-				//pressing enter in textbox finishes the typing and assigns the new values
-				//TODO: create map code, name to be more clear...
 				case 0x0D:
 				{
-					//IBaseMenuObject* pSelectedTextbox = pApp->FindMenuObject(selectedTextbox);
-
-
+					auto* pickedObj = m_pGameObjManager->GetPickedObject();
+					if (pickedObj == nullptr)
+					{
+						break;
+					}
+					
 					if( !pApp->m_strSelectedTextbox.empty() )
 					{
 					    if( pApp->m_strSelectedTextbox == "textbox_typeInGame" )
 						{
-							if(m_pGameObjManager->GetPickedObject()->GetObjectType() == EGameObjectType_Skinned)
+							if(pickedObj->GetObjectType() == EGameObjectType_Skinned)
 							{
-								SkinnedModel* pickedObject = static_cast<SkinnedModel*>(m_pGameObjManager->GetPickedObject());
+								SkinnedModel* pickedObject = static_cast<SkinnedModel*>(pickedObj);
 
 								pickedObject->SetActorType(pSelectedTextbox->GetText());
 								pSelectedTextbox->m_bIsSelected = false;
@@ -709,9 +732,9 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 						}
 						else if( pApp->m_strSelectedTextbox == "textbox_modelName")
 						{
-							if( m_pGameObjManager->GetPickedObject()->GetObjectType() == EGameObjectType_Skinned )
+							if(pickedObj->GetObjectType() == EGameObjectType_Skinned )
 							{
-								std::string name =  m_pGameObjManager->GetPickedObject()->GetName();
+								std::string name = pickedObj->GetName();
 								SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
 
 								obj->SetName(pSelectedTextbox->GetText());
@@ -721,9 +744,9 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 							}
 						}
 						else if( pApp->m_strSelectedTextbox == "textbox_titleForQuest" && 
-								 m_pGameObjManager->GetPickedObject()->GetObjectType() == EGameObjectType_Skinned )
+							pickedObj->GetObjectType() == EGameObjectType_Skinned )
 						{
-							std::string name = m_pGameObjManager->GetPickedObject()->GetName();
+							std::string name = pickedObj->GetName();
 							SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
 							obj->SetTitleForQuest(pSelectedTextbox->GetText());
 							pSelectedTextbox->m_bIsSelected = false;
@@ -731,36 +754,36 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 							pApp->m_strSelectedTextbox = "";
 						}
 						else if( pApp->m_strSelectedTextbox == "textbox_bindToAnModel" && 
-								 m_pGameObjManager->GetPickedObject()->GetObjectType() == EGameObjectType_Static )
+							pickedObj->GetObjectType() == EGameObjectType_Static )
 						{
-							m_pGameObjManager->GetPickedObject()->SetBindedToAnimatedModelName(pSelectedTextbox->GetText());
+							pickedObj->SetBindedToAnimatedModelName(pSelectedTextbox->GetText());
 
-							if( !m_pGameObjManager->GetPickedObject()->GetBindedToBoneName().empty() )
+							if( !pickedObj->GetBindedToBoneName().empty() )
 							{
-								std::string name = m_pGameObjManager->GetPickedObject()->GetBindedToAnimatedModelName();
+								std::string name = pickedObj->GetBindedToAnimatedModelName();
 								SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
 
-								obj->BindWeaponToModel(m_pGameObjManager->GetPickedObject()->GetName(),m_pGameObjManager->GetPickedObject()->GetBindedToBoneName());
+								obj->BindWeaponToModel(pickedObj->GetName(), pickedObj->GetBindedToBoneName());
 
-								m_pGameObjManager->GetPickedObject()->SetIsBindable(true);
+								pickedObj->SetIsBindable(true);
 							}
 
 							pSelectedTextbox->m_bIsSelected = false;
 							pApp->m_strSelectedTextbox = "";
 						}
 						else if( pApp->m_strSelectedTextbox == "textbox_bindToAnModelBone" && 
-								 m_pGameObjManager->GetPickedObject()->GetObjectType() == EGameObjectType_Static  )
+							pickedObj->GetObjectType() == EGameObjectType_Static  )
 						{
-							m_pGameObjManager->GetPickedObject()->SetBindedToBoneName(pSelectedTextbox->GetText());
+							pickedObj->SetBindedToBoneName(pSelectedTextbox->GetText());
 
-							if( !m_pGameObjManager->GetPickedObject()->GetBindedToAnimatedModelName().empty() )
+							if( !pickedObj->GetBindedToAnimatedModelName().empty() )
 							{
-								std::string name = m_pGameObjManager->GetPickedObject()->GetBindedToAnimatedModelName();
+								std::string name = pickedObj->GetBindedToAnimatedModelName();
 								SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
 
-								obj->BindWeaponToModel(m_pGameObjManager->GetPickedObject()->GetName(),m_pGameObjManager->GetPickedObject()->GetBindedToBoneName());
+								obj->BindWeaponToModel(pickedObj->GetName(), pickedObj->GetBindedToBoneName());
 
-								m_pGameObjManager->GetPickedObject()->SetIsBindable(true);
+								pickedObj->SetIsBindable(true);
 								
 							}
 							pSelectedTextbox->m_bIsSelected = false;
@@ -821,15 +844,36 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 			switch(wParam)
 			{
+				case VK_DELETE:
+				{
+					auto* pickedObj = m_pGameObjManager->GetPickedObject();
+					if (pickedObj)
+					{
+						m_pGameObjManager->RemoveObject(pickedObj->GetName());
+					}
+
+					break;
+				}
+
+				case 'V':
+				{
+					auto* obj = m_pGameObjManager->GetPickedObject();
+					if (obj)
+					{
+						obj->SpawnClone();
+					}
+					break;
+				}
+
 				case 'L':
 				{
-					if( camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithoutPressedMouse )
+					if( camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse )
 					{
-						camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithPressedMouse);
+						camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 					}
-					else if( camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithPressedMouse )
+					else if( camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse)
 					{
-						camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithoutPressedMouse);
+						camera->SetCameraMode(ECameraMode::MoveWithoutPressedMouse);
 					}
 				}
 				break;
@@ -1159,10 +1203,13 @@ string Game::GetModelNameFromFilePath(string strFilePath)
 
 void Game::ExportLevel()
 {
-	ofstream staticModelsFile("export/staticModels.lua");
-	ofstream animatedModelsFile("export/animatedModels.lua");
-	ofstream mainHeroFile("export/init.lua");
-	ofstream level("export/level.lua");
+	//currently not needed
+	//ofstream staticModelsFile("export/staticModels.lua");
+	//ofstream animatedModelsFile("export/animatedModels.lua");
+	//ofstream mainHeroFile("export/init.lua");
+
+	std::string exportFileName = "export/level.lua";
+	ofstream level(exportFileName);
 
 	//exports static models
 	if( level.is_open() )
@@ -1218,7 +1265,15 @@ void Game::ExportLevel()
 		}
 
 		level.close();
+
+		char cCurrentPath[MAX_PATH];
+		_getcwd(cCurrentPath, sizeof(cCurrentPath));
+
+		std::string message = "Export finished at " + std::string(cCurrentPath) + "\\" + exportFileName;
+
+		MessageBox(0, message.c_str(), 0, 0);
 	}
+
 	else cout << "Unable to open file";
 }
 

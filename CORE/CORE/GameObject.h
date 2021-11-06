@@ -18,24 +18,30 @@ class GameObject
 public:
 
 	//todo: should init everything in the constructor
-	GameObject() {};
+	GameObject();
 	virtual ~GameObject() = 0;
 	virtual void OnUpdate(float dt) = 0;
 	virtual void OnRender() = 0;
 	virtual void OnLostDevice() = 0;
 	virtual void OnResetDevice() = 0;
-
+	virtual void Destroy() = 0;
 	virtual void LoadGameObject();
 	virtual void RenderBindedWeapon(GameObject* pSkMesh, std::string bone);
 
 	virtual float GetDistanceToPickedObject();
 
+	virtual bool SpawnClone() =0;
+
 	std::string GetModelFileName() const;
 	void SetModelFilename(const std::string& strModelFileName);
 
-	std::string& GetName();
+	std::string GetName() const;
 
 	void SetName(const std::string& strName);
+
+	int GetId() const;
+
+	void SetId(int id);
 
 	D3DXVECTOR3 GetPosition() const;
 
@@ -87,7 +93,7 @@ public:
 
 	void SetBindedObjects(std::unordered_map<GameObject*, std::string> bindedObjects);
 
-	
+	void TransformByMatrix(D3DXMATRIX matrix);
 
 	float GetRotationAngleByX() const;
 	void SetRotationAngleByX(float rotationAngleByX);
@@ -128,6 +134,12 @@ public:
 	D3DXMATRIX GetCombinedTransfMatrix() const;
 
 	void SetCombinedTransfMatrix(D3DXMATRIX mat);
+
+	int GetHealth();
+
+	void SetHealth(int health);
+
+	void AlignToDirection(D3DXVECTOR3 targetPosition);
 
 protected:
 
@@ -179,6 +191,10 @@ protected:
 	EGameObjectType m_eGameObjectType;
 
 	D3DXMATRIX  m_CombinedTransformationMatrix;
+
+	int m_id;
+
+	int m_health;
 };
 
 //////////////////////////////////////////////////////////////////////////////

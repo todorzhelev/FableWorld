@@ -2,6 +2,30 @@
 #include "Terrain.h"
 
 /////////////////////////////////////////////////////////////////////////
+/*
+		   +z
+	----------------
+	|				|
+	|				|
+-x	|		.		| +x
+	|				|
+	|				|
+	----------------
+			-z
+
+if we have 512x512 logical map with 1 logical meter, we will have
+map with coordinates ranging from -256,256 (left up corner) to 256,-256 (down right corner)
+
+physically it feels that 1 logical meter is around 0.03 physical meters
+and 1 physical meter is 35 logical meters
+in this sense 512x512 logical map feels like 15x15 physical map or 225m^2
+
+513x513 = 263169 vertices, 32B per vertex, which results in 8,5MB for the terrain
+5130x5130 => 840MB for the terrain
+
+*/
+
+/////////////////////////////////////////////////////////////////////////
 
 Terrain* pTerrain = NULL;
 
@@ -28,7 +52,7 @@ Terrain::Terrain(std::string strHeightmapFileName,float fHeightsScale, int nRows
 
 	LoadHeightmap();
 
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/blend_map.dds", &m_pBlendMapTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/BlendMap_new.dds", &m_pBlendMapTexture));
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/ground0.dds", &m_pDirtTexture));
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/grass-texture-02.dds", &m_pGrassTexture));
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/rocks.dds", &m_pStoneTexture));
@@ -135,8 +159,8 @@ void Terrain::GenerateTerrainMesh()
 					   |
 					   |
 					  -z
-		We now want to save texture coordinates for the blend std::map. Blend std::map is texture that sits on top of the terrain and got the same dimension as it.
-		Blend std::map is used so multi-texturing can be performed. The texture coordinates are expressed in this coordinate system:
+		We now want to save texture coordinates for the blendmap. Blendmap is texture that sits on top of the terrain and got the same dimension as it.
+		Blendmap is used so multi-texturing can be performed. The texture coordinates are expressed in this coordinate system:
 					
 					 ----------- +u
 					 | 

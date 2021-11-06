@@ -69,6 +69,10 @@ public:
 
 	virtual float	GetDistanceToPickedObject() override;
 
+	virtual bool	SpawnClone() override;
+
+	virtual void	Destroy() override;
+
 	bool			CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX combinedMatrix, D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir, float& nDistance);
 
 	void			PlayAnimation(LPCSTR strAnimationName);
@@ -112,9 +116,9 @@ public:
 	//name above the object in the game
 	ID3DXMesh**		GetTitleMesh();
 	void			SetTitleMesh(ID3DXMesh* titleMesh);
-	D3DXVECTOR3&	GetTitleLookVector();
-	D3DXVECTOR3&	GetTitleRightVector();
-	D3DXVECTOR3&	GetTitleUpVector();
+	D3DXVECTOR3		GetTitleLookVector() const;
+	D3DXVECTOR3		GetTitleRightVector() const;
+	D3DXVECTOR3		GetTitleUpVector() const;
 	D3DXMATRIX		GetTitleRotationMatrix() const;
 	void			SetTitleRotationMatrix(D3DXMATRIX titleRotationMatrix);
 	float			GetTitleRotationAnglyByY() const;
@@ -127,14 +131,16 @@ public:
 	void			SetTitleForQuest(const std::string& titleForQuest);
 	ID3DXMesh**		GetTitleForQuestMesh();
 	void			SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh);
-	D3DXVECTOR3&	GetTitleForQuestLookVector();
-	D3DXVECTOR3&	GetTitleForQuestRightVector();
-	D3DXVECTOR3&	GetTitleForQuestUpVector();
+	D3DXVECTOR3		GetTitleForQuestLookVector() const;
+	D3DXVECTOR3		GetTitleForQuestRightVector() const;
+	D3DXVECTOR3		GetTitleForQuestUpVector() const;
 	D3DXMATRIX		GetTitleForQuestRotationMatrix() const;
 	void			SetTitleForQuestRotationMatrix(D3DXMATRIX titleForQuestRotationMatrix);
 	float			GetTitleForQuestRotationAnglyByY() const;
 	void			SetTitleForQuestRotationAnglyByY(float angle);
 	void			ModifyTitleForQuestRotationAnglyByY(float delta);
+
+	void			TransformTitleByMatrix(D3DXMATRIX matrix);
 
 	std::vector<D3DXMATRIX>& GetFinalBonesMatrices();
 
@@ -163,6 +169,10 @@ public:
 	void SetMovementSpeed(float newSpeed);
 
 	float GetMovementSpeed();
+
+	void SetAnimationSpeed(float newSpeed);
+
+	float GetAnimationSpeed();
 
 private:
 

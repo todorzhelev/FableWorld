@@ -1,16 +1,17 @@
-FableWorld
+War Lord
 ==========
 
-FableWorld is 3D game, created with DirectX 9.0c and C++.<br />
-![alt tag](http://i.imgur.com/AahcNAz.jpg)
+War Lord is RTS game, created with DirectX 9.0c and C++.<br />
+For the pathfinding Recast&Detour is used <br /> <br />
+![alt tag](https://i.imgur.com/JpNOIw1.jpg)
 <br/> <br />
 
   Battle system<br />
 =======
 
-  The player can attack enemies in the game by walking close to the enemy and pressing left mouse button<br /><br />
-  ![alt tag](http://i.imgur.com/VWn3NxV.jpg)
-  ![alt tag](http://i.imgur.com/65Fix8w.jpg)
+  You can fight the enemies by first picking your unit and then move it to the enemy<br /><br />
+  ![alt tag](https://i.imgur.com/zmYI1Z7.jpg)
+  ![alt tag](https://i.imgur.com/0f2MEWX.jpg)
 <br />
 
   Dialogue system<br />

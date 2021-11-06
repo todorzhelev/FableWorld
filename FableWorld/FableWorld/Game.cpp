@@ -1,6 +1,7 @@
 #include <stdafx.h>
 #include "Game.h"
 #include "QuestManager.h"
+#include "Navmesh.h"
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -47,8 +48,12 @@ Game::Game()
 	float fWidth  = (float)pApp->GetPresentParameters().BackBufferWidth;
 	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
 
-	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 2000.0f,false);
-	camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithPressedMouse);
+	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 4000,true);
+	camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
+	camera->SetPosition(D3DXVECTOR3(0,200,100));
+	camera->SetSpeed(500);
+
+	//camera->RotateUp(-300);
 
 	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.
 	InitVertexDeclarations();
@@ -56,7 +61,7 @@ Game::Game()
 	pSky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
 	//TODO: this should be specified in the level file
-	pTerrain = new Terrain("../../Resources/heightmaps/HeightmapFinal.raw",1.0f,513,513,1.0f,1.0f,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	pTerrain = new Terrain("../../Resources/heightmaps/heightmap_new.raw",0.5f,513,513,4,4,D3DXVECTOR3(0.0f,0.0f,0.0f));
 	//pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//the direction to the sun
@@ -67,7 +72,7 @@ Game::Game()
 	pTextManager->CreateFontFor3DText();
 
 	//loads the models, sounds and quests from the scripts
-	luaL_dofile(g_luaState, "../../Resources/scripts/levelInGame.lua");
+	luaL_dofile(g_luaState, "../../Resources/levels/levelInGame_new.lua");
 	luaL_dofile(g_luaState, "../../Resources/scripts/quests.lua");
 
 	pDialogueManager = new DialogueManager;
@@ -114,12 +119,31 @@ Game::Game()
 	//it should be more generic - it should align with the vectors of the main hero.
 	D3DXMATRIX R;
 	D3DXMatrixRotationY(&R, D3DX_PI/2); //rotate this bad boy
-	D3DXVec3TransformCoord(&camera->GetRightVector(), &camera->GetRightVector(), &R);
-	D3DXVec3TransformCoord(&camera->GetUpVector(), &camera->GetUpVector(), &R);
-	D3DXVec3TransformCoord(&camera->GetLookVector(), &camera->GetLookVector(), &R);
+	camera->TransformByMatrix(R);
 
-	m_pGunEffect = std::unique_ptr<GunEffect>(new GunEffect("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",100, D3DXVECTOR4(0, -9.8f, 0.0f,0.0f),-1));
+	m_pGunEffect = std::unique_ptr<GunEffect>(new GunEffect("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",100, D3DXVECTOR4(0, -9.8f, 0.0f,0.0f)));
+	
+	m_isAIRunningToTarget = false;
+	m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
 
+	//GameObject* objCho = m_pGameObjManager->GetObjectByName("cho");
+	//objCho->SpawnClone();//~7.5MB per one cho. Did not expect that wow
+	//objCho->SpawnClone();
+	//objCho->SpawnClone();
+	//objCho->SpawnClone();
+	//objCho->SpawnClone();
+	//objCho->SpawnClone();
+
+	m_navmesh = new Navmesh;
+	m_navmesh->resetCommonSettings();
+	m_navmesh->loadGeometry();
+	bool success = m_navmesh->handleBuild();
+	if (!success)
+	{
+		printf("failed to build navmesh \n");
+	}
+
+	m_currentPathfindingEndIndex = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -223,7 +247,7 @@ void Game::OnUpdate(float dt)
 		SkinnedModel* reqObject = m_pGameObjManager->GetSkinnedModelByName(quest->m_strRequiredObject);
 
 		//if mainHero is close to the required from the quest object and the required object is dead the quest is completed.
-		if (IsObjectNear(pMainHero, reqObject) && reqObject->IsDead())
+		if (IsObjectNear(pMainHero->GetPosition(), reqObject->GetPosition()) && reqObject->IsDead())
 		{
 			quest->m_bIsCompleted = true;
 		}
@@ -240,26 +264,12 @@ void Game::OnUpdate(float dt)
 	{
 		float angle = D3DXVec3Dot(&gameObject->GetTitleRightVector(),&camera->GetLookVector());
 		gameObject->ModifyTitleRotationAnglyByY(angle);
-
-		D3DXMATRIX R;
-		D3DXMatrixRotationY(&R, angle);
-		D3DXVec3TransformCoord(&gameObject->GetTitleLookVector(), &gameObject->GetTitleLookVector(), &R);
-		D3DXVec3TransformCoord(&gameObject->GetTitleRightVector(), &gameObject->GetTitleRightVector(), &R);
-		D3DXVec3TransformCoord(&gameObject->GetTitleUpVector(), &gameObject->GetTitleUpVector(), &R);
-	}
-
-	//updating the models's title's quest positions. 
-	//At the moment these titles are ? signs above the head of the model if he got dialogue attached.
-	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels())
-	{
-		float angle = D3DXVec3Dot(&gameObject->GetTitleForQuestRightVector(),&camera->GetLookVector());
 		gameObject->ModifyTitleForQuestRotationAnglyByY(angle);
 
 		D3DXMATRIX R;
 		D3DXMatrixRotationY(&R, angle);
-		D3DXVec3TransformCoord(&gameObject->GetTitleForQuestLookVector(), &gameObject->GetTitleForQuestLookVector(), &R);
-		D3DXVec3TransformCoord(&gameObject->GetTitleForQuestRightVector(), &gameObject->GetTitleForQuestRightVector(), &R);
-		D3DXVec3TransformCoord(&gameObject->GetTitleForQuestUpVector(), &gameObject->GetTitleForQuestUpVector(), &R);
+
+		gameObject->TransformTitleByMatrix(R);
 	}
 
 	//for (auto it : m_pGameObjManager->GetGameObjects())
@@ -282,8 +292,69 @@ void Game::OnUpdate(float dt)
 	static float delay = 0.0f;
 	if (pDinput->IsKeyDown(DIK_SPACE) && delay <= 0.0f)
 	{
-		delay = 0.1f;
-		m_pGunEffect->AddParticle();
+		auto pickedObj = m_pGameObjManager->GetPickedObject();
+		if (pickedObj)
+		{
+			delay = 0.1f;
+			m_pGunEffect->AddParticle(pickedObj);
+		}
+	}
+
+	auto pickedObj = m_pGameObjManager->GetPickedObject();
+
+	if (pickedObj)
+	{
+		if (pDinput->IsMouseButtonDown(1))
+		{
+			m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
+			D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
+			D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
+
+			GetWorldPickingRay(vOrigin, vDir);
+
+			D3DXPLANE plane;
+			D3DXPlaneFromPointNormal(&plane, &D3DXVECTOR3(0,0,0),&D3DXVECTOR3(0,1,0));
+
+			//I though that only origin and direction is needed and since
+			//line is thought to be endless I am not going to need end point.
+			//looks like we need it. I should really check the API next time, before assuming things.
+			D3DXVECTOR3 lineEndPoint = vOrigin + INT_MAX * vDir;
+			D3DXPlaneIntersectLine(&m_AIIntersectPoint, &plane, &vOrigin, &lineEndPoint);
+
+			m_navmesh->FindPath(pickedObj->GetPosition(), m_AIIntersectPoint);
+
+			m_currentPath.clear();
+			m_currentPath = m_navmesh->GetCalculatedPath();
+
+			m_currentPathfindingEndIndex = 0;
+			m_isAIRunningToTarget = true;
+		}
+	}
+
+	if (m_isAIRunningToTarget && pickedObj)
+	{
+		m_currentPathfindingEndIndex+=10;
+		if (m_currentPathfindingEndIndex < m_currentPath.size())
+		{
+			auto pos = m_currentPath[m_currentPathfindingEndIndex];
+
+			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pickedObj);
+
+			pSkinnedModel->SetAnimationSpeed(2.8);
+			pSkinnedModel->PlayAnimation("run");
+
+			pSkinnedModel->AlignToDirection(pos);
+
+			pSkinnedModel->SetPosition(pos);
+		}
+		else
+		{
+			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pickedObj);
+			pSkinnedModel->SetAnimationSpeed(1);
+			pSkinnedModel->PlayAnimation("idle");
+
+			m_isAIRunningToTarget = false;
+		}
 	}
 
 	delay -= dt;
@@ -296,8 +367,8 @@ void Game::UpdateAI(float dt)
 	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels())
 	{
 		//main hero attacking enemy
-		if (pDinput->IsMouseButtonDown(0) &&
-			IsObjectNear(pMainHero, gameObject) &&
+		if (//pDinput->IsMouseButtonDown(0) &&
+			IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()) &&
 			pMainHero->GetName() != gameObject->GetName() &&
 			gameObject->GetActorType() == "enemy" &&
 			!pMainHero->IsDead()
@@ -317,8 +388,10 @@ void Game::UpdateAI(float dt)
 		}
 
 		// main hero attacked by enemy
-		if (gameObject->IsAttacked() && IsObjectNear(pMainHero, gameObject) &&
-			!gameObject->IsDead() && !pMainHero->IsDead())
+		if (gameObject->IsAttacked() && 
+			IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()) &&
+			!gameObject->IsDead() && 
+			!pMainHero->IsDead())
 		{
 			if (m_rHealthBarRectangle.right > 0.0)
 			{
@@ -341,7 +414,9 @@ void Game::UpdateAI(float dt)
 		}
 
 		//when the enemy is attacked it updates his rotation so it can face the mainHero
-		if (gameObject->IsAttacked() && !gameObject->IsDead() && IsObjectNear(pMainHero, gameObject))
+		if (gameObject->IsAttacked() && 
+			!gameObject->IsDead() && 
+			IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()))
 		{
 			D3DXVECTOR3 vActorPosition = gameObject->GetPosition();
 			D3DXVECTOR3 vMainHeroPosition = pMainHero->GetPosition();
@@ -355,46 +430,42 @@ void Game::UpdateAI(float dt)
 
 			D3DXMATRIX R;
 			D3DXMatrixRotationY(&R, angle);
-			D3DXVec3TransformCoord(&gameObject->GetLookVector(), &gameObject->GetLookVector(), &R);
-			D3DXVec3TransformCoord(&gameObject->GetRightVector(), &gameObject->GetRightVector(), &R);
-			D3DXVec3TransformCoord(&gameObject->GetUpVector(), &gameObject->GetUpVector(), &R);
+			gameObject->TransformByMatrix(R);
 		}
 
 
 		//if mainHero is fighting with enemy, but started to run and is no longer close to the enemy, 
 		//the enemy updates his vectors so he can face the mainHero and run in his direction.
 		//When he is close enough he start to attack again.
-		if (gameObject->IsAttacked() && !gameObject->IsDead() && !IsObjectNear(pMainHero, gameObject) && !pMainHero->IsDead()
+		if (gameObject->IsAttacked() && 
+			!gameObject->IsDead() && 
+			!IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()) && 
+			!pMainHero->IsDead()
 			)
 		{
-			float speed = 80.f;
-			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(gameObject);
-			pSkinnedModel->PlayAnimation("run");
-
-			D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
-
-			dir -= gameObject->GetLookVector();
-
-			D3DXVECTOR3 newPos = gameObject->GetPosition() + dir * speed*dt;
-			gameObject->SetPosition(newPos);
-
-			//put it in a function. the code is duplicated.
-			D3DXVECTOR3 vActorPosition = gameObject->GetPosition();
-			D3DXVECTOR3 vMainHeroPosition = pMainHero->GetPosition();
-
-			D3DXVECTOR3 vDistanceVector = vActorPosition - vMainHeroPosition;
-			D3DXVec3Normalize(&vDistanceVector, &vDistanceVector);
-
-			float angle = D3DXVec3Dot(&gameObject->GetRightVector(), &vDistanceVector);
-			gameObject->ModifyRotationAngleByY(angle);
-
-			D3DXMATRIX R;
-			D3DXMatrixRotationY(&R, angle);
-			D3DXVec3TransformCoord(&gameObject->GetLookVector(), &gameObject->GetLookVector(), &R);
-			D3DXVec3TransformCoord(&gameObject->GetRightVector(), &gameObject->GetRightVector(), &R);
-			D3DXVec3TransformCoord(&gameObject->GetUpVector(), &gameObject->GetUpVector(), &R);
+			RunToTarget(gameObject, pMainHero->GetPosition(), dt);
 		}
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt)
+{
+	float speed = 400.f;
+	SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(runner);
+	pSkinnedModel->SetMovementSpeed(speed / 100);
+	pSkinnedModel->SetAnimationSpeed(speed / 100);
+	pSkinnedModel->PlayAnimation("run");
+
+	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
+
+	dir -= runner->GetLookVector();
+
+	D3DXVECTOR3 newPos = runner->GetPosition() + dir * speed*dt;
+	runner->SetPosition(newPos);
+
+	pSkinnedModel->AlignToDirection(targetPos);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -439,13 +510,13 @@ void Game::MoveObject(std::string objectTitle, float dt)
 		pSkinnedModel->PlayAnimation("idle");
 	}
 	
-	if (camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithoutPressedMouse)
+	if (camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse)
 	{
 		//if we just move the mouse move the camera
 		RotateObject(objectTitle, dt);
 
 	}
-	else if (camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithPressedMouse)
+	else if (camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse)
 	{
 		//if we hold the left mouse button move the camera
 		if (pDinput->IsMouseButtonDown(0))
@@ -486,9 +557,8 @@ void Game::RotateObject(std::string objectTitle, float dt)
 	
 	D3DXMATRIX R;
 	D3DXMatrixRotationY(&R, yAngle);
-	D3DXVec3TransformCoord(&camera->GetRightVector(), &camera->GetRightVector(), &R);
-	D3DXVec3TransformCoord(&camera->GetUpVector(), &camera->GetUpVector(), &R);
-	D3DXVec3TransformCoord(&camera->GetLookVector(), &camera->GetLookVector(), &R);
+
+	camera->TransformByMatrix(R);
 
 	pSkinnedModel->GetLookVector()  = camera->GetLookVector();
 	pSkinnedModel->GetRightVector() = camera->GetRightVector();
@@ -539,8 +609,13 @@ void Game::OnRender()
 			for (auto& gameObject : m_pGameObjManager->GetGameObjects())
 			{
 				gameObject->OnRender();
+				//DrawLine(gameObject->GetPosition(), gameObject->GetLookVector());
+				//DrawLine(gameObject->GetPosition(), gameObject->GetUpVector());
+				//DrawLine(gameObject->GetPosition(), gameObject->GetRightVector());
 			}
 			
+			//DrawLine(camera->GetPosition(), camera->GetLookVector());
+
 			auto BB = pMainHero->GetBB();
 			BB = BB.TransformByMatrix(BB.m_transformationMatrix);
 			for (auto& object:m_pGameObjManager->GetGameObjects())
@@ -616,7 +691,7 @@ void Game::OnRender()
 
 void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
 {
-	pDxDevice->BeginScene();
+	//pDxDevice->BeginScene();
 
 	m_pDebugGraphicsEffect->SetTechnique(m_hDebugGraphicsTechnique);
 
@@ -649,19 +724,20 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
 	m_pDebugGraphicsEffect->EndPass();
 	m_pDebugGraphicsEffect->End();
 
-	pDxDevice->EndScene();
+	//pDxDevice->EndScene();
 
-	pDxDevice->Present(0, 0, 0, 0);
+	//pDxDevice->Present(0, 0, 0, 0);
 }
 
 
 /////////////////////////////////////////////////////////////////////////
 
 //checks if two models are close
-bool Game::IsObjectNear(GameObject* obj1,GameObject* obj2)
+//i think this should be changed in the future with circles
+bool Game::IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t)
 {
-	if((obj1->GetPosition().x > obj2->GetPosition().x-30) && (obj1->GetPosition().x < obj2->GetPosition().x+30) &&
-	   (obj1->GetPosition().z > obj2->GetPosition().z-30) && (obj1->GetPosition().z < obj2->GetPosition().z+30))
+	if((pos1.x > pos2.x-t) && (pos1.x < pos2.x+t) &&
+	   (pos1.z > pos2.z-t) && (pos1.z < pos2.z+t))
 	{
 	   return true;
 	}
@@ -715,13 +791,13 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				case 'L':
 				{
-					if( camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithoutPressedMouse )
+					if( camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse )
 					{
-						camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithPressedMouse);
+						camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 					}
-					else if( camera->GetCameraMode() == ECameraMode::ECameraMode_MoveWithPressedMouse )
+					else if( camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse )
 					{
-						camera->SetCameraMode(ECameraMode::ECameraMode_MoveWithoutPressedMouse);
+						camera->SetCameraMode(ECameraMode::MoveWithoutPressedMouse);
 					}
 
 					break;

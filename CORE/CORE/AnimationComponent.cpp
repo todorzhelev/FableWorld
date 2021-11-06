@@ -5,6 +5,7 @@ AnimationComponent::AnimationComponent()
 {
 	m_bShouldPlayAnimationOnce = false;
 	m_bShouldStopTrackAfterPlayingAnimation = false;
+	m_animationSpeed = 1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -182,7 +183,7 @@ bool AnimationComponent::JustStartedPlayingAnimationOnce()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AnimationComponent::OnUpdate(float dt, float movementSpeed)
+void AnimationComponent::OnUpdate(float dt)
 {
 	//after we know that the current animation should be played just once
 	//we see when it is finished and we transit to the first track, which holds the idle animation set
@@ -229,7 +230,21 @@ void AnimationComponent::OnUpdate(float dt, float movementSpeed)
 		}
 	}
 
-	AdvanceTime(dt*movementSpeed);
+	AdvanceTime(dt*m_animationSpeed);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void AnimationComponent::SetAnimationSpeed(int animationSpeed)
+{
+	m_animationSpeed = animationSpeed;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+int AnimationComponent::GetAnimationSpeed()
+{
+	return m_animationSpeed;
 }
 
 /////////////////////////////////////////////////////////////////////////////

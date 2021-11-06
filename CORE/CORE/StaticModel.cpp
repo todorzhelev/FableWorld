@@ -18,6 +18,10 @@ StaticModel::StaticModel()
 	m_bIsPicked = false;
 
 	BuildEffect();
+
+	m_vLook	 = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	m_vRight = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	m_vUp	 = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 }
 
 
@@ -60,7 +64,7 @@ StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, st
 	m_strBindedToAnimatedModelName = "";
 	m_strBindedToBoneName = "";
 
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, strTextureFileName.c_str(), &m_pTexture));	
+	D3DXCreateTextureFromFile(pDxDevice, strTextureFileName.c_str(), &m_pTexture);	
 
 	/*if( pMesh->m_bIsBindable && !pMesh->m_strBindedToAnimatedModelName.empty() && !pMesh->m_strBindedToBoneName.empty() )
 	{
@@ -78,8 +82,7 @@ StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, st
 
 StaticModel::~StaticModel()
 {
-	m_pWhiteTexture->Release();
-	m_pEffect->Release();
+	Destroy();
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -539,6 +542,46 @@ float StaticModel::GetDistanceToPickedObject()
 	}
 
 	return -1;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+bool StaticModel::SpawnClone()
+{
+	StaticModel* pMesh = new StaticModel;
+
+	pMesh->SetPosition(GetPosition());
+
+	pMesh->SetScale(GetScale());
+
+	pMesh->SetRotationAngleByX(GetRotationAngleByX());
+	pMesh->SetRotationAngleByY(GetRotationAngleByY());
+	pMesh->SetRotationAngleByZ(GetRotationAngleByZ());
+
+	pMesh->SetIsBindable(IsBindable());
+
+	pMesh->SetBindedToAnimatedModelName(GetBindedToAnimatedModelName());
+	pMesh->SetBindedToBoneName(GetBindedToBoneName());
+
+	pMesh->SetModelFilename(GetModelFileName());
+
+	pMesh->SetPicked(false);
+
+	pMesh->LoadGameObject();
+
+	pMesh->SetObjectType(EGameObjectType_Static);
+
+	m_pGameObjManager->AddGameObject(pMesh);
+
+	return true;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void StaticModel::Destroy()
+{
+	m_pWhiteTexture->Release();
+	m_pEffect->Release();
 }
 
 /////////////////////////////////////////////////////////////////////////

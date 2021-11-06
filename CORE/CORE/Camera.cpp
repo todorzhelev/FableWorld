@@ -3,7 +3,6 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-//TODO: no singleton, bad name.. wtf man
 Camera* camera = NULL;
 
 /////////////////////////////////////////////////////////////////////////
@@ -28,6 +27,8 @@ Camera::Camera(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, fl
 	m_vLookVector  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 
 	BuildProjectionMatrix(fFovAngle,fAspectRatio,fFrustumNearPlaneZ,fFrustumFarPlaneZ);
+
+	m_speed = 100;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -53,21 +54,21 @@ D3DXMATRIX Camera::GetViewProjMatrix() const
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3& Camera::GetRightVector()
+D3DXVECTOR3 Camera::GetRightVector() const
 {
 	return m_vRightVector;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3& Camera::GetUpVector() 
+D3DXVECTOR3 Camera::GetUpVector() const
 {
 	return m_vUpVector;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3& Camera::GetLookVector() 
+D3DXVECTOR3 Camera::GetLookVector() const
 {
 	return m_vLookVector;
 }
@@ -257,31 +258,49 @@ void Camera::MoveCamera(float dt)
 	{
 		dir += m_vRightVector;
 	}
-
 	
-	D3DXVECTOR3 newPos = m_vPosition + dir*100.0*dt;
+	D3DXVECTOR3 newPos = m_vPosition + dir* m_speed *dt;
 	m_vPosition = newPos;
 
 	if( pDinput->IsMouseButtonDown(0) )
 	{
+		float angleModifier = 150;
 
-		float pitch  = pDinput->GetMouseDY() / 150.0;
-		float yAngle = pDinput->GetMouseDX() / 150.0f;
+		float upAngleRot	= pDinput->GetMouseDY() / angleModifier;
+		float rightAngleRot = pDinput->GetMouseDX() / angleModifier;
 
-
-		//when we move the mouse up/down we will rotate the camera around the right vector as axis
-		D3DXMATRIX R;
-		D3DXMatrixRotationAxis(&R, &m_vRightVector, pitch);
-		D3DXVec3TransformCoord(&m_vLookVector, &m_vLookVector, &R);
-		D3DXVec3TransformCoord(&m_vUpVector, &m_vUpVector, &R);
-
-
-		// Rotate camera axes about the world's y-axis.
-		D3DXMatrixRotationY(&R, yAngle);
-		D3DXVec3TransformCoord(&m_vRightVector, &m_vRightVector, &R);
-		D3DXVec3TransformCoord(&m_vUpVector, &m_vUpVector, &R);
-		D3DXVec3TransformCoord(&m_vLookVector, &m_vLookVector, &R);
+		RotateUp(upAngleRot);
+		RotateRight(rightAngleRot);
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Camera::SetSpeed(int speed)
+{
+	m_speed = speed;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Camera::RotateRight(float angle)
+{
+	D3DXMATRIX R;
+
+	D3DXMatrixRotationY(&R, angle);
+	D3DXVec3TransformCoord(&m_vRightVector, &m_vRightVector, &R);
+	D3DXVec3TransformCoord(&m_vLookVector, &m_vLookVector, &R);
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Camera::RotateUp(float angle)
+{
+	D3DXMATRIX R;
+
+	D3DXMatrixRotationAxis(&R, &m_vRightVector, angle);
+	D3DXVec3TransformCoord(&m_vLookVector, &m_vLookVector, &R);
+	D3DXVec3TransformCoord(&m_vUpVector, &m_vUpVector, &R);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -329,6 +348,15 @@ void Camera::ModifyZoom(int delta)
 int Camera::GetZoom()
 {
 	return m_zoom;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Camera::TransformByMatrix(D3DXMATRIX matrix)
+{
+	D3DXVec3TransformCoord(&m_vLookVector,	&m_vLookVector,	 &matrix);
+	D3DXVec3TransformCoord(&m_vRightVector, &m_vRightVector, &matrix);
+	D3DXVec3TransformCoord(&m_vUpVector,	&m_vUpVector,	 &matrix);
 }
 
 /////////////////////////////////////////////////////////////////////////

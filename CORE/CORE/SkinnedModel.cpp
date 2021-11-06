@@ -31,6 +31,21 @@ SkinnedModel::SkinnedModel()
 	m_movementSpeed = 1;
 	BuildEffect();
 	BuildEffectForTitles();
+
+	m_vLook  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	m_vRight = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	m_vUp    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+	m_vTitleLook  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	m_vTitleRight = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	m_vTitleUp    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+	m_vTitleForQuestLook  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	m_vTitleForQuestRight = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	m_vTitleForQuestUp	  = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	m_fTitleForQuestRotationAngleByY = 0.0;
+
+	m_pTitleMesh = nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -42,7 +57,7 @@ SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, 
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
 
 	m_pAnimationComponent = std::unique_ptr<AnimationComponent>(new AnimationComponent());
-
+	m_pAnimationComponent->SetAnimationSpeed(1);
 	//max number of bones that can be supported.Above 60 bones arent rendered correctly
 	m_nMaxBonesSupported = 60;
 
@@ -102,25 +117,14 @@ SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, 
 	m_eGameObjectType = EGameObjectType_Skinned;
 
 	m_bShouldRenderTitles = bShouldRenderTitles;
+
+	m_pTitleMesh = nullptr;
 }
 /////////////////////////////////////////////////////////////////////////
 
 SkinnedModel::~SkinnedModel()
 {
-	m_pWhiteTexture->Release();
-	m_pEffect->Release();
-	m_pTitlesEffect->Release();
-	m_pTitleMesh->Release();
-	m_pTitleForQuestMesh->Release();
-	m_vFinalBonesMatrices.clear();
-	m_vToRootMatrices.clear();
-	m_pSkinInfo->Release();
-
-	//todo::recursively clear everything
-	//m_pRoot;
-	
-	//todo:clear this. GameObjects inside should be smart pointers
-	//m_mapBindedObjects;
+	Destroy();
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -423,7 +427,7 @@ void SkinnedModel::BuildEffectForTitles()
 
 void SkinnedModel::OnUpdate(float dt)
 {
-	m_pAnimationComponent->OnUpdate(dt, m_movementSpeed);
+	m_pAnimationComponent->OnUpdate(dt);
 	
 	// Recurse down the tree and builds the toRoot matrix for every bone
 	D3DXMATRIX IdentityMatrix;
@@ -546,7 +550,7 @@ void SkinnedModel::OnRender()
 
 	if(m_bShouldRenderTitles && m_pGameObjManager->ShouldRenderTitles())
 	{
-		//RenderTitles();
+		RenderTitles();
 		RenderTitlesForQuest();
 	}
 	
@@ -681,6 +685,11 @@ void SkinnedModel::RenderBoundingBox()
 
 void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
 {
+	if (!m_pAnimationComponent)
+	{
+		return;
+	}
+
 	m_pAnimationComponent->PlayAnimation(strAnimationName);
 }
 
@@ -961,17 +970,17 @@ void SkinnedModel::SetTitleMesh(ID3DXMesh* titleMesh)
 	m_pTitleMesh = titleMesh;
 }
 
-D3DXVECTOR3& SkinnedModel::GetTitleLookVector()
+D3DXVECTOR3 SkinnedModel::GetTitleLookVector() const
 {
 	return m_vTitleLook;
 }
 
-D3DXVECTOR3& SkinnedModel::GetTitleRightVector()
+D3DXVECTOR3 SkinnedModel::GetTitleRightVector() const
 {
 	return m_vTitleRight;
 }
 
-D3DXVECTOR3& SkinnedModel::GetTitleUpVector()
+D3DXVECTOR3 SkinnedModel::GetTitleUpVector() const
 {
 	return m_vTitleUp;
 }
@@ -1021,17 +1030,17 @@ void SkinnedModel::SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh)
 	m_pTitleForQuestMesh = titleForQuestMesh;
 }
 
-D3DXVECTOR3& SkinnedModel::GetTitleForQuestLookVector()
+D3DXVECTOR3 SkinnedModel::GetTitleForQuestLookVector() const
 {
 	return m_vTitleForQuestLook;
 }
 
-D3DXVECTOR3& SkinnedModel::GetTitleForQuestRightVector()
+D3DXVECTOR3 SkinnedModel::GetTitleForQuestRightVector() const
 {
 	return m_vTitleForQuestRight;
 }
 
-D3DXVECTOR3& SkinnedModel::GetTitleForQuestUpVector()
+D3DXVECTOR3 SkinnedModel::GetTitleForQuestUpVector() const
 {
 	return m_vTitleForQuestUp;
 }
@@ -1059,6 +1068,17 @@ void SkinnedModel::SetTitleForQuestRotationAnglyByY(float angle)
 void SkinnedModel::ModifyTitleForQuestRotationAnglyByY(float delta)
 {
 	m_fTitleForQuestRotationAngleByY += delta;
+}
+
+void SkinnedModel::TransformTitleByMatrix(D3DXMATRIX matrix)
+{
+	D3DXVec3TransformCoord(&m_vTitleLook,  &m_vTitleLook,  &matrix);
+	D3DXVec3TransformCoord(&m_vTitleRight, &m_vTitleRight, &matrix);
+	D3DXVec3TransformCoord(&m_vTitleUp,    &m_vTitleUp,    &matrix);
+
+	D3DXVec3TransformCoord(&m_vTitleForQuestLook,  &m_vTitleForQuestLook,  &matrix);
+	D3DXVec3TransformCoord(&m_vTitleForQuestRight, &m_vTitleForQuestRight, &matrix);
+	D3DXVec3TransformCoord(&m_vTitleForQuestUp,    &m_vTitleForQuestUp,    &matrix);
 }
 
 std::vector<D3DXMATRIX>& SkinnedModel::GetFinalBonesMatrices()
@@ -1129,4 +1149,96 @@ void SkinnedModel::SetMovementSpeed(float newSpeed)
 float SkinnedModel::GetMovementSpeed()
 {
 	return m_movementSpeed;
+}
+
+void SkinnedModel::SetAnimationSpeed(float newSpeed)
+{
+	if (!m_pAnimationComponent)
+	{
+		return;
+	}
+
+	m_pAnimationComponent->SetAnimationSpeed(newSpeed);
+}
+
+float SkinnedModel::GetAnimationSpeed()
+{
+	if (!m_pAnimationComponent)
+	{
+		return 0;
+	}
+	return m_pAnimationComponent->GetAnimationSpeed();
+}
+
+bool SkinnedModel::SpawnClone()
+{
+	SkinnedModel* pMesh = new SkinnedModel;
+
+	pMesh->SetPosition(GetPosition());
+
+	pMesh->SetScale(GetScale());
+
+	pMesh->SetRotationAngleByX(GetRotationAngleByX());
+	pMesh->SetRotationAngleByY(GetRotationAngleByY());
+
+	pMesh->SetRotationAngleByZ(0);
+
+	pMesh->SetTitleRotationAnglyByY(GetRotationAngleByY());
+
+	pMesh->SetTitleForQuest("");
+
+	pMesh->SetModelFilename(GetModelFileName());
+
+	pMesh->SetTextureFilename(GetTextureFilename());
+
+	pMesh->SetActorType("enemy");
+
+	pMesh->SetAttacked(false);
+	pMesh->SetAttacking(false);
+	pMesh->SetDead(false);
+	pMesh->SetPicked(false);
+	pMesh->SetHasDialogue(false);
+	pMesh->SetAttackerName("");
+
+	pMesh->LoadGameObject();
+
+	pMesh->SetObjectType(EGameObjectType_Skinned);
+
+	m_pGameObjManager->AddGameObject(pMesh);
+
+	pTextManager->CreateMeshFor3DText(pMesh);
+
+	return true;
+}
+
+void SkinnedModel::Destroy()
+{
+	m_pWhiteTexture->Release();
+	m_pEffect->Release();
+	m_pTitlesEffect->Release();
+	//m_pTitleMesh->Release();
+	//m_pTitleForQuestMesh->Release();
+	m_vFinalBonesMatrices.clear();
+	m_vToRootMatrices.clear();
+	m_pSkinInfo->Release();
+
+	//todo::recursively clear everything
+	//m_pRoot;
+	
+	//clear the binded objects
+	auto& gameObjects = m_pGameObjManager->GetGameObjects();
+	for (auto& el : m_mapBindedObjects)
+	{
+		std::string name = el.first->GetName();
+
+		auto it = std::find_if(gameObjects.begin(), gameObjects.end(), [name](GameObject* obj) { return !obj->GetName().compare(name); });
+
+		if (it != gameObjects.end())
+		{
+			GameObject* obj = *it;
+			obj->Destroy();
+
+			gameObjects.erase(it);
+		}
+	}
 }

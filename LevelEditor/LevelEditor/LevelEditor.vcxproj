@@ -14,19 +14,19 @@
     <ProjectName>LevelEditor</ProjectName>
     <ProjectGuid>{1B841516-2E1E-46B8-AF1D-7235D31B7598}</ProjectGuid>
     <RootNamespace>diplomna</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -57,8 +57,8 @@
     <SourcePath>C:\Repositories\lua-5.1.4\lua-5.1.4\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\boost_1.59.0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\lua-5.1.4\lua-5.1.4;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\other\PROJECTS\FableWorld\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;D:\other\ENGINES\DX9\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\other\ENGINES\DX9\Lib\x86;D:\other\PROJECTS\FableWorld\CORE\CORE\libs\lua-5.1.4\lua-5.1.4;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -88,7 +88,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\CORE\CORE\;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\CORE\CORE\;D:\other\ENGINES\DX9\Include;$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
@@ -98,7 +98,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4;D:\other\ENGINES\DX9\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -118,6 +118,36 @@
     <ClCompile Include="..\..\CORE\CORE\LuaFunctions.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Misc.cpp" />
     <ClCompile Include="..\..\CORE\CORE\QuestManager.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\DebugUtils\DebugDraw.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\DebugUtils\DetourDebugDraw.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\DebugUtils\RecastDebugDraw.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\DebugUtils\RecastDump.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\DetourCrowd\DetourCrowd.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\DetourCrowd\DetourLocalBoundary.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\DetourCrowd\DetourObstacleAvoidance.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\DetourCrowd\DetourPathCorridor.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\DetourCrowd\DetourPathQueue.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\DetourCrowd\DetourProximityGrid.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\DetourTileCache\DetourTileCache.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\DetourTileCache\DetourTileCacheBuilder.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Detour\DetourAlloc.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Detour\DetourAssert.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Detour\DetourCommon.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Detour\DetourNavMesh.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Detour\DetourNavMeshBuilder.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Detour\DetourNavMeshQuery.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Detour\DetourNode.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Recast\Recast.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Recast\RecastAlloc.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Recast\RecastArea.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Recast\RecastAssert.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Recast\RecastContour.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Recast\RecastFilter.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Recast\RecastLayers.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Recast\RecastMesh.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Recast\RecastMeshDetail.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Recast\RecastRasterization.cpp" />
+    <ClCompile Include="..\..\CORE\CORE\Recast\Recast\RecastRegion.cpp" />
     <ClCompile Include="..\..\CORE\CORE\SkinnedModel.cpp" />
     <ClCompile Include="..\..\CORE\CORE\Sky.cpp" />
     <ClCompile Include="..\..\CORE\CORE\StaticModel.cpp" />
@@ -152,6 +182,30 @@
     <ClInclude Include="..\..\CORE\CORE\LuaFunctions.h" />
     <ClInclude Include="..\..\CORE\CORE\Misc.h" />
     <ClInclude Include="..\..\CORE\CORE\QuestManager.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\DebugUtils\DebugDraw.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\DebugUtils\DetourDebugDraw.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\DebugUtils\RecastDebugDraw.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\DebugUtils\RecastDump.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\DetourCrowd\DetourCrowd.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\DetourCrowd\DetourLocalBoundary.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\DetourCrowd\DetourObstacleAvoidance.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\DetourCrowd\DetourPathCorridor.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\DetourCrowd\DetourPathQueue.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\DetourCrowd\DetourProximityGrid.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\DetourTileCache\DetourTileCache.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\DetourTileCache\DetourTileCacheBuilder.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\Detour\DetourAlloc.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\Detour\DetourAssert.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\Detour\DetourCommon.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\Detour\DetourMath.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\Detour\DetourNavMesh.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\Detour\DetourNavMeshBuilder.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\Detour\DetourNavMeshQuery.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\Detour\DetourNode.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\Detour\DetourStatus.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\Recast\Recast.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\Recast\RecastAlloc.h" />
+    <ClInclude Include="..\..\CORE\CORE\Recast\Recast\RecastAssert.h" />
     <ClInclude Include="..\..\CORE\CORE\SkinnedModel.h" />
     <ClInclude Include="..\..\CORE\CORE\Sky.h" />
     <ClInclude Include="..\..\CORE\CORE\StaticModel.h" />

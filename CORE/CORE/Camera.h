@@ -8,8 +8,8 @@
 
 enum class ECameraMode
 {
-	ECameraMode_MoveWithoutPressedMouse,
-	ECameraMode_MoveWithPressedMouse
+	MoveWithoutPressedMouse,
+	MoveWithPressedMouse
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -25,11 +25,11 @@ public:
 
 	D3DXMATRIX		GetViewProjMatrix() const;
 
-	D3DXVECTOR3&	GetRightVector();
+	D3DXVECTOR3		GetRightVector() const;
 
-	D3DXVECTOR3&	GetUpVector();
+	D3DXVECTOR3		GetUpVector() const;
 
-	D3DXVECTOR3&	GetLookVector();
+	D3DXVECTOR3		GetLookVector() const;
 
 	D3DXVECTOR3&	GetPosition();
 
@@ -47,6 +47,12 @@ public:
 
 	void			MoveCamera(float dt);
 
+	void			SetSpeed(int speed);
+
+	void			RotateRight(float angle);
+
+	void			RotateUp(float angle);
+
 	bool			IsCameraFree() const;
 
 	void			SetCameraFree(bool free);
@@ -56,6 +62,8 @@ public:
 	void			ModifyZoom(int delta);
 
 	int				GetZoom();
+
+	void			TransformByMatrix(D3DXMATRIX matrix);
 
 private:
 
@@ -87,6 +95,8 @@ private:
 	int m_minZoom;
 
 	int m_zoom;
+
+	int m_speed;
 };
 
 //////////////////////////////////////////////////////////////////////////////
