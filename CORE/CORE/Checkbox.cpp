@@ -5,8 +5,7 @@
 /////////////////////////////////////////////////////////////////////////
 
 Checkbox::Checkbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string strText, std::string strIdleStateTexFileName, std::string strMouseOverStateTexFileName, std::string strId)
-:IBaseMenuObject(vPosition,nWidth,nHeight,strText,strIdleStateTexFileName,strMouseOverStateTexFileName,strId)
-{
+:IBaseMenuObject(vPosition,nWidth,nHeight,strText,strIdleStateTexFileName,strMouseOverStateTexFileName,strId) {
 	D3DXCreateSprite(pDxDevice,&m_pSprite);
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,m_strIdleStateTextureFileName.c_str(),&m_pIdleStateTexture));
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,m_strMouseOverStateTextureFileName.c_str(),&m_pMouseOverStateTexture));
@@ -17,28 +16,24 @@ Checkbox::Checkbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string s
 
 /////////////////////////////////////////////////////////////////////////
 
-void Checkbox::Init()
-{
+void Checkbox::Init() {
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Checkbox::OnLostDevice()
-{
+void Checkbox::OnLostDevice() {
 	m_pSprite->OnLostDevice();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Checkbox::OnResetDevice()
-{
+void Checkbox::OnResetDevice() {
 	m_pSprite->OnResetDevice();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-bool Checkbox::IsMouseOver()
-{
+bool Checkbox::IsMouseOver() {
 	POINT s;
 	GetCursorPos(&s);
 
@@ -50,12 +45,10 @@ bool Checkbox::IsMouseOver()
 	if((s.x > m_vPosition.x) && 
 	   (s.y > m_vPosition.y) &&
 	   (s.x< (m_vPosition.x + m_nWidth)) &&
-	   (s.y < (m_vPosition.y + m_nHeight)))
-	{
+	   (s.y < (m_vPosition.y + m_nHeight))) {
 		return true;
 	}
-	else
-	{
+	else {
 		return false;
 	}
 		
@@ -63,77 +56,60 @@ bool Checkbox::IsMouseOver()
 
 /////////////////////////////////////////////////////////////////////////
 
-void Checkbox::OnClicked()
-{
-	if( IsMouseOver() )
-	{
-		if( m_bIsChecked )
-		{
+void Checkbox::OnClicked() {
+	if (IsMouseOver()) {
+		if (m_bIsChecked) {
 			m_bIsChecked = false;
 		}
-		else
-		{
+		else {
 			m_bIsChecked = true;
 		}
 	}
-
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-bool Checkbox::IsMouseDown()
-{
+bool Checkbox::IsMouseDown() {
 	//if the mouse is over the area and the left button is pressed then return true
-	if(IsMouseOver() && pDinput->IsMouseButtonDown(0))
-	{
+	if (IsMouseOver() && pDinput->IsMouseButtonDown(0)) {
 		return true;
 	}
-	else
-	{
+	else {
 		return false;
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Checkbox::OnUpdate()
-{
-	if( IsMouseOver())
-	{
+void Checkbox::OnUpdate() {
+	if (IsMouseOver()) {
 		m_bIsMouseOver = true;
 	}
-	else
-	{
+	else {
 		m_bIsMouseOver = false;
 	}
 
-	if( IsMouseDown())
-	{
+	if (IsMouseDown()) {
 		m_bIsMouseDown = true;
 	}
-	else if( !IsMouseDown() )
-	{
+	else if(!IsMouseDown()) {
 		m_bIsMouseDown = false;
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Checkbox::OnRender(int a,int r,int g,int b)
-{
+void Checkbox::OnRender(int a,int r,int g,int b) {
 	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
 
 	D3DXVECTOR3 vPos = D3DXVECTOR3(m_vPosition.x, m_vPosition.y, 0.f);
 
 	//if the mouse is over the button draw the mouseOverText
-	if( !m_bIsChecked )
-	{
+	if (!m_bIsChecked) {
 		m_pSprite->Draw(m_pMouseOverStateTexture,NULL,NULL,&vPos,D3DXCOLOR(255,255,255,255));
-			
 		m_pSprite->Flush();
 	}
-	else
-	{
+	else {
 		m_pSprite->Draw(m_pIdleStateTexture,NULL,NULL,&vPos,D3DXCOLOR(255,255,255,255));
 		m_pSprite->Flush();
 	}

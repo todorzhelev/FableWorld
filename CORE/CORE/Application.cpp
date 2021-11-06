@@ -16,23 +16,18 @@ std::ofstream fout;
 /////////////////////////////////////////////////////////////////////////
 //LRESULT - long int
 //CALLBACK - this means that Windows will call that function, not our program
-LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	if (pApp && pApp->GetCurrentScene() != NULL)
-	{
+LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	if (pApp && pApp->GetCurrentScene() != NULL) {
 		return pApp->GetCurrentScene()->MsgProc(msg, wParam, lParam);
 	}
-	else
-	{
+	else {
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-Application::Application(HINSTANCE hInstance, std::string strWindowTitle, D3DDEVTYPE eDeviceType, DWORD vertexProcessingType)
-{
+Application::Application(HINSTANCE hInstance, std::string strWindowTitle, D3DDEVTYPE eDeviceType, DWORD vertexProcessingType) {
 	m_strWindowTitle		= strWindowTitle;
 	m_eDeviceType			= eDeviceType;
 	m_hAppInstance			= hInstance;
@@ -50,8 +45,7 @@ Application::Application(HINSTANCE hInstance, std::string strWindowTitle, D3DDEV
 
 /////////////////////////////////////////////////////////////////////////
 
-Application::~Application()
-{
+Application::~Application() {
 	ReleaseX(m_pD3DObject);
 	ReleaseX(pDxDevice);
 }
@@ -59,47 +53,40 @@ Application::~Application()
 /////////////////////////////////////////////////////////////////////////
 
 //returns the instance of the program
-HINSTANCE Application::GetAppInstance()
-{
+HINSTANCE Application::GetAppInstance() {
 	return m_hAppInstance;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 //returns the handle of the window
-HWND Application::GetMainWindow()
-{
+HWND Application::GetMainWindow() {
 	return m_hMainWindow;
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 
 //returns the present parameters, used for creating the directx device
-D3DPRESENT_PARAMETERS Application::GetPresentParameters()
-{
+D3DPRESENT_PARAMETERS Application::GetPresentParameters() {
 	return m_presentParameters;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-bool Application::IsPaused() const
-{
+bool Application::IsPaused() const {
 	return m_bIsAppPaused;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Application::SetPaused(bool bPaused)
-{
+void Application::SetPaused(bool bPaused) {
 	m_bIsAppPaused = bPaused;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 //initialize the window
-void Application::InitMainWindow()
-{
+void Application::InitMainWindow() {
 	WNDCLASS wc;
 	wc.style			= CS_HREDRAW | CS_VREDRAW;										//indicates that the windows has to be repainted in case the window's size is changed in horizontal or vertical side
 	wc.lpfnWndProc		= MainWndProc;													//pointer to the windows procedure function.This function is responsible for processing events
@@ -112,8 +99,7 @@ void Application::InitMainWindow()
 	wc.lpszMenuName		= 0;															//if we have menu
 	wc.lpszClassName	= "D3DWndClassName";											//the name of the class. We use it later to identify the wndclass structure when creating the window
 	
-	if( !RegisterClass(&wc) )								//Windows requires the window to be registered
-	{
+	if (!RegisterClass(&wc)) {								//Windows requires the window to be registered
 		MessageBox(0, "RegisterClass FAILED", 0, 0);
 		PostQuitMessage(0);
 	}
@@ -139,8 +125,7 @@ void Application::InitMainWindow()
 								0, 
 								m_hAppInstance, 
 								0); 
-	if( !m_hMainWindow )
-	{
+	if (!m_hMainWindow) {
 		MessageBox(0, "CreateWindow FAILED", 0, 0);
 		PostQuitMessage(0);
 	}
@@ -154,13 +139,11 @@ void Application::InitMainWindow()
 /////////////////////////////////////////////////////////////////////////
 
 //initialize direct3d
-void Application::InitDirect3D()
-{
+void Application::InitDirect3D() {
 	//via d3dObject we can later create the directx device which we will use in the game for rendering and connection with the video card
 	//with d3dObject we can find information about the hardware devices on the system(video cards etc.)
     m_pD3DObject = Direct3DCreate9(D3D_SDK_VERSION);
-	if( !m_pD3DObject )
-	{
+	if (!m_pD3DObject) {
 		MessageBox(0, "Direct3DCreate9 FAILED", 0, 0);
 		PostQuitMessage(0);
 	}
@@ -197,13 +180,11 @@ void Application::InitDirect3D()
 	//SwitchToFullscreen(true);
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 /*
 Here in a loop are invoked onUpdate and onRender functions of the current scene
 */
-int Application::MainLoop()
-{
+int Application::MainLoop() {
    MSG msg;
    msg.message = WM_NULL;
 
@@ -217,35 +198,29 @@ int Application::MainLoop()
 	//takes the prev time in counts
 	QueryPerformanceCounter((LARGE_INTEGER*)&prevTimeStamp);
 
-	while(msg.message != WM_QUIT)
-	{
+	while(msg.message != WM_QUIT) {
 		//windows uses event-driven programming model. It waits for an event to occur and
 		//when some event occur, windows sends message to the application and adds this message to application's message queue
 		//the type of the queue is priority queue(elements are pulled highest-priority first). The application checks for messages
 		//in the queue and if there is any it translates it and dispatch it to window procedure function, associated with this window,
 		//if there are no messages in the queue this code starts executing the main game logic and rendering.
-		if( PeekMessage(&msg, 0, 0, 0, PM_REMOVE) )
-		{
+		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		else
-		{	
-			if( m_bIsAppPaused )
-			{
+		else {	
+			if (m_bIsAppPaused) {
 				Sleep(20);
 				continue;
 			}
-			if( !IsDeviceLost() )
-			{
+			if (!IsDeviceLost()) {
 				__int64 currTimeStamp = 0;
 				//takes the current time in counts
 				QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
 				//convert the counts into seconds
 				float dt = (currTimeStamp - prevTimeStamp)*secsPerCnt;
 
-				if (m_pCurrentScene != nullptr)
-				{
+				if (m_pCurrentScene != nullptr) {
 					m_pCurrentScene->OnUpdate(dt);
 					m_pCurrentScene->OnRender();
 				}
@@ -255,7 +230,6 @@ int Application::MainLoop()
 		}
 	}	
 
-
 	return (int)msg.wParam;
 }
 
@@ -263,13 +237,10 @@ int Application::MainLoop()
 /////////////////////////////////////////////////////////////////////////
 
 //switches between fullscreen and windowed mode
-void Application::SwitchToFullscreen(bool bSwitch)
-{
+void Application::SwitchToFullscreen(bool bSwitch) {
 	//switch to fullscreen mode
-	if( bSwitch )
-	{
-		if( !m_presentParameters.Windowed ) 
-		{
+	if (bSwitch) {
+		if (!m_presentParameters.Windowed) {
 			return;
 		}
 
@@ -290,10 +261,8 @@ void Application::SwitchToFullscreen(bool bSwitch)
 		SetWindowPos(m_hMainWindow, HWND_TOP, 0, 0, width, height, SWP_NOZORDER | SWP_SHOWWINDOW);	
 	}
 	//switch to windowed mode.
-	else
-	{	
-		if( m_presentParameters.Windowed ) 
-		{
+	else {	
+		if (m_presentParameters.Windowed) {
 			return;
 		}
 
@@ -311,33 +280,27 @@ void Application::SwitchToFullscreen(bool bSwitch)
 
 	//if the scenes are not yet initialized just reset the device, otherwise call on lost and on reset functions
 	//the device reset is needed so the directx device can change its parameters with the new values.
-	if( m_pCurrentScene == NULL )
-	{
+	if (m_pCurrentScene == NULL) {
 		pDxDevice->Reset(&m_presentParameters);
 	}
-	else
-	{
+	else {
 		m_pCurrentScene->OnLostDevice();
 		pDxDevice->Reset(&m_presentParameters);
 		m_pCurrentScene->OnResetDevice();
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
 //tests if the directx device is lost(alt+tab)
-bool Application::IsDeviceLost()
-{
+bool Application::IsDeviceLost() {
 	HRESULT hr = pDxDevice->TestCooperativeLevel();
 
-	if( hr == D3DERR_DEVICELOST )
-	{
+	if (hr == D3DERR_DEVICELOST) {
 		Sleep(20);	
 		return true;
 	}
-	else if( hr == D3DERR_DEVICENOTRESET )
-	{
+	else if (hr == D3DERR_DEVICENOTRESET) {
 		m_pCurrentScene->OnLostDevice();
 		pDxDevice->Reset(&m_presentParameters);
 		m_pCurrentScene->OnResetDevice();
@@ -348,86 +311,73 @@ bool Application::IsDeviceLost()
 
 /////////////////////////////////////////////////////////////////////////
 
-IDirect3DVertexDeclaration9* Application::GetPNTDecl()
-{ 
+IDirect3DVertexDeclaration9* Application::GetPNTDecl() { 
 	return m_pVertexPNTDecl;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Application::SetPNTDecl(IDirect3DVertexDeclaration9* pDecl)
-{
+void Application::SetPNTDecl(IDirect3DVertexDeclaration9* pDecl) {
 	m_pVertexPNTDecl = pDecl;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-IDirect3DVertexDeclaration9* Application::GetParticleDecl()
-{
+IDirect3DVertexDeclaration9* Application::GetParticleDecl() {
 	return m_pVertexParticleDecl;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Application::SetParticleDecl(IDirect3DVertexDeclaration9* pDecl)
-{
+void Application::SetParticleDecl(IDirect3DVertexDeclaration9* pDecl) {
 	m_pVertexParticleDecl = pDecl;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-IDirect3DVertexDeclaration9* Application::GetPCDecl()
-{ 
+IDirect3DVertexDeclaration9* Application::GetPCDecl() { 
 	return m_pVertexPCDecl;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Application::SetPCDecl(IDirect3DVertexDeclaration9* pDecl)
-{
+void Application::SetPCDecl(IDirect3DVertexDeclaration9* pDecl) {
 	m_pVertexPCDecl = pDecl;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Application::SetCurrentScene(IBaseScene* pScene)
-{
+void Application::SetCurrentScene(IBaseScene* pScene) {
 	m_pCurrentScene = pScene;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-IBaseScene* Application::GetCurrentScene()
-{
+IBaseScene* Application::GetCurrentScene() {
 	return m_pCurrentScene;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Application::AddScene(std::string strSceneName, IBaseScene* pScene)
-{
+void Application::AddScene(std::string strSceneName, IBaseScene* pScene) {
 	m_mapScenesContainer[strSceneName] = pScene;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-IBaseScene* Application::GetScene(std::string strSceneName)
-{
+IBaseScene* Application::GetScene(std::string strSceneName) {
 	return m_mapScenesContainer.find(strSceneName)->second;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-bool Application::IsShaderVersionSupported()
-{
+bool Application::IsShaderVersionSupported() {
 	D3DCAPS9 caps;
 	pDxDevice->GetDeviceCaps(&caps); 
-	if( caps.VertexShaderVersion < D3DVS_VERSION(2, 0) )
-	{
+	if (caps.VertexShaderVersion < D3DVS_VERSION(2, 0)) {
 		return false;
 	}
-	if( caps.PixelShaderVersion < D3DPS_VERSION(2, 0) )
-	{
+	if (caps.PixelShaderVersion < D3DPS_VERSION(2, 0)) {
 		return false;
 	}
 
@@ -436,19 +386,15 @@ bool Application::IsShaderVersionSupported()
 
 /////////////////////////////////////////////////////////////////////////
 
-void Application::AddUIObject(IBaseMenuObject* pUIObject)
-{
+void Application::AddUIObject(IBaseMenuObject* pUIObject) {
 	m_vUIObjects.push_back(pUIObject);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-IBaseMenuObject* Application::FindMenuObject(std::string strObjectId)
-{
-	for(int i = 0; i < m_vUIObjects.size(); i++)
-	{
-		if(!strObjectId.compare(m_vUIObjects[i]->m_strId))
-		{
+IBaseMenuObject* Application::FindMenuObject(std::string strObjectId) {
+	for(int i = 0; i < m_vUIObjects.size(); i++) {
+		if(!strObjectId.compare(m_vUIObjects[i]->m_strId)) {
 			return m_vUIObjects[i];
 		}
 	}

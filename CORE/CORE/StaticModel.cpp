@@ -3,8 +3,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-StaticModel::StaticModel()
-{
+StaticModel::StaticModel() {
 	//default texture for models that dont have any
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));	
 
@@ -24,12 +23,10 @@ StaticModel::StaticModel()
 	m_vUp	 = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 }
 
-
 ////////////////////////////////////////////////////////////////////////
 
-StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName)
-{
-		//default texture for models that dont have any
+StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName) {
+	//default texture for models that dont have any
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));	
 
 	m_light.m_vLight   = D3DXVECTOR3(20.0f, 300.0f, 50.0f);
@@ -54,41 +51,31 @@ StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, st
 	m_fRotAngleZ = 0;
 
 	m_strModelName = strModelName;
-
 	m_strModelFileName = ModelFileName;
-
 	m_strTextureFileName = strTextureFileName;
-
 	m_bIsBindable = false;
-
 	m_strBindedToAnimatedModelName = "";
 	m_strBindedToBoneName = "";
-
 	D3DXCreateTextureFromFile(pDxDevice, strTextureFileName.c_str(), &m_pTexture);	
 
-	/*if( pMesh->m_bIsBindable && !pMesh->m_strBindedToAnimatedModelName.empty() && !pMesh->m_strBindedToBoneName.empty() )
-	{
+	/*if( pMesh->m_bIsBindable && !pMesh->m_strBindedToAnimatedModelName.empty() && !pMesh->m_strBindedToBoneName.empty() ) {
 		SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(m_pGameObjManager->GetGameObjects().find(pMesh->m_strBindedToAnimatedModelName)->second);
-
 		pSkinnedModel->BindWeaponToModel(pMesh->m_strModelName,pMesh->m_strBindedToBoneName);
 	}*/
 
 	m_eGameObjectType = EGameObjectType_Static;
-
 	m_bIsPicked = false;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-StaticModel::~StaticModel()
-{
+StaticModel::~StaticModel() {
 	Destroy();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void StaticModel::LoadGameObject()
-{
+void StaticModel::LoadGameObject() {
 	ID3DXMesh* pMesh			 = NULL;
 	ID3DXBuffer* pMaterialBuffer = NULL;
 
@@ -109,10 +96,8 @@ void StaticModel::LoadGameObject()
 	pMesh->Release();
 	pMesh = pTempMesh;
 
-
 	//generate normals if the models doesnt have
-	if( !bHasNormals )
-	{
+	if (!bHasNormals) {
 		D3DXComputeNormals(pMesh, 0);
 	}
 
@@ -124,12 +109,10 @@ void StaticModel::LoadGameObject()
 	//for example car can be divided by 3 parts - the car, front rims and back rims. 
 	//These 3 subsets will have different material and different texture associated with them
 	//this code reads from the information, stored in the .x file and saves it in two vectors: mMtrl and mTex
-	if( pMaterialBuffer != 0 && nMaterialsAmount != 0 )
-	{
+	if (pMaterialBuffer != 0 && nMaterialsAmount != 0) {
 		D3DXMATERIAL* d3dxmtrls = (D3DXMATERIAL*)pMaterialBuffer->GetBufferPointer();
 
-		for(DWORD i = 0; i < nMaterialsAmount; ++i)
-		{
+		for (DWORD i = 0; i < nMaterialsAmount; ++i) {
 			Material material;
 			material.m_ambient		  = d3dxmtrls[i].MatD3D.Diffuse;
 			material.m_diffuse		  = d3dxmtrls[i].MatD3D.Diffuse;
@@ -138,8 +121,7 @@ void StaticModel::LoadGameObject()
 
 			m_vMaterials.push_back(material);
 
-			if( d3dxmtrls[i].pTextureFilename != 0 )
-			{
+			if (d3dxmtrls[i].pTextureFilename != 0) {
 				IDirect3DTexture9* pTexture = 0;
 				char strTexturePath[80];
 				strcpy_s(strTexturePath,"../../Resources/textures/StaticModels/");
@@ -148,8 +130,7 @@ void StaticModel::LoadGameObject()
 
 				m_vTextures.push_back(pTexture);
 			}
-			else
-			{
+			else {
 				m_vTextures.push_back(NULL);
 			}
 		}
@@ -162,8 +143,7 @@ void StaticModel::LoadGameObject()
 
 /////////////////////////////////////////////////////////////////////////
 
-void StaticModel::BuildBoundingBox()
-{
+void StaticModel::BuildBoundingBox() {
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	m_pMesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
 
@@ -192,34 +172,29 @@ void StaticModel::BuildBoundingBox()
 
 /////////////////////////////////////////////////////////////////////////
 
-void StaticModel::OnResetDevice()
-{
+void StaticModel::OnResetDevice() {
 	m_pEffect->OnResetDevice();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void StaticModel::OnLostDevice()
-{
+void StaticModel::OnLostDevice() {
 	//add check if it already went through here
 	m_pEffect->OnLostDevice();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void StaticModel::OnUpdate(float fDeltaTime)
-{
+void StaticModel::OnUpdate(float fDeltaTime) {
 	//binded models got their own height, based on the bone that they are attached to, other models are just put on the terrain
-	if (!m_bIsBindable && m_pGameObjManager->AreObjectsGrounded())
-	{
+	if (!m_bIsBindable && m_pGameObjManager->AreObjectsGrounded()) {
 		m_vPos.y = pTerrain->GetHeight(m_vPos.x,m_vPos.z);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void StaticModel::BuildEffect()
-{
+void StaticModel::BuildEffect() {
 	CheckSuccess(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/StaticModelShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
 
 	m_hEffectTechnique	= m_pEffect->GetTechniqueByName("StaticModelTech");
@@ -232,15 +207,12 @@ void StaticModel::BuildEffect()
 	m_pEffect->SetValue(m_hLight, &m_light, sizeof(Light));
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
 //renders not-binded model
-void StaticModel::OnRender()
-{
+void StaticModel::OnRender() {
 	//if the model is not binded to skinned mesh's bone render it
-	if(!m_bIsBindable)
-	{
+	if (!m_bIsBindable) {
 		m_pEffect->SetTechnique(m_hEffectTechnique);
 
 		D3DXMATRIX T,T1;
@@ -264,40 +236,29 @@ void StaticModel::OnRender()
 		D3DXMATRIX finalMatrix = m_CombinedTransformationMatrix * camera->GetViewProjMatrix();
 		m_pEffect->SetMatrix(m_hWVPMatrix, &finalMatrix);
 
-		if( m_pGameObjManager->ShouldHighlightPickedObjects() )
-		{
+		if (m_pGameObjManager->ShouldHighlightPickedObjects()) {
 			m_pEffect->SetBool(m_hIsPicked,m_bIsPicked);
 		}
 
 		UINT numPasses = 0;
 		m_pEffect->Begin(&numPasses,0);
-		for(UINT i =0;i<numPasses;++i)
-		{
+		for(UINT i =0;i<numPasses;++i) {
 			m_pEffect->BeginPass(i);
-				
-				for(unsigned int j = 0; j < m_vMaterials.size(); ++j)
-				{
+				for(unsigned int j = 0; j < m_vMaterials.size(); ++j) {
 					m_pEffect->SetValue(m_hMaterial, &(m_vMaterials[j]), sizeof(Material));
-					
-					if(m_vTextures[j] != NULL)
-					{
+					if(m_vTextures[j] != NULL) {
 						m_pEffect->SetTexture(m_hTexture, m_vTextures[j]);
 					}
-					else
-					{
+					else {
 						m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);
 					}
-										
 					m_pEffect->CommitChanges();
-
 					m_pMesh->DrawSubset(j);					
 				}
 
-				if (m_pGameObjManager->ShouldRenderBoundingBoxes())
-				{
+				if (m_pGameObjManager->ShouldRenderBoundingBoxes()) {
 					RenderBoundingBox();
 				}
-
 			m_pEffect->EndPass();
 		}
 		m_pEffect->End();
@@ -309,8 +270,7 @@ void StaticModel::OnRender()
 /////////////////////////////////////////////////////////////////////////
 
 //renders binded model
-void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone)
-{
+void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone) {
 	//the animated model
 	SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pSkMesh);
 
@@ -342,7 +302,6 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone)
 
 	//combined matrix
 	D3DXMATRIX BindedObjectCombinedMatrix = SS*(R1SY*R1SX*R1SZ)*TS;
-
 
 	//this part can be used for manual control over the binded weapon through keyboard.
 	//outputs the results in the log files
@@ -431,19 +390,15 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone)
 						
 	UINT numPasses = 0;
 	m_pEffect->Begin(&numPasses,0);
-	for(UINT i =0;i<numPasses;++i)
-	{
+	for(UINT i =0;i<numPasses;++i) {
 		m_pEffect->BeginPass(i);
 
-			for(unsigned int j = 0; j < pBindedObject->GetMaterials().size(); ++j)
-			{
+			for(unsigned int j = 0; j < pBindedObject->GetMaterials().size(); ++j) {
 				m_pEffect->SetValue(m_hMaterial, &(pBindedObject->GetMaterials()[j]), sizeof(Material));
-				if(pBindedObject->GetTextures()[j] != 0)
-				{
+				if(pBindedObject->GetTextures()[j] != 0) {
 					m_pEffect->SetTexture(m_hTexture, pBindedObject->GetTextures()[j]);
 				}
-				else
-				{
+				else {
 					m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);
 				}
 													
@@ -454,7 +409,6 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone)
 			pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 			pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
 
 			//bounding box render for binded weapon
 			D3DXMATRIX finalMatrix = pBindedObject->GetBBOffsetMatrix() * FullCombinedMatrix * camera->GetViewProjMatrix();
@@ -473,8 +427,7 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone)
 
 /////////////////////////////////////////////////////////////////////////
 
-void StaticModel::RenderBoundingBox()
-{
+void StaticModel::RenderBoundingBox() {
 	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 	pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -507,20 +460,16 @@ void StaticModel::RenderBoundingBox()
 
 /////////////////////////////////////////////////////////////////////////
 
-float StaticModel::GetDistanceToPickedObject()
-{
+float StaticModel::GetDistanceToPickedObject() {
 	D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
 
 	GetWorldPickingRay(vOrigin, vDir);
-
 	bool bIsPicked = false;
-
 	AABB box = m_BoundingBox.TransformByMatrix(m_CombinedTransformationMatrix);
 	bIsPicked = D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir);
 
-	if (bIsPicked)
-	{
+	if (bIsPicked) {
 		//by finding the inverse of mesh CombinedMatrix we transform from World space to the mesh local space
 		//this is needed, because we have to transform the picking vectors to the mesh local space
 		//which is required by the D3DXIntersect function
@@ -550,40 +499,28 @@ float StaticModel::GetDistanceToPickedObject()
 
 /////////////////////////////////////////////////////////////////////////
 
-bool StaticModel::SpawnClone()
-{
+bool StaticModel::SpawnClone() {
 	StaticModel* pMesh = new StaticModel;
-
 	pMesh->SetPosition(GetPosition());
-
 	pMesh->SetScale(GetScale());
-
 	pMesh->SetRotationAngleByX(GetRotationAngleByX());
 	pMesh->SetRotationAngleByY(GetRotationAngleByY());
 	pMesh->SetRotationAngleByZ(GetRotationAngleByZ());
-
 	pMesh->SetIsBindable(IsBindable());
-
 	pMesh->SetBindedToAnimatedModelName(GetBindedToAnimatedModelName());
 	pMesh->SetBindedToBoneName(GetBindedToBoneName());
-
 	pMesh->SetModelFilename(GetModelFileName());
-
 	pMesh->SetPicked(false);
-
 	pMesh->LoadGameObject();
-
 	pMesh->SetObjectType(EGameObjectType_Static);
 
 	m_pGameObjManager->AddGameObject(pMesh);
-
 	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void StaticModel::Destroy()
-{
+void StaticModel::Destroy() {
 	m_pWhiteTexture->Release();
 	m_pEffect->Release();
 }

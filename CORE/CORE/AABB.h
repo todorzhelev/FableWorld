@@ -3,8 +3,7 @@
 #include"Application.h"
 #include"Misc.h"
 
-class AABB
-{
+class AABB {
 public:
 
 	AABB();
@@ -21,5 +20,4 @@ private:
 
 	D3DXVECTOR3 minPoint;
 	D3DXVECTOR3 maxPoint;
-	
 };

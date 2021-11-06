@@ -7,10 +7,8 @@ TextManager* pTextManager = NULL;
 
 /////////////////////////////////////////////////////////////////////////
 
-TextManager::TextManager():m_fFPS(0.0)
-{
-	if( AddFontResource("../../Resources/fonts/starcraft.ttf") == 0 )
-	{
+TextManager::TextManager():m_fFPS(0.0) {
+	if (AddFontResource("../../Resources/fonts/starcraft.ttf") == 0) {
 		MessageBox(0,"cannot load font",0,0);
 	}
 
@@ -32,19 +30,16 @@ TextManager::TextManager():m_fFPS(0.0)
 	CheckSuccess(D3DXCreateFontIndirect(pDxDevice, &fontDesc, &m_pFont2D));
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-ID3DXFont* TextManager::GetFont2D()
-{
+ID3DXFont* TextManager::GetFont2D() {
 	return m_pFont2D;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 //create font for the 3d titles above the models in the game
-void TextManager::CreateFontFor3DText()
-{
+void TextManager::CreateFontFor3DText() {
 	//creates device context. The device context is needed so the 3d text can be rendered.
 	m_hDC = CreateCompatibleDC(NULL);
 
@@ -64,18 +59,13 @@ void TextManager::CreateFontFor3DText()
 							"Verdana"
 							);
 
-
-
-
 	SelectObject(m_hDC, m_pFont3D);
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 
 //creates 3D text model for model titles
-void TextManager::CreateMeshFor3DText(SkinnedModel* pGameObject)
-{
+void TextManager::CreateMeshFor3DText(SkinnedModel* pGameObject) {
 	D3DXCreateText(pDxDevice,  
 				   m_hDC,          
 				   pGameObject->GetName().c_str(),		//Text 
@@ -91,8 +81,7 @@ void TextManager::CreateMeshFor3DText(SkinnedModel* pGameObject)
 /////////////////////////////////////////////////////////////////////////
 
 //creates 3D text model for quest titles
-void TextManager::CreateMeshFor3DTextQuest(SkinnedModel* pGameObject)
-{
+void TextManager::CreateMeshFor3DTextQuest(SkinnedModel* pGameObject) {
 	D3DXCreateText( pDxDevice,  
 					m_hDC,          
 					pGameObject->GetTitleForQuest().c_str(),	  //Text 
@@ -106,17 +95,14 @@ void TextManager::CreateMeshFor3DTextQuest(SkinnedModel* pGameObject)
 
 /////////////////////////////////////////////////////////////////////////
 
-void TextManager::RenderText(LPCSTR dtext,int x1,int y1,int x2,int y2,int alpha,int color1,int color2,int color3)
-{
+void TextManager::RenderText(LPCSTR dtext,int x1,int y1,int x2,int y2,int alpha,int color1,int color2,int color3) {
 	RECT rec = {x1,y1,x2,y2};
 	m_pFont2D->DrawTextA(0,dtext,-1,&rec,DT_NOCLIP,D3DCOLOR_ARGB(alpha,color1,color2,color3));
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-void TextManager::OnUpdate(float dt)
-{
+void TextManager::OnUpdate(float dt) {
 	//calculate the fps
 	static float fFps = 0.0f;
 	static float fTimeElapsed = 0.0f;
@@ -124,8 +110,7 @@ void TextManager::OnUpdate(float dt)
 	fFps += 1.0f;
 	fTimeElapsed += dt;
 
-	if(fTimeElapsed >= 1.0f)
-	{
+	if(fTimeElapsed >= 1.0f) {
 		m_fFPS = fFps;
 
 		fFps = 0.0f;
@@ -136,8 +121,7 @@ void TextManager::OnUpdate(float dt)
 /////////////////////////////////////////////////////////////////////////
 
 //draws the fps on the screen
-void TextManager::DrawFPS()
-{
+void TextManager::DrawFPS() {
 	static char buffer[256];
 
 	sprintf_s(buffer,"fps: %.2f \n",m_fFPS);
@@ -151,15 +135,13 @@ void TextManager::DrawFPS()
 
 /////////////////////////////////////////////////////////////////////////
 
-void TextManager::OnResetDevice()
-{
+void TextManager::OnResetDevice() {
 	m_pFont2D->OnResetDevice();	
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void TextManager::OnLostDevice()
-{
+void TextManager::OnLostDevice() {
 	m_pFont2D->OnLostDevice();
 }
 

@@ -5,8 +5,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-Menu::Menu()
-{
+Menu::Menu() {
 	//Dinput is responsible for mouse move detection, key pressed detection and etc.
 	pDinput = new DirectInput(DISCL_NONEXCLUSIVE|DISCL_FOREGROUND, DISCL_NONEXCLUSIVE|DISCL_FOREGROUND);
 
@@ -30,16 +29,14 @@ Menu::Menu()
 
 /////////////////////////////////////////////////////////////////////////
 
-void Menu::OnLostDevice()
-{
+void Menu::OnLostDevice() {
 	pTextManager->OnLostDevice();
 	m_pSpriteForLogo->OnLostDevice();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Menu::OnResetDevice()
-{
+void Menu::OnResetDevice() {
 	pTextManager->OnResetDevice();
 	m_pSpriteForLogo->OnResetDevice();
 	float w = (float)pApp->GetPresentParameters().BackBufferWidth;
@@ -51,19 +48,16 @@ void Menu::OnResetDevice()
 
 /////////////////////////////////////////////////////////////////////////
 
-void Menu::OnUpdate(float dt)
-{
+void Menu::OnUpdate(float dt) {
 	pDinput->Poll();
-	if( pDinput->IsKeyDown(DIK_F))
-	{
+	if (pDinput->IsKeyDown(DIK_F)) {
 		pApp->SwitchToFullscreen(true);
 	}
 
 	m_pLabelStartGame->OnUpdate();
 	m_pLabelQuit->OnUpdate();
 
-	if(m_pLabelStartGame->IsMouseDown())
-	{
+	if (m_pLabelStartGame->IsMouseDown()) {
 		pApp->GetScene("menu")->OnLostDevice();
 
 		//IBaseScene* pGameScene = pApp->GetScene("heroSelect");
@@ -71,8 +65,7 @@ void Menu::OnUpdate(float dt)
 		pApp->SetCurrentScene(pGameScene);
 	}
 
-	if(m_pLabelQuit->IsMouseDown())
-	{
+	if (m_pLabelQuit->IsMouseDown()) {
 		PostQuitMessage(0);
 	}
 
@@ -81,39 +74,32 @@ void Menu::OnUpdate(float dt)
 
 /////////////////////////////////////////////////////////////////////////
 
-void Menu::OnRender()
-{
+void Menu::OnRender() {
 	pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
 	pDxDevice->BeginScene();
 	D3DXVECTOR3 posForLogo(0.0,0.0,0.0);
 	m_pSpriteForLogo->Begin(D3DXSPRITE_ALPHABLEND);
 		
-	if(pApp->GetPresentParameters().Windowed)
-	{
+	if (pApp->GetPresentParameters().Windowed) {
 		//m_pSpriteForLogo->Draw(m_pLogoInWindowTexture,NULL,NULL,&posForLogo,D3DXCOLOR(255,255,255,255));
 	}
-	else
-	{
+	else {
 		//m_pSpriteForLogo->Draw(m_pLogoInFullscreenTexture,NULL,NULL,&posForLogo,D3DXCOLOR(255,255,255,255));
 	}
 	m_pSpriteForLogo->End();
 
 		///text->drawText("Completed",500,40,0,0,255,255,255,0);
-	if(!m_pLabelStartGame->IsMouseOver())
-	{
+	if (!m_pLabelStartGame->IsMouseOver()) {
 		m_pLabelStartGame->OnRender(255,255,255,255);
 	}
-	else
-	{
+	else {
 		m_pLabelStartGame->OnRender(150,255,255,255);
 	}
 
-	if(!m_pLabelQuit->IsMouseOver())
-	{
+	if (!m_pLabelQuit->IsMouseOver()) {
 		m_pLabelQuit->OnRender(255,255,255,255);
 	}
-	else
-	{
+	else {
 		m_pLabelQuit->OnRender(150,255,255,255);
 	}
 
@@ -124,12 +110,9 @@ void Menu::OnRender()
 
 /////////////////////////////////////////////////////////////////////////
 
-LRESULT Menu::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	
+LRESULT Menu::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) {
 	return DefWindowProc(pApp->GetMainWindow(), msg, wParam, lParam);
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 

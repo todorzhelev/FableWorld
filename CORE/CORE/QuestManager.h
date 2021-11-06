@@ -3,12 +3,10 @@
 #include<vector>
 
 //struct for quests
-class Quest
-{
+class Quest {
 public:
 
-	Quest()
-	{
+	Quest() {
 		m_strTitle = "";
 		m_strContent = "";
 		m_strRequiredObject = "";
@@ -24,24 +22,16 @@ public:
 	bool m_bIsStarted;
 };
 
-class QuestManager
-{
+class QuestManager {
 public:
-
 	static QuestManager* m_pQuestManager;
-
 	std::vector<Quest*>& GetQuests();
-
 private:
-
 	std::vector<Quest*> m_quests;
 };
 
-
-inline QuestManager* GetQuestManager()
-{
-	if(QuestManager::m_pQuestManager == nullptr )
-	{
+inline QuestManager* GetQuestManager() {
+	if (QuestManager::m_pQuestManager == nullptr) {
 		QuestManager::m_pQuestManager = new QuestManager();
 		return QuestManager::m_pQuestManager;
 	}

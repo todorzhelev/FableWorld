@@ -5,8 +5,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-SkinnedModel::SkinnedModel()
-{
+SkinnedModel::SkinnedModel() {
 	//default white texture for models which doesnt have any
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
 
@@ -50,8 +49,7 @@ SkinnedModel::SkinnedModel()
 
 /////////////////////////////////////////////////////////////////////////
 
-SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName,bool bShouldRenderTitles)
-{
+SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName,bool bShouldRenderTitles) {
 	//code duplication, move it to another function
 	//default white texture for models which doesnt have any
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
@@ -122,15 +120,13 @@ SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, 
 }
 /////////////////////////////////////////////////////////////////////////
 
-SkinnedModel::~SkinnedModel()
-{
+SkinnedModel::~SkinnedModel() {
 	Destroy();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::LoadGameObject()
-{
+void SkinnedModel::LoadGameObject() {
 	//creates the texture for the model
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, m_strTextureFileName.c_str(), &m_pTexture));
 
@@ -144,8 +140,7 @@ void SkinnedModel::LoadGameObject()
 	//there should be only one bone containing the whole skinned mesh
 	D3DXFRAME* pFrame = FindFrameWithMesh(m_pRoot);
 
-	if( !pFrame ) 
-	{
+	if( !pFrame )  {
 		fout<<"cannot find node with mesh"<<std::endl;
 	}
 	
@@ -187,52 +182,40 @@ void SkinnedModel::LoadGameObject()
 //returns the final matrices for each bone which are passed to the shader for rendering.
 //We are returning the adress of the first element of the array, because in the shader we need only the beginning address of the array
 //since the elements are in consecutive order
-D3DXMATRIX* SkinnedModel::GetFinalBonesMatricesArray()
-{
+D3DXMATRIX* SkinnedModel::GetFinalBonesMatricesArray() {
 	return &m_vFinalBonesMatrices.front();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 //finds the frame that contains mesh
-D3DXFRAME* SkinnedModel::FindFrameWithMesh(D3DXFRAME* frame)
-{
-	if( frame->pMeshContainer )
-	{
-		if( frame->pMeshContainer->MeshData.pMesh != nullptr)
-		{
+D3DXFRAME* SkinnedModel::FindFrameWithMesh(D3DXFRAME* frame) {
+	if( frame->pMeshContainer ) {
+		if( frame->pMeshContainer->MeshData.pMesh != nullptr) {
 			return frame;
 		}
 	}
-
 	D3DXFRAME* pFrame = nullptr;
-	if(frame->pFrameSibling)
-	{
+	if(frame->pFrameSibling) {
 		pFrame = FindFrameWithMesh(frame->pFrameSibling);
-		if( pFrame != nullptr )
-		{
+		if( pFrame != nullptr ) {
 			return pFrame;
 		}
 	}
-
-	if(frame->pFrameFirstChild)
-	{
+	if(frame->pFrameFirstChild) {
 		pFrame = FindFrameWithMesh(frame->pFrameFirstChild);
 
-		if( pFrame != nullptr )
-		{
+		if( pFrame != nullptr ) {
 			return pFrame;
 		}
 	}
-
 	return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 //creates the mesh and converts it to skinned mesh and also computes normals for the mesh if needed
-void SkinnedModel::BuildSkinnedModel(ID3DXMesh* pMesh)
-{
+void SkinnedModel::BuildSkinnedModel(ID3DXMesh* pMesh) {
 	D3DVERTEXELEMENT9 elements[64];
 	UINT numElements = 0;
 
@@ -241,8 +224,7 @@ void SkinnedModel::BuildSkinnedModel(ID3DXMesh* pMesh)
 	ID3DXMesh* pTempMesh = 0;
 	pMesh->CloneMesh(D3DXMESH_SYSTEMMEM, elements, pDxDevice, &pTempMesh);
 	 
-	if( !HasNormals(pTempMesh) )
-	{
+	if (!HasNormals(pTempMesh)) {
 		D3DXComputeNormals(pTempMesh, 0);
 	}
 	
@@ -273,15 +255,12 @@ The to root matrices will be updated every frame in OnUpdate, and we will have
 quick access to these matrices just by index, instead of using D3DXFrameFind every time in OnUpdate
 These matrices are needed to calculate the final matrix transformation for the vertices
 */
-void SkinnedModel::InitBonesToRootMatricesPointersArray()
-{
-	for(UINT i = 0; i < m_nNumBones; ++i)
-	{
+void SkinnedModel::InitBonesToRootMatricesPointersArray() {
+	for(UINT i = 0; i < m_nNumBones; ++i) {
 		const char* boneName = m_pSkinInfo->GetBoneName(i);
 		D3DXFRAME* pFrame	 = D3DXFrameFind(m_pRoot, boneName);
 		
-		if( pFrame )
-		{
+		if( pFrame ) {
 			Bone* pBone = static_cast<Bone*>( pFrame );
 			m_vToRootMatrices[i] = &pBone->m_toRootMatrix;
 		}
@@ -291,10 +270,8 @@ void SkinnedModel::InitBonesToRootMatricesPointersArray()
 /////////////////////////////////////////////////////////////////////////
 
 //binds static object to animated model's bone
-void SkinnedModel::BindWeaponToModel(std::string strObjectName,std::string strBoneToBind)
-{
+void SkinnedModel::BindWeaponToModel(std::string strObjectName,std::string strBoneToBind) {
 	GameObject* pGameObject = m_pGameObjManager->GetObjectByName(strObjectName.c_str());
-
 	m_mapBindedObjects[pGameObject] = strBoneToBind;
 }
 
@@ -323,8 +300,7 @@ We do this, because we want when the root is moved all bones in the hierarchy to
 bone5 doesnt have children or siblings, so we continue on bone1 with the same algorithm.
 
 */
-void SkinnedModel::BuildToRootMatrices(Bone* pBone, D3DXMATRIX& ParentBoneToRootMatrix) 
-{
+void SkinnedModel::BuildToRootMatrices(Bone* pBone, D3DXMATRIX& ParentBoneToRootMatrix) {
 	//gets the local transformation matrix of the current bone
     D3DXMATRIX BoneLocalMatrix = pBone->TransformationMatrix;
 
@@ -336,30 +312,26 @@ void SkinnedModel::BuildToRootMatrices(Bone* pBone, D3DXMATRIX& ParentBoneToRoot
 	Bone* pFirstChild = static_cast<Bone*>(pBone->pFrameFirstChild);
 
 	//if this bone has sibling pass the same ParentBoneToRootMatrix as we used in this bone
-	if( pSibling )
-	{
+	if (pSibling) {
 		BuildToRootMatrices(pSibling, ParentBoneToRootMatrix);
 	}
 
 	//if we have child, use the calculated ToRootMatrix
-	if( pFirstChild )
-	{
+	if (pFirstChild) {
 		BuildToRootMatrices(pFirstChild, ToRootMatrix);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::OnResetDevice()
-{
+void SkinnedModel::OnResetDevice() {
 	m_pEffect->OnResetDevice();
 	m_pTitlesEffect->OnResetDevice();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::OnLostDevice()
-{
+void SkinnedModel::OnLostDevice() {
 	m_pEffect->OnLostDevice();
 	m_pTitlesEffect->OnLostDevice();
 
@@ -367,15 +339,13 @@ void SkinnedModel::OnLostDevice()
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::BuildBoundingBox()
-{
+void SkinnedModel::BuildBoundingBox() {
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	m_pMesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
 
 	D3DXComputeBoundingBox(&pVertexBuffer[0].m_vPos, m_pMesh->GetNumVertices(), sizeof(VertexPositionNormalTexture), &(m_BoundingBox.GetMinPoint()), &(m_BoundingBox.GetMaxPoint()));
 	
 	m_pMesh->UnlockVertexBuffer();
-
 	
     float width  = m_BoundingBox.GetMaxPoint().x - m_BoundingBox.GetMinPoint().x;
 	float height = m_BoundingBox.GetMaxPoint().y - m_BoundingBox.GetMinPoint().y;
@@ -383,7 +353,6 @@ void SkinnedModel::BuildBoundingBox()
 	//fout<<"Bounding box\n"<<width<<endl<<height<<endl<<depth<<endl;
 
 	D3DXCreateBox(pDxDevice, width, height, depth, &m_pBoundingBoxMesh, 0);
-
 
 	D3DXVECTOR3 center = m_BoundingBox.GetCenter();
 	D3DXMatrixTranslation(&(m_BoundingBoxOffset), center.x, center.y, center.z);
@@ -397,8 +366,7 @@ void SkinnedModel::BuildBoundingBox()
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::BuildEffect()
-{
+void SkinnedModel::BuildEffect() {
 	CheckSuccess(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/SkinnedModelShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
 
 	m_hEffectTechnique	  = m_pEffect->GetTechniqueByName("SkinnedModelTech");
@@ -416,8 +384,7 @@ void SkinnedModel::BuildEffect()
 /////////////////////////////////////////////////////////////////////////
 
 //sets paramateres needed in the effect file for the titles
-void SkinnedModel::BuildEffectForTitles()
-{
+void SkinnedModel::BuildEffectForTitles() {
 	D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/Text3DShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pTitlesEffect, 0);
 	m_hTitlesEffectTechnique = m_pTitlesEffect->GetTechniqueByName("text3DTech");
 	m_hTitlesWVPMatrix  	 = m_pTitlesEffect->GetParameterByName(0, "WVP");
@@ -425,8 +392,7 @@ void SkinnedModel::BuildEffectForTitles()
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::OnUpdate(float dt)
-{
+void SkinnedModel::OnUpdate(float dt) {
 	m_pAnimationComponent->OnUpdate(dt);
 	
 	// Recurse down the tree and builds the toRoot matrix for every bone
@@ -440,8 +406,7 @@ void SkinnedModel::OnUpdate(float dt)
 	//combines the offset matrix of the frame with the toRoot matrix so the combined matrix
 	//can be passed to the shader for rendering
 	D3DXMATRIX BoneOffsetMatrix, ToRootMatrix;
-	for(UINT i = 0; i < m_nNumBones; ++i)
-	{
+	for (UINT i = 0; i < m_nNumBones; ++i) {
 		BoneOffsetMatrix = *(m_pSkinInfo->GetBoneOffsetMatrix(i));
 		ToRootMatrix	 = *(m_vToRootMatrices[i]);
 
@@ -450,9 +415,8 @@ void SkinnedModel::OnUpdate(float dt)
 		m_vFinalBonesMatrices[i] = BoneOffsetMatrix * ToRootMatrix;
 	}
 	
-	if( m_pGameObjManager->AreObjectsGrounded() &&
-		pTerrain->IsValidPosition(m_vPos.x, m_vPos.z) )
-	{
+	if (m_pGameObjManager->AreObjectsGrounded() &&
+		pTerrain->IsValidPosition(m_vPos.x, m_vPos.z)) {
 		//updates the height of the model, so it can sit above the ground
 		m_vPos.y = pTerrain->GetHeight(m_vPos.x,m_vPos.z) + 0.5f;
 	}
@@ -460,10 +424,8 @@ void SkinnedModel::OnUpdate(float dt)
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::OnRender()
-{
-	if( m_pGameObjManager->ShouldRenderAxis() )
-	{
+void SkinnedModel::OnRender() {
+	if (m_pGameObjManager->ShouldRenderAxis()) {
 		D3DXMATRIX R15;
 
 		D3DXVECTOR3 vLook = m_vLook;
@@ -518,46 +480,40 @@ void SkinnedModel::OnRender()
 		
 	D3DXMATRIX finalMatrix = m_CombinedTransformationMatrix * camera->GetViewProjMatrix();
 	m_pEffect->SetMatrix(m_hWVPMatrix, &finalMatrix);
-	if( m_pTexture )
-	{
+	if (m_pTexture) {
 		m_pEffect->SetTexture(m_hTexture,m_pTexture);
 	}
-	else
-	{
+	else {
 		m_pEffect->SetTexture(m_hTexture,m_pWhiteTexture);
 	}
 	
 	m_pEffect->SetMatrixArray(m_hFinalBonesMatrices, GetFinalBonesMatricesArray(), m_nNumBones);
 
-	if( m_pGameObjManager->ShouldHighlightPickedObjects() )
-	{
+	if (m_pGameObjManager->ShouldHighlightPickedObjects()) {
 		m_pEffect->SetBool(m_hIsPicked,m_bIsPicked);
 	}
 
 	UINT numPasses = 0;
 	m_pEffect->Begin(&numPasses,0);
-	for(UINT i =0;i<numPasses;++i)
-	{
+	for (UINT i =0;i<numPasses;++i){
 		m_pEffect->BeginPass(i);
 			m_pMesh->DrawSubset(0);
 
-			if (m_pGameObjManager->ShouldRenderBoundingBoxes())
-			{
+			if (m_pGameObjManager->ShouldRenderBoundingBoxes()){
 				RenderBoundingBox();
 			}
+
 		m_pEffect->EndPass();
 	}
 	m_pEffect->End();
 
-	if(m_bShouldRenderTitles && m_pGameObjManager->ShouldRenderTitles())
-	{
+	if (m_bShouldRenderTitles && m_pGameObjManager->ShouldRenderTitles()) {
 		RenderTitles();
 		RenderTitlesForQuest();
 	}
 	
 	//render the binded objects associated with this skinned mesh
-	for (auto& it : m_mapBindedObjects)
-	{
+	for (auto& it : m_mapBindedObjects) {
 		GameObject* pBindedObject = static_cast<StaticModel*>(it.first);
 		pBindedObject->RenderBindedWeapon(this, it.second);
 	}
@@ -566,16 +522,12 @@ void SkinnedModel::OnRender()
 /////////////////////////////////////////////////////////////////////////
 
 void SkinnedModel::RenderBindedWeapon(GameObject* pSkMesh, std::string bone)
-{
-
-
-}
+{}
 
 /////////////////////////////////////////////////////////////////////////
 
 //renders the titles above the skinned meshes
-void SkinnedModel::RenderTitles()
-{
+void SkinnedModel::RenderTitles() {
 	D3DXMATRIX T,S,R,R1;
 	D3DXMatrixTranslation(&T,m_vPos.x,m_vPos.y,m_vPos.z);
 	D3DXMatrixScaling(&S,m_fScale,m_fScale,m_fScale);
@@ -604,8 +556,7 @@ void SkinnedModel::RenderTitles()
 	m_pTitlesEffect->Begin(&numPasses, 0);
 	m_pTitlesEffect->BeginPass(0);
 
-		if (m_pTitleMesh)
-		{
+		if (m_pTitleMesh) {
 			m_pTitleMesh->DrawSubset(0);
 		}
 
@@ -616,10 +567,8 @@ void SkinnedModel::RenderTitles()
 /////////////////////////////////////////////////////////////////////////
 
 //renders the titles for quests above the skinned meshes
-void SkinnedModel::RenderTitlesForQuest()
-{
-	if( m_bHasDialogue )
-	{
+void SkinnedModel::RenderTitlesForQuest() {
+	if (m_bHasDialogue) {
 		D3DXMATRIX T,S,R,R1;
 		D3DXMatrixTranslation(&T,m_vPos.x,m_vPos.y,m_vPos.z);
 		D3DXMatrixScaling(&S,m_fScale,m_fScale,m_fScale);
@@ -656,8 +605,7 @@ void SkinnedModel::RenderTitlesForQuest()
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::RenderBoundingBox()
-{
+void SkinnedModel::RenderBoundingBox() {
 	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 	pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -687,49 +635,41 @@ void SkinnedModel::RenderBoundingBox()
 /////////////////////////////////////////////////////////////////////////
 
 
-void SkinnedModel::PlayAnimation(LPCSTR strAnimationName)
-{
-	if (!m_pAnimationComponent)
-	{
+void SkinnedModel::PlayAnimation(LPCSTR strAnimationName) {
+	if (!m_pAnimationComponent) {
 		return;
 	}
-
 	m_pAnimationComponent->PlayAnimation(strAnimationName);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::SetAnimationOnTrack(std::string strAnimationName, int track)
-{
+void SkinnedModel::SetAnimationOnTrack(std::string strAnimationName, int track) {
 	m_pAnimationComponent->SetAnimationOnTrack(strAnimationName.c_str(), (AnimationTrack)track);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName)
-{
+void SkinnedModel::PlayAnimationOnceAndStopTrack(LPCSTR strAnimationName) {
 	m_pAnimationComponent->PlayAnimationOnceAndStopTrack(strAnimationName);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::PlayAnimationOnce(LPCSTR strAnimationName)
-{
+void SkinnedModel::PlayAnimationOnce(LPCSTR strAnimationName) {
 	m_pAnimationComponent->PlayAnimationOnce(strAnimationName);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-bool SkinnedModel::JustStartedPlayingAnimationOnce()
-{
+bool SkinnedModel::JustStartedPlayingAnimationOnce() {
 	return m_pAnimationComponent->JustStartedPlayingAnimationOnce();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 //Allocates memory for single frame
-HRESULT AllocateHierarchy::CreateFrame(PCTSTR Name, D3DXFRAME** NewFrame)
-{
+HRESULT AllocateHierarchy::CreateFrame(PCTSTR Name, D3DXFRAME** NewFrame) {
 	Bone* pBone = new Bone(Name);
 
 	pBone->pMeshContainer = nullptr;
@@ -749,33 +689,28 @@ HRESULT AllocateHierarchy::CreateFrame(PCTSTR Name, D3DXFRAME** NewFrame)
 //In skinned meshes there is one mesh only and the linked list of mesh containers isnt used.
 HRESULT AllocateHierarchy::CreateMeshContainer(PCTSTR Name, const D3DXMESHDATA* MeshData, const D3DXMATERIAL* Materials, 
 											   const D3DXEFFECTINSTANCE* EffectInstances, DWORD NumMaterials, 
-											   const DWORD *Adjacency, ID3DXSkinInfo* SkinInfo, D3DXMESHCONTAINER** NewMeshContainer)
-{	
+											   const DWORD *Adjacency, ID3DXSkinInfo* SkinInfo, D3DXMESHCONTAINER** NewMeshContainer) {	
 
     D3DXMESHCONTAINER* pMeshContainer = new D3DXMESHCONTAINER();
 	ZeroMemory(pMeshContainer, sizeof(D3DXMESHCONTAINER));	
-	if( Name )	
-	{
+	if (Name) {
 		CopyString(Name, &pMeshContainer->Name);
 	}
-	else   
-	{
+	else {
 		CopyString(nullptr, &pMeshContainer->Name);
 	}
 
 	*NewMeshContainer = pMeshContainer;
 	
 	//if the mesh isnt skinned or it doesnt contain any mesh we dont go on
-	if( SkinInfo == nullptr || MeshData->Type != D3DXMESHTYPE_MESH)
-	{
+	if (SkinInfo == nullptr || MeshData->Type != D3DXMESHTYPE_MESH) {
 		return D3D_OK;
 	}
 
 
 	pMeshContainer->NumMaterials = NumMaterials;
 	pMeshContainer->pMaterials   = new D3DXMATERIAL[NumMaterials];
-	for(DWORD i = 0; i < NumMaterials; ++i)
-	{
+	for (DWORD i = 0; i < NumMaterials; ++i) {
 		D3DXMATERIAL* mtrls = pMeshContainer->pMaterials;
 		mtrls[i].MatD3D =Materials[i].MatD3D;
 		mtrls[i].MatD3D.Ambient = Materials[i].MatD3D.Diffuse;
@@ -798,8 +733,7 @@ HRESULT AllocateHierarchy::CreateMeshContainer(PCTSTR Name, const D3DXMESHDATA* 
 /////////////////////////////////////////////////////////////////////////
 
 //releases the memory allocated for the frame
-HRESULT AllocateHierarchy::DestroyFrame(D3DXFRAME* frame) 
-{
+HRESULT AllocateHierarchy::DestroyFrame(D3DXFRAME* frame) {
 	delete[] frame->Name;
 	delete frame;
  
@@ -809,14 +743,12 @@ HRESULT AllocateHierarchy::DestroyFrame(D3DXFRAME* frame)
 /////////////////////////////////////////////////////////////////////////
 
 //releases the memory allocated for mesh container
-HRESULT AllocateHierarchy::DestroyMeshContainer(D3DXMESHCONTAINER* MeshContainer)
-{
+HRESULT AllocateHierarchy::DestroyMeshContainer(D3DXMESHCONTAINER* MeshContainer) {
 	delete[] MeshContainer->Name;
 	delete[] MeshContainer->pAdjacency;
 	delete[] MeshContainer->pEffects;
  
-	for(DWORD i = 0; i < MeshContainer->NumMaterials; ++i)
-	{
+	for (DWORD i = 0; i < MeshContainer->NumMaterials; ++i) {
 		delete[] MeshContainer->pMaterials[i].pTextureFilename;
 	}
 
@@ -832,21 +764,18 @@ HRESULT AllocateHierarchy::DestroyMeshContainer(D3DXMESHCONTAINER* MeshContainer
 
 /////////////////////////////////////////////////////////////////////////
 
-float SkinnedModel::GetDistanceToPickedObject()
-{
+float SkinnedModel::GetDistanceToPickedObject() {
 	D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
 
 	GetWorldPickingRay(vOrigin, vDir);
 
 	AABB box = m_BoundingBox.TransformByMatrix(m_CombinedTransformationMatrix);
-	if (D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir))
-	{
+	if (D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir)) {
 		float nDistance = 0.0f;
 		D3DXFRAME* pFrame = FindFrameWithMesh(m_pRoot);
 
-		if (CalculateDistanceToPickedObject(pFrame, m_CombinedTransformationMatrix, vOrigin, vDir, nDistance))
-		{
+		if (CalculateDistanceToPickedObject(pFrame, m_CombinedTransformationMatrix, vOrigin, vDir, nDistance)) {
 			return nDistance;
 		}
 	}
@@ -856,15 +785,13 @@ float SkinnedModel::GetDistanceToPickedObject()
 
 /////////////////////////////////////////////////////////////////////////
 
-bool SkinnedModel::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX combinedMatrix, D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir, float& nDistance)
-{
+bool SkinnedModel::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX combinedMatrix, D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir, float& nDistance) {
 	D3DXMESHCONTAINER* pMeshContainer = pFrame->pMeshContainer;
 
 	D3DXFRAME* pSibling = pFrame->pFrameSibling;
 	D3DXFRAME* pFirstChild = pFrame->pFrameFirstChild;
 
-	if (pMeshContainer != NULL)
-	{
+	if (pMeshContainer != NULL) {
 		//fout<<pFrame->Name << endl;
 
 		D3DXMATRIX InverseWorldMatrix;
@@ -890,13 +817,11 @@ bool SkinnedModel::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX
 		return hit;
 	}
 
-	if (pSibling)
-	{
+	if (pSibling) {
 		CalculateDistanceToPickedObject(pSibling, combinedMatrix, vOrigin, vDir, nDistance);
 	}
 
-	if (pFirstChild)
-	{
+	if (pFirstChild) {
 		CalculateDistanceToPickedObject(pFirstChild, combinedMatrix, vOrigin, vDir, nDistance);
 	}
 
@@ -904,178 +829,143 @@ bool SkinnedModel::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX
 }
 
 
-bool SkinnedModel::IsAttacked() const
-{
+bool SkinnedModel::IsAttacked() const {
 	return m_bIsAttacked;
 }
 
-void SkinnedModel::SetAttacked(bool attacked)
-{
+void SkinnedModel::SetAttacked(bool attacked) {
 	m_bIsAttacked = attacked;
 }
 
-bool SkinnedModel::IsAttacking() const
-{
+bool SkinnedModel::IsAttacking() const {
 	return m_bIsAttacking;
 }
 
-void SkinnedModel::SetAttacking(bool attacking)
-{
+void SkinnedModel::SetAttacking(bool attacking) {
 	m_bIsAttacking = attacking;
 }
 
-bool SkinnedModel::IsDead() const
-{
+bool SkinnedModel::IsDead() const {
 	return m_bIsDead;
 }
 
-void SkinnedModel::SetDead(bool dead)
-{
+void SkinnedModel::SetDead(bool dead) {
 	m_bIsDead = dead;
 }
 
-bool SkinnedModel::HasDialogue() const
-{
+bool SkinnedModel::HasDialogue() const {
 	return m_bHasDialogue;
 }
 
-void SkinnedModel::SetHasDialogue(bool hasDialogue)
-{
+void SkinnedModel::SetHasDialogue(bool hasDialogue) {
 	m_bHasDialogue = hasDialogue;
 }
 
-std::string SkinnedModel::GetAttackerName() const
-{
+std::string SkinnedModel::GetAttackerName() const {
 	return m_strAttackerName;
 }
 
-void SkinnedModel::SetAttackerName(const std::string& attackerName)
-{
+void SkinnedModel::SetAttackerName(const std::string& attackerName) {
 	m_strAttackerName = attackerName;
 }
 
-std::string SkinnedModel::GetActorType() const
-{
+std::string SkinnedModel::GetActorType() const {
 	return m_strActorType;
 }
 
-void SkinnedModel::SetActorType(const std::string& actorType)
-{
+void SkinnedModel::SetActorType(const std::string& actorType) {
 	m_strActorType = actorType;
 }
 
-ID3DXMesh** SkinnedModel::GetTitleMesh()
-{
+ID3DXMesh** SkinnedModel::GetTitleMesh() {
 	return&m_pTitleMesh;
 }
 
-void SkinnedModel::SetTitleMesh(ID3DXMesh* titleMesh)
-{
+void SkinnedModel::SetTitleMesh(ID3DXMesh* titleMesh) {
 	m_pTitleMesh = titleMesh;
 }
 
-D3DXVECTOR3 SkinnedModel::GetTitleLookVector() const
-{
+D3DXVECTOR3 SkinnedModel::GetTitleLookVector() const {
 	return m_vTitleLook;
 }
 
-D3DXVECTOR3 SkinnedModel::GetTitleRightVector() const
-{
+D3DXVECTOR3 SkinnedModel::GetTitleRightVector() const {
 	return m_vTitleRight;
 }
 
-D3DXVECTOR3 SkinnedModel::GetTitleUpVector() const
-{
+D3DXVECTOR3 SkinnedModel::GetTitleUpVector() const {
 	return m_vTitleUp;
 }
 
-D3DXMATRIX SkinnedModel::GetTitleRotationMatrix() const
-{
+D3DXMATRIX SkinnedModel::GetTitleRotationMatrix() const {
 	return m_TitleRotationMatrix;
 }
 
-void SkinnedModel::SetTitleRotationMatrix(D3DXMATRIX titleRotationMatrix)
-{
+void SkinnedModel::SetTitleRotationMatrix(D3DXMATRIX titleRotationMatrix) {
 	m_TitleRotationMatrix = titleRotationMatrix;
 }
 
-float SkinnedModel::GetTitleRotationAnglyByY() const
-{
+float SkinnedModel::GetTitleRotationAnglyByY() const {
 	return m_fTitleRotationAngleByY;
 }
 
-void SkinnedModel::SetTitleRotationAnglyByY(float angle)
-{
+void SkinnedModel::SetTitleRotationAnglyByY(float angle) {
 	m_fTitleRotationAngleByY = angle;
 }
 
-void SkinnedModel::ModifyTitleRotationAnglyByY(float delta)
-{
+void SkinnedModel::ModifyTitleRotationAnglyByY(float delta) {
 	m_fTitleRotationAngleByY += delta;
 }
 
-std::string SkinnedModel::GetTitleForQuest() const
-{
+std::string SkinnedModel::GetTitleForQuest() const {
 	return m_strTitleForQuest;
 }
 
-void SkinnedModel::SetTitleForQuest(const std::string& titleForQuest)
-{
+void SkinnedModel::SetTitleForQuest(const std::string& titleForQuest) {
 	m_strTitleForQuest = titleForQuest;
 }
 
-ID3DXMesh** SkinnedModel::GetTitleForQuestMesh()
-{
+ID3DXMesh** SkinnedModel::GetTitleForQuestMesh() {
 	return &m_pTitleForQuestMesh;
 }
 
-void SkinnedModel::SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh)
-{
+void SkinnedModel::SetTitleForQuestMesh(ID3DXMesh* titleForQuestMesh) {
 	m_pTitleForQuestMesh = titleForQuestMesh;
 }
 
-D3DXVECTOR3 SkinnedModel::GetTitleForQuestLookVector() const
-{
+D3DXVECTOR3 SkinnedModel::GetTitleForQuestLookVector() const {
 	return m_vTitleForQuestLook;
 }
 
-D3DXVECTOR3 SkinnedModel::GetTitleForQuestRightVector() const
-{
+D3DXVECTOR3 SkinnedModel::GetTitleForQuestRightVector() const {
 	return m_vTitleForQuestRight;
 }
 
-D3DXVECTOR3 SkinnedModel::GetTitleForQuestUpVector() const
-{
+D3DXVECTOR3 SkinnedModel::GetTitleForQuestUpVector() const {
 	return m_vTitleForQuestUp;
 }
 
-D3DXMATRIX SkinnedModel::GetTitleForQuestRotationMatrix() const
-{
+D3DXMATRIX SkinnedModel::GetTitleForQuestRotationMatrix() const {
 	return m_TitleForQuestRotationMatrix;
 }
 
-void SkinnedModel::SetTitleForQuestRotationMatrix(D3DXMATRIX titleForQuestRotationMatrix)
-{
+void SkinnedModel::SetTitleForQuestRotationMatrix(D3DXMATRIX titleForQuestRotationMatrix) {
 	m_TitleForQuestRotationMatrix = titleForQuestRotationMatrix;
 }
 
-float SkinnedModel::GetTitleForQuestRotationAnglyByY() const
-{
+float SkinnedModel::GetTitleForQuestRotationAnglyByY() const {
 	return m_fTitleForQuestRotationAngleByY;
 }
 
-void SkinnedModel::SetTitleForQuestRotationAnglyByY(float angle)
-{
+void SkinnedModel::SetTitleForQuestRotationAnglyByY(float angle) {
 	m_fTitleForQuestRotationAngleByY = angle;
 }
 
-void SkinnedModel::ModifyTitleForQuestRotationAnglyByY(float delta)
-{
+void SkinnedModel::ModifyTitleForQuestRotationAnglyByY(float delta) {
 	m_fTitleForQuestRotationAngleByY += delta;
 }
 
-void SkinnedModel::TransformTitleByMatrix(D3DXMATRIX matrix)
-{
+void SkinnedModel::TransformTitleByMatrix(D3DXMATRIX matrix) {
 	D3DXVec3TransformCoord(&m_vTitleLook,  &m_vTitleLook,  &matrix);
 	D3DXVec3TransformCoord(&m_vTitleRight, &m_vTitleRight, &matrix);
 	D3DXVec3TransformCoord(&m_vTitleUp,    &m_vTitleUp,    &matrix);
@@ -1085,138 +975,103 @@ void SkinnedModel::TransformTitleByMatrix(D3DXMATRIX matrix)
 	D3DXVec3TransformCoord(&m_vTitleForQuestUp,    &m_vTitleForQuestUp,    &matrix);
 }
 
-std::vector<D3DXMATRIX>& SkinnedModel::GetFinalBonesMatrices()
-{
+std::vector<D3DXMATRIX>& SkinnedModel::GetFinalBonesMatrices() {
 	return m_vFinalBonesMatrices;
 }
 
-void SkinnedModel::SetFinalBonesMatrices(std::vector<D3DXMATRIX> bonesMatrices)
-{
+void SkinnedModel::SetFinalBonesMatrices(std::vector<D3DXMATRIX> bonesMatrices) {
 	m_vFinalBonesMatrices = bonesMatrices;
 }
 
-std::vector<D3DXMATRIX*>& SkinnedModel::GetToRootMatrices()
-{
+std::vector<D3DXMATRIX*>& SkinnedModel::GetToRootMatrices() {
 	return m_vToRootMatrices;
 }
 
-void SkinnedModel::SetToRootMatrices(std::vector<D3DXMATRIX*> toRootMatrices)
-{
+void SkinnedModel::SetToRootMatrices(std::vector<D3DXMATRIX*> toRootMatrices) {
 	m_vToRootMatrices = toRootMatrices;
 }
 
-D3DXFRAME* SkinnedModel::GetRootFrame() const
-{
+D3DXFRAME* SkinnedModel::GetRootFrame() const {
 	return m_pRoot;
 }
 
-void SkinnedModel::SetRootFrame(D3DXFRAME* rootFrame)
-{
+void SkinnedModel::SetRootFrame(D3DXFRAME* rootFrame) {
 	m_pRoot = rootFrame;
 }
 
-DWORD SkinnedModel::GetMaxVertexInfluences() const
-{
+DWORD SkinnedModel::GetMaxVertexInfluences() const {
 	return m_nMaxVertInfluences;
 }
 
-void SkinnedModel::SetMaxVertexInfluences(DWORD maxVertexInfluences)
-{
+void SkinnedModel::SetMaxVertexInfluences(DWORD maxVertexInfluences) {
 	m_nMaxVertInfluences = maxVertexInfluences;
 }
 
-DWORD SkinnedModel::GetAmountOfBones() const
-{
+DWORD SkinnedModel::GetAmountOfBones() const {
 	return m_nNumBones;
 }
 
-void SkinnedModel::SetAmountOfBones(DWORD amountOfBones)
-{
+void SkinnedModel::SetAmountOfBones(DWORD amountOfBones) {
 	m_nNumBones = amountOfBones;
 }
 
-ID3DXSkinInfo* SkinnedModel::GetSKinInfo() const
-{
+ID3DXSkinInfo* SkinnedModel::GetSKinInfo() const {
 	return m_pSkinInfo;
 }
 
-void SkinnedModel::SetSkinInfo(ID3DXSkinInfo* skinInfo)
-{
+void SkinnedModel::SetSkinInfo(ID3DXSkinInfo* skinInfo) {
 	m_pSkinInfo = skinInfo;
 }
 
-void SkinnedModel::SetMovementSpeed(float newSpeed)
-{
+void SkinnedModel::SetMovementSpeed(float newSpeed) {
 	m_movementSpeed = newSpeed;
 }
 
-float SkinnedModel::GetMovementSpeed()
-{
+float SkinnedModel::GetMovementSpeed() {
 	return m_movementSpeed;
 }
 
-void SkinnedModel::SetAnimationSpeed(float newSpeed)
-{
-	if (!m_pAnimationComponent)
-	{
+void SkinnedModel::SetAnimationSpeed(float newSpeed) {
+	if (!m_pAnimationComponent) {
 		return;
 	}
 
 	m_pAnimationComponent->SetAnimationSpeed(newSpeed);
 }
 
-float SkinnedModel::GetAnimationSpeed()
-{
-	if (!m_pAnimationComponent)
-	{
+float SkinnedModel::GetAnimationSpeed() {
+	if (!m_pAnimationComponent) {
 		return 0;
 	}
 	return m_pAnimationComponent->GetAnimationSpeed();
 }
 
-bool SkinnedModel::SpawnClone()
-{
+bool SkinnedModel::SpawnClone() {
 	SkinnedModel* pMesh = new SkinnedModel;
-
 	pMesh->SetPosition(GetPosition());
-
 	pMesh->SetScale(GetScale());
-
 	pMesh->SetRotationAngleByX(GetRotationAngleByX());
 	pMesh->SetRotationAngleByY(GetRotationAngleByY());
-
 	pMesh->SetRotationAngleByZ(0);
-
 	pMesh->SetTitleRotationAnglyByY(GetRotationAngleByY());
-
 	pMesh->SetTitleForQuest("");
-
 	pMesh->SetModelFilename(GetModelFileName());
-
 	pMesh->SetTextureFilename(GetTextureFilename());
-
 	pMesh->SetActorType("enemy");
-
 	pMesh->SetAttacked(false);
 	pMesh->SetAttacking(false);
 	pMesh->SetDead(false);
 	pMesh->SetPicked(false);
 	pMesh->SetHasDialogue(false);
 	pMesh->SetAttackerName("");
-
 	pMesh->LoadGameObject();
-
 	pMesh->SetObjectType(EGameObjectType_Skinned);
-
 	m_pGameObjManager->AddGameObject(pMesh);
-
 	pTextManager->CreateMeshFor3DText(pMesh);
-
 	return true;
 }
 
-void SkinnedModel::Destroy()
-{
+void SkinnedModel::Destroy() {
 	m_pWhiteTexture->Release();
 	m_pEffect->Release();
 	m_pTitlesEffect->Release();
@@ -1231,17 +1086,14 @@ void SkinnedModel::Destroy()
 	
 	//clear the binded objects
 	auto& gameObjects = m_pGameObjManager->GetGameObjects();
-	for (auto& el : m_mapBindedObjects)
-	{
+	for (auto& el : m_mapBindedObjects) {
 		std::string name = el.first->GetName();
 
 		auto it = std::find_if(gameObjects.begin(), gameObjects.end(), [name](GameObject* obj) { return !obj->GetName().compare(name); });
 
-		if (it != gameObjects.end())
-		{
+		if (it != gameObjects.end()) {
 			GameObject* obj = *it;
 			obj->Destroy();
-
 			gameObjects.erase(it);
 		}
 	}

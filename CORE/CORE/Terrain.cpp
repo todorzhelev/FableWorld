@@ -42,8 +42,7 @@ Terrain::Terrain(std::string strHeightmapFileName,float fHeightsScale, int nRows
 ,m_nCols(nCols)
 ,m_fDX(fDX)
 ,m_fDZ(fDZ)
-,m_vCenterPoint(vCenterPoint)
-{
+,m_vCenterPoint(vCenterPoint) {
 	m_nNumVertices	= m_nRows * m_nCols;
 	m_nNumTriangles = (m_nRows-1) * (m_nCols-1) * 2;
 	m_nNumIndices	= (m_nRows-1) * (m_nCols-1) * 6;
@@ -60,7 +59,6 @@ Terrain::Terrain(std::string strHeightmapFileName,float fHeightsScale, int nRows
 	GenerateTerrainMesh();
 	BuildEffect();	
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -80,8 +78,7 @@ LoadHeightmap() opens the passed file for heightmap and read its values in binar
 	  and etc
 	  where the ascii codes of the symbols are taken for height
 */
-void Terrain::LoadHeightmap()
-{
+void Terrain::LoadHeightmap() {
 	//we read ascii values of the chars in the heightmap, so we dont need negative values.
 	//Therefore we use unsigned
 	std::vector<unsigned char> temp(m_nRows*m_nCols);
@@ -89,8 +86,7 @@ void Terrain::LoadHeightmap()
 	std::ifstream fin;
 	fin.open(m_strHeightmapFileName.c_str(), std::ios_base::binary);
 
-	if( !fin )
-	{
+	if( !fin ) {
 		MessageBox(NULL,"Cant open heightmap for reading",NULL,NULL);
 	}
 
@@ -101,16 +97,12 @@ void Terrain::LoadHeightmap()
 	fin.close();
 
 	m_vHeightmap.resize(m_nRows*m_nCols);
-	for(int i = 0; i < m_nRows; ++i)
-	{
-		for(int j = 0; j < m_nCols; ++j)
-		{
+	for(int i = 0; i < m_nRows; ++i) {
+		for(int j = 0; j < m_nCols; ++j) {
 			m_vHeightmap[i*m_nCols+j] = static_cast<float>(temp[i*m_nCols+j]*m_fHeightsScale);
 		}
 	}
-
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -120,8 +112,7 @@ Builds the mesh which represents our terrain.
 	  terrains can be loaded(512x512 for instance).The idea is that bounding boxes are generated for the submeshes and then it can be tested 
 	  if the submesh is visible by the camera.If it is not visible it isnt rendered.
 */
-void Terrain::GenerateTerrainMesh()
-{
+void Terrain::GenerateTerrainMesh() {
 	std::vector<D3DXVECTOR3> verts;
 	std::vector<DWORD> indices;
 	GenerateVertexBuffer(verts,m_nRows,m_nCols);
@@ -140,9 +131,7 @@ void Terrain::GenerateTerrainMesh()
 	//LockVertexBuffer() gives us access to the internal mesh data and by v we can write information to the mesh
 	mesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
 
-
-	for(UINT i = 0; i < mesh->GetNumVertices(); ++i)
-	{
+	for(UINT i = 0; i < mesh->GetNumVertices(); ++i) {
 		pVertexBuffer[i].m_vPos   = verts[i];
 		pVertexBuffer[i].m_vPos.y = m_vHeightmap[i];
 
@@ -174,13 +163,11 @@ void Terrain::GenerateTerrainMesh()
 		pVertexBuffer[i].m_vTexCoords.x = (pVertexBuffer[i].m_vPos.x + (0.5f*m_nWidth)) / m_nWidth;
 		pVertexBuffer[i].m_vTexCoords.y = (pVertexBuffer[i].m_vPos.z - (0.5f*m_nDepth)) / -m_nDepth;
 	}
-
 	
 	//fill the index buffer in the mesh
 	DWORD* index = 0;
 	mesh->LockIndexBuffer(0, (void**)&index);
-	for(UINT i = 0; i < mesh->GetNumFaces(); ++i)
-	{
+	for(UINT i = 0; i < mesh->GetNumFaces(); ++i) {
 		//we multiply by 3 to jump to the next triangle
 		index[i*3+0] = indices[i*3+0];
 		index[i*3+1] = indices[i*3+1];
@@ -195,10 +182,8 @@ void Terrain::GenerateTerrainMesh()
 	int subGridRows = (m_nRows-1) / (k_nSubGridsRowsNumber-1);
 	int subGridCols = (m_nCols-1) / (k_nSubGridsColsNumber-1);
 
-	for(int r = 0; r < subGridRows; r++)
-	{
-		for(int c = 0; c < subGridCols; c++)
-		{
+	for(int r = 0; r < subGridRows; r++) {
+		for(int c = 0; c < subGridCols; c++) {
 			//generates the dimensions of the current sub-grid
 			//the idea is to split the terrain in smaller parts so these parts can be tested for visibility,
 			//and if some of the sub-grids are not visible, they are not rendered
@@ -218,14 +203,9 @@ void Terrain::GenerateTerrainMesh()
 			BuildSubGridMesh(rSubGridRectangle, pVertexBuffer); 
 		}
 	}
-
 	mesh->UnlockVertexBuffer();
-
-	
-
 	ReleaseX(mesh);
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -240,8 +220,7 @@ generates the vertex buffer so the vertices are properly positioned and there is
  |
  m_fDZ
 */
-void Terrain::GenerateVertexBuffer(std::vector<D3DXVECTOR3>& vVertices, int nNumRows,int nNumCols)
-{
+void Terrain::GenerateVertexBuffer(std::vector<D3DXVECTOR3>& vVertices, int nNumRows,int nNumCols) {
 	vVertices.resize(nNumRows*nNumCols);
 
 	//the vertices in the terrain are initially generated in the fourth quadrant.
@@ -281,10 +260,8 @@ void Terrain::GenerateVertexBuffer(std::vector<D3DXVECTOR3>& vVertices, int nNum
 	//
 
 	int k = 0;
-	for(float i = 0; i < nNumRows; ++i)
-	{
-		for(float j = 0; j < nNumCols; ++j)
-		{
+	for(float i = 0; i < nNumRows; ++i) {
+		for(float j = 0; j < nNumCols; ++j) {
 			vVertices[k].x =  j * m_fDX + xOffset;
 			//-i because we generate the vertices in the fourth quadrant(negative z goes down)
 			vVertices[k].z = -i * m_fDZ + zOffset;
@@ -296,12 +273,10 @@ void Terrain::GenerateVertexBuffer(std::vector<D3DXVECTOR3>& vVertices, int nNum
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
 //generates the indexBuffer for the mesh.
-void Terrain::GenerateIndexBuffer(std::vector<DWORD>& vIndices,int nNumRows,int nNumCols)
-{
+void Terrain::GenerateIndexBuffer(std::vector<DWORD>& vIndices,int nNumRows,int nNumCols) {
 	vIndices.resize((nNumRows-1)*(nNumCols-1)*6);
 	 
 	/*
@@ -334,10 +309,8 @@ void Terrain::GenerateIndexBuffer(std::vector<DWORD>& vIndices,int nNumRows,int 
 	// Generate indices. We multiply by nNumCols in the calculations so we can jump on the next row. 
 	// Remember that the heightmap is stored in linear array and the only way to go to next row is to multiply by the columns in this row.
 	int k = 0;
-	for(DWORD i = 0; i < (DWORD)(nNumRows-1); ++i)
-	{
-		for(DWORD j = 0; j < (DWORD)(nNumCols-1); ++j)
-		{
+	for (DWORD i = 0; i < (DWORD)(nNumRows-1); ++i) {
+		for (DWORD j = 0; j < (DWORD)(nNumCols-1); ++j) {
 			vIndices[k]	  = i* nNumCols+j;
 			vIndices[k+1] = i* nNumCols+j+1;
 			vIndices[k+2] = (i+1)*nNumCols+j;
@@ -352,35 +325,29 @@ void Terrain::GenerateIndexBuffer(std::vector<DWORD>& vIndices,int nNumRows,int 
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
 //checks if certain point is at the terrain
-bool Terrain::IsInBounds(int i, int j)
-{
+bool Terrain::IsInBounds(int i, int j) {
 	return i >= 0 && i < m_nRows && j >= 0 && j < m_nCols;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-void Terrain::OnLostDevice()
-{
+void Terrain::OnLostDevice() {
 	m_pEffect->OnLostDevice();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Terrain::OnResetDevice()
-{
+void Terrain::OnResetDevice() {
 	m_pEffect->OnResetDevice();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 //Generates the mesh for the subgrid of the terrain
-void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalTexture* pVertices)
-{
+void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalTexture* pVertices) {
 	std::vector<D3DXVECTOR3> vTempVerts;
 	std::vector<DWORD> vTempIndices;
 
@@ -398,10 +365,8 @@ void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalText
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	pSubMesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
 	int k = 0;
-	for(int i = rSubGridRectangle.top; i <= rSubGridRectangle.bottom; i++)
-	{
-		for(int j = rSubGridRectangle.left; j <= rSubGridRectangle.right; j++,k++)
-		{
+	for(int i = rSubGridRectangle.top; i <= rSubGridRectangle.bottom; i++) {
+		for(int j = rSubGridRectangle.left; j <= rSubGridRectangle.right; j++,k++) {
 			pVertexBuffer[k] = pVertices[i*m_nCols+j];
 		}
 	}
@@ -416,8 +381,7 @@ void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalText
 	DWORD* pAttributeBuffer = 0;
 	pSubMesh->LockIndexBuffer(0, (void**)&pIndices);
 	pSubMesh->LockAttributeBuffer(0, &pAttributeBuffer);
-	for(int i = 0; i < k_nSubGridsTrianglesNumber; ++i)
-	{
+	for(int i = 0; i < k_nSubGridsTrianglesNumber; ++i) {
 		pIndices[i*3+0] = (WORD)vTempIndices[i*3+0];
 		pIndices[i*3+1] = (WORD)vTempIndices[i*3+1];
 		pIndices[i*3+2] = (WORD)vTempIndices[i*3+2];
@@ -439,8 +403,7 @@ void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalText
 
 //here float x and float z are world coordinates, not elements in terrain mesh.You can place model at x = 15.0 and z = 20.0
 //and then GetHeight will give you the height at this position
-float Terrain::GetHeight(float x, float z)
-{
+float Terrain::GetHeight(float x, float z) {
 	//converts to fourth quadrant(with +0.5*width and -0.5*height), this is done
 	//because this way it will be easier to detect later in which column and row our x and z are, since we first generated our terrain in fourth quadrant
 	//also we divide by -m_fDZ to flip the sign of z axis, since currently it goes in negative way.
@@ -482,15 +445,13 @@ float Terrain::GetHeight(float x, float z)
 
 	//note that after we divide by m_fDX and m_fDZ, the distance bitween every column and row is 1
 	//if t is less than 1-s we are in the upper triangle (ABC)
-	if(t < 1.0f - s)
-	{
+	if(t < 1.0f - s) {
 		float uy = B - A;
 		float vy = C - A;
 		return A + s*uy + t*vy;
 	}
 	//else we are in the lower triangle(DCB)
-	else 
-	{
+	else  {
 		float uy = C - D;
 		float vy = B - D;
 		return D + (1.0f-s)*uy + (1.0f-t)*vy;
@@ -499,8 +460,7 @@ float Terrain::GetHeight(float x, float z)
 
 /////////////////////////////////////////////////////////////////////////
 
-bool Terrain::IsValidPosition(float x, float z)
-{
+bool Terrain::IsValidPosition(float x, float z) {
 	float fPossibleColumn = (x + 0.5f*m_nWidth) / m_fDX;
 	float fPossibleRow = (z - 0.5f*m_nDepth) / -m_fDZ;
 
@@ -508,8 +468,7 @@ bool Terrain::IsValidPosition(float x, float z)
 	int nRow = static_cast<int>(floorf(fPossibleRow));
 	int nCol = static_cast<int>(floorf(fPossibleColumn));
 
-	if( nRow > m_nRows || nCol > m_nCols || nRow < 0 || nCol < 0 )
-	{
+	if( nRow > m_nRows || nCol > m_nCols || nRow < 0 || nCol < 0 ) {
 		return false;
 	}
 
@@ -517,8 +476,7 @@ bool Terrain::IsValidPosition(float x, float z)
 	if( nRow*m_nCols + nCol < size &&
 	    nRow*m_nCols + (nCol + 1) < size &&
 		(nRow + 1)*m_nCols + nCol  < size &&
-		(nRow + 1)*m_nCols + (nCol + 1) < size)
-	{
+		(nRow + 1)*m_nCols + (nCol + 1) < size) {
 		return true;
 	}
 
@@ -527,16 +485,14 @@ bool Terrain::IsValidPosition(float x, float z)
 
 /////////////////////////////////////////////////////////////////////////
 //used in shader
-void Terrain::SetLightVector(D3DXVECTOR3 vLightVector)
-{
+void Terrain::SetLightVector(D3DXVECTOR3 vLightVector) {
 	m_pEffect->SetValue(m_hLightVector, &vLightVector, sizeof(D3DXVECTOR3));
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 //loads the effect parameters and the textures used by the terrain into the shader
-void Terrain::BuildEffect()
-{
+void Terrain::BuildEffect() {
 	CheckSuccess(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/TerrainShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
 
 	m_hEffectTechnique	= m_pEffect->GetTechniqueByName("TerrainTech");
@@ -557,13 +513,10 @@ void Terrain::BuildEffect()
 
 /////////////////////////////////////////////////////////////////////////
 
-void Terrain::OnRender()
-{ 
+void Terrain::OnRender() { 
 	std::vector<TerrainSubGrid*> visibleSubGrids;
-	for(auto& subGrid : m_vSubGrids)
-	{
-		if (camera->IsBoundingBoxVisible(subGrid->m_subGridBoungingBox))
-		{
+	for (auto& subGrid : m_vSubGrids) {
+		if (camera->IsBoundingBoxVisible(subGrid->m_subGridBoungingBox)) {
 			visibleSubGrids.push_back(subGrid);
 		}
 	}
@@ -576,8 +529,7 @@ void Terrain::OnRender()
 	m_pEffect->Begin(&numPasses, 0);
 	m_pEffect->BeginPass(0);
 
-		for(auto& visibleSubGrid : visibleSubGrids)
-		{
+		for (auto& visibleSubGrid : visibleSubGrids) {
 			visibleSubGrid->m_pSubGridMesh->DrawSubset(0);
 		}
 	

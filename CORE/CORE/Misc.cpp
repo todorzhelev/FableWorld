@@ -6,8 +6,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //transforms ray from screen space to world space, used for picking models in the game with the mouse
-void GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection)
-{
+void GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection) {
 	//TR level:Picking
 	POINT pCursorPosition;
 	GetCursorPos(&pCursorPosition);
@@ -43,13 +42,11 @@ void GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //gets width of text when drawn on screen
-float GetStringWidth(std::string str)
-{
+float GetStringWidth(std::string str) {
 	RECT rStringInfo;
 	ZeroMemory(&rStringInfo, sizeof(RECT));
 
-	if( pTextManager->GetFont2D() != NULL )
-	{
+	if( pTextManager->GetFont2D() != NULL ) {
 		pTextManager->GetFont2D()->DrawTextA(NULL, str.c_str(), str.length(),&rStringInfo, DT_CALCRECT, D3DCOLOR_XRGB(0,0,0));
 	}
 	return static_cast<float>(rStringInfo.right);
@@ -59,90 +56,74 @@ float GetStringWidth(std::string str)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //gets height of text when drawn on screen
-float GetStringHeight(std::string str)
-{
+float GetStringHeight(std::string str) {
 	RECT rStringInfo;
 	ZeroMemory(&rStringInfo, sizeof(RECT));
 
-	if( pTextManager->GetFont2D() != NULL )
-	{
+	if (pTextManager->GetFont2D() != NULL) {
 		pTextManager->GetFont2D()->DrawTextA(NULL, str.c_str(), str.length(),&rStringInfo, DT_CALCRECT, D3DCOLOR_XRGB(0,0,0));
 	}
 	return static_cast<float>(rStringInfo.bottom);
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //checks if the mesh got normals
-bool HasNormals(ID3DXMesh* pMesh)
-{
+bool HasNormals(ID3DXMesh* pMesh) {
 	D3DVERTEXELEMENT9 elems[MAX_FVF_DECL_SIZE];
 	pMesh->GetDeclaration(elems);
 	
 	bool bHasNormals = false;
 
-	for(int i = 0; i < MAX_FVF_DECL_SIZE; ++i)
-	{
+	for(int i = 0; i < MAX_FVF_DECL_SIZE; ++i) {
 		//if we reached the end of the declaration
-		if(elems[i].Stream == 0xff)
-		{
+		if(elems[i].Stream == 0xff) {
 			break;
 		}
-
 		if( elems[i].Type == D3DDECLTYPE_FLOAT3 &&
 			elems[i].Usage == D3DDECLUSAGE_NORMAL &&
-			elems[i].UsageIndex == 0 )
-		{
+			elems[i].UsageIndex == 0 ) {
 			bHasNormals = true;
 			break;
 		}
 	}
-
 	return bHasNormals;
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //initialize vertex declarations. For now only position, normal, texture declaration is used
 //and only it is initalized and saved in the GamepApp, so we can access it later.
-void InitVertexDeclarations()
-{
+void InitVertexDeclarations() {
 	//position only (12B size)
-	D3DVERTEXELEMENT9 vP[] = 
-	{
+	D3DVERTEXELEMENT9 vP[] = {
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		D3DDECL_END()
 	};	
 
 	//position and color (28B)
-	D3DVERTEXELEMENT9 vPC[] = 
-	{
+	D3DVERTEXELEMENT9 vPC[] = {
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		{0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0},
 		D3DDECL_END()
 	};	
 
 	//position and normal (24B size)
-	D3DVERTEXELEMENT9 vPN[] = 
-	{
+	D3DVERTEXELEMENT9 vPN[] = {
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		{0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0},
 		D3DDECL_END()
 	};	
 
 	//position and texture (20B size)
-	D3DVERTEXELEMENT9 vPT[] = 
-	{
+	D3DVERTEXELEMENT9 vPT[] = {
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		{0, 12, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
 		D3DDECL_END()
 	};	
 
 	//position,normal and texture (32B size)
-	D3DVERTEXELEMENT9 vPNT[] = 
-	{
+	D3DVERTEXELEMENT9 vPNT[] = {
 		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		{0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0},
 		{0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
@@ -150,8 +131,7 @@ void InitVertexDeclarations()
 	};
 
 	//56B. D3DCOLOR is 4x4B floats
-	D3DVERTEXELEMENT9 vPs[] =
-	{
+	D3DVERTEXELEMENT9 vPs[] = {
 		{ 0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
 		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
 		{ 0, 24, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },
@@ -179,16 +159,13 @@ void InitVertexDeclarations()
 
 //this function is used because the name which is passed to create frame is PCTSTR and the name in the frame is LPCSTR
 //and they cannot be casted.
-void CopyString(const char* input, char** output)
-{
-	if(input)
-	{
+void CopyString(const char* input, char** output) {
+	if(input) {
 		int length = strlen(input) + 1;
 		*output = new char[length];
 		strcpy_s(*output, length, input);
 	}
-	else
-	{
+	else {
 		*output = 0;
 	}
 }

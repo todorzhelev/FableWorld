@@ -5,11 +5,9 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-Game::Game()
-{
+Game::Game() {
 	//checks if it is supported pixel and vertex shader 2.0
-	if(!pApp->IsShaderVersionSupported())
-	{
+	if (!pApp->IsShaderVersionSupported()) {
 		MessageBox(0, "Shader version is not supported", 0, 0);
 		PostQuitMessage(0); 
 	}
@@ -81,18 +79,14 @@ Game::Game()
 
 	//creates 3d titles for the models and check for dialogues
 	auto& gameObjects = m_pGameObjManager->GetSkinnedModels();
-	for(auto& gameObject : gameObjects)
-	{
+	for (auto& gameObject : gameObjects) {
 		//create mesh for 3d text above the models
 		pTextManager->CreateMeshFor3DText(gameObject);
 	}
 	
-	for(auto& gameObject : gameObjects )
-	{
-		for( auto& dialogue : pDialogueManager->GetDialogues() )
-		{
-			if( !gameObject->GetName().compare(dialogue->m_strModel) )
-			{
+	for (auto& gameObject : gameObjects ) {
+		for (auto& dialogue : pDialogueManager->GetDialogues()) {
+			if( !gameObject->GetName().compare(dialogue->m_strModel) ) {
 				gameObject->SetHasDialogue(true);
 				pTextManager->CreateMeshFor3DTextQuest(gameObject);
 			}
@@ -103,8 +97,7 @@ Game::Game()
 
 	GameObject* obj = m_pGameObjManager->GetObjectByName(mainHero);
 
-	if(obj != nullptr )
-	{
+	if (obj) {
 		pMainHero = static_cast<SkinnedModel*>(obj);
 	}
 	
@@ -138,8 +131,7 @@ Game::Game()
 	m_navmesh->resetCommonSettings();
 	m_navmesh->loadGeometry();
 	bool success = m_navmesh->handleBuild();
-	if (!success)
-	{
+	if (!success) {
 		printf("failed to build navmesh \n");
 	}
 
@@ -149,8 +141,7 @@ Game::Game()
 /////////////////////////////////////////////////////////////////////////
 
 //initializes the shader for debug graphics
-void Game::InitDebugGraphicsShader()
-{
+void Game::InitDebugGraphicsShader() {
 	D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
 	m_hDebugGraphicsTechnique  = m_pDebugGraphicsEffect->GetTechniqueByName("DebugGraphics3DTech");
 	m_hDebugGraphicsWVPMatrix  = m_pDebugGraphicsEffect->GetParameterByName(0, "WVP");
@@ -158,8 +149,7 @@ void Game::InitDebugGraphicsShader()
 
 /////////////////////////////////////////////////////////////////////////
 
-Game::~Game()
-{
+Game::~Game() {
 	lua_close(g_luaState);
 	delete pTextManager;
 	delete pTerrain;
@@ -172,14 +162,12 @@ Game::~Game()
 
 /////////////////////////////////////////////////////////////////////////
 
-void Game::OnLostDevice()
-{
+void Game::OnLostDevice() {
 	pSky->OnLostDevice();
 	pTextManager->OnLostDevice();
 	pTerrain->OnLostDevice();
 
-	for(auto& gameObject : m_pGameObjManager->GetGameObjects())
-	{
+	for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
 		gameObject->OnLostDevice();
 	}
 
@@ -190,14 +178,12 @@ void Game::OnLostDevice()
 
 /////////////////////////////////////////////////////////////////////////
 
-void Game::OnResetDevice()
-{
+void Game::OnResetDevice() {
 	pSky->OnResetDevice();
 	pTextManager->OnResetDevice();
 	pTerrain->OnResetDevice();
 	
-	for (auto& gameObject : m_pGameObjManager->GetGameObjects())
-	{
+	for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
 		gameObject->OnResetDevice();
 	}
 	m_pInterfaceSprite->OnResetDevice();
@@ -214,54 +200,45 @@ void Game::OnResetDevice()
 
 /////////////////////////////////////////////////////////////////////////
 
-void Game::OnUpdate(float dt)
-{
+void Game::OnUpdate(float dt) {
 	//poll starts to listen if any key on the keyboard is pressed
 	pDinput->Poll();
-	if( pDinput->IsKeyDown(DIK_F))
-	{
+	if (pDinput->IsKeyDown(DIK_F)) {
 		pApp->SwitchToFullscreen(true);
 	}
 	//if escape is pressed in game it switches to another scene
-	if(pDinput->IsKeyDown(DIK_ESCAPE))
-	{
+	if (pDinput->IsKeyDown(DIK_ESCAPE)) {
 		IBaseScene* pMenuInGameScene = pApp->GetScene("menuInGame");
 		pApp->SetCurrentScene(pMenuInGameScene);
 	}
 
 	//update all the game objects
-	for (auto& gameObject : m_pGameObjManager->GetGameObjects())
-	{
+	for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
 		gameObject->OnUpdate(dt);
 	}
 
 	pTextManager->OnUpdate(dt);
 	camera->OnUpdate(dt);
 	
-
 	pDialogueManager->OnUpdate();
 
 	//checking if there is active quest
-	for (auto& quest : GetQuestManager()->GetQuests())
-	{
+	for (auto& quest : GetQuestManager()->GetQuests()) {
 		SkinnedModel* reqObject = m_pGameObjManager->GetSkinnedModelByName(quest->m_strRequiredObject);
 
 		//if mainHero is close to the required from the quest object and the required object is dead the quest is completed.
-		if (IsObjectNear(pMainHero->GetPosition(), reqObject->GetPosition()) && reqObject->IsDead())
-		{
+		if (IsObjectNear(pMainHero->GetPosition(), reqObject->GetPosition()) && reqObject->IsDead()) {
 			quest->m_bIsCompleted = true;
 		}
 	}
 
 	//binding the camera to mainHero in the game and moving it. mainHero is set in the scripts in init.lua
-	if( !pMainHero->IsDead() && !camera->IsCameraFree() )
-	{
+	if (!pMainHero->IsDead() && !camera->IsCameraFree()) {
 		MoveObject(mainHero,dt);
 	}
 
 	//updating the models's titles positions
-	for(auto& gameObject : m_pGameObjManager->GetSkinnedModels())
-	{
+	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels()) {
 		D3DXVECTOR3 titleRightVector = gameObject->GetTitleRightVector();
 		D3DXVECTOR3 cameraLookVector = camera->GetLookVector();
 		float angle = D3DXVec3Dot(&titleRightVector,&cameraLookVector);
@@ -274,16 +251,14 @@ void Game::OnUpdate(float dt)
 		gameObject->TransformTitleByMatrix(R);
 	}
 
-	//for (auto it : m_pGameObjManager->GetGameObjects())
-	//{
+	//for (auto it : m_pGameObjManager->GetGameObjects()) {
 	//	DrawLine(pMainHero->GetPosition(), it->GetPosition());
 	//}
 
 	ManageHealthBars();
 	UpdateAI(dt);
 
-	if( pDinput->IsMouseButtonUp(0) && m_pHealSpell->IsClicked() )
-	{
+	if (pDinput->IsMouseButtonUp(0) && m_pHealSpell->IsClicked()) {
 		m_rHealthBarRectangle.right += 20;
 	}
 
@@ -292,11 +267,9 @@ void Game::OnUpdate(float dt)
 	m_pGunEffect->OnUpdate(dt);
 
 	static float delay = 0.0f;
-	if (pDinput->IsKeyDown(DIK_SPACE) && delay <= 0.0f)
-	{
+	if (pDinput->IsKeyDown(DIK_SPACE) && delay <= 0.0f) {
 		auto pickedObj = m_pGameObjManager->GetPickedObject();
-		if (pickedObj)
-		{
+		if (pickedObj) {
 			delay = 0.1f;
 			m_pGunEffect->AddParticle(pickedObj);
 		}
@@ -304,10 +277,8 @@ void Game::OnUpdate(float dt)
 
 	auto pickedObj = m_pGameObjManager->GetPickedObject();
 
-	if (pickedObj)
-	{
-		if (pDinput->IsMouseButtonDown(1))
-		{
+	if (pickedObj) {
+		if (pDinput->IsMouseButtonDown(1)) {
 			m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
 			D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 			D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
@@ -335,11 +306,9 @@ void Game::OnUpdate(float dt)
 		}
 	}
 
-	if (m_isAIRunningToTarget && pickedObj)
-	{
+	if (m_isAIRunningToTarget && pickedObj) {
 		m_currentPathfindingEndIndex+=2;
-		if (m_currentPathfindingEndIndex < m_currentPath.size())
-		{
+		if (m_currentPathfindingEndIndex < m_currentPath.size()) {
 			auto pos = m_currentPath[m_currentPathfindingEndIndex];
 
 			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pickedObj);
@@ -351,8 +320,7 @@ void Game::OnUpdate(float dt)
 
 			pSkinnedModel->SetPosition(pos);
 		}
-		else
-		{
+		else {
 			SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pickedObj);
 			pSkinnedModel->SetAnimationSpeed(1);
 			pSkinnedModel->PlayAnimation("idle");
@@ -366,18 +334,15 @@ void Game::OnUpdate(float dt)
 
 /////////////////////////////////////////////////////////////////////////
 
-void Game::UpdateAI(float dt)
-{
-	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels())
-	{
+void Game::UpdateAI(float dt) {
+	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels()) {
 		//main hero attacking enemy
 		if (//pDinput->IsMouseButtonDown(0) &&
 			IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()) &&
 			pMainHero->GetName() != gameObject->GetName() &&
 			gameObject->GetActorType() == "enemy" &&
 			!pMainHero->IsDead()
-			)
-		{
+			) {
 			m_bIsEnemyHealthBarVisible = true;
 			gameObject->SetAttacked(true);
 			gameObject->SetAttackerName(mainHero);
@@ -385,8 +350,7 @@ void Game::UpdateAI(float dt)
 			int num = rand() % 2;
 			LPCSTR animName = num % 2 == 0 ? "attack_1" : "attack_2";
 			pMainHero->PlayAnimationOnce(animName);
-			if (pMainHero->JustStartedPlayingAnimationOnce())
-			{
+			if (pMainHero->JustStartedPlayingAnimationOnce()) {
 				m_rEnemyHealthBarRectangle.right -= 70;
 			}
 		}
@@ -395,10 +359,8 @@ void Game::UpdateAI(float dt)
 		if (gameObject->IsAttacked() && 
 			IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()) &&
 			!gameObject->IsDead() && 
-			!pMainHero->IsDead())
-		{
-			if (m_rHealthBarRectangle.right > 0.0)
-			{
+			!pMainHero->IsDead()) {
+			if (m_rHealthBarRectangle.right > 0.0) {
 				pMainHero->SetAttackerName(gameObject->GetName());
 				SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(gameObject);
 
@@ -406,13 +368,11 @@ void Game::UpdateAI(float dt)
 				LPCSTR animName = num % 2 == 0 ? "attack_1" : "attack_2";
 				pSkinnedModel->PlayAnimationOnce(animName);
 
-				if (gameObject->JustStartedPlayingAnimationOnce())
-				{
+				if (gameObject->JustStartedPlayingAnimationOnce()) {
 					m_rHealthBarRectangle.right -= 70;
 				}
 			}
-			else
-			{
+			else {
 				gameObject->SetAttacked(false);
 			}
 		}
@@ -420,8 +380,7 @@ void Game::UpdateAI(float dt)
 		//when the enemy is attacked it updates his rotation so it can face the mainHero
 		if (gameObject->IsAttacked() && 
 			!gameObject->IsDead() && 
-			IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()))
-		{
+			IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition())) {
 			D3DXVECTOR3 vActorPosition = gameObject->GetPosition();
 			D3DXVECTOR3 vMainHeroPosition = pMainHero->GetPosition();
 
@@ -445,8 +404,7 @@ void Game::UpdateAI(float dt)
 			!gameObject->IsDead() && 
 			!IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()) && 
 			!pMainHero->IsDead()
-			)
-		{
+			) {
 			RunToTarget(gameObject, pMainHero->GetPosition(), dt);
 		}
 	}
@@ -454,8 +412,7 @@ void Game::UpdateAI(float dt)
 
 /////////////////////////////////////////////////////////////////////////
 
-void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt)
-{
+void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt) {
 	float speed = 400.f;
 	SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(runner);
 	pSkinnedModel->SetMovementSpeed(speed / 100);
@@ -475,63 +432,51 @@ void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt)
 /////////////////////////////////////////////////////////////////////////
 
 //makes the camera to follow model in game and moving it with WASD from keyboard and mouse
-void Game::MoveObject(std::string objectTitle, float dt)
-{
+void Game::MoveObject(std::string objectTitle, float dt) {
 	//this std::vector holds the new direction to move
 	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
 
 	GameObject* obj = m_pGameObjManager->GetObjectByName(objectTitle);
 	SkinnedModel* pSkinnedModel = nullptr;
 
-	if (obj != nullptr)
-	{
+	if (obj != nullptr) {
 		pSkinnedModel = static_cast<SkinnedModel*>(obj);
 	}
 	
-	if( pDinput->IsKeyDown(DIK_W) )
-	{
+	if (pDinput->IsKeyDown(DIK_W) ) {
 		pSkinnedModel->PlayAnimation("run");
 		dir += camera->GetLookVector();
 	}
-	if( pDinput->IsKeyDown(DIK_S) )
-	{
+	if (pDinput->IsKeyDown(DIK_S) ) {
 		pSkinnedModel->PlayAnimation("run");
 		dir -= camera->GetLookVector();
 	}
-	if( pDinput->IsKeyDown(DIK_A) )
-	{
+	if (pDinput->IsKeyDown(DIK_A) ) {
 		pSkinnedModel->PlayAnimation("run");
 		dir -= camera->GetRightVector();
 	}
-	if( pDinput->IsKeyDown(DIK_D) )
-	{
+	if (pDinput->IsKeyDown(DIK_D) ) {
 		pSkinnedModel->PlayAnimation("run");
 		dir += camera->GetRightVector();
 	}
 
-	if( !pDinput->IsKeyDown(DIK_W) && !pDinput->IsKeyDown(DIK_S) && !pDinput->IsKeyDown(DIK_A) && !pDinput->IsKeyDown(DIK_D) )
-	{
+	if (!pDinput->IsKeyDown(DIK_W) && !pDinput->IsKeyDown(DIK_S) && !pDinput->IsKeyDown(DIK_A) && !pDinput->IsKeyDown(DIK_D)) {
 		pSkinnedModel->PlayAnimation("idle");
 	}
 	
-	if (camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse)
-	{
+	if (camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse) {
 		//if we just move the mouse move the camera
 		RotateObject(objectTitle, dt);
-
 	}
-	else if (camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse)
-	{
+	else if (camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse) {
 		//if we hold the left mouse button move the camera
-		if (pDinput->IsMouseButtonDown(0))
-		{
+		if (pDinput->IsMouseButtonDown(0)) {
 			RotateObject(objectTitle, dt);
 		}
 	}
 
 	D3DXVECTOR3 newPos = pSkinnedModel->GetPosition() + dir*150.0*pSkinnedModel->GetMovementSpeed()*dt;
-	if( pTerrain->IsValidPosition(newPos.x,newPos.z))
-	{
+	if( pTerrain->IsValidPosition(newPos.x,newPos.z)) {
 		pSkinnedModel->SetPosition(newPos);
 	}
 
@@ -546,13 +491,11 @@ void Game::MoveObject(std::string objectTitle, float dt)
 /////////////////////////////////////////////////////////////////////////
 
 //rotates to model and the camera if the mouse is moved
-void Game::RotateObject(std::string objectTitle, float dt)
-{
+void Game::RotateObject(std::string objectTitle, float dt) {
 	GameObject* obj = m_pGameObjManager->GetObjectByName(objectTitle);
 	SkinnedModel* pSkinnedModel = nullptr;
 
-	if (obj != nullptr)
-	{
+	if (obj != nullptr) {
 		pSkinnedModel = static_cast<SkinnedModel*>(obj);
 	}
 	
@@ -573,45 +516,36 @@ void Game::RotateObject(std::string objectTitle, float dt)
 /////////////////////////////////////////////////////////////////////////
 
 //controls the health of the hero and enemy and make them play dead animation if they are at zero health
-void Game::ManageHealthBars()
-{
+void Game::ManageHealthBars() {
 	std::string strEnemy = pMainHero->GetAttackerName();
 	GameObject* obj = m_pGameObjManager->GetObjectByName(strEnemy);
 	SkinnedModel* pEnemy = nullptr;
-	if (obj != nullptr)
-	{
+	if (obj != nullptr) {
 		pEnemy = static_cast<SkinnedModel*>(obj);
 	}
 
-	if( m_rHealthBarRectangle.right <= 0.0 && !pMainHero->IsDead())
-	{
+	if (m_rHealthBarRectangle.right <= 0.0 && !pMainHero->IsDead()) {
 		pMainHero->PlayAnimationOnceAndStopTrack("dead");
 		pMainHero->SetDead(true);
 
 		pEnemy->SetAnimationOnTrack("idle",0);
 	}
-	if( m_rEnemyHealthBarRectangle.right <= 0.0 && !pEnemy->IsDead() )
-	{
+	if (m_rEnemyHealthBarRectangle.right <= 0.0 && !pEnemy->IsDead()) {
 		pEnemy->PlayAnimationOnceAndStopTrack("dead");
 		pEnemy->SetDead(true);
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-void Game::OnRender()
-{
-
+void Game::OnRender() {
     pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
-
     pDxDevice->BeginScene();
 	
 			pSky->OnRender();
 			pTerrain->OnRender();
 
-			for (auto& gameObject : m_pGameObjManager->GetGameObjects())
-			{
+			for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
 				gameObject->OnRender();
 				//DrawLine(gameObject->GetPosition(), gameObject->GetLookVector());
 				//DrawLine(gameObject->GetPosition(), gameObject->GetUpVector());
@@ -622,15 +556,12 @@ void Game::OnRender()
 
 			auto BB = pMainHero->GetBB();
 			BB = BB.TransformByMatrix(BB.m_transformationMatrix);
-			for (auto& object:m_pGameObjManager->GetGameObjects())
-			{
+			for (auto& object:m_pGameObjManager->GetGameObjects()) {
 				auto BB1 = object->GetBB();
 				BB1 = BB1.TransformByMatrix(BB1.m_transformationMatrix);
 
-				if (pMainHero->GetName().compare(object->GetName()))
-				{
-					if (BB.Collide(BB1))
-					{
+				if (pMainHero->GetName().compare(object->GetName())) {
+					if (BB.Collide(BB1)) {
 						//cout << "COLLIDING" << object->GetName() << endl;
 					}
 				}
@@ -639,29 +570,23 @@ void Game::OnRender()
 			//pTextManager->DrawFPS();
 	
 			//draws dialogues
-			for (auto& dialogue : pDialogueManager->GetDialogues())
-			{
+			for (auto& dialogue : pDialogueManager->GetDialogues()) {
 				pDialogueManager->RenderDialogueTree(dialogue->m_pTree->m_pRoot);
 			}
 
 			//text->drawText("Press L to switch between the two camera modes",400,40,0,0,255,0,0,0);
 
 			//draws quest stuff
-			for(auto& quest: GetQuestManager()->GetQuests())
-			{
-				if( quest->m_bIsStarted )
-				{
-					if (quest->m_bIsCompleted)
-					{
+			for(auto& quest: GetQuestManager()->GetQuests()) {
+				if( quest->m_bIsStarted ) {
+					if (quest->m_bIsCompleted) {
 						pTextManager->RenderText(quest->m_strTitle.c_str(), pApp->GetPresentParameters().BackBufferWidth - 420, 70, 0, 0, 255, 255, 255, 0);
 						pTextManager->RenderText("Completed", pApp->GetPresentParameters().BackBufferWidth - 590, 70, 0, 0, 255, 255, 255, 0);
 					}
-					else if (!pMainHero->IsDead())
-					{
+					else if (!pMainHero->IsDead()) {
 						pTextManager->RenderText(quest->m_strTitle.c_str(), pApp->GetPresentParameters().BackBufferWidth - 420, 70, 0, 0, 255, 255, 255, 0);
 					}
-					else if (!quest->m_bIsCompleted && pMainHero->IsDead())
-					{
+					else if (!quest->m_bIsCompleted && pMainHero->IsDead()) {
 						pTextManager->RenderText(quest->m_strTitle.c_str(), pApp->GetPresentParameters().BackBufferWidth - 420, 70, 0, 0, 255, 255, 255, 0);
 						pTextManager->RenderText("Epic fail!", pApp->GetPresentParameters().BackBufferWidth - 570, 70, 0, 0, 255, 255, 255, 0);
 					}
@@ -674,8 +599,7 @@ void Game::OnRender()
 				m_pInterfaceSprite->Draw(m_pHealthBarTexture,NULL,NULL,&m_vHealthBarPosition,D3DXCOLOR(255,255,255,255));
 				m_pInterfaceSprite->Draw(m_pHealthBarFilledTexture,&m_rHealthBarRectangle,NULL,&m_vHealthBarPosition,D3DXCOLOR(255,255,255,255));
 
-				if( m_bIsEnemyHealthBarVisible )
-				{
+				if( m_bIsEnemyHealthBarVisible ) {
 					m_pInterfaceSprite->Draw(m_pHealthBarTexture,NULL,NULL,&m_vEnemyHealthBarPosition,D3DXCOLOR(255,255,255,255));
 					m_pInterfaceSprite->Draw(m_phealthBarFilledEnemyTexture,&m_rEnemyHealthBarRectangle,NULL,&m_vEnemyHealthBarPosition,D3DXCOLOR(255,255,255,255));
 				}
@@ -693,8 +617,7 @@ void Game::OnRender()
 	
 /////////////////////////////////////////////////////////////////////////
 
-void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
-{
+void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd) {
 	//pDxDevice->BeginScene();
 
 	m_pDebugGraphicsEffect->SetTechnique(m_hDebugGraphicsTechnique);
@@ -739,11 +662,9 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd)
 
 //checks if two models are close
 //i think this should be changed in the future with circles
-bool Game::IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t)
-{
+bool Game::IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t) {
 	if((pos1.x > pos2.x-t) && (pos1.x < pos2.x+t) &&
-	   (pos1.z > pos2.z-t) && (pos1.z < pos2.z+t))
-	{
+	   (pos1.z > pos2.z-t) && (pos1.z < pos2.z+t)) {
 	   return true;
 	}
 
@@ -753,82 +674,63 @@ bool Game::IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t)
 
 /////////////////////////////////////////////////////////////////////////
 
-LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	switch( msg )
-	{
+LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) {
+	switch( msg ) {
 		//Sent when the window is activated or deactivated.(pressed alt+tab)
 		//Game is paused when the window is inactive, and unpaused when become active again
-		case WM_ACTIVATE:
-		{
-			if( LOWORD(wParam) == WA_INACTIVE )
-			{
+		case WM_ACTIVATE: {
+			if( LOWORD(wParam) == WA_INACTIVE ) {
 				pApp->SetPaused(true);
 			}
-			else
-			{
+			else {
 				pApp->SetPaused(false);
 			}
 
 			return 0;
 		}
 
-
 		//Sent when the user closes the window
-		case WM_CLOSE:
-		{
+		case WM_CLOSE: {
 			DestroyWindow( pApp->GetMainWindow() );
-		
 			return 0;
 		}
 
 		//Sent when the window is destroyed
-		case WM_DESTROY:
-		{
+		case WM_DESTROY:{
 			PostQuitMessage(0);
-
 			return 0;
 		}
 
-		case WM_KEYDOWN:
-		{
-			switch(wParam)
-			{
-				case 'L':
-				{
-					if( camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse )
-					{
+		case WM_KEYDOWN: {
+			switch(wParam) {
+				case 'L': {
+					if( camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse ) {
 						camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 					}
-					else if( camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse )
-					{
+					else if( camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse ) {
 						camera->SetCameraMode(ECameraMode::MoveWithoutPressedMouse);
 					}
 
 					break;
 				}
-				case 'B':
-				{
+				case 'B': {
 					m_pGameObjManager->SetShouldRenderBoundingBoxes(!m_pGameObjManager->ShouldRenderBoundingBoxes());
 
 					break;
 				}
-				case 'C':
-				{
+				case 'C': {
 					//TODO: if the camera becomes attached again align it with the object
 					camera->SetCameraFree(!camera->IsCameraFree());
 
 					break;
 				}
-				case 'Q':
-				{
+				case 'Q': {
 					m_rHealthBarRectangle.right += 20;
 
 					break;
 				}
 
-				case VK_SHIFT:
-				{
+				case VK_SHIFT: {
 					pMainHero->SetMovementSpeed(2);
 					break;
 				}
@@ -837,35 +739,25 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			return 0;
 		}
 
-		case WM_MOUSEWHEEL:
-		{
+		case WM_MOUSEWHEEL: {
 			auto delta = GET_WHEEL_DELTA_WPARAM(wParam);
-
 			camera->ModifyZoom(delta / 10);
-
 			return 0;
 		}
 
-		case WM_LBUTTONDOWN:
-		{
-			switch (wParam)
-			{
-				case MK_LBUTTON:
-				{
+		case WM_LBUTTONDOWN:{
+			switch (wParam) {
+				case MK_LBUTTON:{
 					m_pGameObjManager->UpdatePicking();
 				}
 				break;
 			}
-
 			return 0;
 		}
 
-		case WM_KEYUP:
-		{
-			switch( wParam )
-			{
-				case VK_SHIFT:
-				{
+		case WM_KEYUP: {
+			switch( wParam ) {
+				case VK_SHIFT: {
 					pMainHero->SetMovementSpeed(1);
 					break;
 				}

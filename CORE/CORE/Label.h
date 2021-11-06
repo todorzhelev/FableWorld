@@ -4,8 +4,7 @@
 #include"IBaseMenuObject.h"
 
 
-class Label: public IBaseMenuObject
-{
+class Label: public IBaseMenuObject {
 public:
 
 	Label(D3DXVECTOR2 vPosition, std::string strText);

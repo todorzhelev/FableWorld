@@ -3,8 +3,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-MenuInGame::MenuInGame()
-{
+MenuInGame::MenuInGame() {
 
 	float posx = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth/2);
 	float posy = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight/2);
@@ -20,24 +19,19 @@ MenuInGame::MenuInGame()
 
 /////////////////////////////////////////////////////////////////////////
 
-void MenuInGame::OnLostDevice()
-{
+void MenuInGame::OnLostDevice() {
 	pTextManager->OnLostDevice();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-void MenuInGame::OnResetDevice()
-{
+void MenuInGame::OnResetDevice() {
 	pTextManager->OnResetDevice();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-void MenuInGame::OnUpdate(float dt)
-{
+void MenuInGame::OnUpdate(float dt) {
 	float w = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth);
 	float h = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight);
 
@@ -47,45 +41,37 @@ void MenuInGame::OnUpdate(float dt)
 	m_pLabelContinueGame->OnUpdate();
 	m_pLabelQuit->OnUpdate();
 
-	if(m_pLabelContinueGame->IsMouseDown())
-	{
+	if (m_pLabelContinueGame->IsMouseDown()) {
 		IBaseScene* pGameScene = pApp->GetScene("game");
 		pApp->SetCurrentScene(pGameScene);
 	}
 
-	if(m_pLabelQuit->IsMouseDown())
-	{
+	if (m_pLabelQuit->IsMouseDown()) {
 		PostQuitMessage(0);
 	}
 
 	//pApp->GetScene("game")->OnUpdate(dt);
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-void MenuInGame::OnRender()
-{
+void MenuInGame::OnRender() {
 	pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER , 0xff000000, 1.0f, 0);
 	pDxDevice->BeginScene();
 	
 	pApp->GetScene("game")->OnRender();
 
-	if(!m_pLabelContinueGame->IsMouseOver())
-	{
+	if (!m_pLabelContinueGame->IsMouseOver()) {
 		m_pLabelContinueGame->OnRender(255,255,255,255);
 	}
-	else
-	{
+	else {
 		m_pLabelContinueGame->OnRender(150,255,255,255);
 	}
 
-	if(!m_pLabelQuit->IsMouseOver())
-	{
+	if (!m_pLabelQuit->IsMouseOver()) {
 		m_pLabelQuit->OnRender(255,255,255,255);
 	}
-	else
-	{
+	else {
 		m_pLabelQuit->OnRender(150,255,255,255);
 	}
 	
@@ -93,19 +79,13 @@ void MenuInGame::OnRender()
 	pDxDevice->Present(0, 0, 0, 0);
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-LRESULT MenuInGame::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	switch (msg)
-	{
-		case WM_KEYDOWN:
-		{
-			switch (wParam)
-			{
-				case 'F':
-				{
+LRESULT MenuInGame::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) {
+	switch (msg) {
+		case WM_KEYDOWN: {
+			switch (wParam) {
+				case 'F': {
 					pApp->SwitchToFullscreen(true);
 				}
 				break;
@@ -116,7 +96,4 @@ LRESULT MenuInGame::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(pApp->GetMainWindow(), msg, wParam, lParam);
 }
 
-
 /////////////////////////////////////////////////////////////////////////
-
-	

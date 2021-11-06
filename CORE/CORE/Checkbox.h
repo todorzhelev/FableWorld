@@ -7,8 +7,7 @@
 /*
 this class contains the functions for creating checkbox, checking if it is pressed and rendering
 */
-class Checkbox: public IBaseMenuObject
-{
+class Checkbox: public IBaseMenuObject {
 public:
 	Checkbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string strText, std::string strIdleStateTexFileName, std::string strMouseOverStateTexFileName,std::string strId);
 

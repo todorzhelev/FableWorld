@@ -12,10 +12,8 @@ const int k_nSubGridsVertsNumber	  = k_nSubGridsRowsNumber * k_nSubGridsColsNumb
 
 //////////////////////////////////////////////////////////////////////////////
 
-struct TerrainSubGrid
-{
-	TerrainSubGrid(ID3DXMesh* mesh, AABB bb)
-	{
+struct TerrainSubGrid {
+	TerrainSubGrid(ID3DXMesh* mesh, AABB bb) {
 		m_pSubGridMesh = mesh;
 		m_subGridBoungingBox = bb;
 	}
@@ -26,36 +24,22 @@ struct TerrainSubGrid
 
 //////////////////////////////////////////////////////////////////////////////
 
-class Terrain
-{
+class Terrain {
 public:
 
 	Terrain(std::string strHeightmapFileName,float fHeightsScale, int nRows,int nCols,float fDX,float fDZ ,const D3DXVECTOR3& vCenterPointr);
-
 	void	OnRender();
-
 	void	OnLostDevice();
-
 	void	OnResetDevice();
-
 	float	GetHeight(float fX, float fZ);
-
 	bool	IsValidPosition(float x, float z);
-
 	bool	IsInBounds(int i, int j);
-
 	void	SetLightVector(D3DXVECTOR3 vLightVector);
-
 	void	LoadHeightmap();
-
 	void	GenerateTerrainMesh();
-
 	void	GenerateVertexBuffer(std::vector<D3DXVECTOR3>& vVertices, int nNumRows,int nNumCols);
-
 	void	GenerateIndexBuffer(std::vector<DWORD>& vIndices,int nNumRows,int nNumCols);
-
 	void	BuildEffect();
-
 	void	BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalTexture* pVertices); 
 
 private:

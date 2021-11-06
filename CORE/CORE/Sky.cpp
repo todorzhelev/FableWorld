@@ -4,8 +4,7 @@
 /////////////////////////////////////////////////////////////////////////
 
 Sky::Sky(std::string strSkyTextureFileName, float fSkyRadius)
-	:m_fSkyRadius(fSkyRadius)
-{
+	:m_fSkyRadius(fSkyRadius) {
 	D3DXCreateSphere(pDxDevice, m_fSkyRadius, 160, 160, &m_pSkyMesh, 0);
 	D3DXCreateCubeTextureFromFile(pDxDevice, strSkyTextureFileName.c_str(), &m_pSkyTexture);
 
@@ -19,11 +18,9 @@ Sky::Sky(std::string strSkyTextureFileName, float fSkyRadius)
 	m_pEffect->SetTexture(m_hSkyTexture, m_pSkyTexture);
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-Sky::~Sky()
-{
+Sky::~Sky() {
 	ReleaseX(m_pSkyMesh);
 	ReleaseX(m_pSkyTexture);
 	ReleaseX(m_pEffect);
@@ -32,24 +29,20 @@ Sky::~Sky()
 
 /////////////////////////////////////////////////////////////////////////
 
-void Sky::OnLostDevice()
-{
+void Sky::OnLostDevice() {
 	m_pEffect->OnLostDevice();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-void Sky::OnResetDevice()
-{
+void Sky::OnResetDevice() {
 	m_pEffect->OnResetDevice();
 }
 
 
 /////////////////////////////////////////////////////////////////////////
 
-void Sky::OnRender()
-{
+void Sky::OnRender() {
 	//Translate the sky mesh to the camera position, this way we will never reach the end of the sky
 	D3DXMATRIX TranslationMatrix;
 	D3DXVECTOR3 vCameraPos = camera->GetPosition();
@@ -66,6 +59,5 @@ void Sky::OnRender()
 	m_pEffect->EndPass();
 	m_pEffect->End();
 }
-
 
 /////////////////////////////////////////////////////////////////////////

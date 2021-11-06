@@ -12,28 +12,22 @@ extern "C"
 
 extern lua_State* g_luaState;
 
-inline void ReleaseX(IUnknown* resource)
-{
-	if(resource != nullptr)
-	{
+inline void ReleaseX(IUnknown* resource) {
+	if(resource != nullptr) {
 		resource->Release();
 	}
 }
 
 #define CheckSuccess(X) __CheckHR(__FILE__, __LINE__, X)
-inline void __CheckHR(std::string file, int line, HRESULT hr)
-{
-	if (FAILED(hr))
-	{
+inline void __CheckHR(std::string file, int line, HRESULT hr) {
+	if (FAILED(hr)) {
 		std::string errString = DXGetErrorString(hr);
 		std::string message = "File:" + file + " line: " + std::to_string(line) + "\nError std::string:" + errString.c_str() + "\nError description:" + DXGetErrorDescription(hr);
 		MessageBox(0, message.c_str(), "Error", MB_CANCELTRYCONTINUE | MB_ICONEXCLAMATION);
-		if (!errString.compare("D3DXERR_INVALIDDATA"))
-		{
+		if (!errString.compare("D3DXERR_INVALIDDATA")) {
 			printf("the filename is either empty or incorrect\n");
 		}
-		else
-		{
+		else {
 			PostQuitMessage(0);
 		}
 	}
@@ -42,15 +36,10 @@ inline void __CheckHR(std::string file, int line, HRESULT hr)
 /////////////////////////////////////////////////////////////////
 
 void GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection);
-
 float GetStringWidth(std::string str);
-
 float GetStringHeight(std::string str);
-
 void CopyString(const char* input, char** output);
-
 bool HasNormals(ID3DXMesh* pMesh);
-
 void InitVertexDeclarations();
 
 /////////////////////////////////////////////////////////////////
@@ -62,8 +51,7 @@ const D3DXCOLOR PINK(1.0f, 0.1f, 0.5f, 1.0f);
 
 /////////////////////////////////////////////////////////////////
 
-struct Material
-{
+struct Material {
 	D3DXCOLOR m_ambient;
 	D3DXCOLOR m_diffuse;
 	D3DXCOLOR m_specular;
@@ -72,8 +60,7 @@ struct Material
 
 /////////////////////////////////////////////////////////////////
 
-struct Light
-{
+struct Light {
 	D3DXCOLOR m_ambient;
 	D3DXCOLOR m_diffuse;
 	D3DXCOLOR m_specular;
@@ -82,39 +69,34 @@ struct Light
 
 /////////////////////////////////////////////////////////////////
 
-struct VertexPosition
-{
+struct VertexPosition {
 	D3DXVECTOR3 m_vPos;
 };
 
 /////////////////////////////////////////////////////////////////
 
-struct VertexPositionColor
-{
+struct VertexPositionColor {
 	D3DXVECTOR3 m_vPos;
 	D3DXCOLOR   m_color;
 };
 
 /////////////////////////////////////////////////////////////////
 
-struct VertexPositionNormal
-{
+struct VertexPositionNormal {
 	D3DXVECTOR3 m_vPos;
 	D3DXVECTOR3 m_vNormal;
 };
 
 /////////////////////////////////////////////////////////////////
 
-struct VertexPositionTexture
-{
+struct VertexPositionTexture {
 	D3DXVECTOR3 m_vPos;
 	D3DXVECTOR2 m_vTexCoords;
 };
 
 /////////////////////////////////////////////////////////////////
 
-struct VertexPositionNormalTexture
-{
+struct VertexPositionNormalTexture {
 	D3DXVECTOR3 m_vPos;
 	D3DXVECTOR3 m_vNormal;
 	D3DXVECTOR2 m_vTexCoords;

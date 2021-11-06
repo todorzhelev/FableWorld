@@ -3,8 +3,7 @@
 #include "Misc.h"
 #include "IBaseMenuObject.h"
 
-class Button: public IBaseMenuObject
-{
+class Button: public IBaseMenuObject {
 public:
 
 	Button(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string strText, std::string strIdleStateTexFileName, std::string strMouseOverStateTexFileName);

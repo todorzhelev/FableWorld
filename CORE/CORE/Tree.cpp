@@ -6,30 +6,26 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-Tree::Tree()
-{
+Tree::Tree() {
 	m_pRoot = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
 //returns the text holded by the passed node
-std::string Tree::GetText(DialogueNode* pNode)
-{
+std::string Tree::GetText(DialogueNode* pNode) {
 	return pNode->m_strText;
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
-void Tree::InsertNode(DialogueNode*& currentNode, DialogueNode*& parentNode, std::string text, std::string quest, bool bAnySiblings)
-{
+void Tree::InsertNode(DialogueNode*& currentNode, DialogueNode*& parentNode, std::string text, std::string quest, bool bAnySiblings) {
 	int x = 5;
 	int y = 0;
 	//TODO: fix all these hardcodes
 	bAnySiblings ? y = 520 : y = 480;
 
-	if (currentNode == nullptr && parentNode == nullptr)
-	{
+	if (currentNode == nullptr && parentNode == nullptr) {
 		currentNode = new DialogueNode;
 		currentNode->m_pLabel = new Label(D3DXVECTOR2(x, y+40), text);
 		currentNode->m_strText = text;
@@ -37,8 +33,7 @@ void Tree::InsertNode(DialogueNode*& currentNode, DialogueNode*& parentNode, std
 		currentNode->m_strQuest = quest;
 		parentNode = currentNode;
 	}
-	else
-	{
+	else {
 		y += (parentNode->m_vNodes.size()+1) * 40;
 
 		currentNode = new DialogueNode;

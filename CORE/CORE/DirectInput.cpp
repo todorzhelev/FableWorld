@@ -9,8 +9,7 @@ DirectInput* pDinput = NULL;
 /////////////////////////////////////////////////////////////////////////
 
 //acquires keyboard and mouse devices
-DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags)
-{
+DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags) {
 	ZeroMemory(m_keyboardState, sizeof(m_keyboardState));
 	ZeroMemory(&m_mouseState, sizeof(m_mouseState));
 
@@ -32,8 +31,7 @@ DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags)
 
 /////////////////////////////////////////////////////////////////////////
 
-DirectInput::~DirectInput()
-{
+DirectInput::~DirectInput() {
 	ReleaseX(m_pDirectInput);
 	m_pKeyboad->Unacquire();
 	ReleaseX(m_pKeyboad);
@@ -44,21 +42,18 @@ DirectInput::~DirectInput()
 /////////////////////////////////////////////////////////////////////////
 
 //starting to poll for user input if the devices are accessible. if not it tries to acquire them
-void DirectInput::Poll()
-{
+void DirectInput::Poll() {
 	//Keyboard
 	HRESULT hResult = m_pKeyboad->GetDeviceState(sizeof(m_keyboardState), (void**)&m_keyboardState); 
 
-	if( FAILED(hResult) )
-	{
+	if (FAILED(hResult)) {
 		m_pKeyboad->Acquire();
 	}
 
 	// Poll mouse.
 	hResult = m_pMouse->GetDeviceState(sizeof(DIMOUSESTATE2), (void**)&m_mouseState); 
 
-	if( FAILED(hResult) )
-	{
+	if (FAILED(hResult)) {
 		m_pMouse->Acquire(); 
 	}
 }
@@ -71,38 +66,33 @@ void DirectInput::Poll()
 //by making bitwise AND with 0x80, we are clearing the other bits and leaving only the high-order bit to be set if 
 //in the previous value is again set.
 //example: keyboardstate[key] = 1001 1100 & 1000 0000(0x80)  = 1000 0000 -> the high order bit is set, therefore the key is down
-bool DirectInput::IsKeyDown(char key)
-{
+bool DirectInput::IsKeyDown(char key) {
 	return (m_keyboardState[key] & 0x80) != 0;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-bool DirectInput::IsMouseButtonDown(int button)
-{
+bool DirectInput::IsMouseButtonDown(int button) {
 	return (m_mouseState.rgbButtons[button] & 0x80) != 0;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-bool DirectInput::IsMouseButtonUp(int button)
-{
+bool DirectInput::IsMouseButtonUp(int button) {
 	return (m_mouseState.rgbButtons[button] & 0x80) == 0;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 //returns lX for the mouse used in rotation.
-float DirectInput::GetMouseDX()
-{
+float DirectInput::GetMouseDX() {
 	return (float)m_mouseState.lX;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 //returns lY for the mouse used in rotation.
-float DirectInput::GetMouseDY()
-{
+float DirectInput::GetMouseDY() {
 	return (float)m_mouseState.lY;
 }
 

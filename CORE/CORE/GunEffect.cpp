@@ -4,23 +4,16 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 GunEffect::GunEffect(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName,int nMaxAmountOfParticles, D3DXVECTOR4 accel)
-	:EffectSystem(sShaderFileName,sShaderTechName,sTextureFileName,nMaxAmountOfParticles,accel)
-{
-	  
-}
+	:EffectSystem(sShaderFileName,sShaderTechName,sTextureFileName,nMaxAmountOfParticles,accel) {}
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-GunEffect::~GunEffect()
-{
-}
+GunEffect::~GunEffect() {}
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-void GunEffect::InitParticle(Particle& outParticle, GameObject* object)
-{
-	if (!object)
-	{
+void GunEffect::InitParticle(Particle& outParticle, GameObject* object) {
+	if (!object) {
 		return;
 	}
 
@@ -46,10 +39,8 @@ void GunEffect::InitParticle(Particle& outParticle, GameObject* object)
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-void GunEffect::OnUpdate(float dt)
-{
+void GunEffect::OnUpdate(float dt) {
 	EffectSystem::OnUpdate(dt);
-
 }
 
 //////////////////////////////////////////////////////////////////////////////////////

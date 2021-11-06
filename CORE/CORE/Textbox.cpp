@@ -3,8 +3,7 @@
 #include "TextManager.h"
 
 Textbox::Textbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string strText,std::string strIdleStateTexFileName, std::string strMouseOverStateTexFileName,std::string strId)
-:IBaseMenuObject(vPosition,nWidth,nHeight,strText,strIdleStateTexFileName,strMouseOverStateTexFileName,strId)
-{
+:IBaseMenuObject(vPosition,nWidth,nHeight,strText,strIdleStateTexFileName,strMouseOverStateTexFileName,strId) {
 	D3DXCreateSprite(pDxDevice,&m_pSprite);
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,m_strIdleStateTextureFileName.c_str(),&m_pIdleStateTexture));
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,m_strMouseOverStateTextureFileName.c_str(),&m_pMouseOverStateTexture));
@@ -15,8 +14,7 @@ Textbox::Textbox(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string str
 
 /////////////////////////////////////////////////////////////////////////
 
-void Textbox::Init()
-{
+void Textbox::Init() {
 	D3DXCreateSprite(pDxDevice,&m_pSprite);
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,m_strIdleStateTextureFileName.c_str(),&m_pIdleStateTexture));
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,m_strMouseOverStateTextureFileName.c_str(),&m_pMouseOverStateTexture));
@@ -25,80 +23,61 @@ void Textbox::Init()
 	m_bIsMouseOver = false;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-void Textbox::OnLostDevice()
-{
+void Textbox::OnLostDevice() {
 	m_pSprite->OnLostDevice();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-void Textbox::OnResetDevice()
-{
+void Textbox::OnResetDevice() {
 	m_pSprite->OnResetDevice();
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
-bool Textbox::IsMouseOver()
-{
+bool Textbox::IsMouseOver() {
 	POINT s;
 	GetCursorPos(&s);
 
 	ScreenToClient(pApp->GetMainWindow(), &s);
 
-	if((s.x > m_vPosition.x) && 
+	if ((s.x > m_vPosition.x) && 
 	   (s.y > m_vPosition.y) &&
 	   (s.x< (m_vPosition.x + m_nWidth)) &&
-	   (s.y < (m_vPosition.y + m_nHeight)))
-		  
-	{
+	   (s.y < (m_vPosition.y + m_nHeight))) {
 			return true;
 	}
-	else 
-	{
+	else {
 		return false;
 	}
-		
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-bool Textbox::IsMouseDown()
-{
-	if(IsMouseOver() && pDinput->IsMouseButtonDown(0))
-	{
+bool Textbox::IsMouseDown() {
+	if (IsMouseOver() && pDinput->IsMouseButtonDown(0)) {
 		return true;
 	}
-	else 
-	{
+	else  {
 		return false;
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Textbox::OnClicked()
-{
-	if( IsMouseOver() && m_bIsVisible)
-	{
+void Textbox::OnClicked() {
+	if (IsMouseOver() && m_bIsVisible) {
 		m_bIsSelected = true;
 	}
 
-	if( m_bIsSelected )
-	{
-		if( pApp->m_strSelectedTextbox.empty() )
-		{
+	if (m_bIsSelected) {
+		if (pApp->m_strSelectedTextbox.empty()) {
 			pApp->m_strSelectedTextbox = m_strId;
 		}
-		else if( m_strId != pApp->m_strSelectedTextbox )
-		{
+		else if (m_strId != pApp->m_strSelectedTextbox) {
 			IBaseMenuObject* pSelectedTextbox = pApp->FindMenuObject(pApp->m_strSelectedTextbox);
-
 			pSelectedTextbox->m_bIsSelected = false;
 			pApp->m_strSelectedTextbox = m_strId;
 		}
@@ -107,43 +86,33 @@ void Textbox::OnClicked()
 
 /////////////////////////////////////////////////////////////////////////
 
-void Textbox::OnUpdate()
-{
-	if(IsMouseOver())
-	{
+void Textbox::OnUpdate() {
+	if (IsMouseOver()) {
 		m_bIsMouseOver = true;
 	}
-	else 
-	{
+	else {
 		m_bIsMouseOver = false;
 	}
 
-	if(IsMouseDown())
-	{
+	if (IsMouseDown()) {
 		m_bIsMouseDown = true;
 	}
-	else 
-	{
+	else {
 		m_bIsMouseDown = false;
 	}
-
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Textbox::OnRender()
-{
+void Textbox::OnRender() {
 	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
-	if(m_bIsVisible)
-	{
+	if (m_bIsVisible) {
 		D3DXVECTOR3 vPos = D3DXVECTOR3(m_vPosition.x, m_vPosition.y, 0.f);
-
 		m_pSprite->Draw(m_pIdleStateTexture,NULL,NULL,&vPos,D3DXCOLOR(255,255,255,255));
 	}
 	m_pSprite->End();
 		
-	if(m_bIsVisible)
-	{
+	if (m_bIsVisible) {
 		pTextManager->RenderText(m_strText.c_str(),
 							     static_cast<int>(m_vPosition.x)+10,
 							     static_cast<int>(m_vPosition.y)+7,
@@ -155,26 +124,21 @@ void Textbox::OnRender()
 
 /////////////////////////////////////////////////////////////////////////
 
-void Textbox::OnRender(int a,int r,int g,int b)
-{
+void Textbox::OnRender(int a,int r,int g,int b) {
 	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
-	if( m_bIsVisible)
-	{
+	if (m_bIsVisible) {
 		D3DXVECTOR3 vPos = D3DXVECTOR3(m_vPosition.x, m_vPosition.y, 0.f);
 
-		if( !m_bIsSelected )
-		{
+		if (!m_bIsSelected) {
 			m_pSprite->Draw(m_pIdleStateTexture,NULL,NULL,&vPos,D3DXCOLOR(255,255,255,255));
 		}
-		else
-		{
+		else {
 			m_pSprite->Draw(m_pMouseOverStateTexture,NULL,NULL,&vPos,D3DXCOLOR(255,255,255,255));
 		}
 	}
 	m_pSprite->End();
 
-	if( m_bIsVisible )
-	{
+	if (m_bIsVisible) {
 		pTextManager->RenderText(m_strText.c_str(),m_vPosition.x+10,
 			m_vPosition.y+7,
 			m_vPosition.x+20,

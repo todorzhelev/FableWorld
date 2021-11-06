@@ -15,8 +15,7 @@ Camera::Camera(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, fl
 	, m_bIsCameraFree(bIsCameraFree)
 	, m_zoom(-35)
 	, m_maxZoom(-80)
-	, m_minZoom(-24)
-{
+	, m_minZoom(-24) {
 	D3DXMatrixIdentity(&m_ViewMatrix);
 	D3DXMatrixIdentity(&m_ProjectionMatrix);
 	D3DXMatrixIdentity(&m_ViewProjectionMatrix);
@@ -33,64 +32,55 @@ Camera::Camera(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, fl
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXMATRIX Camera::GetViewMatrix() const
-{
+D3DXMATRIX Camera::GetViewMatrix() const {
 	return m_ViewMatrix;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXMATRIX Camera::GetProjMatrix() const
-{
+D3DXMATRIX Camera::GetProjMatrix() const {
 	return m_ProjectionMatrix;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXMATRIX Camera::GetViewProjMatrix() const
-{
+D3DXMATRIX Camera::GetViewProjMatrix() const {
 	return m_ViewProjectionMatrix;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 Camera::GetRightVector() const
-{
+D3DXVECTOR3 Camera::GetRightVector() const {
 	return m_vRightVector;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 Camera::GetUpVector() const
-{
+D3DXVECTOR3 Camera::GetUpVector() const {
 	return m_vUpVector;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 Camera::GetLookVector() const
-{
+D3DXVECTOR3 Camera::GetLookVector() const {
 	return m_vLookVector;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3& Camera::GetPosition()
-{
+D3DXVECTOR3& Camera::GetPosition() {
 	return m_vPosition;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Camera::SetPosition(D3DXVECTOR3 vNewPos)
-{
+void Camera::SetPosition(D3DXVECTOR3 vNewPos) {
 	m_vPosition = vNewPos;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Camera::BuildProjectionMatrix(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, float fFrustumFarPlaneZ)
-{
+void Camera::BuildProjectionMatrix(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, float fFrustumFarPlaneZ) {
 	//build projection matrix, based on the field of view angle. 
 	//The projection matrix is used for converting from view space to screen space
 	//nearZ sets the value of the near plane, i.e. everything with smaller value than this wont be seen
@@ -102,10 +92,8 @@ void Camera::BuildProjectionMatrix(float fFovAngle, float fAspectRatio, float fF
 
 /////////////////////////////////////////////////////////////////////////
 
-void Camera::OnUpdate(float dt)
-{
-	if( m_bIsCameraFree )
-	{
+void Camera::OnUpdate(float dt) {
+	if (m_bIsCameraFree) {
 		MoveCamera(dt);
 	}
 
@@ -115,24 +103,18 @@ void Camera::OnUpdate(float dt)
 	m_ViewProjectionMatrix = m_ViewMatrix * m_ProjectionMatrix;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
 //tests if certain bounding box is visible by the camera
-bool Camera::IsBoundingBoxVisible(AABB& box) const
-{
+bool Camera::IsBoundingBoxVisible(AABB& box) const {
 	D3DXVECTOR3 Q;
-	for(int i = 0; i < 6; ++i)
-	{
+	for (int i = 0; i < 6; ++i) {
 		//For each coordinate x,y,z
-		for(int j = 0; j < 3; ++j)
-		{
-			if( m_FrustumPlanes[i][j] >= 0.0f )
-			{
+		for (int j = 0; j < 3; ++j) {
+			if (m_FrustumPlanes[i][j] >= 0.0f) {
 				Q[j] = box.GetMaxPoint()[j];
 			}
-			else 
-			{
+			else {
 				Q[j] = box.GetMinPoint()[j];
 			}
 		}
@@ -140,8 +122,7 @@ bool Camera::IsBoundingBoxVisible(AABB& box) const
 		//if the dot product equals zero it means the point is on the plane.
 		//if the dot product is less than zero means that the point is negative half space -> its not visible
 		//if the dot product is bigger than zero means that the points is in positive half space -> its visible
-		if( D3DXPlaneDotCoord(&m_FrustumPlanes[i], &Q) < 0.0f  )
-		{
+		if (D3DXPlaneDotCoord(&m_FrustumPlanes[i], &Q) < 0.0f) {
 			return false;
 		}
 	}
@@ -156,8 +137,7 @@ After that we transform all the models according to view matrix, so they can be 
 Later we are transforming them according to a projection matrix, so they can be rendered in the screen.
 Note that the camera is like a regular object in the world, we are just viewing the world from its point of view
 */
-void Camera::BuildViewMatrix()
-{
+void Camera::BuildViewMatrix() {
 	//these calcualtions before the filling the matrix are done because 
 	//of floating point errors which can cause the vectors to be non-orthogonal
 	D3DXVec3Normalize(&m_vLookVector, &m_vLookVector);
@@ -198,8 +178,7 @@ void Camera::BuildViewMatrix()
 the camera in the game is represented by a frustum - clipped pyramid. The pyramid is built by 6 planes
 which can be extracted directly from the combined view and proj matrix.
 */
-void Camera::BuildFrustumPlanes()
-{
+void Camera::BuildFrustumPlanes() {
 	D3DXMATRIX ViewProj = m_ViewMatrix * m_ProjectionMatrix;
 
 	D3DXVECTOR4 vCol1(ViewProj(0,0), ViewProj(1,0), ViewProj(2,0), ViewProj(3,0));
@@ -214,56 +193,47 @@ void Camera::BuildFrustumPlanes()
 	m_FrustumPlanes[4] = (D3DXPLANE)(vCol4 - vCol2); // top plane
 	m_FrustumPlanes[5] = (D3DXPLANE)(vCol4 + vCol2); // bottom plane
 
-	for(int i = 0; i < 6; i++)
-	{
+	for (int i = 0; i < 6; i++) {
 		D3DXPlaneNormalize(&m_FrustumPlanes[i], &m_FrustumPlanes[i]);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Camera::SetCameraMode(ECameraMode eCameraMode)
-{
+void Camera::SetCameraMode(ECameraMode eCameraMode) {
 	m_eCameraMode = eCameraMode;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-ECameraMode Camera::GetCameraMode()
-{
+ECameraMode Camera::GetCameraMode() {
 	return m_eCameraMode;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 //moves the camera according to the pressed buttons
-void Camera::MoveCamera(float dt)
-{
+void Camera::MoveCamera(float dt) {
 	//this vector holds the new direction to move
 	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
 	
-	if( pDinput->IsKeyDown(DIK_W) )
-	{
+	if (pDinput->IsKeyDown(DIK_W)) {
 		dir += m_vLookVector;
 	}
-	if( pDinput->IsKeyDown(DIK_S) )
-	{
+	if (pDinput->IsKeyDown(DIK_S)) {
 		dir -= m_vLookVector;
 	}
-	if( pDinput->IsKeyDown(DIK_A) )
-	{
+	if (pDinput->IsKeyDown(DIK_A)) {
 		dir -= m_vRightVector;
 	}
-	if( pDinput->IsKeyDown(DIK_D) )
-	{
+	if (pDinput->IsKeyDown(DIK_D)) {
 		dir += m_vRightVector;
 	}
 	
 	D3DXVECTOR3 newPos = m_vPosition + dir* m_speed *dt;
 	m_vPosition = newPos;
 
-	if( pDinput->IsMouseButtonDown(0) )
-	{
+	if (pDinput->IsMouseButtonDown(0)) {
 		float angleModifier = 150;
 
 		float upAngleRot	= pDinput->GetMouseDY() / angleModifier;
@@ -276,15 +246,13 @@ void Camera::MoveCamera(float dt)
 
 /////////////////////////////////////////////////////////////////////////
 
-void Camera::SetSpeed(int speed)
-{
+void Camera::SetSpeed(int speed) {
 	m_speed = speed;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Camera::RotateRight(float angle)
-{
+void Camera::RotateRight(float angle) {
 	D3DXMATRIX R;
 
 	D3DXMatrixRotationY(&R, angle);
@@ -294,8 +262,7 @@ void Camera::RotateRight(float angle)
 
 /////////////////////////////////////////////////////////////////////////
 
-void Camera::RotateUp(float angle)
-{
+void Camera::RotateUp(float angle) {
 	D3DXMATRIX R;
 
 	D3DXMatrixRotationAxis(&R, &m_vRightVector, angle);
@@ -305,37 +272,31 @@ void Camera::RotateUp(float angle)
 
 /////////////////////////////////////////////////////////////////////////
 
-bool Camera::IsCameraFree() const
-{
+bool Camera::IsCameraFree() const {
 	return m_bIsCameraFree;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Camera::SetCameraFree(bool free)
-{
+void Camera::SetCameraFree(bool free) {
 	m_bIsCameraFree = free;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Camera::SetZoom(int zoom)
-{
+void Camera::SetZoom(int zoom) {
 	m_zoom = zoom;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Camera::ModifyZoom(int delta)
-{
-	if( m_zoom + delta > m_minZoom)
-	{
+void Camera::ModifyZoom(int delta) {
+	if (m_zoom + delta > m_minZoom) {
 		m_zoom = m_minZoom;
 		return;
 	}
 
-	if( m_zoom + delta < m_maxZoom )
-	{
+	if (m_zoom + delta < m_maxZoom) {
 		m_zoom = m_maxZoom;
 		return;
 	}
@@ -345,15 +306,13 @@ void Camera::ModifyZoom(int delta)
 
 /////////////////////////////////////////////////////////////////////////
 
-int Camera::GetZoom()
-{
+int Camera::GetZoom() {
 	return m_zoom;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Camera::TransformByMatrix(D3DXMATRIX matrix)
-{
+void Camera::TransformByMatrix(D3DXMATRIX matrix) {
 	D3DXVec3TransformCoord(&m_vLookVector,	&m_vLookVector,	 &matrix);
 	D3DXVec3TransformCoord(&m_vRightVector, &m_vRightVector, &matrix);
 	D3DXVec3TransformCoord(&m_vUpVector,	&m_vUpVector,	 &matrix);
