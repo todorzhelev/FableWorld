@@ -128,10 +128,12 @@ void EffectSystem::OnRender()
 {
 	m_pEffectShader->SetTechnique(m_hEffectTechnique);
 
-	D3DXVECTOR4 vCameraPos = camera->GetPosition();
+	D3DXVECTOR3 camPos = camera->GetPosition();
+	D3DXVECTOR4 vCameraPos(camPos, 0);
 
 	m_pEffectShader->SetVector(m_hCameraPos,&vCameraPos);
-	m_pEffectShader->SetMatrix(m_hWVPMatrix, &(camera->GetViewProjMatrix()));
+	D3DXMATRIX viewProjMatrix = camera->GetViewProjMatrix();
+	m_pEffectShader->SetMatrix(m_hWVPMatrix, &viewProjMatrix);
 	m_pEffectShader->SetFloat(m_hTime,m_time);
 	m_pEffectShader->SetTexture(m_hTexture,m_pTexture);
 	m_pEffectShader->SetVector(m_hAcceleration, &m_accel);

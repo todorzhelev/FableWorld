@@ -333,7 +333,7 @@ void Game::OnUpdate(float dt)
 
 	if (m_isAIRunningToTarget && pickedObj)
 	{
-		m_currentPathfindingEndIndex+=10;
+		m_currentPathfindingEndIndex+=2;
 		if (m_currentPathfindingEndIndex < m_currentPath.size())
 		{
 			auto pos = m_currentPath[m_currentPathfindingEndIndex];

@@ -591,7 +591,7 @@ void SkinnedModel::RenderTitles()
 							 (m_vPos.y + (boundingBox.GetMaxPoint().y - boundingBox.GetMinPoint().y)+5.0f),
 							 m_vPos.z);
 
-	D3DXMatrixScaling(&S,m_fScale+3,m_fScale+3,m_fScale+3);
+	D3DXMatrixScaling(&S,m_fScale+20,m_fScale+20,m_fScale+20);
 
 	D3DXMatrixRotationY(&R,m_fTitleRotationAngleByY);
 

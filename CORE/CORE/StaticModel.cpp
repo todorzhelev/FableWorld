@@ -261,7 +261,8 @@ void StaticModel::OnRender()
 		pDxDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 		pDxDevice->SetRenderState(D3DRS_ALPHAREF, 100);
 
-		m_pEffect->SetMatrix(m_hWVPMatrix,&(m_CombinedTransformationMatrix *(camera->GetViewProjMatrix())));
+		D3DXMATRIX finalMatrix = m_CombinedTransformationMatrix * camera->GetViewProjMatrix();
+		m_pEffect->SetMatrix(m_hWVPMatrix, &finalMatrix);
 
 		if( m_pGameObjManager->ShouldHighlightPickedObjects() )
 		{
@@ -425,7 +426,8 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone)
 	//Its combination from bone matrices, animated model matrices and the binded weapon matrices
 	D3DXMATRIX FullCombinedMatrix = BindedObjectCombinedMatrix * BoneCombinedMatrix * AnimatedModelCombinedMatrix;
 
-	m_pEffect->SetMatrix(m_hWVPMatrix,&(FullCombinedMatrix * (camera->GetViewProjMatrix())));
+	D3DXMATRIX finalMatrix = FullCombinedMatrix * camera->GetViewProjMatrix();
+	m_pEffect->SetMatrix(m_hWVPMatrix, &finalMatrix);
 						
 	UINT numPasses = 0;
 	m_pEffect->Begin(&numPasses,0);
@@ -455,8 +457,10 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone)
 
 
 			//bounding box render for binded weapon
-			m_pEffect->SetMatrix(m_hWVPMatrix, &(pBindedObject->GetBBOffsetMatrix()*FullCombinedMatrix*camera->GetViewProjMatrix()));
-			m_pEffect->SetValue(m_hMaterial, &pBindedObject->GetBBMaterial(), sizeof(Material));
+			D3DXMATRIX finalMatrix = pBindedObject->GetBBOffsetMatrix() * FullCombinedMatrix * camera->GetViewProjMatrix();
+			m_pEffect->SetMatrix(m_hWVPMatrix, &finalMatrix);
+			Material bbMaterial = pBindedObject->GetBBMaterial();
+			m_pEffect->SetValue(m_hMaterial, &bbMaterial, sizeof(Material));
 			m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);
 			m_pEffect->CommitChanges();
 			//pBindedObject->m_pBoundingBoxMesh->DrawSubset(0);
@@ -489,8 +493,8 @@ void StaticModel::RenderBoundingBox()
 	D3DXMATRIX meshCombined = m_BoundingBoxOffset*S*R1*R2*R3*T;
 
 	m_BoundingBox.m_transformationMatrix = meshCombined;
-
-	m_pEffect->SetMatrix(m_hWVPMatrix, &(meshCombined*camera->GetViewProjMatrix()));
+	D3DXMATRIX finalMatrix = meshCombined * camera->GetViewProjMatrix();
+	m_pEffect->SetMatrix(m_hWVPMatrix, &finalMatrix);
 
 	m_pEffect->SetValue(m_hMaterial, &m_BoundingBoxMaterial, sizeof(Material));
 	m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);
