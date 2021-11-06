@@ -8,3 +8,6 @@ logs
 .vs
 Debug
 bin
+/FableWorld/FableWorld/Release
+/FableWorld/FableWorld/FableWorld.vcxproj.user
+/FableWorld/FableWorld/log.txt
