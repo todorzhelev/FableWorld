@@ -1,8 +1,7 @@
 extern float4x4 WVP;
 extern texture tex0;
 
-sampler SkyS = sampler_state
-{
+sampler SkyS = sampler_state {
     Texture   = <tex0>;
     MinFilter = LINEAR; 
     MagFilter = LINEAR;
@@ -11,21 +10,18 @@ sampler SkyS = sampler_state
     AddressV  = WRAP;
 };
 
-struct VS_OUTPUT
-{
+struct VS_OUTPUT {
 	float4 pos : POSITION0;
 	float3 tex : TEXCOORD0;
 	
 };
 
-struct VS_INPUT
-{
+struct VS_INPUT {
 	float3 pos : POSITION0;
 	float3 tex : TEXCOORD0;
 };
 
-VS_OUTPUT SkyVS(VS_INPUT inp)
-{
+VS_OUTPUT SkyVS(VS_INPUT inp) {
 	VS_OUTPUT o;
 	
     o.pos = mul(float4(inp.pos, 1.0f), WVP);
@@ -40,16 +36,13 @@ VS_OUTPUT SkyVS(VS_INPUT inp)
 	return o;
 }
 
-float4 SkyPS(VS_OUTPUT inp) : COLOR
-{
+float4 SkyPS(VS_OUTPUT inp) : COLOR {
 	//instead of tex2D we use texCUBE, because this is cubemap, not regular texture.
     return texCUBE(SkyS, inp.tex);
 }
 
-technique SkyTech
-{
-    pass P0
-    {
+technique SkyTech {
+    pass P0 {
         vertexShader = compile vs_2_0 SkyVS();
         pixelShader  = compile ps_2_0 SkyPS();
 

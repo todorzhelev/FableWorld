@@ -1,13 +1,11 @@
-struct Mtrl
-{
+struct Mtrl {
 	float4 ambient;
 	float4 diffuse;
 	float4 spec;
 	float  specPower;
 };
 
-struct Light
-{
+struct Light {
 	float4 ambient;
 	float4 diffuse;
 	float4 spec;
@@ -21,8 +19,7 @@ extern Light light;
 extern texture text;
 extern bool picked;
 
-sampler TexS = sampler_state
-{
+sampler TexS = sampler_state {
 	Texture = <text>;
 	MinFilter = LINEAR;
 	MagFilter = LINEAR;
@@ -31,15 +28,13 @@ sampler TexS = sampler_state
     AddressV  = WRAP;
 };
  
-struct VS_OUTPUT
-{
+struct VS_OUTPUT {
     float4 pos   : POSITION0;
     float3 norm  : TEXCOORD0;
     float2 tex   : TEXCOORD2;
 };
 
-struct VS_INPUT
-{
+struct VS_INPUT {
 	float3 pos    	: POSITION0;
     float3 norm 	: NORMAL0;
     float2 tex    	: TEXCOORD0;
@@ -47,8 +42,7 @@ struct VS_INPUT
     int4 boneIndex 	: BLENDINDICES0;
 };
 
-VS_OUTPUT SkinnedModelVS(VS_INPUT inp)
-{
+VS_OUTPUT SkinnedModelVS(VS_INPUT inp) {
 	VS_OUTPUT o;
 
 	//in all models in the game only 2 bones can influence single vertex.
@@ -85,8 +79,7 @@ VS_OUTPUT SkinnedModelVS(VS_INPUT inp)
     return o;
 }
 
-float4 SkinnedModelPS(VS_OUTPUT inp) : COLOR
-{
+float4 SkinnedModelPS(VS_OUTPUT inp) : COLOR {
 	inp.norm = normalize(inp.norm);
 	
 	float lightAmount = saturate(dot(light.lightVector, inp.norm));
@@ -97,24 +90,17 @@ float4 SkinnedModelPS(VS_OUTPUT inp) : COLOR
 	float4 texColor = tex2D(TexS, inp.tex);
 	
 	float3 color;
-	if( !picked )
-	{
+	if (!picked) {
 		color = (ambient + diffuse)*texColor;
 	}
-	else
-	{
+	else {
 		color = (ambient + diffuse*5.0)*texColor;
 	}
-
   	return float4(color, mtrl.diffuse.a*texColor.a);
-    
 }
 
-
-technique SkinnedModelTech
-{
-	pass P0
-	{
+technique SkinnedModelTech {
+	pass P0 {
 		vertexShader = compile vs_2_0 SkinnedModelVS();
         pixelShader  = compile ps_2_0 SkinnedModelPS();
 

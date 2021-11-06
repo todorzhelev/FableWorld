@@ -13,8 +13,7 @@ static float texScale = 50;
 ////////////////////////////////////////////////////////////////////
 
 //stone texture
-sampler TexStoneSampler = sampler_state
-{
+sampler TexStoneSampler = sampler_state {
 	Texture = <tex0>;
 	MinFilter = ANISOTROPIC;
 	MaxAnisotropy = 8;
@@ -27,8 +26,7 @@ sampler TexStoneSampler = sampler_state
 ////////////////////////////////////////////////////////////////////
 
 //dirt texture
-sampler TexDirtSampler = sampler_state
-{
+sampler TexDirtSampler = sampler_state {
 	Texture = <tex1>;
 	MinFilter = ANISOTROPIC;
 	MaxAnisotropy = 8;
@@ -41,8 +39,7 @@ sampler TexDirtSampler = sampler_state
 ////////////////////////////////////////////////////////////////////
 
 //grass texture
-sampler TexGrassSampler = sampler_state
-{
+sampler TexGrassSampler = sampler_state {
 	Texture = <tex2>;
 	MinFilter = ANISOTROPIC;
 	MaxAnisotropy = 8;
@@ -54,8 +51,7 @@ sampler TexGrassSampler = sampler_state
 
 ////////////////////////////////////////////////////////////////////
 
-sampler BlendMapS = sampler_state
-{
+sampler BlendMapS = sampler_state {
 	Texture = <blendMap>;
 	MinFilter = LINEAR;
 	MagFilter = LINEAR;
@@ -66,8 +62,7 @@ sampler BlendMapS = sampler_state
  
 ////////////////////////////////////////////////////////////////////
 
-struct VS_OUTPUT
-{
+struct VS_OUTPUT {
     float4 pos          : POSITION0;
     float2 tiledTex     : TEXCOORD0;
     float2 blendMapText : TEXCOORD1;
@@ -76,8 +71,7 @@ struct VS_OUTPUT
 
 ////////////////////////////////////////////////////////////////////
 
-struct VS_INPUT
-{
+struct VS_INPUT {
 	float3 pos		    : POSITION0;
 	float3 norm			: NORMAL0;
 	float2 blendMapTex  : TEXCOORD0;
@@ -85,8 +79,7 @@ struct VS_INPUT
 
 ////////////////////////////////////////////////////////////////////
 
-VS_OUTPUT TerrainVS(VS_INPUT inp)
-{
+VS_OUTPUT TerrainVS(VS_INPUT inp) {
 	VS_OUTPUT outVS;
 
 	//saturate makes the result between [0,1]. Outside this interval the light is strange.
@@ -101,8 +94,7 @@ VS_OUTPUT TerrainVS(VS_INPUT inp)
 
 ////////////////////////////////////////////////////////////////////
 
-float4 TerrainPS(VS_OUTPUT inp) : COLOR
-{
+float4 TerrainPS(VS_OUTPUT inp) : COLOR {
     float3 texStoneColor = tex2D(TexStoneSampler, inp.tiledTex);
     float3 texDirtColor  = tex2D(TexDirtSampler,  inp.tiledTex);
     float3 texGrassColor = tex2D(TexGrassSampler, inp.tiledTex);
@@ -120,10 +112,8 @@ float4 TerrainPS(VS_OUTPUT inp) : COLOR
 
 ////////////////////////////////////////////////////////////////////
 
-technique TerrainTech
-{
-    pass P0
-    {
+technique TerrainTech {
+    pass P0 {
         vertexShader = compile vs_2_0 TerrainVS();
         pixelShader  = compile ps_2_0 TerrainPS();
     }

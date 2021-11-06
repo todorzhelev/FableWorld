@@ -20,25 +20,18 @@
 
 class IBaseMenuObject;
 
-using namespace std;
 //this is the game scene and contains all the things in the game - terrain, models, etc
 //the Game class inherits from Scenes class so later we can change the scenes for instance from menu to game and etc
-class Game : public IBaseScene
-{
+class Game : public IBaseScene {
 public:
 	Game();
 	~Game();
-
 	bool checkDeviceCaps();
-
 	void OnLostDevice();
 	void OnResetDevice();
-
 	void OnUpdate(float dt);
 	void OnRender();
-
     LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam);
-
 	bool isNear(GameObject& obj1,GameObject& obj2);
 	void objectMovement(string objectTitle,float dt);
 	void objectRotation(string objectTitle,float dt);
@@ -47,7 +40,6 @@ public:
 	void LoadAnimatedModel();
 	bool IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t);
 	void RunToTarget(GameObject * runner, D3DXVECTOR3 targetPos, float dt);
-
 
 	void LoadUIComponents();
 	void pickedModelControl(GameObject& obj, float dt);
@@ -98,7 +90,6 @@ private:
 	IBaseMenuObject* labelQuit;
 	
 	Sky* sky;
-
 
 	bool enter_pressed;
 	TCHAR ch;

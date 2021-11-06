@@ -5,11 +5,9 @@
 
 //TODO: refactor the whole code 
 
-Game::Game()
-{
+Game::Game() {
 	//checks if pixel and vertex shader 2.0 is supported
-	if(!checkDeviceCaps())
-	{
+	if (!checkDeviceCaps()) {
 		MessageBox(0, "checkDeviceCaps() Failed", 0, 0);
 		PostQuitMessage(0);
 	}
@@ -45,7 +43,7 @@ Game::Game()
 	
 	LoadUIComponents();
 
-		//init lua
+	//init lua
 	g_luaState = lua_open();
 	//open lua libs
 	luaL_openlibs(g_luaState);
@@ -61,13 +59,11 @@ Game::Game()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Game::LoadUIComponents()
-{
+void Game::LoadUIComponents() {
 	//TODO: this must be moved to some script
 	float width  = (float)pApp->GetPresentParameters().BackBufferWidth;
 	float height = (float)pApp->GetPresentParameters().BackBufferHeight;
 
-	
 	//load static model button
 	button_LoadStaticModel = new Button(D3DXVECTOR2(width - 630, 15.0),128,32,"","Button_LSM_final1.dds","Button_LSM_final2_hover.dds");
 	pApp->AddUIObject(button_LoadStaticModel);
@@ -129,7 +125,6 @@ void Game::LoadUIComponents()
 	label_modelName->SetVisible(false);
 	pApp->AddUIObject(label_modelName);
 
-
 	//model name textbox
 	textbox_modelName = new Textbox(D3DXVECTOR2(width-300, 170.0f),256,32,"","Textbox.dds","Textbox_selected.dds","textbox_modelName");
 	textbox_modelName->SetVisible(false);
@@ -183,8 +178,7 @@ void Game::LoadUIComponents()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Game::~Game()
-{
+Game::~Game() {
 	/*delete text;
 	delete xmesh;
 	delete smesh;
@@ -201,8 +195,7 @@ Game::~Game()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool Game::checkDeviceCaps()
-{
+bool Game::checkDeviceCaps() {
 	D3DCAPS9 caps;
 	pDxDevice->GetDeviceCaps(&caps); 
 	if( caps.VertexShaderVersion < D3DVS_VERSION(2, 0) )
@@ -215,123 +208,101 @@ bool Game::checkDeviceCaps()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Game::OnLostDevice()
-{
-	
+void Game::OnLostDevice() {
 	sky->OnLostDevice();
 
-	for (auto& obj : pApp->m_vUIObjects)
-	{
+	for (auto& obj : pApp->m_vUIObjects) {
 		obj->OnLostDevice();
 	}
 
 	pTextManager->OnLostDevice();
 	pTerrain->OnLostDevice();
 
-	for(auto& obj : m_pGameObjManager->GetGameObjects() )
-	{
+	for (auto& obj : m_pGameObjManager->GetGameObjects()) {
 		obj->OnLostDevice();
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Game::OnResetDevice()
-{
+void Game::OnResetDevice() {
 	sky->OnResetDevice();
 
-	for (auto& obj : pApp->m_vUIObjects)
-	{
+	for (auto& obj : pApp->m_vUIObjects) {
 		obj->OnResetDevice();
 	}
 
 	pTextManager->OnResetDevice();
 	pTerrain->OnResetDevice();
 
-	for (auto& obj : m_pGameObjManager->GetGameObjects())
-	{
+	for (auto& obj : m_pGameObjManager->GetGameObjects()) {
 		obj->OnResetDevice();
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Game::OnUpdate(float dt)
-{
+void Game::OnUpdate(float dt) {
 	//poll starts to listen if any key on the keyboard is pressed
 	pDinput->Poll();
 
 		//if escape is pressed in game it switches to another scene
-	if(pDinput->IsKeyDown(DIK_ESCAPE))
-	{
+	if (pDinput->IsKeyDown(DIK_ESCAPE)) {
 		IBaseScene* pMenuInGameScene = pApp->GetScene("menuInGame");
 		pApp->SetCurrentScene(pMenuInGameScene);
 	}
 
 	//update all the game objects
-	for (auto& obj : m_pGameObjManager->GetGameObjects())
-	{
+	for (auto& obj : m_pGameObjManager->GetGameObjects()) {
 		obj->OnUpdate(dt);
 	}
 
 	//update all the UI objects
-	for (auto& obj : pApp->m_vUIObjects)
-	{
+	for (auto& obj : pApp->m_vUIObjects) {
 		obj->OnUpdate();
 	}
 
 	pTextManager->OnUpdate(dt);
 
 	//we store the currently selected textbox in string. If its empty nothing is selected
-	if( pApp->m_strSelectedTextbox == "" )
-	{
+	if (pApp->m_strSelectedTextbox == "") {
 		typingMode = false;
 	}
-	else 
-	{
+	else  {
 		typingMode = true;
 	}
 
-
 	//dont move the camera while we are typing in textbox
-	if( !typingMode )
-	{
+	if (!typingMode) {
 		camera->OnUpdate(dt);
 	}
 
 	
-	if( button_LoadStaticModel->IsMouseDown() )
-	{
+	if (button_LoadStaticModel->IsMouseDown()) {
 		ImportStaticModel();
 	}
 
-	if( button_LoadAnimatedModel->IsMouseDown() )
-	{
+	if (button_LoadAnimatedModel->IsMouseDown()) {
 		LoadAnimatedModel();
 	}
 
-	if( button_Export->IsMouseDown() )
-	{
+	if (button_Export->IsMouseDown()) {
 		ExportLevel();
 	}
 
-	if( button_Import->IsMouseDown() )
-	{
+	if (button_Import->IsMouseDown()) {
 		ImportLevel();
 	}
 
 	auto pickedObj = m_pGameObjManager->GetPickedObject();
 
 	//show info for picked object
-	if (pickedObj)
-	{
-		if (pickedObj->GetObjectType() == EGameObjectType_Skinned)
-		{
+	if (pickedObj) {
+		if (pickedObj->GetObjectType() == EGameObjectType_Skinned) {
 			SkinnedModel* skinnedModel = static_cast<SkinnedModel*>(pickedObj);
 
 			//it it is picked reveals animated model's related textboxes and labels
-			if (!label_typeInGame->IsVisible())
-			{
+			if (!label_typeInGame->IsVisible()) {
 				label_modelName->SetVisible(true);
 				textbox_modelName->SetVisible(true);
 
@@ -346,7 +317,6 @@ void Game::OnUpdate(float dt)
 
 				label_typeInGame->SetVisible(true);
 				textbox_typeInGame->SetVisible(true);
-
 			}
 
 			textbox_modelName->SetText(std::to_string(skinnedModel->GetId()));
@@ -355,10 +325,8 @@ void Game::OnUpdate(float dt)
 
 			pickedModelControl(*pickedObj, dt);
 		}
-		else if (pickedObj->GetObjectType() == EGameObjectType_Static)
-		{
-			if (!label_bindToAnModel->IsVisible())
-			{
+		else if (pickedObj->GetObjectType() == EGameObjectType_Static) {
+			if (!label_bindToAnModel->IsVisible()) {
 				label_modelName->SetVisible(true);
 				textbox_modelName->SetVisible(true);
 
@@ -385,10 +353,8 @@ void Game::OnUpdate(float dt)
 	}
 
 	//move picked object to desired destination
-	if (pickedObj)
-	{
-		if (pDinput->IsMouseButtonDown(1))
-		{
+	if (pickedObj) {
+		if (pDinput->IsMouseButtonDown(1)) {
 			D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 			D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
 
@@ -397,7 +363,9 @@ void Game::OnUpdate(float dt)
 			GetWorldPickingRay(vOrigin, vDir);
 
 			D3DXPLANE plane;
-			D3DXPlaneFromPointNormal(&plane, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 1, 0));
+			D3DXVECTOR3 vPoint(0, 0, 0);
+			D3DXVECTOR3 vNormal(0, 1, 0);
+			D3DXPlaneFromPointNormal(&plane, &vPoint, &vNormal);
 
 			//I though that only origin and direction is needed and since
 			//line is thought to be endless I am not going to need end point.
@@ -411,10 +379,8 @@ void Game::OnUpdate(float dt)
 
 	//unpick model that its picked with K
 	//TODO: two panels should be made, which will be used to hide/show all of their children elements
-	if (pDinput->IsKeyDown(DIK_K))
-	{
-		if (pickedObj)
-		{
+	if (pDinput->IsKeyDown(DIK_K)) {
+		if (pickedObj) {
 			//TODO : fix this
 			//m_pGameObjManager->GetGameObjects().erase(m_pGameObjManager->GetPickedObject()->GetName());
 
@@ -430,13 +396,11 @@ void Game::OnUpdate(float dt)
 			textbox_bindToAnModelBone->SetVisible(false);
 		}
 	}
-
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt)
-{
+void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt) {
 	float speed = 200.f;
 	SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(runner);
 
@@ -460,11 +424,9 @@ void Game::RunToTarget(GameObject* runner, D3DXVECTOR3 targetPos, float dt)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool Game::IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t)
-{
+bool Game::IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t) {
 	if ((pos1.x > pos2.x - t) && (pos1.x < pos2.x + t) &&
-		(pos1.z > pos2.z - t) && (pos1.z < pos2.z + t))
-	{
+		(pos1.z > pos2.z - t) && (pos1.z < pos2.z + t)) {
 		return true;
 	}
 
@@ -473,62 +435,49 @@ bool Game::IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Game::pickedModelControl(GameObject& obj, float dt)
-{
-	if( obj.IsPicked() )
-	{
-		if (static_cast<Checkbox*>(checkbox_TranslationX)->m_bIsChecked)
-		{
-			if (pDinput->IsMouseButtonDown(0))
-			{
+void Game::pickedModelControl(GameObject& obj, float dt) {
+	if (obj.IsPicked()) {
+		if (static_cast<Checkbox*>(checkbox_TranslationX)->m_bIsChecked) {
+			if (pDinput->IsMouseButtonDown(0)) {
 				auto vec = obj.GetLookVector() *40.0*dt;
 				auto pos = obj.GetPosition();
 				obj.SetPosition(pos + vec);
 			}
-			else if (pDinput->IsMouseButtonDown(1))
-			{
+			else if (pDinput->IsMouseButtonDown(1)) {
 				auto vec = obj.GetLookVector() *40.0*dt;
 				auto pos = obj.GetPosition();
 				obj.SetPosition(pos - vec);
 			}
 		}
 
-		if (static_cast<Checkbox*>(checkbox_TranslationY)->m_bIsChecked)
-		{
-			if (pDinput->IsMouseButtonDown(0))
-			{
+		if (static_cast<Checkbox*>(checkbox_TranslationY)->m_bIsChecked) {
+			if (pDinput->IsMouseButtonDown(0)) {
 				auto vec = obj.GetUpVector() *40.0*dt;
 				auto pos = obj.GetPosition();
 				obj.SetPosition(pos + vec);
 			}
-			else if (pDinput->IsMouseButtonDown(1))
-			{
+			else if (pDinput->IsMouseButtonDown(1)) {
 				auto vec = obj.GetUpVector() *40.0*dt;
 				auto pos = obj.GetPosition();
 				obj.SetPosition(pos - vec);
 			}
 		}
 
-		if (static_cast<Checkbox*>(checkbox_TranslationZ)->m_bIsChecked)
-		{
-			if (pDinput->IsMouseButtonDown(0))
-			{
+		if (static_cast<Checkbox*>(checkbox_TranslationZ)->m_bIsChecked) {
+			if (pDinput->IsMouseButtonDown(0)) {
 				auto vec = obj.GetRightVector() *40.0*dt;
 				auto pos = obj.GetPosition();
 				obj.SetPosition(pos + vec);
 			}
-			else if (pDinput->IsMouseButtonDown(1))
-			{
+			else if (pDinput->IsMouseButtonDown(1)) {
 				auto vec = obj.GetRightVector() *40.0*dt;
 				auto pos = obj.GetPosition();
 				obj.SetPosition(pos - vec);
 			}
 		}
 
-		if (static_cast<Checkbox*>(checkbox_RotationY)->m_bIsChecked)
-		{
-			if (pDinput->IsMouseButtonDown(0))
-			{
+		if (static_cast<Checkbox*>(checkbox_RotationY)->m_bIsChecked) {
+			if (pDinput->IsMouseButtonDown(0)) {
 				float yAngle = 0.1;
 				obj.ModifyRotationAngleByY(yAngle);
 
@@ -536,8 +485,7 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 				D3DXMatrixRotationY(&R, yAngle);
 				obj.TransformByMatrix(R);
 			}
-			else if (pDinput->IsMouseButtonDown(1))
-			{
+			else if (pDinput->IsMouseButtonDown(1)) {
 				float yAngle = 0.1;
 				obj.ModifyRotationAngleByY(-yAngle);
 
@@ -549,10 +497,8 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 			}
 		}
 
-		if (static_cast<Checkbox*>(checkbox_RotationX)->m_bIsChecked)
-		{
-			if (pDinput->IsMouseButtonDown(0))
-			{
+		if (static_cast<Checkbox*>(checkbox_RotationX)->m_bIsChecked) {
+			if (pDinput->IsMouseButtonDown(0)) {
 				float yAngle = 0.1;
 				obj.ModifyRotationAngleByX(yAngle);
 
@@ -560,8 +506,7 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 				D3DXMatrixRotationX(&R, yAngle);
 				obj.TransformByMatrix(R);
 			}
-			else if (pDinput->IsMouseButtonDown(1))
-			{
+			else if (pDinput->IsMouseButtonDown(1)) {
 				float yAngle = 0.1;
 				obj.ModifyRotationAngleByX(-yAngle);
 
@@ -571,10 +516,8 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 			}
 		}
 
-		if (static_cast<Checkbox*>(checkbox_RotationZ)->m_bIsChecked)
-		{
-			if (pDinput->IsMouseButtonDown(0))
-			{
+		if (static_cast<Checkbox*>(checkbox_RotationZ)->m_bIsChecked) {
+			if (pDinput->IsMouseButtonDown(0)) {
 				float yAngle = 0.1;
 				obj.ModifyRotationAngleByZ(yAngle);
 
@@ -582,8 +525,7 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 				D3DXMatrixRotationZ(&R, yAngle);
 				obj.TransformByMatrix(R);
 			}
-			else if (pDinput->IsMouseButtonDown(1))
-			{
+			else if (pDinput->IsMouseButtonDown(1)) {
 				float yAngle = 0.1;
 				obj.ModifyRotationAngleByZ(-yAngle);
 
@@ -593,14 +535,11 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 			}
 		}
 
-		if (static_cast<Checkbox*>(checkbox_Scaling)->m_bIsChecked)
-		{
-			if (pDinput->IsMouseButtonDown(0))
-			{
+		if (static_cast<Checkbox*>(checkbox_Scaling)->m_bIsChecked) {
+			if (pDinput->IsMouseButtonDown(0)) {
 				obj.ModifyScale(0.01);
 			}
-			else if (pDinput->IsMouseButtonDown(1))
-			{
+			else if (pDinput->IsMouseButtonDown(1)) {
 				obj.ModifyScale(-0.01);
 			}
 		}
@@ -610,8 +549,7 @@ void Game::pickedModelControl(GameObject& obj, float dt)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Game::OnRender()
-{
+void Game::OnRender() {
     pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
 
     pDxDevice->BeginScene();
@@ -621,70 +559,56 @@ void Game::OnRender()
 	pTerrain->OnRender();
 
 	//render all the game objects
-	for(auto& obj : m_pGameObjManager->GetGameObjects() )
-	{
+	for (auto& obj : m_pGameObjManager->GetGameObjects()) {
 		obj->OnRender();
 	}
 			
-	if (m_pGameObjManager->GetPickedObject() != nullptr)
-	{
+	if (m_pGameObjManager->GetPickedObject() != nullptr) {
 		auto BB = m_pGameObjManager->GetPickedObject()->GetBB();
 		BB = BB.TransformByMatrix(BB.m_transformationMatrix);
-		for (auto& obj : m_pGameObjManager->GetGameObjects())
-		{
+		for (auto& obj : m_pGameObjManager->GetGameObjects()) {
 			auto BB1 = obj->GetBB();
 			BB1 = BB1.TransformByMatrix(BB1.m_transformationMatrix);
 
-			if (m_pGameObjManager->GetPickedObject()->GetName().compare(obj->GetName()))
-			{
-				if (BB.Collide(BB1))
-				{
+			if (m_pGameObjManager->GetPickedObject()->GetName().compare(obj->GetName())) {
+				if (BB.Collide(BB1)) {
 					//cout << "COLLIDING" << obj->GetName() << endl;
 				}
 			}
 		}
 	}
 			
-	for(auto& obj: pApp->m_vUIObjects)
-	{
+	for(auto& obj: pApp->m_vUIObjects) {
 		obj->OnRender(255, 255, 255, 255);
 	}
 
 	pDxDevice->EndScene();
-
 	pDxDevice->Present(0, 0, 0, 0);
 }
 	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool Game::isNear(GameObject& obj1,GameObject& obj2)
-{
+bool Game::isNear(GameObject& obj1,GameObject& obj2) {
 	if((obj1.GetPosition().x > obj2.GetPosition().x-30) && (obj1.GetPosition().x < obj2.GetPosition().x+30) &&
-	   (obj1.GetPosition().z > obj2.GetPosition().z-30) && (obj1.GetPosition().z < obj2.GetPosition().z+30))
-	{
+	   (obj1.GetPosition().z > obj2.GetPosition().z-30) && (obj1.GetPosition().z < obj2.GetPosition().z+30)) {
 	   return true;
 	}
-
 	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
-{
+LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) {
 	IBaseMenuObject* pSelectedTextbox = pApp->FindMenuObject(pApp->m_strSelectedTextbox);
 
-	switch( msg )
-	{
+	switch (msg) {
 		//Sent when the window is activated or deactivated.(pressed alt+tab)
 		//Game is paused when the window is inactive, and unpaused when become active again
 		case WM_ACTIVATE:
-			if( LOWORD(wParam) == WA_INACTIVE )
-			{
+			if (LOWORD(wParam) == WA_INACTIVE) {
 				pApp->SetPaused(true);
 			}
-			else
-			{
+			else {
 				pApp->SetPaused(false);
 			}
 			return 0;
@@ -700,91 +624,60 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			PostQuitMessage(0);
 			return 0;
 
-
-
 		//Sent when the user type something on the keyboard
 		case WM_CHAR:
-			
-
-			switch(wParam)
-			{
+			switch(wParam) {
 				//this is the code for enter
-				case 0x0D:
-				{
+				case 0x0D: {
 					auto* pickedObj = m_pGameObjManager->GetPickedObject();
-					if (pickedObj == nullptr)
-					{
+					if (pickedObj == nullptr) {
 						break;
 					}
 					
-					if( !pApp->m_strSelectedTextbox.empty() )
-					{
-					    if( pApp->m_strSelectedTextbox == "textbox_typeInGame" )
-						{
-							if(pickedObj->GetObjectType() == EGameObjectType_Skinned)
-							{
+					if (!pApp->m_strSelectedTextbox.empty()) {
+					    if( pApp->m_strSelectedTextbox == "textbox_typeInGame" ) {
+							if(pickedObj->GetObjectType() == EGameObjectType_Skinned) {
 								SkinnedModel* pickedObject = static_cast<SkinnedModel*>(pickedObj);
-
 								pickedObject->SetActorType(pSelectedTextbox->GetText());
 								pSelectedTextbox->m_bIsSelected = false;
 								pApp->m_strSelectedTextbox = "";
 							}
 						}
-						else if( pApp->m_strSelectedTextbox == "textbox_modelName")
-						{
-							if(pickedObj->GetObjectType() == EGameObjectType_Skinned )
-							{
+						else if (pApp->m_strSelectedTextbox == "textbox_modelName") {
+							if (pickedObj->GetObjectType() == EGameObjectType_Skinned) {
 								std::string name = pickedObj->GetName();
 								SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
-
 								obj->SetName(pSelectedTextbox->GetText());
 								pSelectedTextbox->m_bIsSelected = false;
-
 								pApp->m_strSelectedTextbox = "";
 							}
 						}
-						else if( pApp->m_strSelectedTextbox == "textbox_titleForQuest" && 
-							pickedObj->GetObjectType() == EGameObjectType_Skinned )
-						{
+						else if (pApp->m_strSelectedTextbox == "textbox_titleForQuest" && pickedObj->GetObjectType() == EGameObjectType_Skinned) {
 							std::string name = pickedObj->GetName();
 							SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
 							obj->SetTitleForQuest(pSelectedTextbox->GetText());
 							pSelectedTextbox->m_bIsSelected = false;
-
 							pApp->m_strSelectedTextbox = "";
 						}
-						else if( pApp->m_strSelectedTextbox == "textbox_bindToAnModel" && 
-							pickedObj->GetObjectType() == EGameObjectType_Static )
-						{
-							pickedObj->SetBindedToAnimatedModelName(pSelectedTextbox->GetText());
+						else if (pApp->m_strSelectedTextbox == "textbox_bindToAnModel" && pickedObj->GetObjectType() == EGameObjectType_Static) {
+								pickedObj->SetBindedToAnimatedModelName(pSelectedTextbox->GetText());
+								if (!pickedObj->GetBindedToBoneName().empty()) {
+									std::string name = pickedObj->GetBindedToAnimatedModelName();
+									SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
+									obj->BindWeaponToModel(pickedObj->GetName(), pickedObj->GetBindedToBoneName());
+									pickedObj->SetIsBindable(true);
+								}
 
-							if( !pickedObj->GetBindedToBoneName().empty() )
-							{
-								std::string name = pickedObj->GetBindedToAnimatedModelName();
-								SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
-
-								obj->BindWeaponToModel(pickedObj->GetName(), pickedObj->GetBindedToBoneName());
-
-								pickedObj->SetIsBindable(true);
-							}
-
-							pSelectedTextbox->m_bIsSelected = false;
-							pApp->m_strSelectedTextbox = "";
+								pSelectedTextbox->m_bIsSelected = false;
+								pApp->m_strSelectedTextbox = "";
 						}
-						else if( pApp->m_strSelectedTextbox == "textbox_bindToAnModelBone" && 
-							pickedObj->GetObjectType() == EGameObjectType_Static  )
-						{
+						else if (pApp->m_strSelectedTextbox == "textbox_bindToAnModelBone" && pickedObj->GetObjectType() == EGameObjectType_Static) {
 							pickedObj->SetBindedToBoneName(pSelectedTextbox->GetText());
-
-							if( !pickedObj->GetBindedToAnimatedModelName().empty() )
-							{
+							if (!pickedObj->GetBindedToAnimatedModelName().empty()) {
 								std::string name = pickedObj->GetBindedToAnimatedModelName();
 								SkinnedModel *obj = m_pGameObjManager->GetSkinnedModelByName(name);
-
 								obj->BindWeaponToModel(pickedObj->GetName(), pickedObj->GetBindedToBoneName());
-
 								pickedObj->SetIsBindable(true);
-								
 							}
 							pSelectedTextbox->m_bIsSelected = false;
 							pApp->m_strSelectedTextbox = "";
@@ -794,221 +687,165 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				break;
 
 				//here we detect any key pressed and adds it to the selected textbox
-				default:
-				{
-					if( !pApp->m_strSelectedTextbox.empty() )
-					{
+				default: {
+					if (!pApp->m_strSelectedTextbox.empty()) {
 						
 						//if model name textbox is selected
-						if( pApp->m_strSelectedTextbox == "textbox_modelName" ||
+						if (pApp->m_strSelectedTextbox == "textbox_modelName" ||
 							pApp->m_strSelectedTextbox == "textbox_typeInGame" ||
 							pApp->m_strSelectedTextbox == "textbox_titleForQuest" ||
 							pApp->m_strSelectedTextbox == "textbox_bindToAnModel" ||
-							pApp->m_strSelectedTextbox == "textbox_bindToAnModelBone" )
-						{
+							pApp->m_strSelectedTextbox == "textbox_bindToAnModelBone") {
 								//if we press return delete one char
-								if(wParam == VK_BACK && pSelectedTextbox->GetText().size()!= 0)
-								{
+								if(wParam == VK_BACK && pSelectedTextbox->GetText().size()!= 0) {
 									string strNewText = pSelectedTextbox->GetText();
 									strNewText.erase(strNewText.end() - 1);
 
 									pSelectedTextbox->SetText(strNewText);
 								}
-								else if((GetStringWidth(pSelectedTextbox->GetText()) < pSelectedTextbox->GetWidth()-30) && wParam != VK_BACK)
-								{
+								else if((GetStringWidth(pSelectedTextbox->GetText()) < pSelectedTextbox->GetWidth()-30) && wParam != VK_BACK) {
 									//initially we assign name to the model based on the models filename. Then in the level editor we can change it, 
 									//but here limit the size so it doesnt exceed the textbox's dimensions
 
-									if( m_pGameObjManager->GetPickedObject()->GetName().size() > 15 )
-									{
+									if (m_pGameObjManager->GetPickedObject()->GetName().size() > 15) {
 										m_pGameObjManager->GetPickedObject()->GetName().erase();
 									}
-
 									string strNewText = pSelectedTextbox->GetText() + (TCHAR) wParam;
-
 									pSelectedTextbox->SetText(strNewText);
 								}
-
 						}
-						else if( pApp->m_strSelectedTextbox.empty() )
-						{
-
-						}
+						else if (pApp->m_strSelectedTextbox.empty())
+						{}
+					}
+					break;
 				}
-				break;
-
-			}
 			}
 			return 0;
 
 		case WM_KEYDOWN:
-			switch(wParam)
-			{
-				case VK_DELETE:
-				{
+			switch(wParam) {
+				case VK_DELETE: {
 					auto* pickedObj = m_pGameObjManager->GetPickedObject();
-					if (pickedObj)
-					{
+					if (pickedObj) {
 						m_pGameObjManager->RemoveObject(pickedObj->GetName());
 					}
-
 					break;
 				}
 
-				case 'V':
-				{
+				case 'V': {
 					auto* obj = m_pGameObjManager->GetPickedObject();
-					if (obj)
-					{
+					if (obj) {
 						obj->SpawnClone();
 					}
 					break;
 				}
 
-				case 'L':
-				{
-					if( camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse )
-					{
+				case 'L': {
+					if( camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse ) {
 						camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 					}
-					else if( camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse)
-					{
+					else if( camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse) {
 						camera->SetCameraMode(ECameraMode::MoveWithoutPressedMouse);
 					}
 				}
 				break;
 
-				case 'Y':
-				{
-					if( !typingMode )
-					{
+				case 'Y': {
+					if (!typingMode) {
 						Checkbox* pCheckbox = static_cast<Checkbox*>(checkbox_RotationY);
-
-						if( pCheckbox->m_bIsChecked )
-						{
+						if( pCheckbox->m_bIsChecked ) {
 							pCheckbox->m_bIsChecked = false;
 						}
-						else
-						{
+						else {
 							pCheckbox->m_bIsChecked = true;
 						}
 					}
-					
 				}
 				break;
 
-				case 'X':
-				{
-					if( !typingMode )
-					{
+				case 'X': {
+					if (!typingMode) {
 						Checkbox* pCheckbox = static_cast<Checkbox*>(checkbox_TranslationX);
 
-						if( pCheckbox->m_bIsChecked )
-						{
+						if (pCheckbox->m_bIsChecked) {
 							pCheckbox->m_bIsChecked = false;
 						}
-						else
-						{
+						else {
 							pCheckbox->m_bIsChecked = true;
 						}
 					}
-					
 				}
 				break;
 
-				case 'Z':
-				{
-					if( !typingMode )
-					{
+				case 'Z': {
+					if (!typingMode) {
 						Checkbox* pCheckbox = static_cast<Checkbox*>(checkbox_TranslationZ);
 
-						if( pCheckbox->m_bIsChecked )
-						{
+						if (pCheckbox->m_bIsChecked) {
 							pCheckbox->m_bIsChecked = false;
 						}
-						else
-						{
+						else {
 							pCheckbox->m_bIsChecked = true;
 						}
 					}
-					
 				}
 				break;
 
-				case 'C':
-				{
-					if( !typingMode )
-					{
+				case 'C': {
+					if (!typingMode) {
 						Checkbox* pCheckbox = static_cast<Checkbox*>(checkbox_Scaling);
 
-						if( pCheckbox->m_bIsChecked )
-						{
+						if (pCheckbox->m_bIsChecked) {
 							pCheckbox->m_bIsChecked = false;
 						}
-						else
-						{
+						else {
 							pCheckbox->m_bIsChecked = true;
 						}
 					}
-					
 				}
 				break;
 
-				case 'E':
-				{
-					if( !typingMode )
-					{
+				case 'E': {
+					if( !typingMode ) {
 						ExportLevel();
 					}
 				}
 				break;
 
-				case 'T':
-				{
-					if( !typingMode )
-					{
+				case 'T': {
+					if (!typingMode) {
 						ImportStaticModel();
 					}
 				}
 				break;
 
-				case 'N':
-				{
-					if( !typingMode )
-					{
+				case 'N': {
+					if (!typingMode) {
 						LoadAnimatedModel();
 					}
 				}
 				break;
 
-				case 'B':
-				{
+				case 'B': {
 					m_pGameObjManager->SetShouldRenderBoundingBoxes(!m_pGameObjManager->ShouldRenderBoundingBoxes());
-
 					break;
 				}
 			}
 			return 0;
 
 		case WM_LBUTTONDOWN:
-			switch(wParam)
-			{
-				case MK_LBUTTON:
-				{
+			switch(wParam) {
+				case MK_LBUTTON: {
 					//if we are over UI element, dont check for picking in the world
 					bool isMouseOverUIElement = false;
-					for(int i = 0; i < pApp->m_vUIObjects.size(); i++)
-					{
-						if( pApp->m_vUIObjects[i]->IsMouseOver() )
-						{
+					for(int i = 0; i < pApp->m_vUIObjects.size(); i++) {
+						if (pApp->m_vUIObjects[i]->IsMouseOver()) {
 							isMouseOverUIElement = true;
 						}
-
 						pApp->m_vUIObjects[i]->OnClicked();
 					}
 
-					if( !isMouseOverUIElement )
-					{
+					if (!isMouseOverUIElement) {
 						m_pGameObjManager->UpdatePicking();
 					}
 				}
@@ -1021,8 +858,7 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Game::ImportStaticModel()
-{
+void Game::ImportStaticModel() {
     static char filename[4096];
 
     OPENFILENAME ofn;
@@ -1047,9 +883,7 @@ void Game::ImportStaticModel()
 	ofn.lpstrTitle		  = "Select a static .X file to open";
     ofn.Flags			  = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_NOCHANGEDIR | OFN_OVERWRITEPROMPT;
 
-	if (GetOpenFileName(&ofn))
-	{
-
+	if (GetOpenFileName(&ofn)) {
 		//when we load file windows uses different slashes, which we cant use later in the game, when we load the files for the models in the scripts
 		//so we search the string for these slashes and we replace them with the ones we need.
 		string str(filename);
@@ -1061,14 +895,12 @@ void Game::ImportStaticModel()
 		size_t found2;
 
 		found=str.find(str2);
-		if (found!=string::npos)
-		{
+		if (found!=string::npos) {
 			relativeModelFile = str.substr(found);
 		}
 
-		found2=relativeModelFile.find(slash);
-		while( found2!=string::npos )
-		{
+		found2 = relativeModelFile.find(slash);
+		while (found2!=string::npos) {
 			relativeModelFile.replace(found2,slash.length(),"\/");
 			found2=relativeModelFile.find(slash,found2+1);
 		}
@@ -1087,13 +919,11 @@ void Game::ImportStaticModel()
 
 		m_pGameObjManager->SetPickedObject(obj);
 	}
-
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Game::LoadAnimatedModel()
-{
+void Game::LoadAnimatedModel() {
 	static char filename[4096];
 
 	OPENFILENAME ofn;
@@ -1118,8 +948,7 @@ void Game::LoadAnimatedModel()
 	ofn.lpstrTitle		  = "Select an animated .X file to open";
 	ofn.Flags			  = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_NOCHANGEDIR | OFN_OVERWRITEPROMPT;
 
-	if (GetOpenFileName(&ofn))
-	{
+	if (GetOpenFileName(&ofn)) {
 		string str(filename);
 		string str2("models");
 		string slash = "\\";
@@ -1131,15 +960,13 @@ void Game::LoadAnimatedModel()
 
 		//get the path of the models
 		found=str.find(str2);
-		if (found!=string::npos)
-		{
+		if (found!=string::npos) {
 			relativeModelFile = str.substr(found);
 		}
 
 		//remove the unneccessary second slash which is added for unknown reasons
 		found2=relativeModelFile.find(slash);
-		while( found2!=string::npos )
-		{
+		while (found2!=string::npos) {
 			relativeModelFile.replace(found2,slash.length(),"\/");
 			found2=relativeModelFile.find(slash,found2+1);
 
@@ -1156,22 +983,19 @@ void Game::LoadAnimatedModel()
 
 		m_pGameObjManager->AddGameObject(obj);
 
-		if( m_pGameObjManager->GetPickedObject() != NULL )
-		{
+		if (m_pGameObjManager->GetPickedObject() != NULL) {
 			m_pGameObjManager->GetPickedObject()->SetPicked(false);	
 		}
 
 		m_pGameObjManager->SetPickedObject(obj);
 	}
-
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //this functions returns default model name, based on the name of the file
 //for instance if the file path to the model is models/cho/cho.x, the model name will be cho
-string Game::GetModelNameFromFilePath(string strFilePath)
-{
+string Game::GetModelNameFromFilePath(string strFilePath) {
 	string strModelName = strFilePath;
 	string strSlash2 = "\/";
 
@@ -1179,8 +1003,7 @@ string Game::GetModelNameFromFilePath(string strFilePath)
 	size_t nFoundPos = strModelName.find(strSlash2);
 
 	int nCurrentPos = 0;
-	while( nFoundPos != string::npos )
-	{
+	while (nFoundPos != string::npos) {
 		strModelName.erase(0,nFoundPos+1);
 		nFoundPos = strModelName.find(strSlash2);
 	}
@@ -1201,8 +1024,7 @@ string Game::GetModelNameFromFilePath(string strFilePath)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Game::ExportLevel()
-{
+void Game::ExportLevel() {
 	//currently not needed
 	//ofstream staticModelsFile("export/staticModels.lua");
 	//ofstream animatedModelsFile("export/animatedModels.lua");
@@ -1212,11 +1034,9 @@ void Game::ExportLevel()
 	ofstream level(exportFileName);
 
 	//exports static models
-	if( level.is_open() )
-	{
+	if (level.is_open()) {
 		//export skinned models first, because of the binded objects
-		for(auto& obj : m_pGameObjManager->GetSkinnedModels())
-		{
+		for (auto& obj : m_pGameObjManager->GetSkinnedModels()) {
 			level << "x = " << obj->GetPosition().x << "\n";
 			level << "y = " << obj->GetPosition().y << "\n";
 			level << "z = " << obj->GetPosition().z << "\n";
@@ -1234,10 +1054,8 @@ void Game::ExportLevel()
 			level << "addAnimatedModel();" << "\n" << "\n";
 		}
 
-		for (auto& obj : m_pGameObjManager->GetGameObjects())
-		{
-			if( obj->GetObjectType() == EGameObjectType_Static )
-			{
+		for (auto& obj : m_pGameObjManager->GetGameObjects()) {
+			if (obj->GetObjectType() == EGameObjectType_Static) {
 				level << "x = " << obj->GetPosition().x << "\n";
 				level << "y = " << obj->GetPosition().y << "\n";
 				level << "z = " << obj->GetPosition().z << "\n";
@@ -1255,8 +1073,7 @@ void Game::ExportLevel()
 		}
 
 		//TODO : why are we iterating the skinned models again for the main hero??
-		for (auto& obj : m_pGameObjManager->GetSkinnedModels())
-		{
+		for (auto& obj : m_pGameObjManager->GetSkinnedModels()) {
 			if(	obj->GetActorType() == "mainHero" )
 			{
 				level<<"mainHero = "<<"\""<<obj->GetName() <<"\""<<"\n";
@@ -1265,22 +1082,17 @@ void Game::ExportLevel()
 		}
 
 		level.close();
-
 		char cCurrentPath[MAX_PATH];
 		_getcwd(cCurrentPath, sizeof(cCurrentPath));
-
 		std::string message = "Export finished at " + std::string(cCurrentPath) + "\\" + exportFileName;
-
 		MessageBox(0, message.c_str(), 0, 0);
 	}
-
 	else cout << "Unable to open file";
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Game::ImportLevel()
-{
+void Game::ImportLevel() {
 	static char filename[4096];
 
     OPENFILENAME ofn;
@@ -1305,8 +1117,7 @@ void Game::ImportLevel()
 	ofn.lpstrTitle		  = "Select a lua file containing the level information";
     ofn.Flags			  = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_NOCHANGEDIR | OFN_OVERWRITEPROMPT;
 
-	if (GetOpenFileName(&ofn))
-	{
+	if (GetOpenFileName(&ofn)) {
 		luaL_dofile(g_luaState, filename);
 	}
 }

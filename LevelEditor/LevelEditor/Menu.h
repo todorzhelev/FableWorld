@@ -6,20 +6,13 @@
 using namespace std;
 
 //this is the menu scene and contains all the thing needed in the menu
-class Menu: public IBaseScene
-{
+class Menu: public IBaseScene {
 public:
-
 	Menu();
-
 	virtual void OnLostDevice();
-
 	virtual void OnResetDevice();
-
 	virtual void OnUpdate(float dt);
-
 	virtual void OnRender();
-
 	LRESULT		 MsgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 
 private:
