@@ -56,7 +56,7 @@ Game::Game() {
 	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.
 	InitVertexDeclarations();
 
-	pSky = new Sky("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
+	m_pSky = std::make_unique<Sky>("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
 	//TODO: this should be specified in the level file
 	pTerrain = new Terrain("../../Resources/heightmaps/heightmap_new.raw",0.5f,513,513,4,4,D3DXVECTOR3(0.0f,0.0f,0.0f));
@@ -73,9 +73,9 @@ Game::Game() {
 	luaL_dofile(g_luaState, "../../Resources/levels/levelInGame_new.lua");
 	luaL_dofile(g_luaState, "../../Resources/scripts/quests.lua");
 
-	pDialogueManager = new DialogueManager;
+	m_pDialogueManager = std::make_unique<DialogueManager>();
 	//TODO: probably specify this in the level file?
-	pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue.xml");
+	m_pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue.xml");
 
 	//creates 3d titles for the models and check for dialogues
 	auto& gameObjects = m_pGameObjManager->GetSkinnedModels();
@@ -85,7 +85,7 @@ Game::Game() {
 	}
 	
 	for (auto& gameObject : gameObjects ) {
-		for (auto& dialogue : pDialogueManager->GetDialogues()) {
+		for (auto& dialogue : m_pDialogueManager->GetDialogues()) {
 			if( !gameObject->GetName().compare(dialogue->m_strModel) ) {
 				gameObject->SetHasDialogue(true);
 				pTextManager->CreateMeshFor3DTextQuest(gameObject);
@@ -155,14 +155,12 @@ Game::~Game() {
 	delete pTerrain;
 	delete pDinput;
 	delete pApp;
-	delete pDialogueManager;
-	delete pSky;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 void Game::OnLostDevice() {
-	pSky->OnLostDevice();
+	m_pSky->OnLostDevice();
 	pTextManager->OnLostDevice();
 	pTerrain->OnLostDevice();
 
@@ -178,7 +176,7 @@ void Game::OnLostDevice() {
 /////////////////////////////////////////////////////////////////////////
 
 void Game::OnResetDevice() {
-	pSky->OnResetDevice();
+	m_pSky->OnResetDevice();
 	pTextManager->OnResetDevice();
 	pTerrain->OnResetDevice();
 	
@@ -219,7 +217,7 @@ void Game::OnUpdate(float dt) {
 	pTextManager->OnUpdate(dt);
 	m_pCamera->OnUpdate(dt);
 	
-	pDialogueManager->OnUpdate();
+	m_pDialogueManager->OnUpdate();
 
 	//checking if there is active quest
 	for (auto& quest : GetQuestManager()->GetQuests()) {
@@ -541,7 +539,7 @@ void Game::OnRender() {
     pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
     pDxDevice->BeginScene();
 	
-			pSky->OnRender(m_pCamera);
+			m_pSky->OnRender(m_pCamera);
 			pTerrain->OnRender(m_pCamera);
 
 			for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
@@ -569,8 +567,8 @@ void Game::OnRender() {
 			//pTextManager->DrawFPS();
 	
 			//draws dialogues
-			for (auto& dialogue : pDialogueManager->GetDialogues()) {
-				pDialogueManager->RenderDialogueTree(dialogue->m_pTree->m_pRoot);
+			for (auto& dialogue : m_pDialogueManager->GetDialogues()) {
+				m_pDialogueManager->RenderDialogueTree(dialogue->m_pTree->m_pRoot);
 			}
 
 			//text->drawText("Press L to switch between the two camera modes",400,40,0,0,255,0,0,0);

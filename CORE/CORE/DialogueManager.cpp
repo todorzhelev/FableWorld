@@ -3,8 +3,6 @@
 #include "SkinnedModel.h"
 #include "LuaFunctions.h"
 
-DialogueManager* pDialogueManager = nullptr;
-
 //TODO: this code should be completly refactored
 
 /////////////////////////////////////////////////////////////////////////////////////////
