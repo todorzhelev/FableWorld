@@ -1,5 +1,6 @@
 #include <stdafx.h>
 #include "Terrain.h"
+#include "Camera.h"
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -513,7 +514,7 @@ void Terrain::BuildEffect() {
 
 /////////////////////////////////////////////////////////////////////////
 
-void Terrain::OnRender() { 
+void Terrain::OnRender(const std::unique_ptr<Camera>& camera) {
 	std::vector<TerrainSubGrid*> visibleSubGrids;
 	for (auto& subGrid : m_vSubGrids) {
 		if (camera->IsBoundingBoxVisible(subGrid->m_subGridBoungingBox)) {

@@ -23,7 +23,7 @@ public:
 	virtual void AddParticle(GameObject* object);
 	virtual void OnLostDevice();
 	virtual void OnResetDevice();
-	virtual void OnRender();
+	virtual void OnRender(const std::unique_ptr<Camera>& camera);
 	virtual void OnUpdate(float dt);
 	virtual void InitParticle(Particle& pParticle, GameObject* object) = 0;
 	void SetTime(float time);

@@ -10,7 +10,7 @@ public:
 	~Sky();
 	void OnLostDevice();
 	void OnResetDevice();
-	void OnRender();
+	void OnRender(const std::unique_ptr<Camera>& camera);
 private:
 	ID3DXMesh*	m_pSkyMesh;
 	float		m_fSkyRadius;

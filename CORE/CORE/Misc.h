@@ -1,6 +1,9 @@
 #pragma once
 #include "Application.h"
 
+//needed for GetWorldPickingRay, which should be accessed from everywhere, which has access to camera
+class Camera;
+
 extern std::ofstream fout; //for logs.
 
 extern "C"
@@ -35,7 +38,6 @@ inline void __CheckHR(std::string file, int line, HRESULT hr) {
 
 /////////////////////////////////////////////////////////////////
 
-void GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection);
 float GetStringWidth(std::string str);
 float GetStringHeight(std::string str);
 void CopyString(const char* input, char** output);

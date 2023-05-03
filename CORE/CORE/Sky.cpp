@@ -42,7 +42,7 @@ void Sky::OnResetDevice() {
 
 /////////////////////////////////////////////////////////////////////////
 
-void Sky::OnRender() {
+void Sky::OnRender(const std::unique_ptr<Camera>& camera) {
 	//Translate the sky mesh to the camera position, this way we will never reach the end of the sky
 	D3DXMATRIX TranslationMatrix;
 	D3DXVECTOR3 vCameraPos = camera->GetPosition();

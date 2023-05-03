@@ -98,7 +98,7 @@ void EffectSystem::SetTime(float time) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void EffectSystem::OnRender() {
+void EffectSystem::OnRender(const std::unique_ptr<Camera>& camera) {
 	m_pEffectShader->SetTechnique(m_hEffectTechnique);
 
 	D3DXVECTOR3 camPos = camera->GetPosition();

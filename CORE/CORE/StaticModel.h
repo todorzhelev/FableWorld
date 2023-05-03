@@ -16,15 +16,15 @@ public:
 	virtual ~StaticModel();
 	virtual void LoadGameObject() override;
 	virtual void OnUpdate(float fDeltaTime) override;
-	virtual void OnRender() override;
+	virtual void OnRender(const std::unique_ptr<Camera>& camera) override;
 	virtual void OnResetDevice() override;
 	virtual void OnLostDevice() override;
-	virtual void RenderBindedWeapon(GameObject* pSkMesh, std::string bone) override;
-	virtual float GetDistanceToPickedObject() override;
+	virtual void RenderBindedWeapon(GameObject* pSkMesh, std::string bone, const std::unique_ptr<Camera>& camera) override;
+	virtual float GetDistanceToPickedObject(const std::unique_ptr<Camera>& camera) override;
 	virtual void Destroy() override;
 	virtual bool SpawnClone() override;
 	void		 BuildBoundingBox();
-	void		 RenderBoundingBox();
+	void		 RenderBoundingBox(const std::unique_ptr<Camera>& camera);
 	void		 BuildEffect();
 	
 private:

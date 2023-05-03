@@ -39,6 +39,7 @@ public:
 	void			ModifyZoom(int delta);
 	int				GetZoom();
 	void			TransformByMatrix(D3DXMATRIX matrix);
+	void			GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection);
 private:
 	void			BuildFrustumPlanes();
 	void			BuildViewMatrix();

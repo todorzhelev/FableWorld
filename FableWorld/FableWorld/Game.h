@@ -44,6 +44,7 @@ private:
 private:
 	//the skybox in the game
 	Sky*		pSky;
+	std::unique_ptr<Camera> m_pCamera;
 	bool		m_bIsEnemyHealthBarVisible;
 	//controls how much of our healthbar to be visible. this way we can simulate the drop in the health
 	RECT		m_rHealthBarRectangle;

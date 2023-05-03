@@ -28,7 +28,7 @@ void GameObject::OnUpdate(float dt) {}
 
 //////////////////////////////////////////////////////////////////
 
-void GameObject::OnRender() {}
+void GameObject::OnRender(const std::unique_ptr<Camera>& camera) {}
 
 //////////////////////////////////////////////////////////////////
 
@@ -42,12 +42,12 @@ void GameObject::OnResetDevice() {}
 
 //////////////////////////////////////////////////////////////////
 
-void GameObject::RenderBindedWeapon(GameObject* pSkMesh, std::string bone) {}
+void GameObject::RenderBindedWeapon(GameObject* pSkMesh, std::string bone, const std::unique_ptr<Camera>& camera) {}
 
 //////////////////////////////////////////////////////////////////
 
 //checks if object is picked
-float GameObject::GetDistanceToPickedObject() {
+float GameObject::GetDistanceToPickedObject(const std::unique_ptr<Camera>& camera) {
 	return -1;
 }
 

@@ -19,13 +19,13 @@ public:
 	GameObject();
 	virtual ~GameObject() = 0;
 	virtual void OnUpdate(float dt) = 0;
-	virtual void OnRender() = 0;
+	virtual void OnRender(const std::unique_ptr<Camera>& camera) = 0;
 	virtual void OnLostDevice() = 0;
 	virtual void OnResetDevice() = 0;
 	virtual void Destroy() = 0;
 	virtual void LoadGameObject();
-	virtual void RenderBindedWeapon(GameObject* pSkMesh, std::string bone);
-	virtual float GetDistanceToPickedObject();
+	virtual void RenderBindedWeapon(GameObject* pSkMesh, std::string bone, const std::unique_ptr<Camera>& camera);
+	virtual float GetDistanceToPickedObject(const std::unique_ptr<Camera>& camera);
 	virtual bool SpawnClone() =0;
 	std::string GetModelFileName() const;
 	void SetModelFilename(const std::string& strModelFileName);

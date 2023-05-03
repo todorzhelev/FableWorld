@@ -210,7 +210,7 @@ void StaticModel::BuildEffect() {
 /////////////////////////////////////////////////////////////////////////
 
 //renders not-binded model
-void StaticModel::OnRender() {
+void StaticModel::OnRender(const std::unique_ptr<Camera>& camera) {
 	//if the model is not binded to skinned mesh's bone render it
 	if (!m_bIsBindable) {
 		m_pEffect->SetTechnique(m_hEffectTechnique);
@@ -257,7 +257,7 @@ void StaticModel::OnRender() {
 				}
 
 				if (m_pGameObjManager->ShouldRenderBoundingBoxes()) {
-					RenderBoundingBox();
+					RenderBoundingBox(camera);
 				}
 			m_pEffect->EndPass();
 		}
@@ -270,7 +270,7 @@ void StaticModel::OnRender() {
 /////////////////////////////////////////////////////////////////////////
 
 //renders binded model
-void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone) {
+void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone, const std::unique_ptr<Camera>& camera) {
 	//the animated model
 	SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pSkMesh);
 
@@ -427,7 +427,7 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone) {
 
 /////////////////////////////////////////////////////////////////////////
 
-void StaticModel::RenderBoundingBox() {
+void StaticModel::RenderBoundingBox(const std::unique_ptr<Camera>& camera) {
 	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 	pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -460,11 +460,11 @@ void StaticModel::RenderBoundingBox() {
 
 /////////////////////////////////////////////////////////////////////////
 
-float StaticModel::GetDistanceToPickedObject() {
+float StaticModel::GetDistanceToPickedObject(const std::unique_ptr<Camera>& camera) {
 	D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
 
-	GetWorldPickingRay(vOrigin, vDir);
+	camera->GetWorldPickingRay(vOrigin, vDir);
 	bool bIsPicked = false;
 	AABB box = m_BoundingBox.TransformByMatrix(m_CombinedTransformationMatrix);
 	bIsPicked = D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir);

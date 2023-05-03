@@ -50,12 +50,12 @@ void GameObjectManager::OnUpdate() {}
 
 /////////////////////////////////////////////////////////////////////////
 
-void GameObjectManager::UpdatePicking() {
+void GameObjectManager::UpdatePicking(const std::unique_ptr<Camera>& camera) {
 	auto& mapPickedObjects = m_mapPickedObjects;
 
 	//dont want to capture everything
-	auto lambda = [&mapPickedObjects](GameObject* obj) {
-		float dist = obj->GetDistanceToPickedObject();
+	auto lambda = [&mapPickedObjects, &camera](GameObject* obj) {
+		float dist = obj->GetDistanceToPickedObject(camera);
 
 		if (dist != -1) {
 			mapPickedObjects[dist] = obj;

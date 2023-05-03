@@ -424,7 +424,7 @@ void SkinnedModel::OnUpdate(float dt) {
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::OnRender() {
+void SkinnedModel::OnRender(const std::unique_ptr<Camera>& camera) {
 	if (m_pGameObjManager->ShouldRenderAxis()) {
 		D3DXMATRIX R15;
 
@@ -500,7 +500,7 @@ void SkinnedModel::OnRender() {
 			m_pMesh->DrawSubset(0);
 
 			if (m_pGameObjManager->ShouldRenderBoundingBoxes()){
-				RenderBoundingBox();
+				RenderBoundingBox(camera);
 			}
 
 		m_pEffect->EndPass();
@@ -508,26 +508,26 @@ void SkinnedModel::OnRender() {
 	m_pEffect->End();
 
 	if (m_bShouldRenderTitles && m_pGameObjManager->ShouldRenderTitles()) {
-		RenderTitles();
-		RenderTitlesForQuest();
+		RenderTitles(camera);
+		RenderTitlesForQuest(camera);
 	}
 	
 	//render the binded objects associated with this skinned mesh
 	for (auto& it : m_mapBindedObjects) {
 		GameObject* pBindedObject = static_cast<StaticModel*>(it.first);
-		pBindedObject->RenderBindedWeapon(this, it.second);
+		pBindedObject->RenderBindedWeapon(this, it.second, camera);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::RenderBindedWeapon(GameObject* pSkMesh, std::string bone)
+void SkinnedModel::RenderBindedWeapon(GameObject* pSkMesh, std::string bone, const std::unique_ptr<Camera>& camera)
 {}
 
 /////////////////////////////////////////////////////////////////////////
 
 //renders the titles above the skinned meshes
-void SkinnedModel::RenderTitles() {
+void SkinnedModel::RenderTitles(const std::unique_ptr<Camera>& camera) {
 	D3DXMATRIX T,S,R,R1;
 	D3DXMatrixTranslation(&T,m_vPos.x,m_vPos.y,m_vPos.z);
 	D3DXMatrixScaling(&S,m_fScale,m_fScale,m_fScale);
@@ -567,7 +567,7 @@ void SkinnedModel::RenderTitles() {
 /////////////////////////////////////////////////////////////////////////
 
 //renders the titles for quests above the skinned meshes
-void SkinnedModel::RenderTitlesForQuest() {
+void SkinnedModel::RenderTitlesForQuest(const std::unique_ptr<Camera>& camera) {
 	if (m_bHasDialogue) {
 		D3DXMATRIX T,S,R,R1;
 		D3DXMatrixTranslation(&T,m_vPos.x,m_vPos.y,m_vPos.z);
@@ -605,7 +605,7 @@ void SkinnedModel::RenderTitlesForQuest() {
 
 /////////////////////////////////////////////////////////////////////////
 
-void SkinnedModel::RenderBoundingBox() {
+void SkinnedModel::RenderBoundingBox(const std::unique_ptr<Camera>& camera) {
 	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 	pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -764,11 +764,11 @@ HRESULT AllocateHierarchy::DestroyMeshContainer(D3DXMESHCONTAINER* MeshContainer
 
 /////////////////////////////////////////////////////////////////////////
 
-float SkinnedModel::GetDistanceToPickedObject() {
+float SkinnedModel::GetDistanceToPickedObject(const std::unique_ptr<Camera>& camera) {
 	D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
 
-	GetWorldPickingRay(vOrigin, vDir);
+	camera->GetWorldPickingRay(vOrigin, vDir);
 
 	AABB box = m_BoundingBox.TransformByMatrix(m_CombinedTransformationMatrix);
 	if (D3DXBoxBoundProbe(&box.GetMinPoint(), &box.GetMaxPoint(), &vOrigin, &vDir)) {

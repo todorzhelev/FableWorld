@@ -1,5 +1,4 @@
 #pragma once
-#include "Camera.h"
 #include "Misc.h"
 #include "AABB.h"
 
@@ -28,7 +27,7 @@ class Terrain {
 public:
 
 	Terrain(std::string strHeightmapFileName,float fHeightsScale, int nRows,int nCols,float fDX,float fDZ ,const D3DXVECTOR3& vCenterPointr);
-	void	OnRender();
+	void	OnRender(const std::unique_ptr<Camera>& camera);
 	void	OnLostDevice();
 	void	OnResetDevice();
 	float	GetHeight(float fX, float fZ);

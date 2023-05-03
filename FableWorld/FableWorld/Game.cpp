@@ -46,10 +46,10 @@ Game::Game() {
 	float fWidth  = (float)pApp->GetPresentParameters().BackBufferWidth;
 	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
 
-	camera = new Camera(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 4000,true);
-	camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
-	camera->SetPosition(D3DXVECTOR3(0,200,100));
-	camera->SetSpeed(500);
+	m_pCamera = std::make_unique<Camera>(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 4000,true);
+	m_pCamera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
+	m_pCamera->SetPosition(D3DXVECTOR3(0,200,100));
+	m_pCamera->SetSpeed(500);
 
 	//camera->RotateUp(-300);
 
@@ -112,7 +112,7 @@ Game::Game() {
 	//it should be more generic - it should align with the vectors of the main hero.
 	D3DXMATRIX R;
 	D3DXMatrixRotationY(&R, D3DX_PI/2); //rotate this bad boy
-	camera->TransformByMatrix(R);
+	m_pCamera->TransformByMatrix(R);
 
 	m_pGunEffect = std::unique_ptr<GunEffect>(new GunEffect("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",100, D3DXVECTOR4(0, -9.8f, 0.0f,0.0f)));
 	
@@ -153,7 +153,6 @@ Game::~Game() {
 	lua_close(g_luaState);
 	delete pTextManager;
 	delete pTerrain;
-	delete camera;
 	delete pDinput;
 	delete pApp;
 	delete pDialogueManager;
@@ -218,7 +217,7 @@ void Game::OnUpdate(float dt) {
 	}
 
 	pTextManager->OnUpdate(dt);
-	camera->OnUpdate(dt);
+	m_pCamera->OnUpdate(dt);
 	
 	pDialogueManager->OnUpdate();
 
@@ -233,14 +232,14 @@ void Game::OnUpdate(float dt) {
 	}
 
 	//binding the camera to mainHero in the game and moving it. mainHero is set in the scripts in init.lua
-	if (!pMainHero->IsDead() && !camera->IsCameraFree()) {
+	if (!pMainHero->IsDead() && !m_pCamera->IsCameraFree()) {
 		MoveObject(mainHero,dt);
 	}
 
 	//updating the models's titles positions
 	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels()) {
 		D3DXVECTOR3 titleRightVector = gameObject->GetTitleRightVector();
-		D3DXVECTOR3 cameraLookVector = camera->GetLookVector();
+		D3DXVECTOR3 cameraLookVector = m_pCamera->GetLookVector();
 		float angle = D3DXVec3Dot(&titleRightVector,&cameraLookVector);
 		gameObject->ModifyTitleRotationAnglyByY(angle);
 		gameObject->ModifyTitleForQuestRotationAnglyByY(angle);
@@ -283,7 +282,7 @@ void Game::OnUpdate(float dt) {
 			D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 			D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
 
-			GetWorldPickingRay(vOrigin, vDir);
+			m_pCamera->GetWorldPickingRay(vOrigin, vDir);
 
 			D3DXPLANE plane;
 			D3DXVECTOR3 vPoint(0.0f, 0.0f, 0.0f);
@@ -445,30 +444,30 @@ void Game::MoveObject(std::string objectTitle, float dt) {
 	
 	if (pDinput->IsKeyDown(DIK_W) ) {
 		pSkinnedModel->PlayAnimation("run");
-		dir += camera->GetLookVector();
+		dir += m_pCamera->GetLookVector();
 	}
 	if (pDinput->IsKeyDown(DIK_S) ) {
 		pSkinnedModel->PlayAnimation("run");
-		dir -= camera->GetLookVector();
+		dir -= m_pCamera->GetLookVector();
 	}
 	if (pDinput->IsKeyDown(DIK_A) ) {
 		pSkinnedModel->PlayAnimation("run");
-		dir -= camera->GetRightVector();
+		dir -= m_pCamera->GetRightVector();
 	}
 	if (pDinput->IsKeyDown(DIK_D) ) {
 		pSkinnedModel->PlayAnimation("run");
-		dir += camera->GetRightVector();
+		dir += m_pCamera->GetRightVector();
 	}
 
 	if (!pDinput->IsKeyDown(DIK_W) && !pDinput->IsKeyDown(DIK_S) && !pDinput->IsKeyDown(DIK_A) && !pDinput->IsKeyDown(DIK_D)) {
 		pSkinnedModel->PlayAnimation("idle");
 	}
 	
-	if (camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse) {
+	if (m_pCamera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse) {
 		//if we just move the mouse move the camera
 		RotateObject(objectTitle, dt);
 	}
-	else if (camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse) {
+	else if (m_pCamera->GetCameraMode() == ECameraMode::MoveWithPressedMouse) {
 		//if we hold the left mouse button move the camera
 		if (pDinput->IsMouseButtonDown(0)) {
 			RotateObject(objectTitle, dt);
@@ -483,9 +482,9 @@ void Game::MoveObject(std::string objectTitle, float dt) {
 	//updates the camera position based on the new position of the model and the zoom
 	//we zoom in the direction of the look std::vector. If the zoom is negative it will go in the opposite direction
 	D3DXVECTOR3 upOffset = D3DXVECTOR3(0, 25, 0);
-	D3DXVECTOR3 cameraPos = pMainHero->GetPosition() + camera->GetLookVector()*camera->GetZoom() + upOffset;
+	D3DXVECTOR3 cameraPos = pMainHero->GetPosition() + m_pCamera->GetLookVector()* m_pCamera->GetZoom() + upOffset;
 
-	camera->SetPosition(cameraPos);
+	m_pCamera->SetPosition(cameraPos);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -505,11 +504,11 @@ void Game::RotateObject(std::string objectTitle, float dt) {
 	D3DXMATRIX R;
 	D3DXMatrixRotationY(&R, yAngle);
 
-	camera->TransformByMatrix(R);
+	m_pCamera->TransformByMatrix(R);
 
-	pSkinnedModel->GetLookVector()  = camera->GetLookVector();
-	pSkinnedModel->GetRightVector() = camera->GetRightVector();
-	pSkinnedModel->GetUpVector()    = camera->GetUpVector();
+	pSkinnedModel->GetLookVector()  = m_pCamera->GetLookVector();
+	pSkinnedModel->GetRightVector() = m_pCamera->GetRightVector();
+	pSkinnedModel->GetUpVector()    = m_pCamera->GetUpVector();
 }
 
 
@@ -542,11 +541,11 @@ void Game::OnRender() {
     pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
     pDxDevice->BeginScene();
 	
-			pSky->OnRender();
-			pTerrain->OnRender();
+			pSky->OnRender(m_pCamera);
+			pTerrain->OnRender(m_pCamera);
 
 			for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
-				gameObject->OnRender();
+				gameObject->OnRender(m_pCamera);
 				//DrawLine(gameObject->GetPosition(), gameObject->GetLookVector());
 				//DrawLine(gameObject->GetPosition(), gameObject->GetUpVector());
 				//DrawLine(gameObject->GetPosition(), gameObject->GetRightVector());
@@ -608,7 +607,7 @@ void Game::OnRender() {
 			
 			m_pHealSpell->OnRender();
 
-			m_pGunEffect->OnRender();
+			m_pGunEffect->OnRender(m_pCamera);
 
 	pDxDevice->EndScene();
 
@@ -622,7 +621,7 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd) {
 
 	m_pDebugGraphicsEffect->SetTechnique(m_hDebugGraphicsTechnique);
 
-	D3DXMATRIX viewProjMatrix = camera->GetViewProjMatrix();
+	D3DXMATRIX viewProjMatrix = m_pCamera->GetViewProjMatrix();
 	m_pDebugGraphicsEffect->SetMatrix(m_hDebugGraphicsWVPMatrix, &viewProjMatrix);
 	UINT numPasses = 0;
 	m_pDebugGraphicsEffect->Begin(&numPasses, 0);
@@ -704,11 +703,11 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) {
 		case WM_KEYDOWN: {
 			switch(wParam) {
 				case 'L': {
-					if( camera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse ) {
-						camera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
+					if(m_pCamera->GetCameraMode() == ECameraMode::MoveWithoutPressedMouse ) {
+						m_pCamera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 					}
-					else if( camera->GetCameraMode() == ECameraMode::MoveWithPressedMouse ) {
-						camera->SetCameraMode(ECameraMode::MoveWithoutPressedMouse);
+					else if(m_pCamera->GetCameraMode() == ECameraMode::MoveWithPressedMouse ) {
+						m_pCamera->SetCameraMode(ECameraMode::MoveWithoutPressedMouse);
 					}
 
 					break;
@@ -720,7 +719,7 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) {
 				}
 				case 'C': {
 					//TODO: if the camera becomes attached again align it with the object
-					camera->SetCameraFree(!camera->IsCameraFree());
+					m_pCamera->SetCameraFree(!m_pCamera->IsCameraFree());
 
 					break;
 				}
@@ -741,14 +740,14 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) {
 
 		case WM_MOUSEWHEEL: {
 			auto delta = GET_WHEEL_DELTA_WPARAM(wParam);
-			camera->ModifyZoom(delta / 10);
+			m_pCamera->ModifyZoom(delta / 10);
 			return 0;
 		}
 
 		case WM_LBUTTONDOWN:{
 			switch (wParam) {
 				case MK_LBUTTON:{
-					m_pGameObjManager->UpdatePicking();
+					m_pGameObjManager->UpdatePicking(m_pCamera);
 				}
 				break;
 			}

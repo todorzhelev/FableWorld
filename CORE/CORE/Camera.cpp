@@ -3,10 +3,6 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-Camera* camera = NULL;
-
-/////////////////////////////////////////////////////////////////////////
-
 Camera::Camera(float fFovAngle, float fAspectRatio, float fFrustumNearPlaneZ, float fFrustumFarPlaneZ, bool bIsCameraFree) 
 	: m_fFovAngle(fFovAngle)
 	, m_fAspectRatio(fAspectRatio)
@@ -316,6 +312,37 @@ void Camera::TransformByMatrix(D3DXMATRIX matrix) {
 	D3DXVec3TransformCoord(&m_vLookVector,	&m_vLookVector,	 &matrix);
 	D3DXVec3TransformCoord(&m_vRightVector, &m_vRightVector, &matrix);
 	D3DXVec3TransformCoord(&m_vUpVector,	&m_vUpVector,	 &matrix);
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+//transforms ray from screen space to world space, used for picking models in the game with the mouse
+void Camera::GetWorldPickingRay(D3DXVECTOR3& vOrigin, D3DXVECTOR3& vDirection) {
+	POINT pCursorPosition;
+	GetCursorPos(&pCursorPosition);
+
+	//transforms the position of the cursor to be relative to the client's window
+	ScreenToClient(pApp->GetMainWindow(), &pCursorPosition);
+
+	float w = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth);
+	float h = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight);
+
+	//transforms from screen space to view space
+	float x = (2.0f * pCursorPosition.x / w - 1.0f) / m_ProjectionMatrix(0, 0);
+	float y = (-2.0f * pCursorPosition.y / h + 1.0f) / m_ProjectionMatrix(1, 1);
+
+	//so far the cursor position is transformed from screen space to view space
+	//our models are in world space, though, so we must make one more transformation - from view space to world space
+	D3DXVECTOR3 origin(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR3 direction(x, y, 1.0f);
+
+	//makes inverse of the view matrix, to transform the coordinates to world space
+	D3DXMATRIX InverseViewMatrix;
+	D3DXMatrixInverse(&InverseViewMatrix, 0, &m_ViewMatrix);
+
+	D3DXVec3TransformCoord(&vOrigin, &origin, &InverseViewMatrix);
+	D3DXVec3TransformNormal(&vDirection, &direction, &InverseViewMatrix);
+	D3DXVec3Normalize(&vDirection, &vDirection);
 }
 
 /////////////////////////////////////////////////////////////////////////

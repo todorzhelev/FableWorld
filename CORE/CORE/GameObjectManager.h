@@ -29,7 +29,7 @@ public:
 	bool ShouldPickOnlySkinnedModels();
 	void RemoveObject(std::string objId);
 	void OnUpdate();
-	void UpdatePicking();
+	void UpdatePicking(const std::unique_ptr<Camera>& camera);
 private:
 	//in the level editor the titles above the skinned meshes are not needed
 	bool	    m_bShouldRenderTitles;
