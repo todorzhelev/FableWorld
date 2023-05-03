@@ -8,7 +8,6 @@
 4. In the project properties in VC++ Directories:
 	- in Include Directories add the path to include directories for fmod, directx, src folder of lua and boost
 		C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include
-		F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\boost_1.59.0
 		F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src
 		
 	- in Library Directories add the path to library directories for fmod, directx and lua
