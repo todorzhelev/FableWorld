@@ -1,0 +1,3 @@
+* cleanup the code, especially the singletons
+* water
+* ChatGPT integration for the dialogues?

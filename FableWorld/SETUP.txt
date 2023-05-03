@@ -1,24 +1,9 @@
 ﻿How to setup the project:
-1. Download and install Visual studio 2015 Community Edition or Enterprise
+1. Download and install Visual studio 2019 Community Edition or Enterprise
 
 2. Download and install Microsoft DirectX SDK (June 2010) https://www.microsoft.com/en-us/download/details.aspx?id=6812
 
 3. Open FableWorld.sln
 
-4. In the project properties in VC++ Directories:
-	- in Include Directories add the path to include directories for fmod, directx, src folder of lua and boost
-		C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include
-		F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\src
-		
-	- in Library Directories add the path to library directories for fmod, directx and lua
-		C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86
-		F:\PROJECTS\FableWorld\FableWorld\CORE\CORE\libs\lua-5.1.4\lua-5.1.4
-	
-5. Press Apply and OK
+4. Set the configuration to Release and start the project
 
-6. Set the configuration to Debug and start the project
-
-Problems and solutions:
-1. __vsnprintf
-- in the project properties in Linker -> Input in Additional dependencies add legacy_stdio_definitions.lib;
-in order dxerr to work
