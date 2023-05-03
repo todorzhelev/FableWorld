@@ -85,6 +85,9 @@
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>copy /Y "$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\lua5.1.dll" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -111,6 +114,9 @@
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)lib\x86;$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(SolutionDir)..\CORE\CORE\libs\lua-5.1.4\lua-5.1.4\lua5.1.dll" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\CORE\CORE\AABB.cpp" />
