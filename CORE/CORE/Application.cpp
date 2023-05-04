@@ -294,7 +294,7 @@ void Application::SwitchToFullscreen(bool bSwitch) {
 
 //tests if the directx device is lost(alt+tab)
 bool Application::IsDeviceLost() {
-	HRESULT hr = pDxDevice->TestCooperativeLevel();
+	const HRESULT hr = pDxDevice->TestCooperativeLevel();
 
 	if (hr == D3DERR_DEVICELOST) {
 		Sleep(20);	
@@ -307,6 +307,13 @@ bool Application::IsDeviceLost() {
 
 		return false;
 	}
+	else if (hr == D3DERR_DRIVERINTERNALERROR)
+	{
+		PostQuitMessage(0);
+		return true;
+	}
+	
+	return false;
 }
 
 /////////////////////////////////////////////////////////////////////////
