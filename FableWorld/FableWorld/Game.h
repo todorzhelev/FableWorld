@@ -45,6 +45,7 @@ private:
 	std::unique_ptr<Sky>			 m_pSky;
 	std::unique_ptr<Camera>			 m_pCamera;
 	std::unique_ptr<DialogueManager> m_pDialogueManager;
+	std::unique_ptr<Terrain>		 m_pTerrain;
 
 	bool		m_bIsEnemyHealthBarVisible;
 	//controls how much of our healthbar to be visible. this way we can simulate the drop in the health

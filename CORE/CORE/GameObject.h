@@ -11,6 +11,7 @@ enum EGameObjectType {
 };
 
 //////////////////////////////////////////////////////////////////////////////
+class Terrain;
 
 class GameObject {
 public:
@@ -27,6 +28,7 @@ public:
 	virtual void RenderBindedWeapon(GameObject* pSkMesh, std::string bone, const std::unique_ptr<Camera>& camera);
 	virtual float GetDistanceToPickedObject(const std::unique_ptr<Camera>& camera);
 	virtual bool SpawnClone() =0;
+	virtual void UpdateGameObjectHeightOnTerrain(const std::unique_ptr<Terrain>& terrain);
 	std::string GetModelFileName() const;
 	void SetModelFilename(const std::string& strModelFileName);
 	std::string GetName() const;

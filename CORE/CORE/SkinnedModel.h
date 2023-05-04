@@ -1,6 +1,5 @@
 #pragma once
 #include "Camera.h"
-#include "Terrain.h"
 #include "Misc.h"
 #include "DialogueManager.h"
 #include <stdlib.h>
@@ -55,6 +54,7 @@ public:
 	virtual float				GetDistanceToPickedObject(const std::unique_ptr<Camera>& camera) override;
 	virtual bool				SpawnClone() override;
 	virtual void				Destroy() override;
+	virtual void				UpdateGameObjectHeightOnTerrain(const std::unique_ptr<Terrain>& terrain) override;
 
 	bool						CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX combinedMatrix, D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir, float& nDistance);
 

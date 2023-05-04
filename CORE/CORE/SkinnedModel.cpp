@@ -414,12 +414,6 @@ void SkinnedModel::OnUpdate(float dt) {
 		//initially according to the space of the bone they are influenced by
 		m_vFinalBonesMatrices[i] = BoneOffsetMatrix * ToRootMatrix;
 	}
-	
-	if (m_pGameObjManager->AreObjectsGrounded() &&
-		pTerrain->IsValidPosition(m_vPos.x, m_vPos.z)) {
-		//updates the height of the model, so it can sit above the ground
-		m_vPos.y = pTerrain->GetHeight(m_vPos.x,m_vPos.z) + 0.5f;
-	}
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -828,6 +822,7 @@ bool SkinnedModel::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX
 	return false;
 }
 
+/////////////////////////////////////////////////////////////////////////
 
 bool SkinnedModel::IsAttacked() const {
 	return m_bIsAttacked;
@@ -1098,3 +1093,13 @@ void SkinnedModel::Destroy() {
 		}
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////
+
+void SkinnedModel::UpdateGameObjectHeightOnTerrain(const std::unique_ptr<Terrain>& terrain) {
+	if (m_pGameObjManager->AreObjectsGrounded() && terrain->IsValidPosition(m_vPos.x, m_vPos.z)) {
+		m_vPos.y = terrain->GetHeight(m_vPos.x, m_vPos.z) + 0.5f;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////

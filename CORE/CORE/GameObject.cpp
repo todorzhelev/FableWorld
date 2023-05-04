@@ -1,5 +1,6 @@
 #include <stdafx.h>
 #include"GameObject.h"
+#include"Terrain.h"
 
 //////////////////////////////////////////////////////////////////
 
@@ -403,3 +404,7 @@ void GameObject::AlignToDirection(D3DXVECTOR3 targetPosition) {
 }
 
 //////////////////////////////////////////////////////////////////
+
+void GameObject::UpdateGameObjectHeightOnTerrain(const std::unique_ptr<Terrain>& terrain) {
+
+}

@@ -59,13 +59,13 @@ Game::Game() {
 	m_pSky = std::make_unique<Sky>("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 
 	//TODO: this should be specified in the level file
-	pTerrain = new Terrain("../../Resources/heightmaps/heightmap_new.raw",0.5f,513,513,4,4,D3DXVECTOR3(0.0f,0.0f,0.0f));
-	//pTerrain = new Terrain("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pTerrain = std::make_unique<Terrain>("../../Resources/heightmaps/heightmap_new.raw",0.5f,513,513,4,4,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	//m_pTerrain = std::make_unique<Terrain>("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//the direction to the sun
 	D3DXVECTOR3 lightVector(20.0f, 300.0f, 50.0f);
 	D3DXVec3Normalize(&lightVector, &lightVector);
-	pTerrain->SetLightVector(lightVector);
+	m_pTerrain->SetLightVector(lightVector);
 
 	pTextManager->CreateFontFor3DText();
 
@@ -152,7 +152,6 @@ void Game::InitDebugGraphicsShader() {
 Game::~Game() {
 	lua_close(g_luaState);
 	delete pTextManager;
-	delete pTerrain;
 	delete pDinput;
 	delete pApp;
 }
@@ -162,7 +161,7 @@ Game::~Game() {
 void Game::OnLostDevice() {
 	m_pSky->OnLostDevice();
 	pTextManager->OnLostDevice();
-	pTerrain->OnLostDevice();
+	m_pTerrain->OnLostDevice();
 
 	for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
 		gameObject->OnLostDevice();
@@ -178,7 +177,7 @@ void Game::OnLostDevice() {
 void Game::OnResetDevice() {
 	m_pSky->OnResetDevice();
 	pTextManager->OnResetDevice();
-	pTerrain->OnResetDevice();
+	m_pTerrain->OnResetDevice();
 	
 	for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
 		gameObject->OnResetDevice();
@@ -212,6 +211,7 @@ void Game::OnUpdate(float dt) {
 	//update all the game objects
 	for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
 		gameObject->OnUpdate(dt);
+		gameObject->UpdateGameObjectHeightOnTerrain(m_pTerrain);
 	}
 
 	pTextManager->OnUpdate(dt);
@@ -473,7 +473,7 @@ void Game::MoveObject(std::string objectTitle, float dt) {
 	}
 
 	D3DXVECTOR3 newPos = pSkinnedModel->GetPosition() + dir*150.0*pSkinnedModel->GetMovementSpeed()*dt;
-	if( pTerrain->IsValidPosition(newPos.x,newPos.z)) {
+	if(m_pTerrain->IsValidPosition(newPos.x,newPos.z)) {
 		pSkinnedModel->SetPosition(newPos);
 	}
 
@@ -540,7 +540,7 @@ void Game::OnRender() {
     pDxDevice->BeginScene();
 	
 			m_pSky->OnRender(m_pCamera);
-			pTerrain->OnRender(m_pCamera);
+			m_pTerrain->OnRender(m_pCamera);
 
 			for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
 				gameObject->OnRender(m_pCamera);

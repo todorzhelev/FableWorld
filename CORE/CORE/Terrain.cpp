@@ -28,8 +28,6 @@ in this sense 512x512 logical map feels like 15x15 physical map or 225m^2
 
 /////////////////////////////////////////////////////////////////////////
 
-Terrain* pTerrain = NULL;
-
 //TODO: do we need to translate the terrain to the center of the coordinate system
 // and after that return it back to fourth quadrant?
 

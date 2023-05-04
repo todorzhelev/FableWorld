@@ -3,7 +3,6 @@
 #include "SkinnedModel.h"
 #include "TextManager.h"
 #include "Misc.h"
-#include "Terrain.h"
 #include "GameObject.h"
 #include "GameObjectManager.h"
 
@@ -23,6 +22,7 @@ public:
 	virtual float GetDistanceToPickedObject(const std::unique_ptr<Camera>& camera) override;
 	virtual void Destroy() override;
 	virtual bool SpawnClone() override;
+	virtual void UpdateGameObjectHeightOnTerrain(const std::unique_ptr<Terrain>& terrain) override;
 	void		 BuildBoundingBox();
 	void		 RenderBoundingBox(const std::unique_ptr<Camera>& camera);
 	void		 BuildEffect();

@@ -186,10 +186,6 @@ void StaticModel::OnLostDevice() {
 /////////////////////////////////////////////////////////////////////////
 
 void StaticModel::OnUpdate(float fDeltaTime) {
-	//binded models got their own height, based on the bone that they are attached to, other models are just put on the terrain
-	if (!m_bIsBindable && m_pGameObjManager->AreObjectsGrounded()) {
-		m_vPos.y = pTerrain->GetHeight(m_vPos.x,m_vPos.z);
-	}
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -523,6 +519,15 @@ bool StaticModel::SpawnClone() {
 void StaticModel::Destroy() {
 	m_pWhiteTexture->Release();
 	m_pEffect->Release();
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void StaticModel::UpdateGameObjectHeightOnTerrain(const std::unique_ptr<Terrain>& terrain) {
+	//binded models got their own height, based on the bone that they are attached to, other models are just put on the terrain
+	if (!m_bIsBindable && m_pGameObjManager->AreObjectsGrounded()) {
+		m_vPos.y = terrain->GetHeight(m_vPos.x, m_vPos.z);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////
