@@ -39,9 +39,9 @@ int l_addStaticModel(lua_State* L) {
 	pMesh->SetModelFilename(lua_tostring(L,lua_gettop(L)));
 	pMesh->LoadGameObject();
 	pMesh->SetObjectType(EGameObjectType_Static);
-	m_pGameObjManager->AddGameObject(pMesh);
+	pApp->GetGameObjManager()->AddGameObject(pMesh);
 	if (pMesh->IsBindable() && !pMesh->GetBindedToAnimatedModelName().empty() && !pMesh->GetBindedToBoneName().empty()) {
-		GameObject* obj = m_pGameObjManager->GetObjectByName(pMesh->GetBindedToAnimatedModelName());
+		GameObject* obj = pApp->GetGameObjManager()->GetObjectByName(pMesh->GetBindedToAnimatedModelName());
 		SkinnedModel* pSkinnedModel = nullptr;
 		if (obj != nullptr) {
 			pSkinnedModel = static_cast<SkinnedModel*>(obj);
@@ -95,7 +95,7 @@ int l_addAnimatedModel(lua_State* L) {
 	pMesh->SetAttackerName("");
 	pMesh->LoadGameObject();
 	pMesh->SetObjectType(EGameObjectType_Skinned);
-	m_pGameObjManager->AddGameObject(pMesh);
+	pApp->GetGameObjManager()->AddGameObject(pMesh);
 	return 1;
 }
 

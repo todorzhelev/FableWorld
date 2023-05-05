@@ -57,7 +57,7 @@ bool Textbox::IsMouseOver() {
 /////////////////////////////////////////////////////////////////////////
 
 bool Textbox::IsMouseDown() {
-	if (IsMouseOver() && pDinput->IsMouseButtonDown(0)) {
+	if (IsMouseOver() && pApp->GetDinput()->IsMouseButtonDown(0)) {
 		return true;
 	}
 	else  {
@@ -113,7 +113,7 @@ void Textbox::OnRender() {
 	m_pSprite->End();
 		
 	if (m_bIsVisible) {
-		pTextManager->RenderText(m_strText.c_str(),
+		pApp->GetTextManager()->RenderText(m_strText.c_str(),
 							     static_cast<int>(m_vPosition.x)+10,
 							     static_cast<int>(m_vPosition.y)+7,
 							     static_cast<int>(m_vPosition.x)+20,
@@ -139,10 +139,11 @@ void Textbox::OnRender(int a,int r,int g,int b) {
 	m_pSprite->End();
 
 	if (m_bIsVisible) {
-		pTextManager->RenderText(m_strText.c_str(),m_vPosition.x+10,
-			m_vPosition.y+7,
-			m_vPosition.x+20,
-			m_vPosition.y+32,255,255,255,255);
+		pApp->GetTextManager()->RenderText(m_strText.c_str(),
+												m_vPosition.x+10,
+												m_vPosition.y+7,
+												m_vPosition.x+20,
+												m_vPosition.y+32,255,255,255,255);
 	}
 }
 

@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "IBaseMenuObject.h"
 #include "GameObjectManager.h"
+#include "DirectInput.h"
 
 Application* pApp = nullptr;
 IDirect3DDevice9* pDxDevice = nullptr;
@@ -43,6 +44,15 @@ Application::Application(HINSTANCE hInstance, std::string strWindowTitle, D3DDEV
 	InitDirect3D();
 }
 
+/////////////////////////////////////////////////////////////////////////
+
+//the game object manager, the direct input and the text manager transcend the scenes, 
+//so I think they should be attached to the app and accessible only via the app, not being a singletons
+void Application::InitManagers() {
+	m_pGameObjManager = std::make_unique<GameObjectManager>(true, true, false, true, false, true);
+	m_pDinput = std::make_unique<DirectInput>(DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
+	m_pTextManager = std::make_unique<TextManager>();
+}
 /////////////////////////////////////////////////////////////////////////
 
 Application::~Application() {
@@ -407,6 +417,27 @@ IBaseMenuObject* Application::FindMenuObject(std::string strObjectId) {
 	}
 
 	return NULL;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+auto Application::GetGameObjManager() -> const std::unique_ptr<GameObjectManager>&
+{
+	return m_pGameObjManager;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+auto Application::GetDinput() -> const std::unique_ptr<DirectInput>&
+{
+	return m_pDinput;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+auto Application::GetTextManager() -> const std::unique_ptr<TextManager>&
+{
+	return m_pTextManager;
 }
 
 /////////////////////////////////////////////////////////////////////////

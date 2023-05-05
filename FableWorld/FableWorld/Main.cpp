@@ -13,7 +13,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 	fout.open("log.txt");
 
 	pApp = new Application(hInstance, "War Lord", D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING);
-	m_pGameObjManager = new GameObjectManager(true,true,false,true,false,true);
+
+	pApp->InitManagers();
 
 	Menu menu;
 	pApp->AddScene("menu", &menu);
@@ -27,6 +28,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 	pApp->SetCurrentScene(&menu);
 
 	pApp->MainLoop();
+
+	delete pApp;
 }
 
 //////////////////////////////////////////////////////////////////////////////

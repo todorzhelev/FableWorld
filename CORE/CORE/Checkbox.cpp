@@ -71,7 +71,7 @@ void Checkbox::OnClicked() {
 
 bool Checkbox::IsMouseDown() {
 	//if the mouse is over the area and the left button is pressed then return true
-	if (IsMouseOver() && pDinput->IsMouseButtonDown(0)) {
+	if (IsMouseOver() && pApp->GetDinput()->IsMouseButtonDown(0)) {
 		return true;
 	}
 	else {
@@ -115,11 +115,11 @@ void Checkbox::OnRender(int a,int r,int g,int b) {
 	}
 	m_pSprite->End();
 
-	pTextManager->RenderText(m_strText.c_str(),
-					m_vPosition.x+20,
-					m_vPosition.y,
-					m_vPosition.x+20,
-					m_vPosition.y+32,255,255,255,255);
+	pApp->GetTextManager()->RenderText(m_strText.c_str(),
+										m_vPosition.x+20,
+										m_vPosition.y,
+										m_vPosition.x+20,
+										m_vPosition.y+32,255,255,255,255);
 }
 
 /////////////////////////////////////////////////////////////////////////

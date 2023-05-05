@@ -79,5 +79,3 @@ private:
 	tinyxml2::XMLElement* m_pNode;
 	tinyxml2::XMLElement* m_pDialogue;
 };
-
-extern DialogueManager* pDialogueManager;

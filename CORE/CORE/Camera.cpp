@@ -213,27 +213,27 @@ void Camera::MoveCamera(float dt) {
 	//this vector holds the new direction to move
 	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
 	
-	if (pDinput->IsKeyDown(DIK_W)) {
+	if (pApp->GetDinput()->IsKeyDown(DIK_W)) {
 		dir += m_vLookVector;
 	}
-	if (pDinput->IsKeyDown(DIK_S)) {
+	if (pApp->GetDinput()->IsKeyDown(DIK_S)) {
 		dir -= m_vLookVector;
 	}
-	if (pDinput->IsKeyDown(DIK_A)) {
+	if (pApp->GetDinput()->IsKeyDown(DIK_A)) {
 		dir -= m_vRightVector;
 	}
-	if (pDinput->IsKeyDown(DIK_D)) {
+	if (pApp->GetDinput()->IsKeyDown(DIK_D)) {
 		dir += m_vRightVector;
 	}
 	
 	D3DXVECTOR3 newPos = m_vPosition + dir* m_speed *dt;
 	m_vPosition = newPos;
 
-	if (pDinput->IsMouseButtonDown(0)) {
+	if (pApp->GetDinput()->IsMouseButtonDown(0)) {
 		float angleModifier = 150;
 
-		float upAngleRot	= pDinput->GetMouseDY() / angleModifier;
-		float rightAngleRot = pDinput->GetMouseDX() / angleModifier;
+		float upAngleRot	= pApp->GetDinput()->GetMouseDY() / angleModifier;
+		float rightAngleRot = pApp->GetDinput()->GetMouseDX() / angleModifier;
 
 		RotateUp(upAngleRot);
 		RotateRight(rightAngleRot);

@@ -3,8 +3,6 @@
 #include "DirectInput.h"
 #include "SkinnedModel.h"
 
-GameObjectManager* m_pGameObjManager = nullptr;
-
 int GameObjectManager::m_lastObjectId = 0;
 
 /////////////////////////////////////////////////////////////////////////
@@ -17,6 +15,8 @@ GameObjectManager::GameObjectManager(bool bShouldRenderTitles, bool bShouldHighl
 	m_bAreObjectsGrounded			= bAreObjectsGrounded;
 	m_bShouldRenderBoundingBoxes	= bShouldRenderBoundingBoxes;
 	m_bShouldPickOnlySkinnedModels	= bShouldPickOnlySkinnedModels;
+
+	printf("GameObjectManager created\n");
 }
 
 /////////////////////////////////////////////////////////////////////////

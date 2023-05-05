@@ -20,6 +20,8 @@ public:
 	void		OnUpdate(float dt);
 	void		OnResetDevice();
 	void		OnLostDevice();
+	float		GetStringWidth(std::string str);
+	float		GetStringHeight(std::string str);
 
 private:
 
@@ -30,9 +32,5 @@ private:
 	ID3DXFont*	m_pFont2D;
 
 };
-
-//////////////////////////////////////////////////////////////////////////////
-
-extern TextManager* pTextManager;
 
 //////////////////////////////////////////////////////////////////////////////

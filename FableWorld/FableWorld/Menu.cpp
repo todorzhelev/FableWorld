@@ -6,11 +6,6 @@
 /////////////////////////////////////////////////////////////////////////
 
 Menu::Menu() {
-	//Dinput is responsible for mouse move detection, key pressed detection and etc.
-	pDinput = new DirectInput(DISCL_NONEXCLUSIVE|DISCL_FOREGROUND, DISCL_NONEXCLUSIVE|DISCL_FOREGROUND);
-
-	pTextManager = new TextManager;
-
 	D3DXCreateSprite(pDxDevice,&m_pSpriteForLogo);
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/Logo/logo_FableWorld.jpg",&m_pLogoInWindowTexture));
 	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/Logo/logo_FableWorldFullscreen.jpg",&m_pLogoInFullscreenTexture));
@@ -30,14 +25,14 @@ Menu::Menu() {
 /////////////////////////////////////////////////////////////////////////
 
 void Menu::OnLostDevice() {
-	pTextManager->OnLostDevice();
+	pApp->GetTextManager()->OnLostDevice();
 	m_pSpriteForLogo->OnLostDevice();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 void Menu::OnResetDevice() {
-	pTextManager->OnResetDevice();
+	pApp->GetTextManager()->OnResetDevice();
 	m_pSpriteForLogo->OnResetDevice();
 	float w = (float)pApp->GetPresentParameters().BackBufferWidth;
 	float h = (float)pApp->GetPresentParameters().BackBufferHeight;
@@ -49,8 +44,8 @@ void Menu::OnResetDevice() {
 /////////////////////////////////////////////////////////////////////////
 
 void Menu::OnUpdate(float dt) {
-	pDinput->Poll();
-	if (pDinput->IsKeyDown(DIK_F)) {
+	pApp->GetDinput()->Poll();
+	if (pApp->GetDinput()->IsKeyDown(DIK_F)) {
 		pApp->SwitchToFullscreen(true);
 	}
 

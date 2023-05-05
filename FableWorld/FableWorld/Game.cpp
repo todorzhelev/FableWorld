@@ -67,7 +67,7 @@ Game::Game() {
 	D3DXVec3Normalize(&lightVector, &lightVector);
 	m_pTerrain->SetLightVector(lightVector);
 
-	pTextManager->CreateFontFor3DText();
+	pApp->GetTextManager()->CreateFontFor3DText();
 
 	//loads the models, sounds and quests from the scripts
 	luaL_dofile(g_luaState, "../../Resources/levels/levelInGame_new.lua");
@@ -78,24 +78,24 @@ Game::Game() {
 	m_pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue.xml");
 
 	//creates 3d titles for the models and check for dialogues
-	auto& gameObjects = m_pGameObjManager->GetSkinnedModels();
+	auto& gameObjects = pApp->GetGameObjManager()->GetSkinnedModels();
 	for (auto& gameObject : gameObjects) {
 		//create mesh for 3d text above the models
-		pTextManager->CreateMeshFor3DText(gameObject);
+		pApp->GetTextManager()->CreateMeshFor3DText(gameObject);
 	}
 	
 	for (auto& gameObject : gameObjects ) {
 		for (auto& dialogue : m_pDialogueManager->GetDialogues()) {
 			if( !gameObject->GetName().compare(dialogue->m_strModel) ) {
 				gameObject->SetHasDialogue(true);
-				pTextManager->CreateMeshFor3DTextQuest(gameObject);
+				pApp->GetTextManager()->CreateMeshFor3DTextQuest(gameObject);
 			}
 		}
 	}
 	// hides the enemy health bar before we attack enemy.
 	m_bIsEnemyHealthBarVisible = false;
 
-	GameObject* obj = m_pGameObjManager->GetObjectByName(mainHero);
+	GameObject* obj = pApp->GetGameObjManager()->GetObjectByName(mainHero);
 
 	if (obj) {
 		pMainHero = static_cast<SkinnedModel*>(obj);
@@ -119,7 +119,7 @@ Game::Game() {
 	m_isAIRunningToTarget = false;
 	m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
 
-	//GameObject* objCho = m_pGameObjManager->GetObjectByName("cho");
+	//GameObject* objCho = pApp->GetGameObjManager()->GetObjectByName("cho");
 	//objCho->SpawnClone();//~7.5MB per one cho. Did not expect that wow
 	//objCho->SpawnClone();
 	//objCho->SpawnClone();
@@ -151,19 +151,16 @@ void Game::InitDebugGraphicsShader() {
 
 Game::~Game() {
 	lua_close(g_luaState);
-	delete pTextManager;
-	delete pDinput;
-	delete pApp;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 void Game::OnLostDevice() {
 	m_pSky->OnLostDevice();
-	pTextManager->OnLostDevice();
+	pApp->GetTextManager()->OnLostDevice();
 	m_pTerrain->OnLostDevice();
 
-	for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
+	for (auto& gameObject : pApp->GetGameObjManager()->GetGameObjects()) {
 		gameObject->OnLostDevice();
 	}
 
@@ -176,10 +173,10 @@ void Game::OnLostDevice() {
 
 void Game::OnResetDevice() {
 	m_pSky->OnResetDevice();
-	pTextManager->OnResetDevice();
+	pApp->GetTextManager()->OnResetDevice();
 	m_pTerrain->OnResetDevice();
 	
-	for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
+	for (auto& gameObject : pApp->GetGameObjManager()->GetGameObjects()) {
 		gameObject->OnResetDevice();
 	}
 	m_pInterfaceSprite->OnResetDevice();
@@ -198,30 +195,30 @@ void Game::OnResetDevice() {
 
 void Game::OnUpdate(float dt) {
 	//poll starts to listen if any key on the keyboard is pressed
-	pDinput->Poll();
-	if (pDinput->IsKeyDown(DIK_F)) {
+	pApp->GetDinput()->Poll();
+	if (pApp->GetDinput()->IsKeyDown(DIK_F)) {
 		pApp->SwitchToFullscreen(true);
 	}
 	//if escape is pressed in game it switches to another scene
-	if (pDinput->IsKeyDown(DIK_ESCAPE)) {
+	if (pApp->GetDinput()->IsKeyDown(DIK_ESCAPE)) {
 		IBaseScene* pMenuInGameScene = pApp->GetScene("menuInGame");
 		pApp->SetCurrentScene(pMenuInGameScene);
 	}
 
 	//update all the game objects
-	for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
+	for (auto& gameObject : pApp->GetGameObjManager()->GetGameObjects()) {
 		gameObject->OnUpdate(dt);
 		gameObject->UpdateGameObjectHeightOnTerrain(m_pTerrain);
 	}
 
-	pTextManager->OnUpdate(dt);
+	pApp->GetTextManager()->OnUpdate(dt);
 	m_pCamera->OnUpdate(dt);
 	
 	m_pDialogueManager->OnUpdate();
 
 	//checking if there is active quest
 	for (auto& quest : GetQuestManager()->GetQuests()) {
-		SkinnedModel* reqObject = m_pGameObjManager->GetSkinnedModelByName(quest->m_strRequiredObject);
+		SkinnedModel* reqObject = pApp->GetGameObjManager()->GetSkinnedModelByName(quest->m_strRequiredObject);
 
 		//if mainHero is close to the required from the quest object and the required object is dead the quest is completed.
 		if (IsObjectNear(pMainHero->GetPosition(), reqObject->GetPosition()) && reqObject->IsDead()) {
@@ -235,7 +232,7 @@ void Game::OnUpdate(float dt) {
 	}
 
 	//updating the models's titles positions
-	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels()) {
+	for (auto& gameObject : pApp->GetGameObjManager()->GetSkinnedModels()) {
 		D3DXVECTOR3 titleRightVector = gameObject->GetTitleRightVector();
 		D3DXVECTOR3 cameraLookVector = m_pCamera->GetLookVector();
 		float angle = D3DXVec3Dot(&titleRightVector,&cameraLookVector);
@@ -248,14 +245,14 @@ void Game::OnUpdate(float dt) {
 		gameObject->TransformTitleByMatrix(R);
 	}
 
-	//for (auto it : m_pGameObjManager->GetGameObjects()) {
+	//for (auto it : pApp->GetGameObjManager()->GetGameObjects()) {
 	//	DrawLine(pMainHero->GetPosition(), it->GetPosition());
 	//}
 
 	ManageHealthBars();
 	UpdateAI(dt);
 
-	if (pDinput->IsMouseButtonUp(0) && m_pHealSpell->IsClicked()) {
+	if (pApp->GetDinput()->IsMouseButtonUp(0) && m_pHealSpell->IsClicked()) {
 		m_rHealthBarRectangle.right += 20;
 	}
 
@@ -264,18 +261,18 @@ void Game::OnUpdate(float dt) {
 	m_pGunEffect->OnUpdate(dt);
 
 	static float delay = 0.0f;
-	if (pDinput->IsKeyDown(DIK_SPACE) && delay <= 0.0f) {
-		auto pickedObj = m_pGameObjManager->GetPickedObject();
+	if (pApp->GetDinput()->IsKeyDown(DIK_SPACE) && delay <= 0.0f) {
+		auto pickedObj = pApp->GetGameObjManager()->GetPickedObject();
 		if (pickedObj) {
 			delay = 0.1f;
 			m_pGunEffect->AddParticle(pickedObj);
 		}
 	}
 
-	auto pickedObj = m_pGameObjManager->GetPickedObject();
+	auto pickedObj = pApp->GetGameObjManager()->GetPickedObject();
 
 	if (pickedObj) {
-		if (pDinput->IsMouseButtonDown(1)) {
+		if (pApp->GetDinput()->IsMouseButtonDown(1)) {
 			m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
 			D3DXVECTOR3 vOrigin(0.0f, 0.0f, 0.0f);
 			D3DXVECTOR3 vDir(0.0f, 0.0f, 0.0f);
@@ -332,7 +329,7 @@ void Game::OnUpdate(float dt) {
 /////////////////////////////////////////////////////////////////////////
 
 void Game::UpdateAI(float dt) {
-	for (auto& gameObject : m_pGameObjManager->GetSkinnedModels()) {
+	for (auto& gameObject : pApp->GetGameObjManager()->GetSkinnedModels()) {
 		//main hero attacking enemy
 		if (//pDinput->IsMouseButtonDown(0) &&
 			IsObjectNear(pMainHero->GetPosition(), gameObject->GetPosition()) &&
@@ -433,31 +430,34 @@ void Game::MoveObject(std::string objectTitle, float dt) {
 	//this std::vector holds the new direction to move
 	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
 
-	GameObject* obj = m_pGameObjManager->GetObjectByName(objectTitle);
+	GameObject* obj = pApp->GetGameObjManager()->GetObjectByName(objectTitle);
 	SkinnedModel* pSkinnedModel = nullptr;
 
 	if (obj != nullptr) {
 		pSkinnedModel = static_cast<SkinnedModel*>(obj);
 	}
 	
-	if (pDinput->IsKeyDown(DIK_W) ) {
+	if (pApp->GetDinput()->IsKeyDown(DIK_W) ) {
 		pSkinnedModel->PlayAnimation("run");
 		dir += m_pCamera->GetLookVector();
 	}
-	if (pDinput->IsKeyDown(DIK_S) ) {
+	if (pApp->GetDinput()->IsKeyDown(DIK_S) ) {
 		pSkinnedModel->PlayAnimation("run");
 		dir -= m_pCamera->GetLookVector();
 	}
-	if (pDinput->IsKeyDown(DIK_A) ) {
+	if (pApp->GetDinput()->IsKeyDown(DIK_A) ) {
 		pSkinnedModel->PlayAnimation("run");
 		dir -= m_pCamera->GetRightVector();
 	}
-	if (pDinput->IsKeyDown(DIK_D) ) {
+	if (pApp->GetDinput()->IsKeyDown(DIK_D) ) {
 		pSkinnedModel->PlayAnimation("run");
 		dir += m_pCamera->GetRightVector();
 	}
 
-	if (!pDinput->IsKeyDown(DIK_W) && !pDinput->IsKeyDown(DIK_S) && !pDinput->IsKeyDown(DIK_A) && !pDinput->IsKeyDown(DIK_D)) {
+	if (!pApp->GetDinput()->IsKeyDown(DIK_W) && 
+		!pApp->GetDinput()->IsKeyDown(DIK_S) && 
+		!pApp->GetDinput()->IsKeyDown(DIK_A) && 
+		!pApp->GetDinput()->IsKeyDown(DIK_D)) {
 		pSkinnedModel->PlayAnimation("idle");
 	}
 	
@@ -467,7 +467,7 @@ void Game::MoveObject(std::string objectTitle, float dt) {
 	}
 	else if (m_pCamera->GetCameraMode() == ECameraMode::MoveWithPressedMouse) {
 		//if we hold the left mouse button move the camera
-		if (pDinput->IsMouseButtonDown(0)) {
+		if (pApp->GetDinput()->IsMouseButtonDown(0)) {
 			RotateObject(objectTitle, dt);
 		}
 	}
@@ -489,14 +489,14 @@ void Game::MoveObject(std::string objectTitle, float dt) {
 
 //rotates to model and the camera if the mouse is moved
 void Game::RotateObject(std::string objectTitle, float dt) {
-	GameObject* obj = m_pGameObjManager->GetObjectByName(objectTitle);
+	GameObject* obj = pApp->GetGameObjManager()->GetObjectByName(objectTitle);
 	SkinnedModel* pSkinnedModel = nullptr;
 
 	if (obj != nullptr) {
 		pSkinnedModel = static_cast<SkinnedModel*>(obj);
 	}
 	
-	float yAngle = pDinput->GetMouseDX() / (19000*dt);
+	float yAngle = pApp->GetDinput()->GetMouseDX() / (19000*dt);
 	pSkinnedModel->ModifyRotationAngleByY(yAngle);
 	
 	D3DXMATRIX R;
@@ -515,7 +515,7 @@ void Game::RotateObject(std::string objectTitle, float dt) {
 //controls the health of the hero and enemy and make them play dead animation if they are at zero health
 void Game::ManageHealthBars() {
 	std::string strEnemy = pMainHero->GetAttackerName();
-	GameObject* obj = m_pGameObjManager->GetObjectByName(strEnemy);
+	GameObject* obj = pApp->GetGameObjManager()->GetObjectByName(strEnemy);
 	SkinnedModel* pEnemy = nullptr;
 	if (obj != nullptr) {
 		pEnemy = static_cast<SkinnedModel*>(obj);
@@ -542,7 +542,7 @@ void Game::OnRender() {
 			m_pSky->OnRender(m_pCamera);
 			m_pTerrain->OnRender(m_pCamera);
 
-			for (auto& gameObject : m_pGameObjManager->GetGameObjects()) {
+			for (auto& gameObject : pApp->GetGameObjManager()->GetGameObjects()) {
 				gameObject->OnRender(m_pCamera);
 				//DrawLine(gameObject->GetPosition(), gameObject->GetLookVector());
 				//DrawLine(gameObject->GetPosition(), gameObject->GetUpVector());
@@ -553,7 +553,7 @@ void Game::OnRender() {
 
 			auto BB = pMainHero->GetBB();
 			BB = BB.TransformByMatrix(BB.m_transformationMatrix);
-			for (auto& object:m_pGameObjManager->GetGameObjects()) {
+			for (auto& object: pApp->GetGameObjManager()->GetGameObjects()) {
 				auto BB1 = object->GetBB();
 				BB1 = BB1.TransformByMatrix(BB1.m_transformationMatrix);
 
@@ -564,7 +564,7 @@ void Game::OnRender() {
 				}
 			}
 
-			//pTextManager->DrawFPS();
+			pApp->GetTextManager()->DrawFPS();
 	
 			//draws dialogues
 			for (auto& dialogue : m_pDialogueManager->GetDialogues()) {
@@ -577,15 +577,15 @@ void Game::OnRender() {
 			for(auto& quest: GetQuestManager()->GetQuests()) {
 				if( quest->m_bIsStarted ) {
 					if (quest->m_bIsCompleted) {
-						pTextManager->RenderText(quest->m_strTitle.c_str(), pApp->GetPresentParameters().BackBufferWidth - 420, 70, 0, 0, 255, 255, 255, 0);
-						pTextManager->RenderText("Completed", pApp->GetPresentParameters().BackBufferWidth - 590, 70, 0, 0, 255, 255, 255, 0);
+						pApp->GetTextManager()->RenderText(quest->m_strTitle.c_str(), pApp->GetPresentParameters().BackBufferWidth - 420, 70, 0, 0, 255, 255, 255, 0);
+						pApp->GetTextManager()->RenderText("Completed", pApp->GetPresentParameters().BackBufferWidth - 590, 70, 0, 0, 255, 255, 255, 0);
 					}
 					else if (!pMainHero->IsDead()) {
-						pTextManager->RenderText(quest->m_strTitle.c_str(), pApp->GetPresentParameters().BackBufferWidth - 420, 70, 0, 0, 255, 255, 255, 0);
+						pApp->GetTextManager()->RenderText(quest->m_strTitle.c_str(), pApp->GetPresentParameters().BackBufferWidth - 420, 70, 0, 0, 255, 255, 255, 0);
 					}
 					else if (!quest->m_bIsCompleted && pMainHero->IsDead()) {
-						pTextManager->RenderText(quest->m_strTitle.c_str(), pApp->GetPresentParameters().BackBufferWidth - 420, 70, 0, 0, 255, 255, 255, 0);
-						pTextManager->RenderText("Epic fail!", pApp->GetPresentParameters().BackBufferWidth - 570, 70, 0, 0, 255, 255, 255, 0);
+						pApp->GetTextManager()->RenderText(quest->m_strTitle.c_str(), pApp->GetPresentParameters().BackBufferWidth - 420, 70, 0, 0, 255, 255, 255, 0);
+						pApp->GetTextManager()->RenderText("Epic fail!", pApp->GetPresentParameters().BackBufferWidth - 570, 70, 0, 0, 255, 255, 255, 0);
 					}
 				}
 			}
@@ -711,7 +711,7 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) {
 					break;
 				}
 				case 'B': {
-					m_pGameObjManager->SetShouldRenderBoundingBoxes(!m_pGameObjManager->ShouldRenderBoundingBoxes());
+					pApp->GetGameObjManager()->SetShouldRenderBoundingBoxes(!pApp->GetGameObjManager()->ShouldRenderBoundingBoxes());
 
 					break;
 				}
@@ -745,7 +745,7 @@ LRESULT Game::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) {
 		case WM_LBUTTONDOWN:{
 			switch (wParam) {
 				case MK_LBUTTON:{
-					m_pGameObjManager->UpdatePicking(m_pCamera);
+					pApp->GetGameObjManager()->UpdatePicking(m_pCamera);
 				}
 				break;
 			}

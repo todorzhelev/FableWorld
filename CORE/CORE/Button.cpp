@@ -58,7 +58,7 @@ bool Button::IsMouseOver() {
 
 bool Button::IsMouseDown() {
 	//if the mouse is over the area and the left button is pressed then return true
-	if(IsMouseOver() && pDinput->IsMouseButtonDown(0)) {
+	if(IsMouseOver() && pApp->GetDinput()->IsMouseButtonDown(0)) {
 		return true;
 	}
 	else {

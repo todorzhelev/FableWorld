@@ -59,7 +59,7 @@ StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, st
 	D3DXCreateTextureFromFile(pDxDevice, strTextureFileName.c_str(), &m_pTexture);	
 
 	/*if( pMesh->m_bIsBindable && !pMesh->m_strBindedToAnimatedModelName.empty() && !pMesh->m_strBindedToBoneName.empty() ) {
-		SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(m_pGameObjManager->GetGameObjects().find(pMesh->m_strBindedToAnimatedModelName)->second);
+		SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pApp->GetGameObjManager()->GetGameObjects().find(pMesh->m_strBindedToAnimatedModelName)->second);
 		pSkinnedModel->BindWeaponToModel(pMesh->m_strModelName,pMesh->m_strBindedToBoneName);
 	}*/
 
@@ -232,7 +232,7 @@ void StaticModel::OnRender(const std::unique_ptr<Camera>& camera) {
 		D3DXMATRIX finalMatrix = m_CombinedTransformationMatrix * camera->GetViewProjMatrix();
 		m_pEffect->SetMatrix(m_hWVPMatrix, &finalMatrix);
 
-		if (m_pGameObjManager->ShouldHighlightPickedObjects()) {
+		if (pApp->GetGameObjManager()->ShouldHighlightPickedObjects()) {
 			m_pEffect->SetBool(m_hIsPicked,m_bIsPicked);
 		}
 
@@ -252,7 +252,7 @@ void StaticModel::OnRender(const std::unique_ptr<Camera>& camera) {
 					m_pMesh->DrawSubset(j);					
 				}
 
-				if (m_pGameObjManager->ShouldRenderBoundingBoxes()) {
+				if (pApp->GetGameObjManager()->ShouldRenderBoundingBoxes()) {
 					RenderBoundingBox(camera);
 				}
 			m_pEffect->EndPass();
@@ -510,7 +510,7 @@ bool StaticModel::SpawnClone() {
 	pMesh->LoadGameObject();
 	pMesh->SetObjectType(EGameObjectType_Static);
 
-	m_pGameObjManager->AddGameObject(pMesh);
+	pApp->GetGameObjManager()->AddGameObject(pMesh);
 	return true;
 }
 
@@ -525,7 +525,7 @@ void StaticModel::Destroy() {
 
 void StaticModel::UpdateGameObjectHeightOnTerrain(const std::unique_ptr<Terrain>& terrain) {
 	//binded models got their own height, based on the bone that they are attached to, other models are just put on the terrain
-	if (!m_bIsBindable && m_pGameObjManager->AreObjectsGrounded()) {
+	if (!m_bIsBindable && pApp->GetGameObjManager()->AreObjectsGrounded()) {
 		m_vPos.y = terrain->GetHeight(m_vPos.x, m_vPos.z);
 	}
 }

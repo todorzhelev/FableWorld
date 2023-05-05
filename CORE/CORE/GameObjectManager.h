@@ -48,6 +48,3 @@ private:
 	std::map<int,GameObject*> m_mapPickedObjects;
 	static int m_lastObjectId;
 };
-
-extern GameObjectManager* m_pGameObjManager;
-

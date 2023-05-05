@@ -2,9 +2,7 @@
 #include "DirectInput.h"
 
 //////////////////////////////////////////////////////////////////////////////
-//TODO: should get rid of all this
-
-DirectInput* pDinput = NULL;
+//TODO: should get rid of all this when migrating to DX12
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -27,6 +25,7 @@ DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags) {
 	m_pMouse->SetCooperativeLevel(pApp->GetMainWindow(), mouseCoopFlags);
 	m_pMouse->Acquire();
 
+	printf("DirectInput created\n");
 }
 
 /////////////////////////////////////////////////////////////////////////

@@ -1,36 +1,6 @@
 #include <stdafx.h>
 #include "Misc.h"
 #include "Camera.h"
-#include "TextManager.h"
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//gets width of text when drawn on screen
-float GetStringWidth(std::string str) {
-	RECT rStringInfo;
-	ZeroMemory(&rStringInfo, sizeof(RECT));
-
-	if( pTextManager->GetFont2D() != NULL ) {
-		pTextManager->GetFont2D()->DrawTextA(NULL, str.c_str(), str.length(),&rStringInfo, DT_CALCRECT, D3DCOLOR_XRGB(0,0,0));
-	}
-	return static_cast<float>(rStringInfo.right);
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//gets height of text when drawn on screen
-float GetStringHeight(std::string str) {
-	RECT rStringInfo;
-	ZeroMemory(&rStringInfo, sizeof(RECT));
-
-	if (pTextManager->GetFont2D() != NULL) {
-		pTextManager->GetFont2D()->DrawTextA(NULL, str.c_str(), str.length(),&rStringInfo, DT_CALCRECT, D3DCOLOR_XRGB(0,0,0));
-	}
-	return static_cast<float>(rStringInfo.bottom);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //checks if the mesh got normals
 bool HasNormals(ID3DXMesh* pMesh) {

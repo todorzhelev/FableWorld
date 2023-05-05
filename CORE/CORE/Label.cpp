@@ -8,8 +8,8 @@ Label::Label(D3DXVECTOR2 vPosition, std::string strText) {
 	m_vPosition = vPosition;
 	m_strText = strText;
 
-	m_nHeight = static_cast<int>(GetStringHeight(m_strText));
-	m_nWidth  = static_cast<int>(GetStringWidth(m_strText));
+	m_nHeight = static_cast<int>(pApp->GetTextManager()->GetStringHeight(m_strText));
+	m_nWidth  = static_cast<int>(pApp->GetTextManager()->GetStringWidth(m_strText));
 
 	m_bIsMouseDown = false;
 	m_bIsMouseOver = false;
@@ -18,8 +18,8 @@ Label::Label(D3DXVECTOR2 vPosition, std::string strText) {
 /////////////////////////////////////////////////////////////////////////
 
 void Label::Init() {
-	m_nHeight = static_cast<int>(GetStringHeight(m_strText));
-	m_nWidth  = static_cast<int>(GetStringWidth(m_strText));
+	m_nHeight = static_cast<int>(pApp->GetTextManager()->GetStringHeight(m_strText));
+	m_nWidth  = static_cast<int>(pApp->GetTextManager()->GetStringWidth(m_strText));
 
 	m_bIsMouseDown = false;
 	m_bIsMouseOver = false;
@@ -60,7 +60,7 @@ bool Label::IsMouseOver() {
 /////////////////////////////////////////////////////////////////////////
 
 bool Label::IsMouseDown() {
-	if (IsMouseOver() && pDinput->IsMouseButtonDown(0) && m_bIsVisible) {
+	if (IsMouseOver() && pApp->GetDinput()->IsMouseButtonDown(0) && m_bIsVisible) {
 		return true;
 	}
 	else {
@@ -90,7 +90,7 @@ void Label::OnUpdate() {
 
 void Label::OnRender(int a,int r,int g,int b) {
 	if (m_bIsVisible) {
-		pTextManager->RenderText(m_strText.c_str(),
+		pApp->GetTextManager()->RenderText(m_strText.c_str(),
 							     static_cast<int>(m_vPosition.x),
 							     static_cast<int>(m_vPosition.y),
 							     static_cast<int>(m_vPosition.x)+m_nWidth,

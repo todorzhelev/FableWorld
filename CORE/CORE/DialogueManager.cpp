@@ -104,7 +104,7 @@ void DialogueManager::OnUpdate() {
 			UpdateDialogue(dialogue->m_pCurrentDialogueNode, *dialogue);
 		}
 
-		GameObject* obj = m_pGameObjManager->GetObjectByName(dialogue->m_strModel);
+		GameObject* obj = pApp->GetGameObjManager()->GetObjectByName(dialogue->m_strModel);
 
 		if (obj && obj->IsPicked() && !dialogue->m_bIsEnded) {
 			dialogue->m_pTree->m_pRoot->m_pLabel->SetVisible(true);
@@ -155,7 +155,7 @@ void DialogueManager::UpdateDialogue(DialogueNode* pNode, DialogueObject& dialog
 		}
 
 		//if the mouse button is up we have selected this node
-		if (dialogue.m_bIsClickedDialogueNode && pDinput->IsMouseButtonUp(0)) {
+		if (dialogue.m_bIsClickedDialogueNode && pApp->GetDinput()->IsMouseButtonUp(0)) {
 			std::string quest = dialogue.m_pClickedDialogueNode->m_strQuest;
 
 			//if there is quest attached to this node, take the quest and end the conversation
@@ -173,7 +173,7 @@ void DialogueManager::UpdateDialogue(DialogueNode* pNode, DialogueObject& dialog
 					}
 				}
 
-				SkinnedModel* pGameObject = m_pGameObjManager->GetSkinnedModelByName(dialogue.m_strModel);
+				SkinnedModel* pGameObject = pApp->GetGameObjManager()->GetSkinnedModelByName(dialogue.m_strModel);
 
 				pGameObject->SetHasDialogue(false);
 

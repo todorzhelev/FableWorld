@@ -5,6 +5,9 @@
 
 class GameObject;
 class IBaseMenuObject;
+class GameObjectManager;
+class DirectInput;
+class TextManager;
 
 //////////////////////////////////////////////////////////////////////////////
       
@@ -40,6 +43,11 @@ public:
 	//MenuManager must be made instead and it has to be moved there.
 	std::string					m_strSelectedTextbox;
 	IBaseMenuObject*		FindMenuObject(std::string strObjectId);
+
+	void					InitManagers();
+	auto					GetGameObjManager() -> const std::unique_ptr<GameObjectManager>&;
+	auto					GetDinput() -> const std::unique_ptr<DirectInput>&;
+	auto					GetTextManager() -> const std::unique_ptr<TextManager>&;
 private:
 	void					InitMainWindow();
 	void					InitDirect3D();
@@ -65,6 +73,9 @@ private:
 	IDirect3DVertexDeclaration9* m_pVertexPNTDecl;
 	IDirect3DVertexDeclaration9* m_pVertexPCDecl;
 	IDirect3DVertexDeclaration9* m_pVertexParticleDecl;
+	std::unique_ptr<GameObjectManager> m_pGameObjManager;
+	std::unique_ptr<DirectInput> m_pDinput;
+	std::unique_ptr<TextManager> m_pTextManager;
 };
 
 //////////////////////////////////////////////////////////////////////////////

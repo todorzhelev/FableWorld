@@ -271,7 +271,7 @@ void SkinnedModel::InitBonesToRootMatricesPointersArray() {
 
 //binds static object to animated model's bone
 void SkinnedModel::BindWeaponToModel(std::string strObjectName,std::string strBoneToBind) {
-	GameObject* pGameObject = m_pGameObjManager->GetObjectByName(strObjectName.c_str());
+	GameObject* pGameObject = pApp->GetGameObjManager()->GetObjectByName(strObjectName.c_str());
 	m_mapBindedObjects[pGameObject] = strBoneToBind;
 }
 
@@ -419,7 +419,7 @@ void SkinnedModel::OnUpdate(float dt) {
 /////////////////////////////////////////////////////////////////////////
 
 void SkinnedModel::OnRender(const std::unique_ptr<Camera>& camera) {
-	if (m_pGameObjManager->ShouldRenderAxis()) {
+	if (pApp->GetGameObjManager()->ShouldRenderAxis()) {
 		D3DXMATRIX R15;
 
 		D3DXVECTOR3 vLook = m_vLook;
@@ -483,7 +483,7 @@ void SkinnedModel::OnRender(const std::unique_ptr<Camera>& camera) {
 	
 	m_pEffect->SetMatrixArray(m_hFinalBonesMatrices, GetFinalBonesMatricesArray(), m_nNumBones);
 
-	if (m_pGameObjManager->ShouldHighlightPickedObjects()) {
+	if (pApp->GetGameObjManager()->ShouldHighlightPickedObjects()) {
 		m_pEffect->SetBool(m_hIsPicked,m_bIsPicked);
 	}
 
@@ -493,7 +493,7 @@ void SkinnedModel::OnRender(const std::unique_ptr<Camera>& camera) {
 		m_pEffect->BeginPass(i);
 			m_pMesh->DrawSubset(0);
 
-			if (m_pGameObjManager->ShouldRenderBoundingBoxes()){
+			if (pApp->GetGameObjManager()->ShouldRenderBoundingBoxes()){
 				RenderBoundingBox(camera);
 			}
 
@@ -501,7 +501,7 @@ void SkinnedModel::OnRender(const std::unique_ptr<Camera>& camera) {
 	}
 	m_pEffect->End();
 
-	if (m_bShouldRenderTitles && m_pGameObjManager->ShouldRenderTitles()) {
+	if (m_bShouldRenderTitles && pApp->GetGameObjManager()->ShouldRenderTitles()) {
 		RenderTitles(camera);
 		RenderTitlesForQuest(camera);
 	}
@@ -1061,8 +1061,8 @@ bool SkinnedModel::SpawnClone() {
 	pMesh->SetAttackerName("");
 	pMesh->LoadGameObject();
 	pMesh->SetObjectType(EGameObjectType_Skinned);
-	m_pGameObjManager->AddGameObject(pMesh);
-	pTextManager->CreateMeshFor3DText(pMesh);
+	pApp->GetGameObjManager()->AddGameObject(pMesh);
+	pApp->GetTextManager()->CreateMeshFor3DText(pMesh);
 	return true;
 }
 
@@ -1080,7 +1080,7 @@ void SkinnedModel::Destroy() {
 	//m_pRoot;
 	
 	//clear the binded objects
-	auto& gameObjects = m_pGameObjManager->GetGameObjects();
+	auto& gameObjects = pApp->GetGameObjManager()->GetGameObjects();
 	for (auto& el : m_mapBindedObjects) {
 		std::string name = el.first->GetName();
 
@@ -1097,7 +1097,7 @@ void SkinnedModel::Destroy() {
 /////////////////////////////////////////////////////////////////////////
 
 void SkinnedModel::UpdateGameObjectHeightOnTerrain(const std::unique_ptr<Terrain>& terrain) {
-	if (m_pGameObjManager->AreObjectsGrounded() && terrain->IsValidPosition(m_vPos.x, m_vPos.z)) {
+	if (pApp->GetGameObjManager()->AreObjectsGrounded() && terrain->IsValidPosition(m_vPos.x, m_vPos.z)) {
 		m_vPos.y = terrain->GetHeight(m_vPos.x, m_vPos.z) + 0.5f;
 	}
 }

@@ -1,9 +1,6 @@
 #include <stdafx.h>
 #include "TextManager.h"
 #include "SkinnedModel.h"
-/////////////////////////////////////////////////////////////////////////
-
-TextManager* pTextManager = NULL;
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -28,6 +25,8 @@ TextManager::TextManager():m_fFPS(0.0) {
 	//_tcscpy_s(fontDesc.FaceName, _T("Times New Roman"));
 
 	CheckSuccess(D3DXCreateFontIndirect(pDxDevice, &fontDesc, &m_pFont2D));
+
+	printf("TextManager created\n");
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -124,7 +123,7 @@ void TextManager::OnUpdate(float dt) {
 void TextManager::DrawFPS() {
 	static char buffer[256];
 
-	sprintf_s(buffer,"fps: %.2f \n",m_fFPS);
+	sprintf_s(buffer,"fps: %.0f \n",m_fFPS);
 
 	int w = pApp->GetPresentParameters().BackBufferWidth;
 	int h = pApp->GetPresentParameters().BackBufferHeight;
@@ -143,6 +142,33 @@ void TextManager::OnResetDevice() {
 
 void TextManager::OnLostDevice() {
 	m_pFont2D->OnLostDevice();
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+//gets width of text when drawn on screen
+float TextManager::GetStringWidth(std::string str) {
+	RECT rStringInfo;
+	ZeroMemory(&rStringInfo, sizeof(RECT));
+
+	if (m_pFont2D != NULL) {
+		m_pFont2D->DrawTextA(NULL, str.c_str(), str.length(), &rStringInfo, DT_CALCRECT, D3DCOLOR_XRGB(0, 0, 0));
+	}
+	return static_cast<float>(rStringInfo.right);
+}
+
+
+/////////////////////////////////////////////////////////////////////////
+
+//gets height of text when drawn on screen
+float TextManager::GetStringHeight(std::string str) {
+	RECT rStringInfo;
+	ZeroMemory(&rStringInfo, sizeof(RECT));
+
+	if (m_pFont2D != NULL) {
+		m_pFont2D->DrawTextA(NULL, str.c_str(), str.length(), &rStringInfo, DT_CALCRECT, D3DCOLOR_XRGB(0, 0, 0));
+	}
+	return static_cast<float>(rStringInfo.bottom);
 }
 
 /////////////////////////////////////////////////////////////////////////
