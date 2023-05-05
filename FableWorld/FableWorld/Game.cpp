@@ -114,7 +114,7 @@ Game::Game() {
 	D3DXMatrixRotationY(&R, D3DX_PI/2); //rotate this bad boy
 	m_pCamera->TransformByMatrix(R);
 
-	m_pGunEffect = std::unique_ptr<GunEffect>(new GunEffect("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",100, D3DXVECTOR4(0, -9.8f, 0.0f,0.0f)));
+	m_pGunEffect = std::make_unique<GunEffect>("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",100, D3DXVECTOR4(0, -9.8f, 0.0f,0.0f));
 	
 	m_isAIRunningToTarget = false;
 	m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);

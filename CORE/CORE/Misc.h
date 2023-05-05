@@ -38,8 +38,6 @@ inline void __CheckHR(std::string file, int line, HRESULT hr) {
 
 /////////////////////////////////////////////////////////////////
 
-float GetStringWidth(std::string str);
-float GetStringHeight(std::string str);
 void CopyString(const char* input, char** output);
 bool HasNormals(ID3DXMesh* pMesh);
 void InitVertexDeclarations();
