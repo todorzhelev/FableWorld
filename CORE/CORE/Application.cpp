@@ -11,8 +11,6 @@
 
 Application* pApp = nullptr;
 IDirect3DDevice9* pDxDevice = nullptr;
-lua_State* g_luaState = nullptr;
-std::ofstream fout;
 
 /////////////////////////////////////////////////////////////////////////
 //LRESULT - long int
@@ -42,6 +40,8 @@ Application::Application(HINSTANCE hInstance, std::string strWindowTitle, D3DDEV
 	
 	InitMainWindow();
 	InitDirect3D();
+
+	m_LogStream.open("log.txt");
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -421,23 +421,26 @@ IBaseMenuObject* Application::FindMenuObject(std::string strObjectId) {
 
 /////////////////////////////////////////////////////////////////////////
 
-auto Application::GetGameObjManager() -> const std::unique_ptr<GameObjectManager>&
-{
+auto Application::GetGameObjManager() -> const std::unique_ptr<GameObjectManager>& {
 	return m_pGameObjManager;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-auto Application::GetDinput() -> const std::unique_ptr<DirectInput>&
-{
+auto Application::GetDinput() -> const std::unique_ptr<DirectInput>& {
 	return m_pDinput;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-auto Application::GetTextManager() -> const std::unique_ptr<TextManager>&
-{
+auto Application::GetTextManager() -> const std::unique_ptr<TextManager>& {
 	return m_pTextManager;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+std::ofstream& Application::GetLogStream() {
+	return m_LogStream;
 }
 
 /////////////////////////////////////////////////////////////////////////

@@ -32,16 +32,16 @@ Game::Game() {
 	m_vEnemyHealthBarPosition = D3DXVECTOR3(370,5.0,0.0);
 
 	//init lua
-	g_luaState = lua_open();
+	m_pLuaState = lua_open();
 	//open lua libs
-	luaL_openlibs(g_luaState);
+	luaL_openlibs(m_pLuaState);
 	
 	//with lua_register we bind the functions in the cpp file with the invoked functions in the script file
 	//here addStaticModel is function in the script.When it is invoked there it actually invokes l_addStaticModel(lua_State* L)
-	lua_register(g_luaState,"addStaticModel", l_addStaticModel );
-	lua_register(g_luaState,"addAnimatedModel",l_addAnimatedModel);
-	lua_register(g_luaState,"addQuest",l_addQuest);
-	lua_register(g_luaState,"setUpMainHero",l_setUpMainHero);
+	lua_register(m_pLuaState,"addStaticModel", l_addStaticModel );
+	lua_register(m_pLuaState,"addAnimatedModel",l_addAnimatedModel);
+	lua_register(m_pLuaState,"addQuest",l_addQuest);
+	lua_register(m_pLuaState,"setUpMainHero",l_setUpMainHero);
 
 	float fWidth  = (float)pApp->GetPresentParameters().BackBufferWidth;
 	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
@@ -70,8 +70,8 @@ Game::Game() {
 	pApp->GetTextManager()->CreateFontFor3DText();
 
 	//loads the models, sounds and quests from the scripts
-	luaL_dofile(g_luaState, "../../Resources/levels/levelInGame_new.lua");
-	luaL_dofile(g_luaState, "../../Resources/scripts/quests.lua");
+	luaL_dofile(m_pLuaState, "../../Resources/levels/levelInGame_new.lua");
+	luaL_dofile(m_pLuaState, "../../Resources/scripts/quests.lua");
 
 	m_pDialogueManager = std::make_unique<DialogueManager>();
 	//TODO: probably specify this in the level file?
@@ -150,7 +150,7 @@ void Game::InitDebugGraphicsShader() {
 /////////////////////////////////////////////////////////////////////////
 
 Game::~Game() {
-	lua_close(g_luaState);
+	lua_close(m_pLuaState);
 }
 
 /////////////////////////////////////////////////////////////////////////

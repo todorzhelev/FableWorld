@@ -141,7 +141,7 @@ void SkinnedModel::LoadGameObject() {
 	D3DXFRAME* pFrame = FindFrameWithMesh(m_pRoot);
 
 	if( !pFrame )  {
-		fout<<"cannot find node with mesh"<<std::endl;
+		pApp->GetLogStream()<<"cannot find node with mesh"<<std::endl;
 	}
 	
 	D3DXMESHCONTAINER* pMeshContainer = pFrame->pMeshContainer;
@@ -350,7 +350,7 @@ void SkinnedModel::BuildBoundingBox() {
     float width  = m_BoundingBox.GetMaxPoint().x - m_BoundingBox.GetMinPoint().x;
 	float height = m_BoundingBox.GetMaxPoint().y - m_BoundingBox.GetMinPoint().y;
 	float depth  = m_BoundingBox.GetMaxPoint().z - m_BoundingBox.GetMinPoint().z;
-	//fout<<"Bounding box\n"<<width<<endl<<height<<endl<<depth<<endl;
+	//pApp->GetLogStream()<<"Bounding box\n"<<width<<endl<<height<<endl<<depth<<endl;
 
 	D3DXCreateBox(pDxDevice, width, height, depth, &m_pBoundingBoxMesh, 0);
 
@@ -786,7 +786,7 @@ bool SkinnedModel::CalculateDistanceToPickedObject(D3DXFRAME* pFrame, D3DXMATRIX
 	D3DXFRAME* pFirstChild = pFrame->pFrameFirstChild;
 
 	if (pMeshContainer != NULL) {
-		//fout<<pFrame->Name << endl;
+		//pApp->GetLogStream()<<pFrame->Name << endl;
 
 		D3DXMATRIX InverseWorldMatrix;
 		D3DXMatrixInverse(&InverseWorldMatrix, 0, &combinedMatrix);

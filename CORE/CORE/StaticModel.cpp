@@ -155,7 +155,7 @@ void StaticModel::BuildBoundingBox() {
 	float height = m_BoundingBox.GetMaxPoint().y - m_BoundingBox.GetMinPoint().y;
 	float depth  = m_BoundingBox.GetMaxPoint().z - m_BoundingBox.GetMinPoint().z;
 
-	fout<<"Bounding box\n"<<width<<std::endl<<height<<std::endl<<depth<<std::endl;
+	pApp->GetLogStream() <<"Bounding box\n"<<width<<std::endl<<height<<std::endl<<depth<<std::endl;
 
 	D3DXCreateBox(pDxDevice, width, height, depth, &m_pBoundingBoxMesh, 0);
 
@@ -355,12 +355,12 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone, const
 		angleX-=0.01;
 	}
 						
-	fout<<"rot_angleX:"<<angleX<<endl;
-	fout<<"rot_angleY:"<<angleY<<endl;
-	fout<<"rot_angleZ:"<<angleZ<<endl;
-	fout<<"posx:"<<pos.x<<endl;
-	fout<<"posy:"<<pos.y<<endl;
-	fout<<"posz:"<<pos.z<<endl;*/
+	pApp->GetLogStream()<<"rot_angleX:"<<angleX<<endl;
+	pApp->GetLogStream()<<"rot_angleY:"<<angleY<<endl;
+	pApp->GetLogStream()<<"rot_angleZ:"<<angleZ<<endl;
+	pApp->GetLogStream()<<"posx:"<<pos.x<<endl;
+	pApp->GetLogStream()<<"posy:"<<pos.y<<endl;
+	pApp->GetLogStream()<<"posz:"<<pos.z<<endl;*/
 						
 
 	//matrices for the animated model

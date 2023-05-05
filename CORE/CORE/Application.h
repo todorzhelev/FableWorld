@@ -48,6 +48,7 @@ public:
 	auto					GetGameObjManager() -> const std::unique_ptr<GameObjectManager>&;
 	auto					GetDinput() -> const std::unique_ptr<DirectInput>&;
 	auto					GetTextManager() -> const std::unique_ptr<TextManager>&;
+	std::ofstream&			GetLogStream();
 private:
 	void					InitMainWindow();
 	void					InitDirect3D();
@@ -76,12 +77,12 @@ private:
 	std::unique_ptr<GameObjectManager> m_pGameObjManager;
 	std::unique_ptr<DirectInput> m_pDinput;
 	std::unique_ptr<TextManager> m_pTextManager;
+	std::ofstream     m_LogStream;
 };
 
 //////////////////////////////////////////////////////////////////////////////
 
 extern Application*		 pApp;
 extern IDirect3DDevice9* pDxDevice;
-extern std::ofstream     fout;
 
 //////////////////////////////////////////////////////////////////////////////

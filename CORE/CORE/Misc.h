@@ -4,16 +4,12 @@
 //needed for GetWorldPickingRay, which should be accessed from everywhere, which has access to camera
 class Camera;
 
-extern std::ofstream fout; //for logs.
-
 extern "C"
 {
 	#include "lua.h"
 	#include "lualib.h"
 	#include "lauxlib.h"
 }
-
-extern lua_State* g_luaState;
 
 inline void ReleaseX(IUnknown* resource) {
 	if(resource != nullptr) {
