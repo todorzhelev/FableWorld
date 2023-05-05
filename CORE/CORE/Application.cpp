@@ -9,8 +9,9 @@
 #include "GameObjectManager.h"
 #include "DirectInput.h"
 
+/////////////////////////////////////////////////////////////////////////
+
 Application* pApp = nullptr;
-IDirect3DDevice9* pDxDevice = nullptr;
 
 /////////////////////////////////////////////////////////////////////////
 //LRESULT - long int
@@ -57,7 +58,7 @@ void Application::InitManagers() {
 
 Application::~Application() {
 	ReleaseX(m_pD3DObject);
-	ReleaseX(pDxDevice);
+	ReleaseX(m_pDxDevice);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -184,7 +185,7 @@ void Application::InitDirect3D() {
 										m_hMainWindow,                    // window associated with device
 										m_vertexProcessingType,
 										&m_presentParameters,
-										&pDxDevice));
+										&m_pDxDevice));
 
 	printf("DX device created\n");
 	//SwitchToFullscreen(true);
@@ -291,11 +292,11 @@ void Application::SwitchToFullscreen(bool bSwitch) {
 	//if the scenes are not yet initialized just reset the device, otherwise call on lost and on reset functions
 	//the device reset is needed so the directx device can change its parameters with the new values.
 	if (m_pCurrentScene == NULL) {
-		pDxDevice->Reset(&m_presentParameters);
+		m_pDxDevice->Reset(&m_presentParameters);
 	}
 	else {
 		m_pCurrentScene->OnLostDevice();
-		pDxDevice->Reset(&m_presentParameters);
+		m_pDxDevice->Reset(&m_presentParameters);
 		m_pCurrentScene->OnResetDevice();
 	}
 }
@@ -304,7 +305,7 @@ void Application::SwitchToFullscreen(bool bSwitch) {
 
 //tests if the directx device is lost(alt+tab)
 bool Application::IsDeviceLost() {
-	const HRESULT hr = pDxDevice->TestCooperativeLevel();
+	const HRESULT hr = m_pDxDevice->TestCooperativeLevel();
 
 	if (hr == D3DERR_DEVICELOST) {
 		Sleep(20);	
@@ -312,7 +313,7 @@ bool Application::IsDeviceLost() {
 	}
 	else if (hr == D3DERR_DEVICENOTRESET) {
 		m_pCurrentScene->OnLostDevice();
-		pDxDevice->Reset(&m_presentParameters);
+		pApp->GetDevice()->Reset(&m_presentParameters);
 		m_pCurrentScene->OnResetDevice();
 
 		return false;
@@ -390,7 +391,7 @@ IBaseScene* Application::GetScene(std::string strSceneName) {
 
 bool Application::IsShaderVersionSupported() {
 	D3DCAPS9 caps;
-	pDxDevice->GetDeviceCaps(&caps); 
+	m_pDxDevice->GetDeviceCaps(&caps);
 	if (caps.VertexShaderVersion < D3DVS_VERSION(2, 0)) {
 		return false;
 	}
@@ -441,6 +442,12 @@ auto Application::GetTextManager() -> const std::unique_ptr<TextManager>& {
 
 std::ofstream& Application::GetLogStream() {
 	return m_LogStream;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+IDirect3DDevice9* Application::GetDevice() {
+	return m_pDxDevice;
 }
 
 /////////////////////////////////////////////////////////////////////////

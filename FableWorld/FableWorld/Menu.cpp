@@ -6,9 +6,9 @@
 /////////////////////////////////////////////////////////////////////////
 
 Menu::Menu() {
-	D3DXCreateSprite(pDxDevice,&m_pSpriteForLogo);
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/Logo/logo_FableWorld.jpg",&m_pLogoInWindowTexture));
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/Logo/logo_FableWorldFullscreen.jpg",&m_pLogoInFullscreenTexture));
+	D3DXCreateSprite(pApp->GetDevice(),&m_pSpriteForLogo);
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(),"../../Resources/textures/Logo/logo_FableWorld.jpg",&m_pLogoInWindowTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(),"../../Resources/textures/Logo/logo_FableWorldFullscreen.jpg",&m_pLogoInFullscreenTexture));
 
 	float posx = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth/2);
 	float posy = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight/2);
@@ -70,8 +70,8 @@ void Menu::OnUpdate(float dt) {
 /////////////////////////////////////////////////////////////////////////
 
 void Menu::OnRender() {
-	pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
-	pDxDevice->BeginScene();
+	pApp->GetDevice()->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
+	pApp->GetDevice()->BeginScene();
 	D3DXVECTOR3 posForLogo(0.0,0.0,0.0);
 	m_pSpriteForLogo->Begin(D3DXSPRITE_ALPHABLEND);
 		
@@ -98,8 +98,8 @@ void Menu::OnRender() {
 		m_pLabelQuit->OnRender(150,255,255,255);
 	}
 
-	pDxDevice->EndScene();
-	pDxDevice->Present(0, 0, 0, 0);
+	pApp->GetDevice()->EndScene();
+	pApp->GetDevice()->Present(0, 0, 0, 0);
 }
 
 

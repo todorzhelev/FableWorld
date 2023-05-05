@@ -6,9 +6,9 @@
 
 EffectSystem::EffectSystem(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName,int nMaxAmountOfParticles, D3DXVECTOR4 accel)
 :m_particlesAmount(nMaxAmountOfParticles),m_time(0.f), m_accel(accel) {
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,sTextureFileName.c_str(),&m_pTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(),sTextureFileName.c_str(),&m_pTexture));
 	InitShader(sShaderFileName,sShaderTechName);
-	CheckSuccess(pDxDevice->CreateVertexBuffer(nMaxAmountOfParticles*sizeof (Particle),
+	CheckSuccess(pApp->GetDevice()->CreateVertexBuffer(nMaxAmountOfParticles*sizeof (Particle),
 								  D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY|D3DUSAGE_POINTS,
 								  0, D3DPOOL_DEFAULT, &m_pEffectVertexBuffer, 0));
 	m_particles.resize(m_particlesAmount);
@@ -48,7 +48,7 @@ void EffectSystem::AddParticle(GameObject* object) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void EffectSystem::InitShader(std::string sShaderFileName, std::string sShaderTechName) {
-	CheckSuccess(D3DXCreateEffectFromFile(pDxDevice, sShaderFileName.c_str(), 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffectShader, 0));
+	CheckSuccess(D3DXCreateEffectFromFile(pApp->GetDevice(), sShaderFileName.c_str(), 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffectShader, 0));
 	m_hEffectTechnique	  = m_pEffectShader->GetTechniqueByName(sShaderTechName.c_str());
 	m_hWVPMatrix		  = m_pEffectShader->GetParameterByName(0, "WVP");
 	m_hCameraPos		  = m_pEffectShader->GetParameterByName(0, "cameraPos");
@@ -68,7 +68,7 @@ void EffectSystem::OnLostDevice() {
 
 void EffectSystem::OnResetDevice() {
 	m_pEffectShader->OnResetDevice();
-	CheckSuccess(pDxDevice->CreateVertexBuffer(m_particlesAmount *sizeof(Particle),
+	CheckSuccess(pApp->GetDevice()->CreateVertexBuffer(m_particlesAmount *sizeof(Particle),
 								  D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY|D3DUSAGE_POINTS,
 								  0, D3DPOOL_DEFAULT, &m_pEffectVertexBuffer, 0));
 }
@@ -111,9 +111,9 @@ void EffectSystem::OnRender(const std::unique_ptr<Camera>& camera) {
 	m_pEffectShader->SetTexture(m_hTexture,m_pTexture);
 	m_pEffectShader->SetVector(m_hAcceleration, &m_accel);
 
-	pDxDevice->SetStreamSource(0, m_pEffectVertexBuffer, 0, sizeof(Particle));
+	pApp->GetDevice()->SetStreamSource(0, m_pEffectVertexBuffer, 0, sizeof(Particle));
 
-	CheckSuccess(pDxDevice->SetVertexDeclaration(pApp->GetParticleDecl()));
+	CheckSuccess(pApp->GetDevice()->SetVertexDeclaration(pApp->GetParticleDecl()));
 
 	UINT numPasses = 0;
 	m_pEffectShader->Begin(&numPasses, 0);
@@ -134,7 +134,7 @@ void EffectSystem::OnRender(const std::unique_ptr<Camera>& camera) {
 			m_pEffectVertexBuffer->Unlock();
 
 			if( nCount > 0 ) {
-				pDxDevice->DrawPrimitive(D3DPT_POINTLIST,0,nCount);
+				pApp->GetDevice()->DrawPrimitive(D3DPT_POINTLIST,0,nCount);
 			}
 
 		m_pEffectShader->EndPass();

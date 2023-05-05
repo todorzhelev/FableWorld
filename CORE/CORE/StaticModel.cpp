@@ -5,7 +5,7 @@
 
 StaticModel::StaticModel() {
 	//default texture for models that dont have any
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));	
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
 
 	m_light.m_vLight   = D3DXVECTOR3(20.0f, 300.0f, 50.0f);
 	m_light.m_ambient  = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
@@ -27,7 +27,7 @@ StaticModel::StaticModel() {
 
 StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName) {
 	//default texture for models that dont have any
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));	
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
 
 	m_light.m_vLight   = D3DXVECTOR3(20.0f, 300.0f, 50.0f);
 	m_light.m_ambient  = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
@@ -56,7 +56,7 @@ StaticModel::StaticModel(std::string strModelName, std::string ModelFileName, st
 	m_bIsBindable = false;
 	m_strBindedToAnimatedModelName = "";
 	m_strBindedToBoneName = "";
-	D3DXCreateTextureFromFile(pDxDevice, strTextureFileName.c_str(), &m_pTexture);	
+	D3DXCreateTextureFromFile(pApp->GetDevice(), strTextureFileName.c_str(), &m_pTexture);
 
 	/*if( pMesh->m_bIsBindable && !pMesh->m_strBindedToAnimatedModelName.empty() && !pMesh->m_strBindedToBoneName.empty() ) {
 		SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pApp->GetGameObjManager()->GetGameObjects().find(pMesh->m_strBindedToAnimatedModelName)->second);
@@ -81,7 +81,7 @@ void StaticModel::LoadGameObject() {
 
 	DWORD nMaterialsAmount = 0;
 
-	CheckSuccess(D3DXLoadMeshFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pDxDevice, 0, &pMaterialBuffer, 0, &nMaterialsAmount, &pMesh));
+	CheckSuccess(D3DXLoadMeshFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pApp->GetDevice(), 0, &pMaterialBuffer, 0, &nMaterialsAmount, &pMesh));
 
 	bool bHasNormals = HasNormals(pMesh);
 
@@ -92,7 +92,7 @@ void StaticModel::LoadGameObject() {
 	pApp->GetPNTDecl()->GetDeclaration(elements, &nElementsAmount);
 
 	ID3DXMesh* pTempMesh = 0;
-	pMesh->CloneMesh(D3DXMESH_SYSTEMMEM, elements, pDxDevice, &pTempMesh);
+	pMesh->CloneMesh(D3DXMESH_SYSTEMMEM, elements, pApp->GetDevice(), &pTempMesh);
 	pMesh->Release();
 	pMesh = pTempMesh;
 
@@ -101,7 +101,7 @@ void StaticModel::LoadGameObject() {
 		D3DXComputeNormals(pMesh, 0);
 	}
 
-	pMesh->CloneMesh(D3DXMESH_SYSTEMMEM, elements, pDxDevice, &(m_pMesh));
+	pMesh->CloneMesh(D3DXMESH_SYSTEMMEM, elements, pApp->GetDevice(), &(m_pMesh));
 	pMesh->Release();
 
 	//one mesh can be divided by different parts, called subsets and for every substet
@@ -126,7 +126,7 @@ void StaticModel::LoadGameObject() {
 				char strTexturePath[80];
 				strcpy_s(strTexturePath,"../../Resources/textures/StaticModels/");
 				strcat_s(strTexturePath,d3dxmtrls[i].pTextureFilename);
-				CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, strTexturePath, &pTexture));
+				CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), strTexturePath, &pTexture));
 
 				m_vTextures.push_back(pTexture);
 			}
@@ -157,7 +157,7 @@ void StaticModel::BuildBoundingBox() {
 
 	pApp->GetLogStream() <<"Bounding box\n"<<width<<std::endl<<height<<std::endl<<depth<<std::endl;
 
-	D3DXCreateBox(pDxDevice, width, height, depth, &m_pBoundingBoxMesh, 0);
+	D3DXCreateBox(pApp->GetDevice(), width, height, depth, &m_pBoundingBoxMesh, 0);
 
 	D3DXVECTOR3 center = m_BoundingBox.GetCenter();
 	D3DXMatrixTranslation(&(m_BoundingBoxOffset), center.x, center.y, center.z);
@@ -191,7 +191,7 @@ void StaticModel::OnUpdate(float fDeltaTime) {
 /////////////////////////////////////////////////////////////////////////
 
 void StaticModel::BuildEffect() {
-	CheckSuccess(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/StaticModelShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
+	CheckSuccess(D3DXCreateEffectFromFile(pApp->GetDevice(), "../../Resources/shaders/StaticModelShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
 
 	m_hEffectTechnique	= m_pEffect->GetTechniqueByName("StaticModelTech");
 	m_hWVPMatrix		= m_pEffect->GetParameterByName(0, "WVP");
@@ -225,9 +225,9 @@ void StaticModel::OnRender(const std::unique_ptr<Camera>& camera) {
 		m_CombinedTransformationMatrix = S*R1*R2*R3*T;
 
 		//alpha channel is used in the trees
-		pDxDevice->SetRenderState(D3DRS_ALPHATESTENABLE, true);
-		pDxDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
-		pDxDevice->SetRenderState(D3DRS_ALPHAREF, 100);
+		pApp->GetDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, true);
+		pApp->GetDevice()->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+		pApp->GetDevice()->SetRenderState(D3DRS_ALPHAREF, 100);
 
 		D3DXMATRIX finalMatrix = m_CombinedTransformationMatrix * camera->GetViewProjMatrix();
 		m_pEffect->SetMatrix(m_hWVPMatrix, &finalMatrix);
@@ -259,7 +259,7 @@ void StaticModel::OnRender(const std::unique_ptr<Camera>& camera) {
 		}
 		m_pEffect->End();
 	}
-	pDxDevice->SetRenderState(D3DRS_ALPHATESTENABLE, false);
+	pApp->GetDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, false);
 }
 
 //TODO: do we need separate function for binded weapons? may be pass a parameter if it is binded or not?
@@ -402,9 +402,9 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone, const
 				pBindedObject->GetMesh()->DrawSubset(j);
 			}
 
-			pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-			pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+			pApp->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+			pApp->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+			pApp->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 			//bounding box render for binded weapon
 			D3DXMATRIX finalMatrix = pBindedObject->GetBBOffsetMatrix() * FullCombinedMatrix * camera->GetViewProjMatrix();
@@ -414,7 +414,7 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone, const
 			m_pEffect->SetTexture(m_hTexture, m_pWhiteTexture);
 			m_pEffect->CommitChanges();
 			//pBindedObject->m_pBoundingBoxMesh->DrawSubset(0);
-			pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+			pApp->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 
 		m_pEffect->EndPass();
 	}
@@ -424,9 +424,9 @@ void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone, const
 /////////////////////////////////////////////////////////////////////////
 
 void StaticModel::RenderBoundingBox(const std::unique_ptr<Camera>& camera) {
-	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-	pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	pApp->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+	pApp->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pApp->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	D3DXMATRIX T,T1;
 	D3DXMATRIX S;
@@ -451,7 +451,7 @@ void StaticModel::RenderBoundingBox(const std::unique_ptr<Camera>& camera) {
 
 	m_pBoundingBoxMesh->DrawSubset(0);
 
-	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+	pApp->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 }
 
 /////////////////////////////////////////////////////////////////////////

@@ -56,8 +56,8 @@ void MenuInGame::OnUpdate(float dt) {
 /////////////////////////////////////////////////////////////////////////
 
 void MenuInGame::OnRender() {
-	pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER , 0xff000000, 1.0f, 0);
-	pDxDevice->BeginScene();
+	pApp->GetDevice()->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER , 0xff000000, 1.0f, 0);
+	pApp->GetDevice()->BeginScene();
 	
 	pApp->GetScene("game")->OnRender();
 
@@ -75,8 +75,8 @@ void MenuInGame::OnRender() {
 		m_pLabelQuit->OnRender(150,255,255,255);
 	}
 	
-	pDxDevice->EndScene();
-	pDxDevice->Present(0, 0, 0, 0);
+	pApp->GetDevice()->EndScene();
+	pApp->GetDevice()->Present(0, 0, 0, 0);
 }
 
 /////////////////////////////////////////////////////////////////////////

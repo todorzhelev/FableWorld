@@ -13,11 +13,11 @@ Game::Game() {
 	}
 
 	//sprite for the interface in the game
-	D3DXCreateSprite(pDxDevice,&m_pInterfaceSprite);
+	D3DXCreateSprite(pApp->GetDevice(), &m_pInterfaceSprite);
 	//textures for the interface
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/GUI/healthbar.dds",&m_pHealthBarTexture));
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/GUI/healthbar_filled.dds",&m_pHealthBarFilledTexture));
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,"../../Resources/textures/GUI/healthbar_filled_enemy.dds",&m_phealthBarFilledEnemyTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/GUI/healthbar.dds", &m_pHealthBarTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/GUI/healthbar_filled.dds", &m_pHealthBarFilledTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/GUI/healthbar_filled_enemy.dds", &m_phealthBarFilledEnemyTexture));
 	m_rHealthBarRectangle.left = 0;  
 	m_rHealthBarRectangle.top = 0;  
 	m_rHealthBarRectangle.right  = 270;  
@@ -142,7 +142,7 @@ Game::Game() {
 
 //initializes the shader for debug graphics
 void Game::InitDebugGraphicsShader() {
-	D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
+	D3DXCreateEffectFromFile(pApp->GetDevice(), "../../Resources/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
 	m_hDebugGraphicsTechnique  = m_pDebugGraphicsEffect->GetTechniqueByName("DebugGraphics3DTech");
 	m_hDebugGraphicsWVPMatrix  = m_pDebugGraphicsEffect->GetParameterByName(0, "WVP");
 }
@@ -536,8 +536,8 @@ void Game::ManageHealthBars() {
 /////////////////////////////////////////////////////////////////////////
 
 void Game::OnRender() {
-    pDxDevice->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
-    pDxDevice->BeginScene();
+	pApp->GetDevice()->Clear(0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
+	pApp->GetDevice()->BeginScene();
 	
 			m_pSky->OnRender(m_pCamera);
 			m_pTerrain->OnRender(m_pCamera);
@@ -607,15 +607,15 @@ void Game::OnRender() {
 
 			m_pGunEffect->OnRender(m_pCamera);
 
-	pDxDevice->EndScene();
+	pApp->GetDevice()->EndScene();
 
-	pDxDevice->Present(0, 0, 0, 0);
+	pApp->GetDevice()->Present(0, 0, 0, 0);
 }
 	
 /////////////////////////////////////////////////////////////////////////
 
 void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd) {
-	//pDxDevice->BeginScene();
+	//pApp->GetDevice()->BeginScene();
 
 	m_pDebugGraphicsEffect->SetTechnique(m_hDebugGraphicsTechnique);
 
@@ -627,7 +627,7 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd) {
 
 		IDirect3DVertexBuffer9* pVertexBuffer;
 
-		pDxDevice->CreateVertexBuffer(2 * sizeof (VertexPositionColor), D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &pVertexBuffer, 0);
+		pApp->GetDevice()->CreateVertexBuffer(2 * sizeof (VertexPositionColor), D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &pVertexBuffer, 0);
 
 		VertexPositionColor* v = 0;
 		pVertexBuffer->Lock(0, 0,  (void**)&v, 0);
@@ -640,11 +640,11 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd) {
 
 		pVertexBuffer->Unlock();
 
-		pDxDevice->SetStreamSource(0, pVertexBuffer, 0, sizeof(VertexPositionColor));
+		pApp->GetDevice()->SetStreamSource(0, pVertexBuffer, 0, sizeof(VertexPositionColor));
 
-		pDxDevice->SetVertexDeclaration(pApp->GetPCDecl());
+		pApp->GetDevice()->SetVertexDeclaration(pApp->GetPCDecl());
 
-		pDxDevice->DrawPrimitive(D3DPT_LINELIST,0,1);
+		pApp->GetDevice()->DrawPrimitive(D3DPT_LINELIST,0,1);
 
 	m_pDebugGraphicsEffect->EndPass();
 	m_pDebugGraphicsEffect->End();

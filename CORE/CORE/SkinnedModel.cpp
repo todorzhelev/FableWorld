@@ -7,7 +7,7 @@
 
 SkinnedModel::SkinnedModel() {
 	//default white texture for models which doesnt have any
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
 
 	//max number of bones that can be supported.Above 60 bones arent rendered correctly
 	m_nMaxBonesSupported = 60;
@@ -52,7 +52,7 @@ SkinnedModel::SkinnedModel() {
 SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName,bool bShouldRenderTitles) {
 	//code duplication, move it to another function
 	//default white texture for models which doesnt have any
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/DefaultWhiteTexture.dds", &m_pWhiteTexture));
 
 	m_pAnimationComponent = std::unique_ptr<AnimationComponent>(new AnimationComponent());
 	m_pAnimationComponent->SetAnimationSpeed(1);
@@ -128,11 +128,11 @@ SkinnedModel::~SkinnedModel() {
 
 void SkinnedModel::LoadGameObject() {
 	//creates the texture for the model
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, m_strTextureFileName.c_str(), &m_pTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), m_strTextureFileName.c_str(), &m_pTexture));
 
 	AllocateHierarchy allocMeshHierarchy;
 
-	CheckSuccess(D3DXLoadMeshHierarchyFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pDxDevice, &allocMeshHierarchy, 0, &m_pRoot, &m_pAnimationComponent->m_pAnimationController));
+	CheckSuccess(D3DXLoadMeshHierarchyFromX(m_strModelFileName.c_str(), D3DXMESH_SYSTEMMEM, pApp->GetDevice(), &allocMeshHierarchy, 0, &m_pRoot, &m_pAnimationComponent->m_pAnimationController));
 
 	m_pAnimationComponent->EnableTrack(FirstTrack, true);
 	m_pAnimationComponent->EnableTrack(SecondTrack, true);
@@ -158,7 +158,7 @@ void SkinnedModel::LoadGameObject() {
 	m_strTextureFileName = str;
 
 	//creates the texture for the model
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, m_strTextureFileName.c_str(), &m_pTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), m_strTextureFileName.c_str(), &m_pTexture));
 
 	//set the idle animation on the current track and mantain one more track, 
 	//which we will use later to switch to attack or dead animations
@@ -222,7 +222,7 @@ void SkinnedModel::BuildSkinnedModel(ID3DXMesh* pMesh) {
 	pApp->GetPNTDecl()->GetDeclaration(elements, &numElements);
 
 	ID3DXMesh* pTempMesh = 0;
-	pMesh->CloneMesh(D3DXMESH_SYSTEMMEM, elements, pDxDevice, &pTempMesh);
+	pMesh->CloneMesh(D3DXMESH_SYSTEMMEM, elements, pApp->GetDevice(), &pTempMesh);
 	 
 	if (!HasNormals(pTempMesh)) {
 		D3DXComputeNormals(pTempMesh, 0);
@@ -352,7 +352,7 @@ void SkinnedModel::BuildBoundingBox() {
 	float depth  = m_BoundingBox.GetMaxPoint().z - m_BoundingBox.GetMinPoint().z;
 	//pApp->GetLogStream()<<"Bounding box\n"<<width<<endl<<height<<endl<<depth<<endl;
 
-	D3DXCreateBox(pDxDevice, width, height, depth, &m_pBoundingBoxMesh, 0);
+	D3DXCreateBox(pApp->GetDevice(), width, height, depth, &m_pBoundingBoxMesh, 0);
 
 	D3DXVECTOR3 center = m_BoundingBox.GetCenter();
 	D3DXMatrixTranslation(&(m_BoundingBoxOffset), center.x, center.y, center.z);
@@ -367,7 +367,7 @@ void SkinnedModel::BuildBoundingBox() {
 /////////////////////////////////////////////////////////////////////////
 
 void SkinnedModel::BuildEffect() {
-	CheckSuccess(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/SkinnedModelShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
+	CheckSuccess(D3DXCreateEffectFromFile(pApp->GetDevice(), "../../Resources/shaders/SkinnedModelShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
 
 	m_hEffectTechnique	  = m_pEffect->GetTechniqueByName("SkinnedModelTech");
 	m_hWVPMatrix		  = m_pEffect->GetParameterByName(0, "WVP");
@@ -385,7 +385,7 @@ void SkinnedModel::BuildEffect() {
 
 //sets paramateres needed in the effect file for the titles
 void SkinnedModel::BuildEffectForTitles() {
-	D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/Text3DShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pTitlesEffect, 0);
+	D3DXCreateEffectFromFile(pApp->GetDevice(), "../../Resources/shaders/Text3DShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pTitlesEffect, 0);
 	m_hTitlesEffectTechnique = m_pTitlesEffect->GetTechniqueByName("text3DTech");
 	m_hTitlesWVPMatrix  	 = m_pTitlesEffect->GetParameterByName(0, "WVP");
 }
@@ -600,9 +600,9 @@ void SkinnedModel::RenderTitlesForQuest(const std::unique_ptr<Camera>& camera) {
 /////////////////////////////////////////////////////////////////////////
 
 void SkinnedModel::RenderBoundingBox(const std::unique_ptr<Camera>& camera) {
-	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-	pDxDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	pDxDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	pApp->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+	pApp->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pApp->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	D3DXMATRIX T,S,R,R1,R2;
 	D3DXMatrixTranslation(&T,m_vPos.x,m_vPos.y,m_vPos.z);
@@ -623,7 +623,7 @@ void SkinnedModel::RenderBoundingBox(const std::unique_ptr<Camera>& camera) {
 	m_pBoundingBoxMesh->DrawSubset(0);
 
 	m_pEffect->SetValue(m_hMaterial, &m_whiteMaterial, sizeof(Material));	
-	pDxDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+	pApp->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 }
 
 /////////////////////////////////////////////////////////////////////////

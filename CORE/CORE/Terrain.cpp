@@ -50,10 +50,10 @@ Terrain::Terrain(std::string strHeightmapFileName,float fHeightsScale, int nRows
 
 	LoadHeightmap();
 
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/BlendMap_new.dds", &m_pBlendMapTexture));
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/ground0.dds", &m_pDirtTexture));
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/grass-texture-02.dds", &m_pGrassTexture));
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice, "../../Resources/textures/Terrain/rocks.dds", &m_pStoneTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/Terrain/BlendMap_new.dds", &m_pBlendMapTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/Terrain/ground0.dds", &m_pDirtTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/Terrain/grass-texture-02.dds", &m_pGrassTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/Terrain/rocks.dds", &m_pStoneTexture));
 
 	GenerateTerrainMesh();
 	BuildEffect();	
@@ -124,7 +124,7 @@ void Terrain::GenerateTerrainMesh() {
 	pApp->GetPNTDecl()->GetDeclaration(elems, &numElems);
 
 	ID3DXMesh* mesh = 0;
-	CheckSuccess(D3DXCreateMesh(m_nNumTriangles, m_nNumVertices, D3DPOOL_SCRATCH | D3DXMESH_32BIT, elems, pDxDevice, &mesh));
+	CheckSuccess(D3DXCreateMesh(m_nNumTriangles, m_nNumVertices, D3DPOOL_SCRATCH | D3DXMESH_32BIT, elems, pApp->GetDevice(), &mesh));
 
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	//LockVertexBuffer() gives us access to the internal mesh data and by v we can write information to the mesh
@@ -359,7 +359,7 @@ void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalText
 
 	pApp->GetPNTDecl()->GetDeclaration(elems, &nNumElements);
 
-	D3DXCreateMesh(k_nSubGridsTrianglesNumber, k_nSubGridsVertsNumber, D3DXMESH_MANAGED, elems, pDxDevice, &pSubMesh);
+	D3DXCreateMesh(k_nSubGridsTrianglesNumber, k_nSubGridsVertsNumber, D3DXMESH_MANAGED, elems, pApp->GetDevice(), &pSubMesh);
 
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	pSubMesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
@@ -492,7 +492,7 @@ void Terrain::SetLightVector(D3DXVECTOR3 vLightVector) {
 
 //loads the effect parameters and the textures used by the terrain into the shader
 void Terrain::BuildEffect() {
-	CheckSuccess(D3DXCreateEffectFromFile(pDxDevice, "../../Resources/shaders/TerrainShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
+	CheckSuccess(D3DXCreateEffectFromFile(pApp->GetDevice(), "../../Resources/shaders/TerrainShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pEffect, 0));
 
 	m_hEffectTechnique	= m_pEffect->GetTechniqueByName("TerrainTech");
 	m_hWVPMatrix		= m_pEffect->GetParameterByName(0, "WVP");

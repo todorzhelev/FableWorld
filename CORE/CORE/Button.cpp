@@ -3,11 +3,11 @@
 
 Button::Button(D3DXVECTOR2 vPosition, int nWidth, int nHeight, std::string strText,std::string strIdleStateTexFileName, std::string strMouseOverStateTexFileName)
 :IBaseMenuObject(vPosition,nWidth,nHeight,strText,strIdleStateTexFileName,strMouseOverStateTexFileName) {
-	D3DXCreateSprite(pDxDevice,&m_pSprite);
+	D3DXCreateSprite(pApp->GetDevice(),&m_pSprite);
 
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,m_strIdleStateTextureFileName.c_str(),&m_pIdleStateTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(),m_strIdleStateTextureFileName.c_str(),&m_pIdleStateTexture));
 
-	CheckSuccess(D3DXCreateTextureFromFile(pDxDevice,m_strMouseOverStateTextureFileName.c_str(),&m_pMouseOverStateTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(),m_strMouseOverStateTextureFileName.c_str(),&m_pMouseOverStateTexture));
 
 	m_bIsMouseOver = false;
 	m_bIsMouseDown = false;

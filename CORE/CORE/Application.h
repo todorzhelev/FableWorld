@@ -49,6 +49,8 @@ public:
 	auto					GetDinput() -> const std::unique_ptr<DirectInput>&;
 	auto					GetTextManager() -> const std::unique_ptr<TextManager>&;
 	std::ofstream&			GetLogStream();
+	IDirect3DDevice9*		GetDevice();
+
 private:
 	void					InitMainWindow();
 	void					InitDirect3D();
@@ -78,11 +80,11 @@ private:
 	std::unique_ptr<DirectInput> m_pDinput;
 	std::unique_ptr<TextManager> m_pTextManager;
 	std::ofstream     m_LogStream;
+	IDirect3DDevice9* m_pDxDevice;
 };
 
 //////////////////////////////////////////////////////////////////////////////
 
 extern Application*		 pApp;
-extern IDirect3DDevice9* pDxDevice;
 
 //////////////////////////////////////////////////////////////////////////////

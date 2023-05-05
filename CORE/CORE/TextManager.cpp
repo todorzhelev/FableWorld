@@ -24,7 +24,7 @@ TextManager::TextManager():m_fFPS(0.0) {
 	//_tcscpy_s(fontDesc.FaceName, _T("28 Days Later"));
 	//_tcscpy_s(fontDesc.FaceName, _T("Times New Roman"));
 
-	CheckSuccess(D3DXCreateFontIndirect(pDxDevice, &fontDesc, &m_pFont2D));
+	CheckSuccess(D3DXCreateFontIndirect(pApp->GetDevice(), &fontDesc, &m_pFont2D));
 
 	printf("TextManager created\n");
 }
@@ -65,7 +65,7 @@ void TextManager::CreateFontFor3DText() {
 
 //creates 3D text model for model titles
 void TextManager::CreateMeshFor3DText(SkinnedModel* pGameObject) {
-	D3DXCreateText(pDxDevice,  
+	D3DXCreateText(pApp->GetDevice(),
 				   m_hDC,          
 				   pGameObject->GetName().c_str(),		//Text 
 				   0.001f,            
@@ -81,7 +81,7 @@ void TextManager::CreateMeshFor3DText(SkinnedModel* pGameObject) {
 
 //creates 3D text model for quest titles
 void TextManager::CreateMeshFor3DTextQuest(SkinnedModel* pGameObject) {
-	D3DXCreateText( pDxDevice,  
+	D3DXCreateText(pApp->GetDevice(),
 					m_hDC,          
 					pGameObject->GetTitleForQuest().c_str(),	  //Text 
 					0.001f,            

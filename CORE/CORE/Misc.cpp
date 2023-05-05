@@ -77,15 +77,15 @@ void InitVertexDeclarations() {
 	};
 
 	IDirect3DVertexDeclaration9* pDecl = NULL;
-	pDxDevice->CreateVertexDeclaration(vPNT, &pDecl);
+	pApp->GetDevice()->CreateVertexDeclaration(vPNT, &pDecl);
 	pApp->SetPNTDecl(pDecl);
 
 	pDecl = NULL;
-	pDxDevice->CreateVertexDeclaration(vPC, &pDecl);
+	pApp->GetDevice()->CreateVertexDeclaration(vPC, &pDecl);
 	pApp->SetPCDecl(pDecl);
 
 	pDecl = NULL;
-	pDxDevice->CreateVertexDeclaration(vPs, &pDecl);
+	pApp->GetDevice()->CreateVertexDeclaration(vPs, &pDecl);
 	pApp->SetParticleDecl(pDecl);
 }
 
