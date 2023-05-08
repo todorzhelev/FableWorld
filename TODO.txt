@@ -1,3 +1,4 @@
-* cleanup the code, especially the singletons
-* water
+* Water
+* fix the scene - should I revert it back to RPG style?
+* fix the picking and animation issues
 * ChatGPT integration for the dialogues?
