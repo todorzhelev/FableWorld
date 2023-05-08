@@ -7,7 +7,7 @@ public:
 	virtual ~GunEffect();
 	virtual void OnUpdate(float dt) override;
 private:
-	virtual void InitParticle(Particle& pParticle, GameObject* object) override;
+	virtual void InitParticle(Particle& pParticle, std::shared_ptr<GameObject> object) override;
 
 	SkinnedModel* m_pGalio;
 	SkinnedModel* m_pCho;

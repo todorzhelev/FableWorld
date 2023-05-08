@@ -1,16 +1,13 @@
 #include <stdafx.h>
 #include"LuaFunctions.h"
 
-std::string mainHero = "";
-
 /////////////////////////////////////////////////////////////////////////
 /*
 Function:l_addStaticModel
 Purpose:load static models, i.e. models whithout animations
 */
 int l_addStaticModel(lua_State* L) {
-	GameObject* pMesh = new StaticModel;
-
+	std::shared_ptr<GameObject> pMesh = std::make_shared<StaticModel>();
 	D3DXVECTOR3 pos;
 	lua_getglobal(L, "x");
 	pos.x = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
@@ -41,13 +38,9 @@ int l_addStaticModel(lua_State* L) {
 	pMesh->SetObjectType(EGameObjectType_Static);
 	pApp->GetGameObjManager()->AddGameObject(pMesh);
 	if (pMesh->IsBindable() && !pMesh->GetBindedToAnimatedModelName().empty() && !pMesh->GetBindedToBoneName().empty()) {
-		GameObject* obj = pApp->GetGameObjManager()->GetObjectByName(pMesh->GetBindedToAnimatedModelName());
-		SkinnedModel* pSkinnedModel = nullptr;
-		if (obj != nullptr) {
-			pSkinnedModel = static_cast<SkinnedModel*>(obj);
-		}
-
-		pSkinnedModel->BindWeaponToModel(pMesh->GetName(), pMesh->GetBindedToBoneName());
+		//get the name of the actor from the static model to be binded and cast it to SkinnedModel
+		auto pActor = std::static_pointer_cast<SkinnedModel>(pApp->GetGameObjManager()->GetObjectByName(pMesh->GetBindedToAnimatedModelName()));
+		pActor->BindWeaponToModel(pMesh->GetName(), pMesh->GetBindedToBoneName());
 	}
 
 	return 1;
@@ -59,7 +52,7 @@ Function:l_addAnimatedModel
 Purpose:load animated model
 */
 int l_addAnimatedModel(lua_State* L) {
-	SkinnedModel* pMesh = new SkinnedModel;
+	std::shared_ptr<SkinnedModel> pMesh = std::make_shared<SkinnedModel>();
 	D3DXVECTOR3 pos;
 	lua_getglobal(L, "x");
 	pos.x = static_cast<float>(lua_tonumber(L,lua_gettop(L)));
@@ -118,18 +111,6 @@ int l_addQuest(lua_State* L) {
 	quests.push_back(quest);
 	return 1;
 }
-
-/////////////////////////////////////////////////////////////////////////
-/*
-Function:l_setUpMainHero
-Purpose:set ups the main hero in the game
-*/
-int l_setUpMainHero(lua_State* L) {
-	lua_getglobal(L, "mainHero");
-	mainHero = lua_tostring(L,lua_gettop(L));
-	return 1;
-}
-
 
 /////////////////////////////////////////////////////////////////////////
 

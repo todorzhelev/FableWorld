@@ -21,26 +21,27 @@ GameObjectManager::GameObjectManager(bool bShouldRenderTitles, bool bShouldHighl
 
 /////////////////////////////////////////////////////////////////////////
 
-void GameObjectManager::AddGameObject(GameObject* pGameObject) {
+void GameObjectManager::AddGameObject(std::shared_ptr<GameObject> pGameObject) {
 	m_lastObjectId++;
 	pGameObject->SetId(m_lastObjectId);
 
 	m_gameObjects.push_back(pGameObject);
 
-	if( pGameObject->GetObjectType() == EGameObjectType_Skinned ) {
-		m_skinnedModels.push_back(static_cast<SkinnedModel*>(pGameObject));
+	if (pGameObject->GetObjectType() == EGameObjectType_Skinned) {
+		auto skinnedModel = std::static_pointer_cast<SkinnedModel>(pGameObject);
+		m_skinnedModels.push_back(skinnedModel);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-GameObject* GameObjectManager::GetPickedObject() {
+std::shared_ptr<GameObject> GameObjectManager::GetPickedObject() {
 	return m_pPickedObject;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void GameObjectManager::SetPickedObject(GameObject* pPickedObject) {
+void GameObjectManager::SetPickedObject(std::shared_ptr<GameObject> pPickedObject) {
 	m_pPickedObject = pPickedObject;
 }
 
@@ -54,7 +55,7 @@ void GameObjectManager::UpdatePicking(const std::unique_ptr<Camera>& camera) {
 	auto& mapPickedObjects = m_mapPickedObjects;
 
 	//dont want to capture everything
-	auto lambda = [&mapPickedObjects, &camera](GameObject* obj) {
+	auto lambda = [&mapPickedObjects, &camera](std::shared_ptr<GameObject> obj) {
 		float dist = obj->GetDistanceToPickedObject(camera);
 
 		if (dist != -1) {
@@ -92,19 +93,19 @@ void GameObjectManager::UpdatePicking(const std::unique_ptr<Camera>& camera) {
 }
 /////////////////////////////////////////////////////////////////////////
 
-std::vector<GameObject*>& GameObjectManager::GetGameObjects() {
+std::vector<std::shared_ptr<GameObject>>& GameObjectManager::GetGameObjects() {
 	return m_gameObjects;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-std::vector<SkinnedModel*>& GameObjectManager::GetSkinnedModels() {
+std::vector<std::shared_ptr<SkinnedModel>>& GameObjectManager::GetSkinnedModels() {
 	return m_skinnedModels;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-GameObject* GameObjectManager::GetObjectByName(std::string name) {
+std::shared_ptr<GameObject> GameObjectManager::GetObjectByName(std::string name) {
 	for(auto& object : m_gameObjects ) {
 		if (!object->GetName().compare(name)) {
 			return object;
@@ -115,10 +116,10 @@ GameObject* GameObjectManager::GetObjectByName(std::string name) {
 
 /////////////////////////////////////////////////////////////////////////
 
-SkinnedModel* GameObjectManager::GetSkinnedModelByName(std::string name) {
+std::shared_ptr<SkinnedModel> GameObjectManager::GetSkinnedModelByName(std::string name) {
 	for (auto& object : m_skinnedModels) {
 		if (!object->GetName().compare(name)) {
-			return static_cast<SkinnedModel*>(object);
+			return object;
 		}
 	}
 	return nullptr;
@@ -199,19 +200,18 @@ bool GameObjectManager::ShouldPickOnlySkinnedModels() {
 /////////////////////////////////////////////////////////////////////////
 
 void GameObjectManager::RemoveObject(std::string objId) {
-	auto it = std::find_if(m_gameObjects.begin(), m_gameObjects.end(), [objId](GameObject* obj) { return !obj->GetName().compare(objId); });
+	auto it = std::find_if(m_gameObjects.begin(), m_gameObjects.end(),
+							[objId](std::shared_ptr<GameObject> obj) { return !obj->GetName().compare(objId); });
 
 	if (it != m_gameObjects.end()) {
-		GameObject* obj = *it;
-		if (obj->GetObjectType() == EGameObjectType_Skinned) {
-			auto skinnedIt = std::find_if(m_skinnedModels.begin(), m_skinnedModels.end(), [objId](GameObject* obj) { return !obj->GetName().compare(objId); });
+		if ((*it)->GetObjectType() == EGameObjectType_Skinned) {
+			auto skinnedIt = std::find_if(m_skinnedModels.begin(), m_skinnedModels.end(),
+											[objId](std::shared_ptr<SkinnedModel> obj) { return !obj->GetName().compare(objId); });
 
 			if (skinnedIt != m_skinnedModels.end()){
 				m_skinnedModels.erase(skinnedIt);
 			}
 		}
-
-		obj->Destroy();
 
 		m_gameObjects.erase(it);
 	}

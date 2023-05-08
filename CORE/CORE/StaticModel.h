@@ -11,6 +11,8 @@
 class StaticModel : public GameObject {
 public:
 	StaticModel();
+	StaticModel(const StaticModel& other) = delete;
+	StaticModel& operator=(const StaticModel&) = delete;
 	StaticModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName);
 	virtual ~StaticModel();
 	virtual void LoadGameObject() override;

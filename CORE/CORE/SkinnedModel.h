@@ -43,6 +43,8 @@ public:
 class SkinnedModel : public GameObject {
 public:
 	SkinnedModel();
+	SkinnedModel(const SkinnedModel& other) = delete;
+	SkinnedModel& operator=(const SkinnedModel&) = delete;
 	SkinnedModel(std::string strModelName, std::string ModelFileName, std::string strTextureFileName, bool bShouldRenderTitles = true);
 	virtual						~SkinnedModel();
 	virtual void 				LoadGameObject() override;
@@ -204,7 +206,7 @@ private:
 	std::unique_ptr<AnimationComponent> m_pAnimationComponent;
 
 	//this std::map holds which weapon to which bone is attached
-	std::unordered_map<GameObject*, std::string> m_mapBindedObjects;
+	std::unordered_map<std::shared_ptr<GameObject>, std::string> m_mapBindedObjects;
 
 	float				m_movementSpeed;
 };

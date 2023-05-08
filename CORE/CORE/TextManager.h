@@ -13,8 +13,8 @@ public:
 	TextManager();
 	ID3DXFont*  GetFont2D();
 	void		CreateFontFor3DText();
-	void		CreateMeshFor3DText(SkinnedModel* pGameObject);
-	void		CreateMeshFor3DTextQuest(SkinnedModel* pGameObject);
+	void		CreateMeshFor3DText(std::shared_ptr<SkinnedModel> pGameObject);
+	void		CreateMeshFor3DTextQuest(std::shared_ptr<SkinnedModel> pGameObject);
 	void		RenderText(LPCSTR dtext,int x1,int y1,int x2,int y2,int alpha,int color1,int color2,int color3);
 	void		DrawFPS();
 	void		OnUpdate(float dt);

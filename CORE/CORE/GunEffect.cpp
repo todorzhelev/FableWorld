@@ -12,7 +12,7 @@ GunEffect::~GunEffect() {}
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-void GunEffect::InitParticle(Particle& outParticle, GameObject* object) {
+void GunEffect::InitParticle(Particle& outParticle, std::shared_ptr<GameObject> object) {
 	if (!object) {
 		return;
 	}

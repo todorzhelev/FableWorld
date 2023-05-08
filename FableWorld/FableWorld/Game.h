@@ -31,12 +31,11 @@ public:
 	virtual void OnRender() override;
 	bool		IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t=60);
 	virtual LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
-	void		 MoveObject(std::string objectTitle,float dt);
-	void		 RotateObject(std::string objectTitle,float dt);
-	void		 ManageHealthBars();
+	void		 MoveActor(std::shared_ptr<SkinnedModel> actor, float dt);
+	void		 RotateActor(std::shared_ptr<SkinnedModel> actor, float dt);
 	void		 DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd);
 	void		 UpdateAI(float dt);
-	void		 RunToTarget(GameObject * runner, D3DXVECTOR3 targetPos, float dt);
+	void		 RunToTarget(std::shared_ptr<SkinnedModel> runner, D3DXVECTOR3 targetPos, float dt);
 
 private:
 	void		InitDebugGraphicsShader();
@@ -62,7 +61,7 @@ private:
 	IDirect3DTexture9*		m_pHealthBarFilledTexture;
 	IDirect3DTexture9*		m_phealthBarFilledEnemyTexture;
 	Button*					m_pHealSpell;
-	SkinnedModel* 	pMainHero;
+	std::shared_ptr<SkinnedModel> m_pMainHero;
 	bool			m_isAIRunningToTarget;
 	D3DXVECTOR3     m_AIIntersectPoint;
 	ID3DXEffect* m_pDebugGraphicsEffect;

@@ -266,7 +266,7 @@ void StaticModel::OnRender(const std::unique_ptr<Camera>& camera) {
 /////////////////////////////////////////////////////////////////////////
 
 //renders binded model
-void StaticModel::RenderBindedWeapon(GameObject* pSkMesh,std::string bone, const std::unique_ptr<Camera>& camera) {
+void StaticModel::RenderBindedWeapon(GameObject* pSkMesh, std::string bone, const std::unique_ptr<Camera>& camera) {
 	//the animated model
 	SkinnedModel* pSkinnedModel = static_cast<SkinnedModel*>(pSkMesh);
 
@@ -496,7 +496,7 @@ float StaticModel::GetDistanceToPickedObject(const std::unique_ptr<Camera>& came
 /////////////////////////////////////////////////////////////////////////
 
 bool StaticModel::SpawnClone() {
-	StaticModel* pMesh = new StaticModel;
+	std::shared_ptr<StaticModel> pMesh = std::make_shared<StaticModel>();
 	pMesh->SetPosition(GetPosition());
 	pMesh->SetScale(GetScale());
 	pMesh->SetRotationAngleByX(GetRotationAngleByX());

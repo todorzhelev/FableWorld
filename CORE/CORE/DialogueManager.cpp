@@ -104,7 +104,7 @@ void DialogueManager::OnUpdate() {
 			UpdateDialogue(dialogue->m_pCurrentDialogueNode, *dialogue);
 		}
 
-		GameObject* obj = pApp->GetGameObjManager()->GetObjectByName(dialogue->m_strModel);
+		auto obj = pApp->GetGameObjManager()->GetObjectByName(dialogue->m_strModel);
 
 		if (obj && obj->IsPicked() && !dialogue->m_bIsEnded) {
 			dialogue->m_pTree->m_pRoot->m_pLabel->SetVisible(true);
@@ -173,9 +173,9 @@ void DialogueManager::UpdateDialogue(DialogueNode* pNode, DialogueObject& dialog
 					}
 				}
 
-				SkinnedModel* pGameObject = pApp->GetGameObjManager()->GetSkinnedModelByName(dialogue.m_strModel);
+				auto pActor = pApp->GetGameObjManager()->GetSkinnedModelByName(dialogue.m_strModel);
 
-				pGameObject->SetHasDialogue(false);
+				pActor->SetHasDialogue(false);
 
 				dialogue.m_pCurrentDialogueNode = dialogue.m_pTree->m_pRoot;
 				dialogue.m_bIsStarted = false;

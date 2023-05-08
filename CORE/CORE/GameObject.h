@@ -18,6 +18,8 @@ public:
 
 	//todo: should init everything in the constructor
 	GameObject();
+	GameObject(const GameObject& other) = delete;
+	GameObject& operator=(const GameObject&) = delete;
 	virtual ~GameObject() = 0;
 	virtual void OnUpdate(float dt) = 0;
 	virtual void OnRender(const std::unique_ptr<Camera>& camera) = 0;

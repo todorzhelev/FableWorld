@@ -118,6 +118,7 @@ SkinnedModel::SkinnedModel(std::string strModelName, std::string ModelFileName, 
 
 	m_pTitleMesh = nullptr;
 }
+
 /////////////////////////////////////////////////////////////////////////
 
 SkinnedModel::~SkinnedModel() {
@@ -271,7 +272,7 @@ void SkinnedModel::InitBonesToRootMatricesPointersArray() {
 
 //binds static object to animated model's bone
 void SkinnedModel::BindWeaponToModel(std::string strObjectName,std::string strBoneToBind) {
-	GameObject* pGameObject = pApp->GetGameObjManager()->GetObjectByName(strObjectName.c_str());
+	auto pGameObject = pApp->GetGameObjManager()->GetObjectByName(strObjectName.c_str());
 	m_mapBindedObjects[pGameObject] = strBoneToBind;
 }
 
@@ -334,7 +335,6 @@ void SkinnedModel::OnResetDevice() {
 void SkinnedModel::OnLostDevice() {
 	m_pEffect->OnLostDevice();
 	m_pTitlesEffect->OnLostDevice();
-
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -508,7 +508,7 @@ void SkinnedModel::OnRender(const std::unique_ptr<Camera>& camera) {
 	
 	//render the binded objects associated with this skinned mesh
 	for (auto& it : m_mapBindedObjects) {
-		GameObject* pBindedObject = static_cast<StaticModel*>(it.first);
+		auto pBindedObject = std::static_pointer_cast<StaticModel>(it.first);
 		pBindedObject->RenderBindedWeapon(this, it.second, camera);
 	}
 }
@@ -1042,7 +1042,7 @@ float SkinnedModel::GetAnimationSpeed() {
 }
 
 bool SkinnedModel::SpawnClone() {
-	SkinnedModel* pMesh = new SkinnedModel;
+	std::shared_ptr<SkinnedModel> pMesh = std::make_shared<SkinnedModel>();
 	pMesh->SetPosition(GetPosition());
 	pMesh->SetScale(GetScale());
 	pMesh->SetRotationAngleByX(GetRotationAngleByX());
@@ -1084,14 +1084,15 @@ void SkinnedModel::Destroy() {
 	for (auto& el : m_mapBindedObjects) {
 		std::string name = el.first->GetName();
 
-		auto it = std::find_if(gameObjects.begin(), gameObjects.end(), [name](GameObject* obj) { return !obj->GetName().compare(name); });
+		auto it = std::find_if(gameObjects.begin(), gameObjects.end(),
+								[name](std::shared_ptr<GameObject> obj) { return !obj->GetName().compare(name); });
 
 		if (it != gameObjects.end()) {
-			GameObject* obj = *it;
-			obj->Destroy();
 			gameObjects.erase(it);
 		}
 	}
+
+	m_mapBindedObjects.clear();
 }
 
 /////////////////////////////////////////////////////////////////////////

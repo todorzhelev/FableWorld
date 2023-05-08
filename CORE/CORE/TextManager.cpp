@@ -64,7 +64,7 @@ void TextManager::CreateFontFor3DText() {
 /////////////////////////////////////////////////////////////////////////
 
 //creates 3D text model for model titles
-void TextManager::CreateMeshFor3DText(SkinnedModel* pGameObject) {
+void TextManager::CreateMeshFor3DText(std::shared_ptr<SkinnedModel> pGameObject) {
 	D3DXCreateText(pApp->GetDevice(),
 				   m_hDC,          
 				   pGameObject->GetName().c_str(),		//Text 
@@ -80,7 +80,7 @@ void TextManager::CreateMeshFor3DText(SkinnedModel* pGameObject) {
 /////////////////////////////////////////////////////////////////////////
 
 //creates 3D text model for quest titles
-void TextManager::CreateMeshFor3DTextQuest(SkinnedModel* pGameObject) {
+void TextManager::CreateMeshFor3DTextQuest(std::shared_ptr<SkinnedModel> pGameObject) {
 	D3DXCreateText(pApp->GetDevice(),
 					m_hDC,          
 					pGameObject->GetTitleForQuest().c_str(),	  //Text 

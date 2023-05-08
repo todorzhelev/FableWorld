@@ -29,7 +29,7 @@ EffectSystem::~EffectSystem() {}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void EffectSystem::AddParticle(GameObject* object) {
+void EffectSystem::AddParticle(std::shared_ptr<GameObject> object) {
 	if (!object) {
 		return;
 	}

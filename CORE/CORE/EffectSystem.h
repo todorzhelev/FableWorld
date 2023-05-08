@@ -20,12 +20,12 @@ public:
 	EffectSystem(std::string sShaderFileName, std::string sShaderTechName, std::string sTextureFileName, int nMaxAmountOfParticles, D3DXVECTOR4 accel);
 	virtual ~EffectSystem();
 	void		InitShader(std::string sShaderFileName, std::string sShaderTechName);
-	virtual void AddParticle(GameObject* object);
+	virtual void AddParticle(std::shared_ptr<GameObject> object);
 	virtual void OnLostDevice();
 	virtual void OnResetDevice();
 	virtual void OnRender(const std::unique_ptr<Camera>& camera);
 	virtual void OnUpdate(float dt);
-	virtual void InitParticle(Particle& pParticle, GameObject* object) = 0;
+	virtual void InitParticle(Particle& pParticle, std::shared_ptr<GameObject> object) = 0;
 	void SetTime(float time);
 
 protected:
