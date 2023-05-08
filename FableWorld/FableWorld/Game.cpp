@@ -47,10 +47,10 @@ Game::Game() {
 
 	m_pCamera = std::make_unique<Camera>(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 4000,true);
 	m_pCamera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
-	m_pCamera->SetPosition(D3DXVECTOR3(0,200,100));
+	m_pCamera->SetPosition(D3DXVECTOR3(-1058, 1238, 674));
 	m_pCamera->SetSpeed(500);
-
-	//camera->RotateUp(-300);
+	m_pCamera->RotateUp(0.8);
+	m_pCamera->RotateRight(0.6);
 
 	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.
 	InitVertexDeclarations();
@@ -136,6 +136,8 @@ Game::Game() {
 	}
 
 	m_currentPathfindingEndIndex = 0;
+
+	pApp->GetGameObjManager()->SetPickedObject(m_pMainHero);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -521,7 +523,7 @@ void Game::OnRender() {
 				//DrawLine(gameObject->GetPosition(), gameObject->GetRightVector());
 			}
 			
-			//DrawLine(camera->GetPosition(), camera->GetLookVector());
+			//DrawLine(m_pCamera->GetPosition(), m_pCamera->GetLookVector());
 
 			auto BB = m_pMainHero->GetBB();
 			BB = BB.TransformByMatrix(BB.m_transformationMatrix);
@@ -599,7 +601,7 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd) {
 
 		IDirect3DVertexBuffer9* pVertexBuffer;
 
-		pApp->GetDevice()->CreateVertexBuffer(2 * sizeof (VertexPositionColor), D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &pVertexBuffer, 0);
+		CheckSuccess(pApp->GetDevice()->CreateVertexBuffer(2 * sizeof (VertexPositionColor), D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &pVertexBuffer, 0));
 
 		VertexPositionColor* v = 0;
 		pVertexBuffer->Lock(0, 0,  (void**)&v, 0);

@@ -43,6 +43,7 @@ std::shared_ptr<GameObject> GameObjectManager::GetPickedObject() {
 
 void GameObjectManager::SetPickedObject(std::shared_ptr<GameObject> pPickedObject) {
 	m_pPickedObject = pPickedObject;
+	m_pPickedObject->SetPicked(true);
 }
 
 /////////////////////////////////////////////////////////////////////////
