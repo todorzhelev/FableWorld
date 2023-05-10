@@ -112,70 +112,51 @@ Builds the mesh which represents our terrain.
 	  if the submesh is visible by the camera.If it is not visible it isnt rendered.
 */
 void Terrain::GenerateTerrainMesh() {
-	std::vector<D3DXVECTOR3> verts;
-	std::vector<DWORD> indices;
-	GenerateVertexBuffer(verts,m_nRows,m_nCols);
-	GenerateIndexBuffer(indices,m_nRows,m_nCols);
-
 	D3DVERTEXELEMENT9 elems[MAX_FVF_DECL_SIZE];
 	UINT numElems = 0;
-
-	//VertexPositionNormalTexture vertexDeclaration;
 	pApp->GetPNTDecl()->GetDeclaration(elems, &numElems);
+	ID3DXMesh* tempTerrainMesh = 0;
+	CheckSuccess(D3DXCreateMesh(m_nNumTriangles, m_nNumVertices, D3DPOOL_SCRATCH | D3DXMESH_32BIT, elems, pApp->GetDevice(), &tempTerrainMesh));
 
-	ID3DXMesh* mesh = 0;
-	CheckSuccess(D3DXCreateMesh(m_nNumTriangles, m_nNumVertices, D3DPOOL_SCRATCH | D3DXMESH_32BIT, elems, pApp->GetDevice(), &mesh));
-
-	VertexPositionNormalTexture* pVertexBuffer = 0;
+	VertexPositionNormalTexture* tempVertexBuffer = 0;
 	//LockVertexBuffer() gives us access to the internal mesh data and by v we can write information to the mesh
-	mesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
+	tempTerrainMesh->LockVertexBuffer(0, (void**)&tempVertexBuffer);
 
-	for(UINT i = 0; i < mesh->GetNumVertices(); ++i) {
-		pVertexBuffer[i].m_vPos   = verts[i];
-		pVertexBuffer[i].m_vPos.y = m_vHeightmap[i];
-
+	std::vector<D3DXVECTOR3> terrainVertexPositions;
+	GenerateVertexPositions(terrainVertexPositions, m_nRows, m_nCols);
+	for(UINT i = 0; i < tempTerrainMesh->GetNumVertices(); ++i) {
+		tempVertexBuffer[i].m_vPos   = terrainVertexPositions[i];
+		tempVertexBuffer[i].m_vPos.y = m_vHeightmap[i];
 
 		/*
 		At this point the terrain is centered at 0,0,0 like this
-					  +z
-					   |
-					 ----- row 0
-					 | | | row 1
-			 -x ------------------ +x
-					 | | | row 2
-					 ----- row n
-					   |
-					   |
-					  -z
+						+z
+						|
+						----- row 0
+						| | | row 1
+				-x ------------------ +x
+						| | | row 2
+						----- row n
+						|
+						|
+						-z
 		We now want to save texture coordinates for the blendmap. Blendmap is texture that sits on top of the terrain and got the same dimension as it.
 		Blendmap is used so multi-texturing can be performed. The texture coordinates are expressed in this coordinate system:
 					
-					 ----------- +u
-					 | 
-					 |
-					 |
-					 +v
+						----------- +u
+						| 
+						|
+						|
+						+v
 		The texture coordinates must be in [0,1] range. So we have to translate the terrain to the fourth quadrant, so it starts from 0,0,0
 		(this is done with + 0.5*width and -0.5*depth) and after that we have to divide by width and - depth, so the coordinates will be
 		in [0,1] range. We divide by -depth, because in texture coordinates the +v goes down, while in the terrain the rows goes in negative z.
 		*/
-		pVertexBuffer[i].m_vTexCoords.x = (pVertexBuffer[i].m_vPos.x + (0.5f*m_nWidth)) / m_nWidth;
-		pVertexBuffer[i].m_vTexCoords.y = (pVertexBuffer[i].m_vPos.z - (0.5f*m_nDepth)) / -m_nDepth;
+		tempVertexBuffer[i].m_vTexCoords.x = (tempVertexBuffer[i].m_vPos.x + (0.5f*m_nWidth)) / m_nWidth;
+		tempVertexBuffer[i].m_vTexCoords.y = (tempVertexBuffer[i].m_vPos.z - (0.5f*m_nDepth)) / -m_nDepth;
 	}
 	
-	//fill the index buffer in the mesh
-	DWORD* index = 0;
-	mesh->LockIndexBuffer(0, (void**)&index);
-	for(UINT i = 0; i < mesh->GetNumFaces(); ++i) {
-		//we multiply by 3 to jump to the next triangle
-		index[i*3+0] = indices[i*3+0];
-		index[i*3+1] = indices[i*3+1];
-		index[i*3+2] = indices[i*3+2];
-	}
-	mesh->UnlockIndexBuffer();
-
-	//compute normals
-	D3DXComputeNormals(mesh, 0);
+	tempTerrainMesh->UnlockVertexBuffer();
 	
 	//divide the whole mesh into parts
 	int subGridRows = (m_nRows-1) / (k_nSubGridsRowsNumber-1);
@@ -187,7 +168,7 @@ void Terrain::GenerateTerrainMesh() {
 			//the idea is to split the terrain in smaller parts so these parts can be tested for visibility,
 			//and if some of the sub-grids are not visible, they are not rendered
 			//if the whole terrain looks something like this:
-		    //      ------ row 0
+			//      ------ row 0
 			//		|    | row 1
 			//      |    | row 2
 			//      ------ row n
@@ -199,11 +180,11 @@ void Terrain::GenerateTerrainMesh() {
 			//      -------------
 			RECT rSubGridRectangle = {c*(k_nSubGridsColsNumber-1),r*(k_nSubGridsRowsNumber-1),(c+1)*(k_nSubGridsColsNumber-1),(r+1)*(k_nSubGridsRowsNumber-1)};
 
-			BuildSubGridMesh(rSubGridRectangle, pVertexBuffer); 
+			BuildSubGridMesh(rSubGridRectangle, tempVertexBuffer);
 		}
 	}
-	mesh->UnlockVertexBuffer();
-	ReleaseX(mesh);
+
+	ReleaseX(tempTerrainMesh);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -219,8 +200,8 @@ generates the vertex buffer so the vertices are properly positioned and there is
  |
  m_fDZ
 */
-void Terrain::GenerateVertexBuffer(std::vector<D3DXVECTOR3>& vVertices, int nNumRows,int nNumCols) {
-	vVertices.resize(nNumRows*nNumCols);
+void Terrain::GenerateVertexPositions(std::vector<D3DXVECTOR3>& vertexPositions, int nNumRows,int nNumCols) {
+	vertexPositions.resize(nNumRows*nNumCols);
 
 	//the vertices in the terrain are initially generated in the fourth quadrant.
 	//I.e. we start from the first row, generate all the vertices on this row and continue on the next row
@@ -261,11 +242,11 @@ void Terrain::GenerateVertexBuffer(std::vector<D3DXVECTOR3>& vVertices, int nNum
 	int k = 0;
 	for(float i = 0; i < nNumRows; ++i) {
 		for(float j = 0; j < nNumCols; ++j) {
-			vVertices[k].x =  j * m_fDX + xOffset;
+			vertexPositions[k].x =  j * m_fDX + xOffset;
 			//-i because we generate the vertices in the fourth quadrant(negative z goes down)
-			vVertices[k].z = -i * m_fDZ + zOffset;
+			vertexPositions[k].z = -i * m_fDZ + zOffset;
 			//the height is later modified by the heightmap
-			vVertices[k].y =  0.0f;
+			vertexPositions[k].y =  0.0f;
 			
 			k++; // Next vertex
 		}
@@ -275,7 +256,7 @@ void Terrain::GenerateVertexBuffer(std::vector<D3DXVECTOR3>& vVertices, int nNum
 /////////////////////////////////////////////////////////////////////////
 
 //generates the indexBuffer for the mesh.
-void Terrain::GenerateIndexBuffer(std::vector<DWORD>& vIndices,int nNumRows,int nNumCols) {
+void Terrain::GenerateIndexData(std::vector<DWORD>& vIndices, int nNumRows, int nNumCols) {
 	vIndices.resize((nNumRows-1)*(nNumCols-1)*6);
 	 
 	/*
@@ -310,12 +291,9 @@ void Terrain::GenerateIndexBuffer(std::vector<DWORD>& vIndices,int nNumRows,int 
 	int k = 0;
 	for (DWORD i = 0; i < (DWORD)(nNumRows-1); ++i) {
 		for (DWORD j = 0; j < (DWORD)(nNumCols-1); ++j) {
-			vIndices[k]	  = i* nNumCols+j;
-			vIndices[k+1] = i* nNumCols+j+1;
-			vIndices[k+2] = (i+1)*nNumCols+j;
-					
-			vIndices[k+3] = (i+1)*nNumCols+j;
-			vIndices[k+4] = i*nNumCols+j+1;
+			vIndices[k]	  = i*nNumCols+j;
+			vIndices[k+1] = vIndices[k+4] = i*nNumCols+j+1;
+			vIndices[k+2] = vIndices[k+3] = (i+1)*nNumCols+j;
 			vIndices[k+5] = (i+1)*nNumCols+j+1;
 
 			// next quad
@@ -326,40 +304,13 @@ void Terrain::GenerateIndexBuffer(std::vector<DWORD>& vIndices,int nNumRows,int 
 
 /////////////////////////////////////////////////////////////////////////
 
-//checks if certain point is at the terrain
-bool Terrain::IsInBounds(int i, int j) {
-	return i >= 0 && i < m_nRows && j >= 0 && j < m_nCols;
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-void Terrain::OnLostDevice() {
-	m_pEffect->OnLostDevice();
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-void Terrain::OnResetDevice() {
-	m_pEffect->OnResetDevice();
-}
-
-/////////////////////////////////////////////////////////////////////////
-
 //Generates the mesh for the subgrid of the terrain
 void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalTexture* pVertices) {
-	std::vector<D3DXVECTOR3> vTempVerts;
-	std::vector<DWORD> vTempIndices;
-
-	GenerateVertexBuffer(vTempVerts,k_nSubGridsRowsNumber,k_nSubGridsColsNumber);
-	GenerateIndexBuffer(vTempIndices,k_nSubGridsRowsNumber,k_nSubGridsColsNumber);
-
-	ID3DXMesh* pSubMesh = NULL;
 	D3DVERTEXELEMENT9 elems[MAX_FVF_DECL_SIZE];
 	UINT nNumElements = 0;
-
 	pApp->GetPNTDecl()->GetDeclaration(elems, &nNumElements);
-
-	D3DXCreateMesh(k_nSubGridsTrianglesNumber, k_nSubGridsVertsNumber, D3DXMESH_MANAGED, elems, pApp->GetDevice(), &pSubMesh);
+	ID3DXMesh* pSubMesh = nullptr;
+	CheckSuccess(D3DXCreateMesh(k_nSubGridsTrianglesNumber, k_nSubGridsVertsNumber, D3DXMESH_MANAGED | D3DXMESH_32BIT, elems, pApp->GetDevice(), &pSubMesh));
 
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	pSubMesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
@@ -369,34 +320,28 @@ void Terrain::BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalText
 			pVertexBuffer[k] = pVertices[i*m_nCols+j];
 		}
 	}
-
-	AABB bndBox;
-	D3DXComputeBoundingBox((D3DXVECTOR3*)pVertexBuffer, pSubMesh->GetNumVertices(), 
-		sizeof(VertexPositionNormalTexture), &bndBox.GetMinPoint(), &bndBox.GetMaxPoint());
-
 	pSubMesh->UnlockVertexBuffer();
 
-	WORD* pIndices  = 0;
-	DWORD* pAttributeBuffer = 0;
+	DWORD* pIndices  = 0;
 	pSubMesh->LockIndexBuffer(0, (void**)&pIndices);
-	pSubMesh->LockAttributeBuffer(0, &pAttributeBuffer);
+	std::vector<DWORD> indicesData;
+	GenerateIndexData(indicesData, k_nSubGridsRowsNumber, k_nSubGridsColsNumber);
 	for(int i = 0; i < k_nSubGridsTrianglesNumber; ++i) {
-		pIndices[i*3+0] = (WORD)vTempIndices[i*3+0];
-		pIndices[i*3+1] = (WORD)vTempIndices[i*3+1];
-		pIndices[i*3+2] = (WORD)vTempIndices[i*3+2];
-
-		//indicate that all the triangles in the subGrid mesh will share the same attribute buffer
-		//when we draw the subgrids we will call DrawSubset(0), which will render all the triangles in the subgrid with attribute ID = 0
-		pAttributeBuffer[i] = 0; 
+		pIndices[i*3+0] = indicesData[i*3+0];
+		pIndices[i*3+1] = indicesData[i*3+1];
+		pIndices[i*3+2] = indicesData[i*3+2];
 	}
 	pSubMesh->UnlockIndexBuffer();
-	pSubMesh->UnlockAttributeBuffer();
 
-	TerrainSubGrid* subGrid = new TerrainSubGrid(pSubMesh,bndBox);
+	//the index buffer is essential for fast compute of the normals
+	D3DXComputeNormals(pSubMesh, 0);
+	
+	AABB bndBox;
+	D3DXComputeBoundingBox((D3DXVECTOR3*)pVertexBuffer, pSubMesh->GetNumVertices(), sizeof(VertexPositionNormalTexture), &bndBox.GetMinPoint(), &bndBox.GetMaxPoint());
 
+	auto subGrid = std::make_shared<TerrainSubGrid>(pSubMesh, bndBox);
 	m_vSubGrids.push_back(subGrid);
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -513,7 +458,7 @@ void Terrain::BuildEffect() {
 /////////////////////////////////////////////////////////////////////////
 
 void Terrain::OnRender(const std::unique_ptr<Camera>& camera) {
-	std::vector<TerrainSubGrid*> visibleSubGrids;
+	std::vector<std::shared_ptr<TerrainSubGrid>> visibleSubGrids;
 	for (auto& subGrid : m_vSubGrids) {
 		if (camera->IsBoundingBoxVisible(subGrid->m_subGridBoungingBox)) {
 			visibleSubGrids.push_back(subGrid);
@@ -534,8 +479,28 @@ void Terrain::OnRender(const std::unique_ptr<Camera>& camera) {
 	
 	m_pEffect->EndPass();
 	m_pEffect->End();
+
+	visibleSubGrids.clear();
 }
 
+/////////////////////////////////////////////////////////////////////////
+
+//checks if certain point is at the terrain
+bool Terrain::IsInBounds(int i, int j) {
+	return i >= 0 && i < m_nRows&& j >= 0 && j < m_nCols;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Terrain::OnLostDevice() {
+	m_pEffect->OnLostDevice();
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Terrain::OnResetDevice() {
+	m_pEffect->OnResetDevice();
+}
 
 /////////////////////////////////////////////////////////////////////////
 

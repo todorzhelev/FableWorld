@@ -36,8 +36,8 @@ public:
 	void	SetLightVector(D3DXVECTOR3 vLightVector);
 	void	LoadHeightmap();
 	void	GenerateTerrainMesh();
-	void	GenerateVertexBuffer(std::vector<D3DXVECTOR3>& vVertices, int nNumRows,int nNumCols);
-	void	GenerateIndexBuffer(std::vector<DWORD>& vIndices,int nNumRows,int nNumCols);
+	void	GenerateVertexPositions(std::vector<D3DXVECTOR3>& vertexPositions, int nNumRows, int nNumCols);
+	void	GenerateIndexData(std::vector<DWORD>& indexData, int nNumRows, int nNumCols);
 	void	BuildEffect();
 	void	BuildSubGridMesh(RECT& rSubGridRectangle, VertexPositionNormalTexture* pVertices); 
 
@@ -64,7 +64,7 @@ private:
 	std::vector<float> m_vHeightmap;
 
 	//vector with subgrids of the terrain
-	std::vector<TerrainSubGrid*> m_vSubGrids;
+	std::vector<std::shared_ptr<TerrainSubGrid>> m_vSubGrids;
 
 	IDirect3DTexture9* m_pBlendMapTexture;
 	IDirect3DTexture9* m_pStoneTexture;
