@@ -40,7 +40,13 @@ public:
 
 private:
 	void		InitDebugGraphicsShader();
-	void		CreateWater();
+	void		InitWater();
+	void		InitTerrain();
+	void		InitCamera();
+	void		InitGameObjects();
+	void		InitNavmesh();
+	void		InitUI();
+	void		InitLua();
 
 private:
 	std::unique_ptr<Sky>			 m_pSky;
@@ -62,7 +68,7 @@ private:
 	IDirect3DTexture9*		m_pHealthBarTexture;
 	IDirect3DTexture9*		m_pHealthBarFilledTexture;
 	IDirect3DTexture9*		m_phealthBarFilledEnemyTexture;
-	Button*					m_pHealSpell;
+	std::unique_ptr<Button>	m_pHealSpell;
 	std::shared_ptr<SkinnedModel> m_pMainHero;
 	bool			m_isAIRunningToTarget;
 	D3DXVECTOR3     m_AIIntersectPoint;
@@ -70,7 +76,7 @@ private:
 	D3DXHANDLE 	 m_hDebugGraphicsTechnique;
 	D3DXHANDLE   m_hDebugGraphicsWVPMatrix;
 	std::unique_ptr<GunEffect> m_pGunEffect;
-	Navmesh* m_navmesh;
+	std::unique_ptr<Navmesh> m_pNavmesh;
 	int m_currentPathfindingEndIndex;
 	std::vector<D3DXVECTOR3> m_currentPath;
 

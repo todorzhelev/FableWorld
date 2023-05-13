@@ -6,77 +6,89 @@
 /////////////////////////////////////////////////////////////////////////
 
 Game::Game() {
-	//checks if it is supported pixel and vertex shader 2.0
 	if (!pApp->IsShaderVersionSupported()) {
 		MessageBox(0, "Shader version is not supported", 0, 0);
 		PostQuitMessage(0); 
 	}
 
-	//sprite for the interface in the game
-	D3DXCreateSprite(pApp->GetDevice(), &m_pInterfaceSprite);
-	//textures for the interface
-	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/GUI/healthbar.dds", &m_pHealthBarTexture));
-	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/GUI/healthbar_filled.dds", &m_pHealthBarFilledTexture));
-	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/GUI/healthbar_filled_enemy.dds", &m_phealthBarFilledEnemyTexture));
-	m_rHealthBarRectangle.left = 0;  
-	m_rHealthBarRectangle.top = 0;  
-	m_rHealthBarRectangle.right  = 270;  
-	m_rHealthBarRectangle.bottom = 17;
+	InitUI();
+	InitCamera();
+	InitVertexDeclarations();
+	m_pSky = std::make_unique<Sky>("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
+	InitTerrain();
+	pApp->GetTextManager()->CreateFontFor3DText();
+	InitLua();
 
-	m_rEnemyHealthBarRectangle.left = 0;  
-	m_rEnemyHealthBarRectangle.top = 0;  
-	m_rEnemyHealthBarRectangle.right  = 270;  
-	m_rEnemyHealthBarRectangle.bottom = 17;
+	m_pDialogueManager = std::make_unique<DialogueManager>();
+	m_pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue.xml");
 
-	m_vHealthBarPosition = D3DXVECTOR3(100.0,5.0,0.0);
-	m_vEnemyHealthBarPosition = D3DXVECTOR3(370,5.0,0.0);
-
-	//init lua
-	m_pLuaState = lua_open();
-	//open lua libs
-	luaL_openlibs(m_pLuaState);
+	InitGameObjects();
+	InitDebugGraphicsShader();
+	m_pGunEffect = std::make_unique<GunEffect>("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",100, D3DXVECTOR4(0, -9.8f, 0.0f,0.0f));
 	
-	//with lua_register we bind the functions in the cpp file with the invoked functions in the script file
-	//here addStaticModel is function in the script.When it is invoked there it actually invokes l_addStaticModel(lua_State* L)
-	lua_register(m_pLuaState,"addStaticModel", l_addStaticModel );
-	lua_register(m_pLuaState,"addAnimatedModel",l_addAnimatedModel);
-	lua_register(m_pLuaState,"addQuest",l_addQuest);
+	m_isAIRunningToTarget = false;
+	m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
 
-	float fWidth  = (float)pApp->GetPresentParameters().BackBufferWidth;
-	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
+	InitNavmesh();
+	InitWater();
+}
 
-	m_pCamera = std::make_unique<Camera>(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 10000, true);
+/////////////////////////////////////////////////////////////////////////
+
+//initializes the shader for debug graphics
+void Game::InitDebugGraphicsShader() {
+	D3DXCreateEffectFromFile(pApp->GetDevice(), "../../Resources/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
+	m_hDebugGraphicsTechnique  = m_pDebugGraphicsEffect->GetTechniqueByName("DebugGraphics3DTech");
+	m_hDebugGraphicsWVPMatrix  = m_pDebugGraphicsEffect->GetParameterByName(0, "WVP");
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Game::InitCamera() {
+	const float fWidth  = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth);
+	const float fHeight = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight);
+
+	m_pCamera = std::make_unique<Camera>(D3DX_PI * 0.25f, fWidth / fHeight, 1.0f, 10000, true);
 	m_pCamera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 	m_pCamera->SetPosition(D3DXVECTOR3(-1058, 1238, 674));
 	m_pCamera->SetSpeed(500);
 	m_pCamera->RotateUp(0.8);
 	m_pCamera->RotateRight(0.6);
+}
 
-	//Initialize the vertex declarations. They are needed for creating the terrain, models and etc.
-	InitVertexDeclarations();
+/////////////////////////////////////////////////////////////////////////
 
-	m_pSky = std::make_unique<Sky>("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
-
-	//TODO: this should be specified in the level file
-	m_pTerrain = std::make_unique<Terrain>("../../Resources/heightmaps/heightmap_new.raw",0.5f,513,513,4,4,D3DXVECTOR3(0.0f,0.0f,0.0f));
+void Game::InitTerrain() {
+	m_pTerrain = std::make_unique<Terrain>("../../Resources/heightmaps/heightmap_new.raw", 0.5f, 513, 513, 4, 4, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	//m_pTerrain = std::make_unique<Terrain>("../../Resources/heightmaps/coastMountain1025.raw", 1.0f, 1025, 1025, 10.0f, 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//the direction to the sun
 	D3DXVECTOR3 lightVector(20.0f, 300.0f, 50.0f);
 	D3DXVec3Normalize(&lightVector, &lightVector);
 	m_pTerrain->SetLightVector(lightVector);
+}
 
-	pApp->GetTextManager()->CreateFontFor3DText();
+/////////////////////////////////////////////////////////////////////////
 
+void Game::InitLua() {
+	//init lua
+	m_pLuaState = lua_open();
+	//open lua libs
+	luaL_openlibs(m_pLuaState);
+
+	//with lua_register we bind the functions in the cpp file with the invoked functions in the script file
+	//here addStaticModel is function in the script.When it is invoked there it actually invokes l_addStaticModel(lua_State* L)
+	lua_register(m_pLuaState, "addStaticModel", l_addStaticModel);
+	lua_register(m_pLuaState, "addAnimatedModel", l_addAnimatedModel);
+	lua_register(m_pLuaState, "addQuest", l_addQuest);
 	//loads the models, sounds and quests from the scripts
 	luaL_dofile(m_pLuaState, "../../Resources/levels/levelInGame_new.lua");
 	luaL_dofile(m_pLuaState, "../../Resources/scripts/quests.lua");
+}
 
-	m_pDialogueManager = std::make_unique<DialogueManager>();
-	//TODO: probably specify this in the level file?
-	m_pDialogueManager->LoadDialogues("../../Resources/dialogues/dialogue.xml");
+/////////////////////////////////////////////////////////////////////////
 
-	//creates 3d titles for the models and check for dialogues
+void Game::InitGameObjects() {
 	auto& gameObjects = pApp->GetGameObjManager()->GetSkinnedModels();
 	for (auto& gameObject : gameObjects) {
 		//create mesh for 3d text above the models
@@ -98,26 +110,7 @@ Game::Game() {
 		}
 	}
 
-	// hides the enemy health bar before we attack enemy.
-	m_bIsEnemyHealthBarVisible = false;
-	
-	auto height = pApp->GetPresentParameters().BackBufferHeight;
-	D3DXVECTOR2 spellPosition(100, height-80);
-
-	m_pHealSpell = new Button(spellPosition,64,64,"","heal1.dds","heal1.dds");
-
-	InitDebugGraphicsShader();
-
-	//TODO: this does not work for all cases...
-	//it should be more generic - it should align with the vectors of the main hero.
-	D3DXMATRIX R;
-	D3DXMatrixRotationY(&R, D3DX_PI/2); //rotate this bad boy
-	m_pCamera->TransformByMatrix(R);
-
-	m_pGunEffect = std::make_unique<GunEffect>("../../Resources/shaders/Effects/GunShader.fx","GunEffectTech","../../Resources/textures/Effects/bolt.dds",100, D3DXVECTOR4(0, -9.8f, 0.0f,0.0f));
-	
-	m_isAIRunningToTarget = false;
-	m_AIIntersectPoint = D3DXVECTOR3(0, 0, 0);
+	pApp->GetGameObjManager()->SetPickedObject(m_pMainHero);
 
 	//auto objCho = pApp->GetGameObjManager()->GetObjectByName("cho");
 	//objCho->SpawnClone();//~7.5MB per one cho
@@ -126,41 +119,18 @@ Game::Game() {
 	//objCho->SpawnClone();
 	//objCho->SpawnClone();
 	//objCho->SpawnClone();
-
-	m_navmesh = new Navmesh;
-	m_navmesh->resetCommonSettings();
-	m_navmesh->loadGeometry();
-	bool success = m_navmesh->handleBuild();
-	if (!success) {
-		printf("failed to build navmesh \n");
-	}
-
-	m_currentPathfindingEndIndex = 0;
-
-	pApp->GetGameObjManager()->SetPickedObject(m_pMainHero);
-
-	CreateWater();
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-//initializes the shader for debug graphics
-void Game::InitDebugGraphicsShader() {
-	D3DXCreateEffectFromFile(pApp->GetDevice(), "../../Resources/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
-	m_hDebugGraphicsTechnique  = m_pDebugGraphicsEffect->GetTechniqueByName("DebugGraphics3DTech");
-	m_hDebugGraphicsWVPMatrix  = m_pDebugGraphicsEffect->GetParameterByName(0, "WVP");
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-void Game::CreateWater() {
+void Game::InitWater() {
 	D3DXMATRIX waterWorld;
 	D3DXMatrixTranslation(&waterWorld, 0.0f, -3.0f, 0.0f);
 
 	Material waterMtrl;
-	waterMtrl.m_ambient = D3DXCOLOR(0.26f, 0.23f, 0.3f, 0.90f);
-	waterMtrl.m_diffuse = D3DXCOLOR(0.26f, 0.23f, 0.3f, 0.90f);
-	waterMtrl.m_specular = 1.0f * WHITE;
+	waterMtrl.m_ambient = D3DXCOLOR(0.26f, 0.23f, 0.3f, 0.70f);
+	waterMtrl.m_diffuse = D3DXCOLOR(0.26f, 0.23f, 0.3f, 0.70f);
+	waterMtrl.m_specular = 1.0f * PINK;
 	waterMtrl.m_fSpecularPower = 64.0f;
 
 	Light light;
@@ -190,49 +160,48 @@ void Game::CreateWater() {
 
 /////////////////////////////////////////////////////////////////////////
 
-Game::~Game() {
-	lua_close(m_pLuaState);
+void Game::InitNavmesh() {
+	m_pNavmesh = std::make_unique<Navmesh>();
+	m_pNavmesh->resetCommonSettings();
+	m_pNavmesh->loadGeometry();
+	bool success = m_pNavmesh->handleBuild();
+	if (!success) {
+		printf("failed to build navmesh \n");
+	}
+
+	m_currentPathfindingEndIndex = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Game::OnLostDevice() {
-	m_pSky->OnLostDevice();
-	pApp->GetTextManager()->OnLostDevice();
-	m_pTerrain->OnLostDevice();
+void Game::InitUI() {
+	//sprite for the interface in the game
+	D3DXCreateSprite(pApp->GetDevice(), &m_pInterfaceSprite);
+	//textures for the interface
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/GUI/healthbar.dds", &m_pHealthBarTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/GUI/healthbar_filled.dds", &m_pHealthBarFilledTexture));
+	CheckSuccess(D3DXCreateTextureFromFile(pApp->GetDevice(), "../../Resources/textures/GUI/healthbar_filled_enemy.dds", &m_phealthBarFilledEnemyTexture));
+	m_rHealthBarRectangle.left = 0;
+	m_rHealthBarRectangle.top = 0;
+	m_rHealthBarRectangle.right = 270;
+	m_rHealthBarRectangle.bottom = 17;
 
-	for (auto& gameObject : pApp->GetGameObjManager()->GetGameObjects()) {
-		gameObject->OnLostDevice();
-	}
+	m_rEnemyHealthBarRectangle.left = 0;
+	m_rEnemyHealthBarRectangle.top = 0;
+	m_rEnemyHealthBarRectangle.right = 270;
+	m_rEnemyHealthBarRectangle.bottom = 17;
 
-	m_pInterfaceSprite->OnLostDevice();
-	m_pHealSpell->OnLostDevice();
-	m_pWater->OnLostDevice();
+	m_vHealthBarPosition = D3DXVECTOR3(100.0, 5.0, 0.0);
+	m_vEnemyHealthBarPosition = D3DXVECTOR3(370, 5.0, 0.0);
+
+	// hides the enemy health bar before we attack enemy.
+	m_bIsEnemyHealthBarVisible = false;
+
+	auto height = pApp->GetPresentParameters().BackBufferHeight;
+	D3DXVECTOR2 spellPosition(100, height - 80);
+
+	m_pHealSpell = std::make_unique<Button>(spellPosition, 64, 64, "", "heal1.dds", "heal1.dds");
 }
-
-/////////////////////////////////////////////////////////////////////////
-
-void Game::OnResetDevice() {
-	m_pSky->OnResetDevice();
-	pApp->GetTextManager()->OnResetDevice();
-	m_pTerrain->OnResetDevice();
-	
-	for (auto& gameObject : pApp->GetGameObjManager()->GetGameObjects()) {
-		gameObject->OnResetDevice();
-	}
-	m_pInterfaceSprite->OnResetDevice();
-
-	m_pHealSpell->OnResetDevice();
-	
-	//after the onResetDevice there might be change in the size of the screen so set
-	//the new dimensions to the camera
-	//float w = (float)pApp->GetPresentParameters().BackBufferWidth;
-	//float h = (float)pApp->GetPresentParameters().BackBufferHeight;
-	//camera->BuildProjectionMatrix(D3DX_PI * 0.25f, w/h, 1.0f, 2000.0f);
-
-	m_pWater->OnResetDevice();
-}
-
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -332,10 +301,10 @@ void Game::OnUpdate(float dt) {
 			D3DXVECTOR3 lineEndPoint = vOrigin + INT_MAX * vDir;
 			D3DXPlaneIntersectLine(&m_AIIntersectPoint, &plane, &vOrigin, &lineEndPoint);
 
-			m_navmesh->FindPath(pickedObj->GetPosition(), m_AIIntersectPoint);
+			m_pNavmesh->FindPath(pickedObj->GetPosition(), m_AIIntersectPoint);
 
 			m_currentPath.clear();
-			m_currentPath = m_navmesh->GetCalculatedPath();
+			m_currentPath = m_pNavmesh->GetCalculatedPath();
 
 			m_currentPathfindingEndIndex = 0;
 			m_isAIRunningToTarget = true;
@@ -673,7 +642,6 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd) {
 	//pDxDevice->Present(0, 0, 0, 0);
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 
 //checks if two models are close
@@ -687,6 +655,48 @@ bool Game::IsObjectNear(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float t) {
 	return false;
 }
 
+Game::~Game() {
+	lua_close(m_pLuaState);
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Game::OnLostDevice() {
+	m_pSky->OnLostDevice();
+	pApp->GetTextManager()->OnLostDevice();
+	m_pTerrain->OnLostDevice();
+
+	for (auto& gameObject : pApp->GetGameObjManager()->GetGameObjects()) {
+		gameObject->OnLostDevice();
+	}
+
+	m_pInterfaceSprite->OnLostDevice();
+	m_pHealSpell->OnLostDevice();
+	m_pWater->OnLostDevice();
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Game::OnResetDevice() {
+	m_pSky->OnResetDevice();
+	pApp->GetTextManager()->OnResetDevice();
+	m_pTerrain->OnResetDevice();
+
+	for (auto& gameObject : pApp->GetGameObjManager()->GetGameObjects()) {
+		gameObject->OnResetDevice();
+	}
+	m_pInterfaceSprite->OnResetDevice();
+
+	m_pHealSpell->OnResetDevice();
+
+	//after the onResetDevice there might be change in the size of the screen so set
+	//the new dimensions to the camera
+	//float w = (float)pApp->GetPresentParameters().BackBufferWidth;
+	//float h = (float)pApp->GetPresentParameters().BackBufferHeight;
+	//camera->BuildProjectionMatrix(D3DX_PI * 0.25f, w/h, 1.0f, 2000.0f);
+
+	m_pWater->OnResetDevice();
+}
 
 /////////////////////////////////////////////////////////////////////////
 
