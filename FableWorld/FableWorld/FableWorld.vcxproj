@@ -189,6 +189,7 @@
     <ClCompile Include="NavmeshInterfaces.cpp" />
     <ClCompile Include="NavmeshPathfinder.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
+    <ClCompile Include="Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\CORE\CORE\AABB.h" />
@@ -253,6 +254,7 @@
     <ClInclude Include="NavmeshPathfinder.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="resource2.h" />
+    <ClInclude Include="Water.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Resources\scripts\level.lua" />
@@ -288,6 +290,10 @@
     <FxCompile Include="..\..\Resources\shaders\Text3DShader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TransformVS</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TransformVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\..\Resources\shaders\WaterShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WaterVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WaterVS</EntryPointName>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -260,6 +260,9 @@
     <ClCompile Include="NavmeshPathfinder.cpp">
       <Filter>Source Files\Navmesh</Filter>
     </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>CORE\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\CORE\CORE\AABB.h">
@@ -446,6 +449,9 @@
       <Filter>Source Files\Navmesh</Filter>
     </ClInclude>
     <ClInclude Include="resource2.h" />
+    <ClInclude Include="Water.h">
+      <Filter>CORE\Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fonts\28DaysLater.ttf">
@@ -481,6 +487,9 @@
       <Filter>shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Resources\shaders\Effects\GunShader.fx">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Resources\shaders\WaterShader.fx">
       <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>

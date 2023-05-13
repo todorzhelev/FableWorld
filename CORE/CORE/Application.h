@@ -37,6 +37,10 @@ public:
 	//particles
 	void					SetParticleDecl(IDirect3DVertexDeclaration9 * pDecl);
 	auto					GetParticleDecl() ->IDirect3DVertexDeclaration9*;
+	//used for water
+	void					SetPositionTextureDecl(IDirect3DVertexDeclaration9* pDecl);
+	auto					GetPositionTextureDecl()->IDirect3DVertexDeclaration9*;
+
 	void					AddUIObject(IBaseMenuObject* pUIObject);
 	std::vector<IBaseMenuObject*> m_vUIObjects;
 	//holds the selected textbox, this must not be here,
@@ -76,6 +80,7 @@ private:
 	IDirect3DVertexDeclaration9* m_pVertexPNTDecl;
 	IDirect3DVertexDeclaration9* m_pVertexPCDecl;
 	IDirect3DVertexDeclaration9* m_pVertexParticleDecl;
+	IDirect3DVertexDeclaration9* m_pVertexPositionTextureDecl;
 	std::unique_ptr<GameObjectManager> m_pGameObjManager;
 	std::unique_ptr<DirectInput> m_pDinput;
 	std::unique_ptr<TextManager> m_pTextManager;

@@ -44,6 +44,8 @@ const float EPSILON  = 0.001f;
 const float INF = FLT_MAX;
 const D3DXCOLOR WHITE(1.0f, 1.0f, 1.0f, 1.0f);
 const D3DXCOLOR PINK(1.0f, 0.1f, 0.5f, 1.0f);
+const D3DXCOLOR RED(1.0f, 0.0f, 0.0f, 1.0f);
+const D3DXCOLOR YELLOW(1.0f, 1.0f, 0.0f, 1.0f);
 
 /////////////////////////////////////////////////////////////////
 

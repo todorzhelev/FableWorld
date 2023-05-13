@@ -16,6 +16,7 @@
 #include "GameObjectManager.h"
 #include "LuaFunctions.h"
 #include "GunEffect.h"
+#include "Water.h"
 
 class Navmesh;
 
@@ -39,6 +40,7 @@ public:
 
 private:
 	void		InitDebugGraphicsShader();
+	void		CreateWater();
 
 private:
 	std::unique_ptr<Sky>			 m_pSky;
@@ -71,4 +73,6 @@ private:
 	Navmesh* m_navmesh;
 	int m_currentPathfindingEndIndex;
 	std::vector<D3DXVECTOR3> m_currentPath;
+
+	std::unique_ptr<Water> m_pWater;
 };

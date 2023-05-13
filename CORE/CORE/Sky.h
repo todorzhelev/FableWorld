@@ -11,6 +11,8 @@ public:
 	void OnLostDevice();
 	void OnResetDevice();
 	void OnRender(const std::unique_ptr<Camera>& camera);
+	auto GetSkyTexture() -> IDirect3DCubeTexture9*;
+
 private:
 	ID3DXMesh*	m_pSkyMesh;
 	float		m_fSkyRadius;

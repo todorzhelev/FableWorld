@@ -87,6 +87,10 @@ void InitVertexDeclarations() {
 	pDecl = NULL;
 	pApp->GetDevice()->CreateVertexDeclaration(vPs, &pDecl);
 	pApp->SetParticleDecl(pDecl);
+
+	pDecl = NULL;
+	pApp->GetDevice()->CreateVertexDeclaration(vPT, &pDecl);
+	pApp->SetPositionTextureDecl(pDecl);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

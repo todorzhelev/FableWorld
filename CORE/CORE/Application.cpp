@@ -365,6 +365,18 @@ void Application::SetPCDecl(IDirect3DVertexDeclaration9* pDecl) {
 
 /////////////////////////////////////////////////////////////////////////
 
+IDirect3DVertexDeclaration9* Application::GetPositionTextureDecl() {
+	return m_pVertexPositionTextureDecl;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Application::SetPositionTextureDecl(IDirect3DVertexDeclaration9* pDecl) {
+	m_pVertexPositionTextureDecl = pDecl;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
 void Application::SetCurrentScene(IBaseScene* pScene) {
 	m_pCurrentScene = pScene;
 }

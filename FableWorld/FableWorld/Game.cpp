@@ -45,7 +45,7 @@ Game::Game() {
 	float fWidth  = (float)pApp->GetPresentParameters().BackBufferWidth;
 	float fHeight = (float)pApp->GetPresentParameters().BackBufferHeight;
 
-	m_pCamera = std::make_unique<Camera>(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 4000,true);
+	m_pCamera = std::make_unique<Camera>(D3DX_PI * 0.25f, fWidth/fHeight, 1.0f, 10000, true);
 	m_pCamera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 	m_pCamera->SetPosition(D3DXVECTOR3(-1058, 1238, 674));
 	m_pCamera->SetSpeed(500);
@@ -138,6 +138,8 @@ Game::Game() {
 	m_currentPathfindingEndIndex = 0;
 
 	pApp->GetGameObjManager()->SetPickedObject(m_pMainHero);
+
+	CreateWater();
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -147,6 +149,43 @@ void Game::InitDebugGraphicsShader() {
 	D3DXCreateEffectFromFile(pApp->GetDevice(), "../../Resources/shaders/DebugGraphicsShader.fx", 0, 0, D3DXSHADER_DEBUG, 0, &m_pDebugGraphicsEffect, 0);
 	m_hDebugGraphicsTechnique  = m_pDebugGraphicsEffect->GetTechniqueByName("DebugGraphics3DTech");
 	m_hDebugGraphicsWVPMatrix  = m_pDebugGraphicsEffect->GetParameterByName(0, "WVP");
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Game::CreateWater() {
+	D3DXMATRIX waterWorld;
+	D3DXMatrixTranslation(&waterWorld, 0.0f, -3.0f, 0.0f);
+
+	Material waterMtrl;
+	waterMtrl.m_ambient = D3DXCOLOR(0.26f, 0.23f, 0.3f, 0.90f);
+	waterMtrl.m_diffuse = D3DXCOLOR(0.26f, 0.23f, 0.3f, 0.90f);
+	waterMtrl.m_specular = 1.0f * WHITE;
+	waterMtrl.m_fSpecularPower = 64.0f;
+
+	Light light;
+	light.m_vLight = D3DXVECTOR3(0.0f, -2.0f, -1.0f);
+	D3DXVec3Normalize(&light.m_vLight, &light.m_vLight);
+	light.m_ambient = D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f);
+	light.m_diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	light.m_specular = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+
+	Water::InitInfo waterInitInfo;
+	waterInitInfo.dirLight = light;
+	waterInitInfo.mtrl = waterMtrl;
+	waterInitInfo.vertRows = 128;
+	waterInitInfo.vertCols = 128;
+	waterInitInfo.dx = 80.0f;
+	waterInitInfo.dz = 80.0f;
+	waterInitInfo.waveMapFilename0 = "../../Resources/textures/Water/wave0.dds";
+	waterInitInfo.waveMapFilename1 = "../../Resources/textures/Water/wave1.dds";
+	waterInitInfo.waveMapVelocity0 = D3DXVECTOR2(0.05f, 0.08f);
+	waterInitInfo.waveMapVelocity1 = D3DXVECTOR2(-0.02f, 0.1f);
+	waterInitInfo.texScale = 16.0f;
+	waterInitInfo.toWorld = waterWorld;
+
+	m_pWater = std::make_unique<Water>(waterInitInfo);
+	m_pWater->SetEnvMap(m_pSky->GetSkyTexture());
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -168,8 +207,8 @@ void Game::OnLostDevice() {
 
 	m_pInterfaceSprite->OnLostDevice();
 	m_pHealSpell->OnLostDevice();
+	m_pWater->OnLostDevice();
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -190,6 +229,8 @@ void Game::OnResetDevice() {
 	//float w = (float)pApp->GetPresentParameters().BackBufferWidth;
 	//float h = (float)pApp->GetPresentParameters().BackBufferHeight;
 	//camera->BuildProjectionMatrix(D3DX_PI * 0.25f, w/h, 1.0f, 2000.0f);
+
+	m_pWater->OnResetDevice();
 }
 
 
@@ -324,6 +365,8 @@ void Game::OnUpdate(float dt) {
 	}
 
 	delay -= dt;
+
+	m_pWater->OnUpdate(dt);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -580,6 +623,8 @@ void Game::OnRender() {
 			m_pHealSpell->OnRender();
 
 			m_pGunEffect->OnRender(m_pCamera);
+
+			m_pWater->OnRender(m_pCamera);
 
 	pApp->GetDevice()->EndScene();
 
