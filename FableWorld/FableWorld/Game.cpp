@@ -13,7 +13,6 @@ Game::Game() {
 
 	InitUI();
 	InitCamera();
-	InitVertexDeclarations();
 	m_pSky = std::make_unique<Sky>("../../Resources/textures/Sky/grassenvmap1024.dds", 10000.0f);
 	InitTerrain();
 	pApp->GetTextManager()->CreateFontFor3DText();
@@ -48,7 +47,7 @@ void Game::InitCamera() {
 	const float fWidth  = static_cast<float>(pApp->GetPresentParameters().BackBufferWidth);
 	const float fHeight = static_cast<float>(pApp->GetPresentParameters().BackBufferHeight);
 
-	m_pCamera = std::make_unique<Camera>(D3DX_PI * 0.25f, fWidth / fHeight, 1.0f, 10000, true);
+	m_pCamera = std::make_unique<Camera>(D3DX_PI * 0.25f, fWidth / fHeight, 1.0f, 20000, true);
 	m_pCamera->SetCameraMode(ECameraMode::MoveWithPressedMouse);
 	m_pCamera->SetPosition(D3DXVECTOR3(-1058, 1238, 674));
 	m_pCamera->SetSpeed(500);
@@ -125,37 +124,41 @@ void Game::InitGameObjects() {
 
 void Game::InitWater() {
 	D3DXMATRIX waterWorld;
-	D3DXMatrixTranslation(&waterWorld, 0.0f, -3.0f, 0.0f);
+	D3DXMatrixTranslation(&waterWorld, 0.0f, -400.0f, 0.0f);
 
 	Material waterMtrl;
-	waterMtrl.m_ambient = D3DXCOLOR(0.26f, 0.23f, 0.3f, 0.70f);
-	waterMtrl.m_diffuse = D3DXCOLOR(0.26f, 0.23f, 0.3f, 0.70f);
-	waterMtrl.m_specular = 1.0f * PINK;
-	waterMtrl.m_fSpecularPower = 64.0f;
+	waterMtrl.m_ambient = D3DXCOLOR(0.4f, 0.4f, 0.7f, 0.0f);
+	waterMtrl.m_diffuse = D3DXCOLOR(0.4f, 0.4f, 0.7f, 1.0f);
+	waterMtrl.m_specular = 1.0f * WHITE;
+	waterMtrl.m_fSpecularPower = 128.0f;
 
 	Light light;
-	light.m_vLight = D3DXVECTOR3(0.0f, -2.0f, -1.0f);
+	light.m_vLight = D3DXVECTOR3(0.0f, -1.0f, -3.0f);
 	D3DXVec3Normalize(&light.m_vLight, &light.m_vLight);
-	light.m_ambient = D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f);
-	light.m_diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	light.m_specular = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	light.m_ambient  = D3DXCOLOR(0.5f, 0.5f, 0.6f, 1.0f);
+	light.m_diffuse  = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	light.m_specular = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
 
 	Water::InitInfo waterInitInfo;
 	waterInitInfo.dirLight = light;
 	waterInitInfo.mtrl = waterMtrl;
 	waterInitInfo.vertRows = 128;
 	waterInitInfo.vertCols = 128;
-	waterInitInfo.dx = 80.0f;
-	waterInitInfo.dz = 80.0f;
-	waterInitInfo.waveMapFilename0 = "../../Resources/textures/Water/wave0.dds";
-	waterInitInfo.waveMapFilename1 = "../../Resources/textures/Water/wave1.dds";
-	waterInitInfo.waveMapVelocity0 = D3DXVECTOR2(0.05f, 0.08f);
-	waterInitInfo.waveMapVelocity1 = D3DXVECTOR2(-0.02f, 0.1f);
-	waterInitInfo.texScale = 16.0f;
-	waterInitInfo.toWorld = waterWorld;
+	waterInitInfo.dx = 200.f;
+	waterInitInfo.dz = 200.f;
+	waterInitInfo.waveMapFilename0	= "../../Resources/textures/Water/wave0.dds";
+	waterInitInfo.waveMapFilename1	= "../../Resources/textures/Water/wave1.dds";
+	waterInitInfo.dmapFilename0		= "../../Resources/textures/Water/waterdmap0.dds";
+	waterInitInfo.dmapFilename1		= "../../Resources/textures/Water/waterdmap1.dds";
+	waterInitInfo.waveNMapVelocity0 = D3DXVECTOR2(0.05f, 0.07f);
+	waterInitInfo.waveNMapVelocity1 = D3DXVECTOR2(-0.01f, 0.13f);
+	waterInitInfo.waveDMapVelocity0 = D3DXVECTOR2(0.001f, 0.001f);
+	waterInitInfo.waveDMapVelocity1 = D3DXVECTOR2(0.001f, 0.001f);
+	waterInitInfo.scaleHeights		= D3DXVECTOR2(302.7f, 302.1f);
+	waterInitInfo.texScale			= 8.0f;
+	waterInitInfo.toWorld			= waterWorld;
 
 	m_pWater = std::make_unique<Water>(waterInitInfo);
-	m_pWater->SetEnvMap(m_pSky->GetSkyTexture());
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -620,10 +623,10 @@ void Game::DrawLine(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vEnd) {
 		VertexPositionColor* v = 0;
 		pVertexBuffer->Lock(0, 0,  (void**)&v, 0);
 
-		v[0].m_vPos = vStart;
+		v[0].m_pos = vStart;
 		//v[0].m_color = D3DXCOLOR(1.0f,1.0,1.0f,1.0f);
 
-		v[1].m_vPos = vEnd;
+		v[1].m_pos = vEnd;
 		//v[1].m_color = D3DXCOLOR(1.0f,1.0,1.0f,1.0f);
 
 		pVertexBuffer->Unlock();

@@ -2,6 +2,8 @@
 #include "Misc.h"
 #include "Camera.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //checks if the mesh got normals
 bool HasNormals(ID3DXMesh* pMesh) {
 	D3DVERTEXELEMENT9 elems[MAX_FVF_DECL_SIZE];
@@ -22,75 +24,6 @@ bool HasNormals(ID3DXMesh* pMesh) {
 		}
 	}
 	return bHasNormals;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//initialize vertex declarations. For now only position, normal, texture declaration is used
-//and only it is initalized and saved in the GamepApp, so we can access it later.
-void InitVertexDeclarations() {
-	//position only (12B size)
-	D3DVERTEXELEMENT9 vP[] = {
-		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
-		D3DDECL_END()
-	};	
-
-	//position and color (28B)
-	D3DVERTEXELEMENT9 vPC[] = {
-		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
-		{0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0},
-		D3DDECL_END()
-	};	
-
-	//position and normal (24B size)
-	D3DVERTEXELEMENT9 vPN[] = {
-		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
-		{0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0},
-		D3DDECL_END()
-	};	
-
-	//position and texture (20B size)
-	D3DVERTEXELEMENT9 vPT[] = {
-		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
-		{0, 12, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
-		D3DDECL_END()
-	};	
-
-	//position,normal and texture (32B size)
-	D3DVERTEXELEMENT9 vPNT[] = {
-		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
-		{0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0},
-		{0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
-		D3DDECL_END()
-	};
-
-	//56B. D3DCOLOR is 4x4B floats
-	D3DVERTEXELEMENT9 vPs[] = {
-		{ 0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
-		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
-		{ 0, 24, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },
-		{ 0, 28, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 2 },
-		{ 0, 32, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 3 },
-		{ 0, 36, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 4 },
-		{ 0, 40, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
-		D3DDECL_END()
-	};
-
-	IDirect3DVertexDeclaration9* pDecl = NULL;
-	pApp->GetDevice()->CreateVertexDeclaration(vPNT, &pDecl);
-	pApp->SetPNTDecl(pDecl);
-
-	pDecl = NULL;
-	pApp->GetDevice()->CreateVertexDeclaration(vPC, &pDecl);
-	pApp->SetPCDecl(pDecl);
-
-	pDecl = NULL;
-	pApp->GetDevice()->CreateVertexDeclaration(vPs, &pDecl);
-	pApp->SetParticleDecl(pDecl);
-
-	pDecl = NULL;
-	pApp->GetDevice()->CreateVertexDeclaration(vPT, &pDecl);
-	pApp->SetPositionTextureDecl(pDecl);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

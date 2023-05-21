@@ -147,7 +147,7 @@ void StaticModel::BuildBoundingBox() {
 	VertexPositionNormalTexture* pVertexBuffer = 0;
 	m_pMesh->LockVertexBuffer(0, (void**)&pVertexBuffer);
 
-	D3DXComputeBoundingBox(&pVertexBuffer[0].m_vPos, m_pMesh->GetNumVertices(), sizeof(VertexPositionNormalTexture), &(m_BoundingBox.GetMinPoint()), &(m_BoundingBox.GetMaxPoint()));
+	D3DXComputeBoundingBox(&pVertexBuffer[0].m_pos, m_pMesh->GetNumVertices(), sizeof(VertexPositionNormalTexture), &(m_BoundingBox.GetMinPoint()), &(m_BoundingBox.GetMaxPoint()));
 	
 	m_pMesh->UnlockVertexBuffer();
 	

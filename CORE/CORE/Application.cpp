@@ -41,6 +41,7 @@ Application::Application(HINSTANCE hInstance, std::string strWindowTitle, D3DDEV
 	
 	InitMainWindow();
 	InitDirect3D();
+	InitVertexDeclarations();
 
 	m_LogStream.open("log.txt");
 }
@@ -329,54 +330,6 @@ bool Application::IsDeviceLost() {
 
 /////////////////////////////////////////////////////////////////////////
 
-IDirect3DVertexDeclaration9* Application::GetPNTDecl() { 
-	return m_pVertexPNTDecl;
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-void Application::SetPNTDecl(IDirect3DVertexDeclaration9* pDecl) {
-	m_pVertexPNTDecl = pDecl;
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-IDirect3DVertexDeclaration9* Application::GetParticleDecl() {
-	return m_pVertexParticleDecl;
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-void Application::SetParticleDecl(IDirect3DVertexDeclaration9* pDecl) {
-	m_pVertexParticleDecl = pDecl;
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-IDirect3DVertexDeclaration9* Application::GetPCDecl() { 
-	return m_pVertexPCDecl;
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-void Application::SetPCDecl(IDirect3DVertexDeclaration9* pDecl) {
-	m_pVertexPCDecl = pDecl;
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-IDirect3DVertexDeclaration9* Application::GetPositionTextureDecl() {
-	return m_pVertexPositionTextureDecl;
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-void Application::SetPositionTextureDecl(IDirect3DVertexDeclaration9* pDecl) {
-	m_pVertexPositionTextureDecl = pDecl;
-}
-
-/////////////////////////////////////////////////////////////////////////
-
 void Application::SetCurrentScene(IBaseScene* pScene) {
 	m_pCurrentScene = pScene;
 }
@@ -404,10 +357,10 @@ IBaseScene* Application::GetScene(std::string strSceneName) {
 bool Application::IsShaderVersionSupported() {
 	D3DCAPS9 caps;
 	m_pDxDevice->GetDeviceCaps(&caps);
-	if (caps.VertexShaderVersion < D3DVS_VERSION(2, 0)) {
+	if (caps.VertexShaderVersion < D3DVS_VERSION(3, 0)) {
 		return false;
 	}
-	if (caps.PixelShaderVersion < D3DPS_VERSION(2, 0)) {
+	if (caps.PixelShaderVersion < D3DPS_VERSION(3, 0)) {
 		return false;
 	}
 
@@ -460,6 +413,95 @@ std::ofstream& Application::GetLogStream() {
 
 IDirect3DDevice9* Application::GetDevice() {
 	return m_pDxDevice;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void Application::InitVertexDeclarations() {
+	//position only (12B size)
+	D3DVERTEXELEMENT9 vP[] = {
+		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+		D3DDECL_END()
+	};
+
+	//position and color (28B)
+	D3DVERTEXELEMENT9 vPC[] = {
+		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+		{0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0},
+		D3DDECL_END()
+	};
+
+	//position and normal (24B size)
+	D3DVERTEXELEMENT9 vPN[] = {
+		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+		{0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0},
+		D3DDECL_END()
+	};
+
+	//position and 2 textures (28B size)
+	D3DVERTEXELEMENT9 vPTT[] = {
+		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+		{0, 12, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
+		{0, 20, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1},
+		D3DDECL_END()
+	};
+
+	//position,normal and texture (32B size)
+	D3DVERTEXELEMENT9 vPNT[] = {
+		{0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+		{0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0},
+		{0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
+		D3DDECL_END()
+	};
+
+	//56B. D3DCOLOR is 4x4B floats
+	D3DVERTEXELEMENT9 vPs[] = {
+		{ 0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 24, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },
+		{ 0, 28, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 2 },
+		{ 0, 32, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 3 },
+		{ 0, 36, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 4 },
+		{ 0, 40, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+		D3DDECL_END()
+	};
+
+	IDirect3DVertexDeclaration9* pDecl = nullptr;
+	m_pDxDevice->CreateVertexDeclaration(vPNT, &pDecl);
+	m_pVertexPNTDecl = pDecl;
+
+	m_pDxDevice->CreateVertexDeclaration(vPC, &pDecl);
+	m_pVertexPCDecl = pDecl;
+
+	m_pDxDevice->CreateVertexDeclaration(vPs, &pDecl);
+	m_pVertexParticleDecl = pDecl;
+
+	m_pDxDevice->CreateVertexDeclaration(vPTT, &pDecl);
+	m_pVertexPositionNormalDisplacementDecl = pDecl;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+IDirect3DVertexDeclaration9* Application::GetPNTDecl() {
+	return m_pVertexPNTDecl;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+IDirect3DVertexDeclaration9* Application::GetParticleDecl() {
+	return m_pVertexParticleDecl;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+IDirect3DVertexDeclaration9* Application::GetPCDecl() {
+	return m_pVertexPCDecl;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+IDirect3DVertexDeclaration9* Application::GetPositionNormalDisplacementDecl() {
+	return m_pVertexPositionNormalDisplacementDecl;
 }
 
 /////////////////////////////////////////////////////////////////////////

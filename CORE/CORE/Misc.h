@@ -36,7 +36,6 @@ inline void __CheckHR(std::string file, int line, HRESULT hr) {
 
 void CopyString(const char* input, char** output);
 bool HasNormals(ID3DXMesh* pMesh);
-void InitVertexDeclarations();
 
 /////////////////////////////////////////////////////////////////
 
@@ -66,42 +65,3 @@ struct Light {
 };
 
 /////////////////////////////////////////////////////////////////
-
-struct VertexPosition {
-	D3DXVECTOR3 m_vPos;
-};
-
-/////////////////////////////////////////////////////////////////
-
-struct VertexPositionColor {
-	D3DXVECTOR3 m_vPos;
-	D3DXCOLOR   m_color;
-};
-
-/////////////////////////////////////////////////////////////////
-
-struct VertexPositionNormal {
-	D3DXVECTOR3 m_vPos;
-	D3DXVECTOR3 m_vNormal;
-};
-
-/////////////////////////////////////////////////////////////////
-
-struct VertexPositionTexture {
-	D3DXVECTOR3 m_vPos;
-	D3DXVECTOR2 m_vTexCoords;
-};
-
-/////////////////////////////////////////////////////////////////
-
-struct VertexPositionNormalTexture {
-	D3DXVECTOR3 m_vPos;
-	D3DXVECTOR3 m_vNormal;
-	D3DXVECTOR2 m_vTexCoords;
-};
-
-/////////////////////////////////////////////////////////////////
-
-
-
-

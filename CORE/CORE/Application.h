@@ -28,18 +28,6 @@ public:
 	void					AddScene(std::string strSceneName, IBaseScene* pScene);
 	IBaseScene*				GetScene(std::string strSceneName);
 	bool					IsShaderVersionSupported();
-	//position normal texture
-	void					SetPNTDecl(IDirect3DVertexDeclaration9* pDecl);
-	auto					GetPNTDecl() ->IDirect3DVertexDeclaration9*;
-	//position color
-	void					SetPCDecl(IDirect3DVertexDeclaration9* pDecl);
-	auto					GetPCDecl() ->IDirect3DVertexDeclaration9*;
-	//particles
-	void					SetParticleDecl(IDirect3DVertexDeclaration9 * pDecl);
-	auto					GetParticleDecl() ->IDirect3DVertexDeclaration9*;
-	//used for water
-	void					SetPositionTextureDecl(IDirect3DVertexDeclaration9* pDecl);
-	auto					GetPositionTextureDecl()->IDirect3DVertexDeclaration9*;
 
 	void					AddUIObject(IBaseMenuObject* pUIObject);
 	std::vector<IBaseMenuObject*> m_vUIObjects;
@@ -55,9 +43,17 @@ public:
 	std::ofstream&			GetLogStream();
 	IDirect3DDevice9*		GetDevice();
 
+public:
+	IDirect3DVertexDeclaration9* GetPNTDecl();
+	IDirect3DVertexDeclaration9* GetPCDecl();
+	IDirect3DVertexDeclaration9* GetParticleDecl();
+	IDirect3DVertexDeclaration9* GetPositionNormalDisplacementDecl();
+
 private:
 	void					InitMainWindow();
 	void					InitDirect3D();
+	void					InitVertexDeclarations();
+
 private:
 	//the std::string in the title bar if we are in windowed mode
 	std::string					 m_strWindowTitle;
@@ -80,7 +76,7 @@ private:
 	IDirect3DVertexDeclaration9* m_pVertexPNTDecl;
 	IDirect3DVertexDeclaration9* m_pVertexPCDecl;
 	IDirect3DVertexDeclaration9* m_pVertexParticleDecl;
-	IDirect3DVertexDeclaration9* m_pVertexPositionTextureDecl;
+	IDirect3DVertexDeclaration9* m_pVertexPositionNormalDisplacementDecl;
 	std::unique_ptr<GameObjectManager> m_pGameObjManager;
 	std::unique_ptr<DirectInput> m_pDinput;
 	std::unique_ptr<TextManager> m_pTextManager;
@@ -91,5 +87,42 @@ private:
 //////////////////////////////////////////////////////////////////////////////
 
 extern Application*		 pApp;
+
+//////////////////////////////////////////////////////////////////////////////
+
+struct VertexPosition {
+	D3DXVECTOR3 m_pos;
+};
+
+//////////////////////////////////////////////////////////////////////////////
+
+struct VertexPositionColor {
+	D3DXVECTOR3 m_pos;
+	D3DXCOLOR   m_color;
+};
+
+//////////////////////////////////////////////////////////////////////////////
+
+struct VertexPositionNormal {
+	D3DXVECTOR3 m_pos;
+	D3DXVECTOR3 m_vNormal;
+};
+
+//////////////////////////////////////////////////////////////////////////////
+
+//used for water
+struct VertexPositionNormalDisplacement {
+	D3DXVECTOR3 m_pos;
+	D3DXVECTOR2 m_normalMapCoord;       // [a, b]
+	D3DXVECTOR2 m_displacementMapCoord; // [0, 1]
+};
+
+//////////////////////////////////////////////////////////////////////////////
+
+struct VertexPositionNormalTexture {
+	D3DXVECTOR3 m_pos;
+	D3DXVECTOR3 m_normal;
+	D3DXVECTOR2 m_textureCoord;
+};
 
 //////////////////////////////////////////////////////////////////////////////

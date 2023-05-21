@@ -1,4 +1,4 @@
-* Water
 * fix the scene - should I revert it back to RPG style?
 * fix the picking and animation issues
+* shadows?
 * ChatGPT integration for the dialogues?

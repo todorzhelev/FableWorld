@@ -14,8 +14,13 @@ public:
 		float    dz;
 		std::string waveMapFilename0;
 		std::string waveMapFilename1;
-		D3DXVECTOR2 waveMapVelocity0;
-		D3DXVECTOR2 waveMapVelocity1;
+		std::string dmapFilename0;
+		std::string dmapFilename1;
+		D3DXVECTOR2 waveNMapVelocity0;
+		D3DXVECTOR2 waveNMapVelocity1;
+		D3DXVECTOR2 waveDMapVelocity0;
+		D3DXVECTOR2 waveDMapVelocity1;
+		D3DXVECTOR2 scaleHeights;
 		float texScale;
 		D3DXMATRIX toWorld;
 	};
@@ -39,9 +44,17 @@ private:
 	std::unique_ptr<IDirect3DTexture9> m_pWaveMap0;
 	std::unique_ptr<IDirect3DTexture9> m_pWaveMap1;
 
+	// The two displacement maps to scroll.
+	std::unique_ptr<IDirect3DTexture9> m_pDispMap0;
+	std::unique_ptr<IDirect3DTexture9> m_pDispMap1;
+
 	// Offset of normal maps for scrolling (vary as a function of time)
-	D3DXVECTOR2 m_waveMapOffset0;
-	D3DXVECTOR2 m_waveMapOffset1;
+	D3DXVECTOR2 m_waveNMapOffset0;
+	D3DXVECTOR2 m_waveNMapOffset1;
+
+	// Offset of displacement maps for scrolling (vary as a function of time)
+	D3DXVECTOR2 m_waveDMapOffset0;
+	D3DXVECTOR2 m_waveDMapOffset1;
 
 	InitInfo m_initInfo;
 	float m_width;
@@ -56,8 +69,14 @@ private:
 	D3DXHANDLE m_hEyePosW;
 	D3DXHANDLE m_hWaveMap0;
 	D3DXHANDLE m_hWaveMap1;
-	D3DXHANDLE m_hWaveMapOffset0;
-	D3DXHANDLE m_hWaveMapOffset1;
+	D3DXHANDLE m_hWaveNMapOffset0;
+	D3DXHANDLE m_hWaveNMapOffset1;
+	D3DXHANDLE m_hWaveDMapOffset0;
+	D3DXHANDLE m_hWaveDMapOffset1;
+	D3DXHANDLE m_hWaveDispMap0;
+	D3DXHANDLE m_hWaveDispMap1;
+	D3DXHANDLE m_hScaleHeights;
+	D3DXHANDLE m_hGridStepSizeL;
 	D3DXHANDLE m_hEnvMap;
 };
 

@@ -4,7 +4,7 @@ struct Material {
 	float4 ambient;
 	float4 diffuse;
 	float4 spec;
-	float  specPower;
+	float specPower;
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -22,32 +22,38 @@ uniform extern float4x4 gWorld;
 uniform extern float4x4 gWorldInv;
 uniform extern float4x4 gWVP;
 uniform extern Material gMtrl;
-uniform extern Light    gLight;
-uniform extern float3   gEyePosW;
-uniform extern float2   gWaveMapOffset0;
-uniform extern float2   gWaveMapOffset1;
-uniform extern texture  gWaveMap0;
-uniform extern texture  gWaveMap1;
-uniform extern texture  gEnvMap;
+uniform extern Light gLight;
+uniform extern float3 gEyePosW;
+
+// Texture coordinate offset vectors for scrolling normal maps and displacement maps.
+uniform extern float2 gWaveNMapOffset0;
+uniform extern float2 gWaveNMapOffset1;
+uniform extern float2 gWaveDMapOffset0;
+uniform extern float2 gWaveDMapOffset1;
+
+// Two normal maps and displacement maps.
+uniform extern texture gWaveMap0;
+uniform extern texture gWaveMap1;
+uniform extern texture gWaveDispMap0;
+uniform extern texture gWaveDispMap1;
+
+// User-defined scaling factors to scale the heights sampled from the displacement map into a more convenient range.
+uniform extern float2 gScaleHeights;
+
+// Space between grids in x,z directions in local space used for finite differencing.
+uniform extern float2 gGridStepSizeL;
 
 ////////////////////////////////////////////////////////////////////
 
-sampler EnvMapS = sampler_state {
-	Texture = <gEnvMap>;
-	MinFilter = ANISOTROPIC;
-	MaxAnisotropy = 8;
-	MagFilter = LINEAR;
-	MipFilter = LINEAR;
-	AddressU = WRAP;
-	AddressV = WRAP;
-};
+static const float DMAP_SIZE = 128.0f;
+static const float DMAP_DX = 1.0f / DMAP_SIZE;
 
 ////////////////////////////////////////////////////////////////////
 
 sampler WaveMapS0 = sampler_state {
 	Texture = <gWaveMap0>;
 	MinFilter = ANISOTROPIC;
-	MaxAnisotropy = 8;
+	MaxAnisotropy = 12;
 	MagFilter = LINEAR;
 	MipFilter = LINEAR;
 	AddressU = WRAP;
@@ -59,7 +65,7 @@ sampler WaveMapS0 = sampler_state {
 sampler WaveMapS1 = sampler_state {
 	Texture = <gWaveMap1>;
 	MinFilter = ANISOTROPIC;
-	MaxAnisotropy = 8;
+	MaxAnisotropy = 12;
 	MagFilter = LINEAR;
 	MipFilter = LINEAR;
 	AddressU = WRAP;
@@ -68,26 +74,98 @@ sampler WaveMapS1 = sampler_state {
 
 ////////////////////////////////////////////////////////////////////
 
-struct OutputVS {
-	float4 posH      : POSITION0;
-	float3 toEyeT    : TEXCOORD0;
-	float3 lightDirT : TEXCOORD1;
-	float2 tex0      : TEXCOORD2;
-	float2 tex1      : TEXCOORD3;
-	float3 toEyeW    : TEXCOORD4;
-	float3 normalW   : TEXCOORD5;
+sampler DispMapS0 = sampler_state {
+	Texture = <gWaveDispMap0>;
+	MinFilter = POINT;
+	MagFilter = POINT;
+	MipFilter = POINT;
+	AddressU = WRAP;
+	AddressV = WRAP;
 };
 
 ////////////////////////////////////////////////////////////////////
 
-OutputVS WaterVS(float3 posL : POSITION0, float2 tex0 : TEXCOORD0) {
-	OutputVS outVS;
+sampler DispMapS1 = sampler_state {
+	Texture = <gWaveDispMap1>;
+	MinFilter = POINT;
+	MagFilter = POINT;
+	MipFilter = POINT;
+	AddressU = WRAP;
+	AddressV = WRAP;
+};
 
-	// Build TBN-basis. For flat water grid in the xz-plane in object space, the TBN-basis has a very simple form.
+////////////////////////////////////////////////////////////////////
+
+struct VS_OUTPUT {
+	float4 posH : POSITION0;
+	float3 toEyeT : TEXCOORD0;
+	float3 lightDirT : TEXCOORD1;
+	float2 tex0 : TEXCOORD2;
+	float2 tex1 : TEXCOORD3;
+};
+
+////////////////////////////////////////////////////////////////////
+
+struct VS_INPUT {
+	float3 posL : POSITION0;
+	float2 normalMapCoord : TEXCOORD0;
+	float2 displacementMapCoord : TEXCOORD1;
+};
+
+////////////////////////////////////////////////////////////////////
+
+float DoDispMapping(float2 texC0, float2 texC1) {
+	// Transform to texel space
+	float2 texelpos = DMAP_SIZE * texC0;
+
+	// Determine the lerp amounts.
+	float2 lerps = frac(texelpos);
+
+	float dmap0[4];
+	dmap0[0] = tex2Dlod(DispMapS0, float4(texC0, 0.0f, 0.0f)).r;
+	dmap0[1] = tex2Dlod(DispMapS0, float4(texC0, 0.0f, 0.0f) + float4(DMAP_DX, 0.0f, 0.0f, 0.0f)).r;
+	dmap0[2] = tex2Dlod(DispMapS0, float4(texC0, 0.0f, 0.0f) + float4(0.0f, DMAP_DX, 0.0f, 0.0f)).r;
+	dmap0[3] = tex2Dlod(DispMapS0, float4(texC0, 0.0f, 0.0f) + float4(DMAP_DX, DMAP_DX, 0.0f, 0.0f)).r;
+
+	// Filter displacement map:
+	float h0 = lerp(lerp(dmap0[0], dmap0[1], lerps.x), lerp(dmap0[2], dmap0[3], lerps.x), lerps.y);
+
+	texelpos = DMAP_SIZE * texC1;
+	lerps = frac(texelpos);
+
+	float dmap1[4];
+	dmap1[0] = tex2Dlod(DispMapS1, float4(texC1, 0.0f, 0.0f)).r;
+	dmap1[1] = tex2Dlod(DispMapS1, float4(texC1, 0.0f, 0.0f) + float4(DMAP_DX, 0.0f, 0.0f, 0.0f)).r;
+	dmap1[2] = tex2Dlod(DispMapS1, float4(texC1, 0.0f, 0.0f) + float4(0.0f, DMAP_DX, 0.0f, 0.0f)).r;
+	dmap1[3] = tex2Dlod(DispMapS1, float4(texC1, 0.0f, 0.0f) + float4(DMAP_DX, DMAP_DX, 0.0f, 0.0f)).r;
+
+	// Filter displacement map:
+	float h1 = lerp(lerp(dmap1[0], dmap1[1], lerps.x), lerp(dmap1[2], dmap1[3], lerps.x), lerps.y);
+
+	// Sum and scale the sampled heights.
+	return gScaleHeights.x * h0 + gScaleHeights.y * h1;
+}
+
+////////////////////////////////////////////////////////////////////
+
+VS_OUTPUT WaterVS(VS_INPUT inp) {
+	VS_OUTPUT outVS;
+
+	// Scroll vertex texture coordinates to animate waves.
+	float2 vTex0 = inp.displacementMapCoord + gWaveDMapOffset0;
+	float2 vTex1 = inp.displacementMapCoord + gWaveDMapOffset1;
+
+	// Set y-coordinate of water grid vertices based on displacement mapping.
+	inp.posL.y = DoDispMapping(vTex0, vTex1);
+
+	// Estimate TBN-basis using finite differencing in local space.
+	float r = DoDispMapping(vTex0 + float2(DMAP_DX, 0.0f), vTex1 + float2(0.0f, DMAP_DX));
+	float b = DoDispMapping(vTex0 + float2(DMAP_DX, 0.0f), vTex1 + float2(0.0f, DMAP_DX));
+
 	float3x3 TBN;
-	TBN[0] = float3(1.0f, 0.0f, 0.0f); // Tangent goes along object space x-axis.
-	TBN[1] = float3(0.0f, 0.0f, -1.0f);// Binormal goes along object space -z-axis
-	TBN[2] = float3(0.0f, 1.0f, 0.0f); // Normal goes along object space y-axis
+	TBN[0] = normalize(float3(1.0f, (r - inp.posL.y) / gGridStepSizeL.x, 0.0f));
+	TBN[1] = normalize(float3(0.0f, (b - inp.posL.y) / gGridStepSizeL.y, -1.0f));
+	TBN[2] = normalize(cross(TBN[0], TBN[1]));
 
 	// Matrix transforms from object space to tangent space.
 	float3x3 toTangentSpace = transpose(TBN);
@@ -96,36 +174,27 @@ OutputVS WaterVS(float3 posL : POSITION0, float2 tex0 : TEXCOORD0) {
 	float3 eyePosL = mul(float4(gEyePosW, 1.0f), gWorldInv).xyz;
 
 	// Transform to-eye vector to tangent space.
-	float3 toEyeL = eyePosL - posL;
+	float3 toEyeL = eyePosL - inp.posL;
 	outVS.toEyeT = mul(toEyeL, toTangentSpace);
 
 	// Transform light direction to tangent space.
 	float3 lightDirL = mul(float4(gLight.dirW, 0.0f), gWorldInv).xyz;
 	outVS.lightDirT = mul(lightDirL, toTangentSpace);
 
-	// Get to-eye in world space also for environment map look-up.
-	outVS.toEyeW = gEyePosW - mul(float4(posL, 1.0f), gWorld);
-
-	// Water plane lies in xz-plane, so geometric normal is (0, 1, 0).
-	outVS.normalW = mul(float4(0.0f, 1.0f, 0.0f, 0.0f), gWorld);
-
 	// Transform to homogeneous clip space.
-	outVS.posH = mul(float4(posL, 1.0f), gWVP);
+	outVS.posH = mul(float4(inp.posL, 1.0f), gWVP);
 
 	// Scroll texture coordinates.
-	outVS.tex0 = tex0 + gWaveMapOffset0;
-	outVS.tex1 = tex0 + gWaveMapOffset1;
+	outVS.tex0 = inp.normalMapCoord + gWaveNMapOffset0;
+	outVS.tex1 = inp.normalMapCoord + gWaveNMapOffset1;
 
 	return outVS;
 }
 
 ////////////////////////////////////////////////////////////////////
 
-float4 WaterPS(float3 toEyeT:TEXCOORD0, float3 lightDirT:TEXCOORD1, float2 tex0:TEXCOORD2, float2 tex1:TEXCOORD3, float3 toEyeW:TEXCOORD4, float3 normalW:TEXCOORD5):COLOR {
-	// Interpolated normals can become unnormal--so normalize.
-	// Note that toEyeW and normalW do not need to be normalized
-	// because they are just used for a reflection and environment
-	// map look-up and only direction matters.
+float4 WaterPS(float3 toEyeT : TEXCOORD0, float3 lightDirT : TEXCOORD1, float2 tex0 : TEXCOORD2, float2 tex1 : TEXCOORD3) : COLOR {
+	// Interpolated normals can become unnormal
 	toEyeT = normalize(toEyeT);
 	lightDirT = normalize(lightDirT);
 
@@ -161,20 +230,11 @@ float4 WaterPS(float3 toEyeT:TEXCOORD0, float3 lightDirT:TEXCOORD1, float2 tex0:
 		t = 0.0f;
 	}
 
-	// Get the reflected color.  Also add some scale of normalT to the environment map look-up vector. This perturbs the look-up
-	// vector in a different way each frame (since normalT changes), which gives a ripple effect.
-	float3 envMapTex = reflect(-toEyeW, normalW) + (normalT * 10.0f);
-	float3 reflectedColor = texCUBE(EnvMapS, envMapTex);
+	float3 spec = t * (gMtrl.spec * gLight.spec).rgb;
+	float3 diffuse = s * (gMtrl.diffuse * gLight.diffuse.rgb);
+	float3 ambient = gMtrl.ambient * gLight.ambient;
 
-	// Weighted average between the reflected color and usual diffuse material.
-	float3 ambientMtrl = (0.5f * reflectedColor + 0.5f * gMtrl.ambient);
-	float3 diffuseMtrl = (0.5f * reflectedColor + 0.5f * gMtrl.diffuse);
-
-	float3 specular = t * (gMtrl.spec * gLight.spec).rgb;
-	float3 diffuse = s * (diffuseMtrl * gLight.diffuse.rgb);
-	float3 ambient = ambientMtrl * gLight.ambient;
-
-	float3 final = ambient + diffuse + specular;
+	float3 final = ambient + diffuse + spec;
 
 	return float4(final, gMtrl.diffuse.a);
 }
@@ -183,12 +243,8 @@ float4 WaterPS(float3 toEyeT:TEXCOORD0, float3 lightDirT:TEXCOORD1, float2 tex0:
 
 technique WaterTech {
 	pass P0 {
-		vertexShader = compile vs_2_0 WaterVS();
-		pixelShader  = compile ps_2_0 WaterPS();
-
-		AlphaBlendEnable = true;
-		SrcBlend = SrcAlpha;
-		DestBlend = InvSrcAlpha;
+		vertexShader = compile vs_3_0 WaterVS();
+		pixelShader  = compile ps_3_0 WaterPS();
 	}
 }
 

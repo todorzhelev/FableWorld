@@ -10,20 +10,23 @@ Water::Water(InitInfo& initInfo) {
 	m_width = (initInfo.vertCols - 1) * initInfo.dx;
 	m_depth = (initInfo.vertRows - 1) * initInfo.dz;
 
-	m_waveMapOffset0 = D3DXVECTOR2(0.0f, 0.0f);
-	m_waveMapOffset1 = D3DXVECTOR2(0.0f, 0.0f);
+	m_waveNMapOffset0 = D3DXVECTOR2(0.0f, 0.0f);
+	m_waveNMapOffset1 = D3DXVECTOR2(0.0f, 0.0f);
+
+	m_waveDMapOffset0 = D3DXVECTOR2(0.0f, 0.0f);
+	m_waveDMapOffset1 = D3DXVECTOR2(0.0f, 0.0f);
 
 	DWORD numTris = (initInfo.vertRows - 1) * (initInfo.vertCols - 1) * 2;
 	DWORD numVerts = initInfo.vertRows * initInfo.vertCols;
 
 	D3DVERTEXELEMENT9 elements[MAX_FVF_DECL_SIZE];
 	UINT numElements = 0;
-	pApp->GetPositionTextureDecl()->GetDeclaration(elements, &numElements);
+	pApp->GetPositionNormalDisplacementDecl()->GetDeclaration(elements, &numElements);
 	ID3DXMesh* mesh = nullptr;
 	D3DXCreateMesh(numTris, numVerts, D3DXMESH_MANAGED | D3DXMESH_32BIT, elements, pApp->GetDevice(), &mesh);
 	m_pMesh.reset(mesh);
 
-	VertexPositionTexture* v = nullptr;
+	VertexPositionNormalDisplacement* v = nullptr;
 	m_pMesh->LockVertexBuffer(0, (void**)&v);
 
 	std::vector<D3DXVECTOR3> verts;
@@ -33,8 +36,11 @@ Water::Water(InitInfo& initInfo) {
 	for (int i = 0; i < m_initInfo.vertRows; ++i) {
 		for (int j = 0; j < m_initInfo.vertCols; ++j) {
 			DWORD index = i * m_initInfo.vertCols + j;
-			v[index].m_vPos = verts[index];
-			v[index].m_vTexCoords = D3DXVECTOR2((float)j / m_initInfo.vertCols, (float)i / m_initInfo.vertRows) * initInfo.texScale;
+			const auto coord = D3DXVECTOR2((float)j / m_initInfo.vertCols, (float)i / m_initInfo.vertRows);
+
+			v[index].m_pos					= verts[index];
+			v[index].m_normalMapCoord		= coord * initInfo.texScale;
+			v[index].m_displacementMapCoord = coord;
 		}
 	}
 	m_pMesh->UnlockVertexBuffer();
@@ -60,10 +66,17 @@ Water::Water(InitInfo& initInfo) {
 
 	IDirect3DTexture9* waveMap0 = nullptr;
 	IDirect3DTexture9* waveMap1 = nullptr;
-	D3DXCreateTextureFromFileA(pApp->GetDevice(), initInfo.waveMapFilename0.c_str(), &waveMap0);
-	D3DXCreateTextureFromFileA(pApp->GetDevice(), initInfo.waveMapFilename1.c_str(), &waveMap1);
+	D3DXCreateTextureFromFile(pApp->GetDevice(), initInfo.waveMapFilename0.c_str(), &waveMap0);
+	D3DXCreateTextureFromFile(pApp->GetDevice(), initInfo.waveMapFilename1.c_str(), &waveMap1);
 	m_pWaveMap0.reset(waveMap0);
 	m_pWaveMap1.reset(waveMap1);
+
+	IDirect3DTexture9* dispMap0 = nullptr;
+	IDirect3DTexture9* dispMap1 = nullptr;
+	D3DXCreateTextureFromFileEx(pApp->GetDevice(), initInfo.dmapFilename0.c_str(), m_initInfo.vertRows, m_initInfo.vertCols, 1, 0, D3DFMT_R32F, D3DPOOL_MANAGED, D3DX_DEFAULT, D3DX_DEFAULT, 0, 0, 0, &dispMap0);
+	D3DXCreateTextureFromFileEx(pApp->GetDevice(), initInfo.dmapFilename1.c_str(), m_initInfo.vertRows, m_initInfo.vertCols, 1, 0, D3DFMT_R32F, D3DPOOL_MANAGED, D3DX_DEFAULT, D3DX_DEFAULT, 0, 0, 0, &dispMap1);
+	m_pDispMap0.reset(dispMap0);
+	m_pDispMap1.reset(dispMap1);
 	buildFX();
 }
 
@@ -130,18 +143,24 @@ void Water::buildFX() {
 
 	m_pFX.reset(effect);
 
-	m_hTech			  = m_pFX->GetTechniqueByName("WaterTech");
-	m_hWorld		  = m_pFX->GetParameterByName(0, "gWorld");
-	m_hWorldInv		  = m_pFX->GetParameterByName(0, "gWorldInv");
-	m_hWVP			  = m_pFX->GetParameterByName(0, "gWVP");
-	m_hEyePosW		  = m_pFX->GetParameterByName(0, "gEyePosW");
-	m_hLight		  = m_pFX->GetParameterByName(0, "gLight");
-	m_hMtrl			  = m_pFX->GetParameterByName(0, "gMtrl");
-	m_hWaveMap0		  = m_pFX->GetParameterByName(0, "gWaveMap0");
-	m_hWaveMap1		  = m_pFX->GetParameterByName(0, "gWaveMap1");
-	m_hWaveMapOffset0 = m_pFX->GetParameterByName(0, "gWaveMapOffset0");
-	m_hWaveMapOffset1 = m_pFX->GetParameterByName(0, "gWaveMapOffset1");
-	m_hEnvMap		  = m_pFX->GetParameterByName(0, "gEnvMap");
+	m_hTech			   = m_pFX->GetTechniqueByName("WaterTech");
+	m_hWorld		   = m_pFX->GetParameterByName(0, "gWorld");
+	m_hWorldInv		   = m_pFX->GetParameterByName(0, "gWorldInv");
+	m_hWVP			   = m_pFX->GetParameterByName(0, "gWVP");
+	m_hEyePosW		   = m_pFX->GetParameterByName(0, "gEyePosW");
+	m_hLight		   = m_pFX->GetParameterByName(0, "gLight");
+	m_hMtrl			   = m_pFX->GetParameterByName(0, "gMtrl");
+	m_hWaveMap0		   = m_pFX->GetParameterByName(0, "gWaveMap0");
+	m_hWaveMap1		   = m_pFX->GetParameterByName(0, "gWaveMap1");
+	m_hWaveNMapOffset0 = m_pFX->GetParameterByName(0, "gWaveNMapOffset0");
+	m_hWaveNMapOffset1 = m_pFX->GetParameterByName(0, "gWaveNMapOffset1");
+	m_hWaveDMapOffset0 = m_pFX->GetParameterByName(0, "gWaveDMapOffset0");
+	m_hWaveDMapOffset1 = m_pFX->GetParameterByName(0, "gWaveDMapOffset1");
+	m_hWaveDispMap0	   = m_pFX->GetParameterByName(0, "gWaveDispMap0");
+	m_hWaveDispMap1    = m_pFX->GetParameterByName(0, "gWaveDispMap1");
+	m_hScaleHeights    = m_pFX->GetParameterByName(0, "gScaleHeights");
+	m_hGridStepSizeL   = m_pFX->GetParameterByName(0, "gGridStepSizeL");
+	//m_hEnvMap		  = m_pFX->GetParameterByName(0, "gEnvMap");
 
 
 	m_pFX->SetMatrix(m_hWorld, &m_initInfo.toWorld);
@@ -151,33 +170,44 @@ void Water::buildFX() {
 	m_pFX->SetTechnique(m_hTech);
 	m_pFX->SetTexture(m_hWaveMap0, m_pWaveMap0.get());
 	m_pFX->SetTexture(m_hWaveMap1, m_pWaveMap1.get());
+	m_pFX->SetTexture(m_hWaveDispMap0, m_pDispMap0.get());
+	m_pFX->SetTexture(m_hWaveDispMap1, m_pDispMap1.get());
 	m_pFX->SetValue(m_hLight, &m_initInfo.dirLight, sizeof(Light));
 	m_pFX->SetValue(m_hMtrl, &m_initInfo.mtrl, sizeof(Material));
+	m_pFX->SetValue(m_hScaleHeights, &m_initInfo.scaleHeights, sizeof(D3DXVECTOR2));
+
+	D3DXVECTOR2 stepSizes(m_initInfo.dx, m_initInfo.dz);
+	m_pFX->SetValue(m_hGridStepSizeL, &stepSizes, sizeof(D3DXVECTOR2));
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 void Water::OnUpdate(float dt) {
 	// Update texture coordinate offsets.  These offsets are added to the texture coordinates in the vertex shader to animate them.
-	m_waveMapOffset0 += m_initInfo.waveMapVelocity0 * dt;
-	m_waveMapOffset1 += m_initInfo.waveMapVelocity1 * dt;
+	m_waveNMapOffset0 += m_initInfo.waveNMapVelocity0 * dt;
+	m_waveNMapOffset1 += m_initInfo.waveNMapVelocity1 * dt;
+
+	m_waveDMapOffset0 += m_initInfo.waveDMapVelocity0 * dt;
+	m_waveDMapOffset1 += m_initInfo.waveDMapVelocity1 * dt;
 
 	// Textures repeat every 1.0 unit, so reset back down to zero so the coordinates do not grow too large.
-	if (m_waveMapOffset0.x >= 1.0f || m_waveMapOffset0.x <= -1.0f) {
-		m_waveMapOffset0.x = 0.0f;
-	}
+	if (m_waveNMapOffset0.x >= 1.0f || m_waveNMapOffset0.x <= -1.0f)
+		m_waveNMapOffset0.x = 0.0f;
+	if (m_waveNMapOffset0.y >= 1.0f || m_waveNMapOffset0.y <= -1.0f)
+		m_waveNMapOffset0.y = 0.0f;
+	if (m_waveNMapOffset1.x >= 1.0f || m_waveNMapOffset1.x <= -1.0f)
+		m_waveNMapOffset1.x = 0.0f;
+	if (m_waveNMapOffset1.y >= 1.0f || m_waveNMapOffset1.y <= -1.0f)
+		m_waveNMapOffset1.y = 0.0f;
 
-	if (m_waveMapOffset0.y >= 1.0f || m_waveMapOffset0.y <= -1.0f) {
-		m_waveMapOffset0.y = 0.0f;
-	}
-
-	if (m_waveMapOffset1.x >= 1.0f || m_waveMapOffset1.x <= -1.0f) {
-		m_waveMapOffset1.x = 0.0f;
-	}
-
-	if (m_waveMapOffset1.y >= 1.0f || m_waveMapOffset1.y <= -1.0f) {
-		m_waveMapOffset1.y = 0.0f;
-	}
+	if (m_waveDMapOffset0.x >= 1.0f || m_waveDMapOffset0.x <= -1.0f)
+		m_waveDMapOffset0.x = 0.0f;
+	if (m_waveDMapOffset0.y >= 1.0f || m_waveDMapOffset0.y <= -1.0f)
+		m_waveDMapOffset0.y = 0.0f;
+	if (m_waveDMapOffset1.x >= 1.0f || m_waveDMapOffset1.x <= -1.0f)
+		m_waveDMapOffset1.x = 0.0f;
+	if (m_waveDMapOffset1.y >= 1.0f || m_waveDMapOffset1.y <= -1.0f)
+		m_waveDMapOffset1.y = 0.0f;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -186,8 +216,10 @@ void Water::OnRender(const std::unique_ptr<Camera>& camera) {
 	const auto matrix = m_initInfo.toWorld * camera->GetViewProjMatrix();
 	m_pFX->SetMatrix(m_hWVP, &matrix);
 	m_pFX->SetValue(m_hEyePosW, &camera->GetPosition(), sizeof(D3DXVECTOR3));
-	m_pFX->SetValue(m_hWaveMapOffset0, &m_waveMapOffset0, sizeof(D3DXVECTOR2));
-	m_pFX->SetValue(m_hWaveMapOffset1, &m_waveMapOffset1, sizeof(D3DXVECTOR2));
+	m_pFX->SetValue(m_hWaveNMapOffset0, &m_waveNMapOffset0, sizeof(D3DXVECTOR2));
+	m_pFX->SetValue(m_hWaveNMapOffset1, &m_waveNMapOffset1, sizeof(D3DXVECTOR2));
+	m_pFX->SetValue(m_hWaveDMapOffset0, &m_waveDMapOffset0, sizeof(D3DXVECTOR2));
+	m_pFX->SetValue(m_hWaveDMapOffset1, &m_waveDMapOffset1, sizeof(D3DXVECTOR2));
 
 	UINT numPasses = 0;
 	m_pFX->Begin(&numPasses, 0);

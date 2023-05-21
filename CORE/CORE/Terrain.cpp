@@ -125,8 +125,8 @@ void Terrain::GenerateTerrainMesh() {
 	std::vector<D3DXVECTOR3> terrainVertexPositions;
 	GenerateVertexPositions(terrainVertexPositions, m_nRows, m_nCols);
 	for(UINT i = 0; i < tempTerrainMesh->GetNumVertices(); ++i) {
-		tempVertexBuffer[i].m_vPos   = terrainVertexPositions[i];
-		tempVertexBuffer[i].m_vPos.y = m_vHeightmap[i];
+		tempVertexBuffer[i].m_pos   = terrainVertexPositions[i];
+		tempVertexBuffer[i].m_pos.y = m_vHeightmap[i];
 
 		/*
 		At this point the terrain is centered at 0,0,0 like this
@@ -152,8 +152,8 @@ void Terrain::GenerateTerrainMesh() {
 		(this is done with + 0.5*width and -0.5*depth) and after that we have to divide by width and - depth, so the coordinates will be
 		in [0,1] range. We divide by -depth, because in texture coordinates the +v goes down, while in the terrain the rows goes in negative z.
 		*/
-		tempVertexBuffer[i].m_vTexCoords.x = (tempVertexBuffer[i].m_vPos.x + (0.5f*m_nWidth)) / m_nWidth;
-		tempVertexBuffer[i].m_vTexCoords.y = (tempVertexBuffer[i].m_vPos.z - (0.5f*m_nDepth)) / -m_nDepth;
+		tempVertexBuffer[i].m_textureCoord.x = (tempVertexBuffer[i].m_pos.x + (0.5f*m_nWidth)) / m_nWidth;
+		tempVertexBuffer[i].m_textureCoord.y = (tempVertexBuffer[i].m_pos.z - (0.5f*m_nDepth)) / -m_nDepth;
 	}
 	
 	tempTerrainMesh->UnlockVertexBuffer();
